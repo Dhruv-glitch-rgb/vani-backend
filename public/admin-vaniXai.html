@@ -621,7 +621,7 @@
         async function loadUsers() {
             try {
                 const snapshot = await firebase.firestore().collection('users').orderBy('createdAt', 'desc').get();
-                const tbody = document.getElementById('users-tbody');
+                const tbody = document.getElementById('user-table-body');
                 tbody.innerHTML = '';
                 
                 const countBadge = document.getElementById('user-count');
