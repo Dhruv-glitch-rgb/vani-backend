@@ -3,510 +3,529 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V.A.N.I-xAI | Admin Panel</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Outfit:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <title>Bharat Core | Admin Panel</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
-            --bg-dark: #030811;
-            --bg-panel: #071324;
-            --bg-panel-hover: #0a1b33;
-            --border-neon: #00d2ff;
-            --border-dim: #1a365d;
-            --text-main: #e2e8f0;
-            --text-muted: #64748b;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --font-tech: 'Rajdhani', sans-serif;
-            --font-body: 'Outfit', sans-serif;
-            --font-mono: 'Share Tech Mono', monospace;
+            --bg-deep: #f8fafc;
+            --saffron: #ea580c; 
+            --white-glow: #0f172a; 
+            --india-green: #16a34a; 
+            --navy-blue: #1e3a8a;
+            --text-main: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.6); /* More transparent for frosted glass */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-deep);
             color: var(--text-main);
-            font-family: var(--font-body);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* --- Loading Overlay --- */
-        #loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-dark); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .cyber-spinner {
-            width: 80px; height: 80px; border: 4px solid transparent;
-            border-top: 4px solid var(--border-neon); border-bottom: 4px solid var(--border-neon);
-            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;
-            box-shadow: 0 0 20px var(--border-neon);
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* --- Main Application Container --- */
-        .app-container {
-            width: 98vw;
-            height: 96vh;
-            border: 2px solid var(--border-dim);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
             position: relative;
-            background: radial-gradient(circle at center, #05101e 0%, var(--bg-dark) 100%);
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.05) inset, 0 0 50px rgba(0,0,0,0.8);
-            display: none; /* Hidden until auth */
-            overflow: hidden;
         }
 
-        /* Tech Brackets Corners */
-        .app-container::before, .app-container::after {
-            content: ''; position: absolute; width: 40px; height: 40px; pointer-events: none;
-        }
-        .app-container::before {
-            top: -2px; left: -2px;
-            border-top: 3px solid var(--border-neon); border-left: 3px solid var(--border-neon);
-            border-radius: 12px 0 0 0;
-            box-shadow: -5px -5px 15px rgba(0, 210, 255, 0.3);
-        }
-        .app-container::after {
-            bottom: -2px; right: -2px;
-            border-bottom: 3px solid var(--border-neon); border-right: 3px solid var(--border-neon);
-            border-radius: 0 0 12px 0;
-            box-shadow: 5px 5px 15px rgba(0, 210, 255, 0.3);
+        /* --- Holographic Background --- */
+        .ambient-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(234, 88, 12, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(22, 163, 74, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+            animation: gridPulse 4s ease-in-out infinite alternate, moveGrid 30s linear infinite;
         }
 
-        /* --- Header --- */
-        .header {
-            height: 70px;
+        @keyframes moveGrid {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(25px) scale(1.02); }
+            100% { transform: translateY(50px) scale(1); }
+        }
+        @keyframes gridPulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .ashoka-chakra-bg {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vh; height: 80vh;
+            border: 2px dashed rgba(30, 58, 138, 0.15);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+            animation: slowSpin 20s linear infinite;
+            box-shadow: 0 0 100px rgba(234, 88, 12, 0.08) inset, 0 0 100px rgba(22, 163, 74, 0.08) inset;
+        }
+        .ashoka-chakra-bg::before {
+            content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border: 1px solid rgba(30, 58, 138, 0.05); border-radius: 50%;
+            animation: slowSpin 30s linear infinite reverse;
+        }
+        .ashoka-chakra-bg::after {
+            content: "☸";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60vh;
+            color: rgba(30, 58, 138, 0.05);
+            text-shadow: 0 0 40px rgba(30, 58, 138, 0.15);
+        }
+
+        @keyframes slowSpin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        .glow-saffron {
+            position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.15) 0%, transparent 60%);
+            z-index: 0; filter: blur(60px);
+            animation: pulseGlow 4s ease-in-out infinite alternate, floatOrb 10s ease-in-out infinite;
+        }
+        .glow-green {
+            position: fixed; bottom: -10%; right: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.15) 0%, transparent 60%);
+            z-index: 0; filter: blur(60px);
+            animation: pulseGlow 5s ease-in-out infinite alternate-reverse, floatOrb 12s ease-in-out infinite reverse;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.4; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* --- Floating Particles --- */
+        .particle {
+            position: fixed;
+            background: rgba(30, 58, 138, 0.3);
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatUp 8s linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 1; transform: translateY(80vh) scale(1); }
+            80% { opacity: 1; transform: translateY(20vh) scale(1); }
+            100% { transform: translateY(-10vh) scale(0); opacity: 0; }
+        }
+
+        /* --- Layout & Core --- */
+        .admin-layout {
+            position: relative;
+            z-index: 10;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            animation: bootUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes bootUp {
+            0% { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(10px); }
+            50% { opacity: 0.8; filter: blur(2px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        /* --- Header & HUD --- */
+        .admin-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 30px;
-            border-bottom: 1px solid var(--border-dim);
-            background: rgba(7, 19, 36, 0.8);
+            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+            background: rgba(255,255,255,0.4);
             backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        }
+        
+        /* HUD Brackets */
+        .admin-header::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 20px; height: 20px;
+            border-top: 3px solid var(--saffron); border-left: 3px solid var(--saffron);
+            border-radius: 15px 0 0 0;
+        }
+        .admin-header::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 20px; height: 20px;
+            border-bottom: 3px solid var(--india-green); border-right: 3px solid var(--india-green);
+            border-radius: 0 0 15px 0;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-title img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            background: linear-gradient(#fff, #fff) padding-box, linear-gradient(45deg, var(--saffron), var(--navy-blue), var(--india-green)) border-box;
+            box-shadow: 0 0 25px rgba(30, 58, 138, 0.2);
+            animation: pulseRing 2s infinite;
+        }
+
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(30, 58, 138, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(30, 58, 138, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(30, 58, 138, 0); }
+        }
+
+        h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--saffron) 0%, var(--navy-blue) 50%, var(--india-green) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* --- Buttons --- */
+        .btn-back {
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(0,0,0,0.1);
+            color: var(--text-main);
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        .btn-back::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(234, 88, 12, 0.2), transparent);
+            transition: 0.5s;
+        }
+        .btn-back:hover::before { left: 100%; }
+        .btn-back:hover {
+            border-color: var(--saffron);
+            background: #fff;
+            color: var(--saffron);
+            box-shadow: 0 10px 25px rgba(234, 88, 12, 0.2);
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* --- Data Panel & Glassmorphism --- */
+        .data-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-top: 3px solid rgba(234, 88, 12, 0.8);
+            border-bottom: 3px solid rgba(22, 163, 74, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.05), 
+                0 0 50px rgba(255, 255, 255, 0.8) inset,
+                0 0 20px rgba(30, 58, 138, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Scanning Laser over panel */
+        .data-panel::after {
+            content: '';
+            position: absolute;
+            top: -100%; left: 0;
+            width: 100%; height: 200px;
+            background: linear-gradient(to bottom, transparent, rgba(30, 58, 138, 0.03) 50%, rgba(30, 58, 138, 0.1) 100%);
+            border-bottom: 2px solid rgba(30, 58, 138, 0.3);
+            animation: scanDown 4s linear infinite;
+            pointer-events: none;
             z-index: 10;
         }
 
-        .header-logo {
-            display: flex; align-items: center; gap: 15px;
-        }
-        .header-logo img {
-            width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--border-neon);
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
-        }
-        .header-title {
-            display: flex; flex-direction: column;
-        }
-        .header-title h1 {
-            font-family: var(--font-tech); font-size: 1.8rem; letter-spacing: 3px;
-            color: var(--text-main); line-height: 1; margin: 0;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
-        }
-        .header-title span {
-            font-family: var(--font-mono); font-size: 0.7rem; color: var(--border-neon); letter-spacing: 2px;
+        @keyframes scanDown {
+            0% { top: -100%; }
+            100% { top: 200%; }
         }
 
-        .header-title-center {
-            position: absolute; left: 50%; transform: translateX(-50%);
-            text-align: center;
-        }
-        .header-title-center h1 {
-            font-family: var(--font-tech); font-size: 2.2rem; color: #fff; letter-spacing: 5px;
-            text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
-        }
-        .header-title-center span {
-            font-family: var(--font-tech); color: var(--border-neon); font-size: 0.9rem; letter-spacing: 3px;
-        }
-
-        .header-profile {
-            display: flex; align-items: center; gap: 20px;
-        }
-        .profile-info {
-            display: flex; align-items: center; gap: 15px;
-        }
-        .profile-icon {
-            width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-muted);
-            display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: var(--text-muted);
-        }
-        .profile-text { display: flex; flex-direction: column; }
-        .profile-text strong { font-size: 1rem; color: #fff; }
-        .profile-text span { font-size: 0.75rem; color: var(--text-muted); }
-        .status-dot { color: var(--accent-green); font-size: 0.6rem; margin-right: 5px; animation: blink 2s infinite; }
-        
-        .header-actions { display: flex; gap: 15px; }
-        .icon-btn {
-            background: none; border: 1px solid var(--border-dim); color: var(--text-muted);
-            width: 35px; height: 35px; border-radius: 8px; cursor: pointer; transition: 0.3s;
-            display: flex; justify-content: center; align-items: center; position: relative;
-        }
-        .icon-btn:hover { border-color: var(--border-neon); color: var(--border-neon); box-shadow: 0 0 10px rgba(0,210,255,0.2); }
-        .badge-dot { position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--accent-red); border-radius: 50%; }
-
-        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-
-        /* --- Main Body Area --- */
-        .app-body {
+        .panel-header {
             display: flex;
-            flex: 1;
-            overflow: hidden;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* --- Sidebar --- */
-        .sidebar {
-            width: 240px;
-            border-right: 1px solid var(--border-dim);
-            background: rgba(7, 19, 36, 0.5);
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .nav-item {
-            padding: 12px 25px;
+        .panel-header h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2rem;
+            color: var(--white-glow);
+            letter-spacing: 3px;
+            text-transform: uppercase;
             display: flex;
             align-items: center;
             gap: 15px;
-            color: var(--text-muted);
-            font-family: var(--font-tech);
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-            border-left: 3px solid transparent;
         }
-        .nav-item i { width: 20px; text-align: center; font-size: 1.2rem; }
-        .nav-item:hover {
-            color: var(--text-main);
-            background: rgba(0, 210, 255, 0.05);
+        
+        .panel-header h2 i {
+            color: var(--navy-blue);
+            animation: pulseIcon 2s infinite;
         }
-        .nav-item.active {
-            color: var(--border-neon);
-            border-left: 3px solid var(--border-neon);
-            background: linear-gradient(90deg, rgba(0, 210, 255, 0.1) 0%, transparent 100%);
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        @keyframes pulseIcon { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
+        .badge {
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.1), rgba(234, 88, 12, 0.2));
+            color: var(--saffron);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            border: 1px solid rgba(234, 88, 12, 0.4);
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.2);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: badgeBreathe 2s ease-in-out infinite alternate;
+        }
+        @keyframes badgeBreathe {
+            0% { box-shadow: 0 0 10px rgba(234, 88, 12, 0.1); transform: scale(1); }
+            100% { box-shadow: 0 0 20px rgba(234, 88, 12, 0.4); transform: scale(1.02); }
         }
 
-        /* --- Content Area --- */
-        .content-area {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+            position: relative;
+            z-index: 2;
+            padding-bottom: 20px; /* space for hover effects */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 12px; /* more spacing for floating effect */
+            text-align: left;
+        }
+
+        th {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--navy-blue);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1rem;
+            padding: 15px 20px;
+            border-bottom: 2px solid rgba(30, 58, 138, 0.1);
+        }
+
+        td {
+            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            font-size: 1rem;
+            border: 1px solid rgba(255,255,255,0.8);
+            border-left: none;
+            border-right: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             position: relative;
         }
         
-        .content-area::-webkit-scrollbar { width: 6px; }
-        .content-area::-webkit-scrollbar-thumb { background: var(--border-dim); border-radius: 3px; }
-
-        /* Tab Views */
-        .view-section { display: none; height: 100%; flex-direction: column; gap: 20px; animation: fadeIn 0.4s ease-out forwards; }
-        .view-section.active { display: flex; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- Dashboard Grid Layout --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-auto-rows: minmax(100px, auto);
-            gap: 20px;
-            height: 100%;
+        td:first-child { 
+            border-left: 3px solid transparent; 
+            border-radius: 12px 0 0 12px; 
+        }
+        td:last-child { 
+            border-right: 1px solid rgba(255,255,255,0.8); 
+            border-radius: 0 12px 12px 0; 
         }
 
-        .panel {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-dim);
+        tr {
+            opacity: 0;
+            animation: rowFadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes rowFadeIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.95);
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(30, 58, 138, 0.1);
+            z-index: 10;
+        }
+        tr:hover td:first-child {
+            border-left: 3px solid var(--saffron);
+        }
+
+        .pin-cell {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--saffron);
+            letter-spacing: 6px;
+            background: rgba(234, 88, 12, 0.05);
+            padding: 5px 15px;
             border-radius: 8px;
-            padding: 20px;
+            border: 1px dashed rgba(234, 88, 12, 0.2);
+            display: inline-block;
+        }
+        
+        .name-cell {
+            font-weight: 800;
+            color: var(--white-glow);
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+        .email-cell {
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 80px;
+            color: var(--saffron);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: pulseLoading 2s infinite alternate;
+        }
+        @keyframes pulseLoading {
+            0% { opacity: 0.5; filter: blur(2px); }
+            100% { opacity: 1; filter: blur(0); }
+        }
+
+        .loader-spinner {
+            display: inline-block;
+            width: 60px; height: 60px;
+            border: 3px solid rgba(30, 58, 138, 0.1);
+            border-top: 4px solid var(--saffron);
+            border-bottom: 4px solid var(--india-green);
+            border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(234, 88, 12, 0.15);
+        }
+
+        /* --- Scramble & Glitch Effects --- */
+        .scramble-char {
+            color: var(--saffron);
+            font-family: monospace;
+            opacity: 0.8;
+            font-weight: bold;
+        }
+
+        .glitch-hover {
             position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            overflow: hidden;
         }
-        .panel-header {
-            font-family: var(--font-tech); font-size: 1.1rem; color: #fff; letter-spacing: 2px;
-            text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between;
+        .glitch-hover:hover {
+            animation: glitchSkew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+            color: var(--saffron);
+        }
+
+        @keyframes glitchSkew {
+            0% { transform: translate(0) skew(0deg); }
+            20% { transform: translate(-2px, 1px) skew(2deg); }
+            40% { transform: translate(-1px, -1px) skew(-2deg); }
+            60% { transform: translate(2px, 1px) skew(0deg); }
+            80% { transform: translate(1px, -1px) skew(1deg); }
+            100% { transform: translate(0) skew(0deg); }
+        }
+
+        .row-jitter:hover {
+            animation: jitter 0.1s infinite;
         }
         
-        /* Panel Grid Placements */
-        .p-sys-status { grid-column: 1 / 3; grid-row: 1 / 4; }
-        .p-ai-monitor { grid-column: 3 / 5; grid-row: 1 / 4; }
-        
-        .p-stat-1 { grid-column: 1; grid-row: 4; }
-        .p-stat-2 { grid-column: 2; grid-row: 4; }
-        .p-stat-3 { grid-column: 3; grid-row: 4; }
-        .p-stat-4 { grid-column: 4; grid-row: 4; }
+        @keyframes jitter {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(1px); }
+            100% { transform: translateX(-1px); }
+        }
 
-        .p-recent { grid-column: 1 / 2; grid-row: 5 / 7; }
-        .p-perf { grid-column: 2 / 3; grid-row: 5 / 7; }
-        .p-map { grid-column: 3 / 5; grid-row: 5 / 7; }
-
-        /* --- Panel Specific Internals --- */
-        
-        /* Stat Cards */
-        .stat-card { display: flex; align-items: center; gap: 20px; }
-        .stat-icon { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--border-dim); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--border-neon); box-shadow: 0 0 15px rgba(0,210,255,0.1) inset; }
-        .stat-info { display: flex; flex-direction: column; }
-        .stat-title { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .stat-val { font-family: var(--font-mono); font-size: 1.8rem; color: #fff; }
-        .stat-trend { font-size: 0.7rem; color: var(--accent-green); margin-top: 5px; }
-
-        /* System Status Globe/Rings Simulation */
-        .sys-status-content { display: flex; height: calc(100% - 30px); align-items: center; justify-content: space-around; }
-        .ring-group { display: flex; flex-direction: column; gap: 20px; }
-        .ring-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .ring { width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--border-dim); border-top-color: var(--border-neon); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 1.2rem; }
-        .globe-placeholder { width: 220px; height: 220px; border-radius: 50%; border: 1px dashed var(--text-muted); position: relative; animation: slowSpin 30s linear infinite; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 50px rgba(239, 68, 68, 0.1) inset; }
-        .globe-placeholder::after { content: '\f0ac'; font-family: 'FontAwesome'; font-size: 120px; color: rgba(239, 68, 68, 0.2); }
-        .red-accent { border-top-color: var(--accent-red) !important; color: var(--accent-red); }
-
-        @keyframes slowSpin { 100% { transform: rotate(360deg); } }
-
-        /* AI Monitor Hologram Simulation */
-        .ai-monitor-content { position: relative; height: calc(100% - 30px); display: flex; justify-content: space-between; align-items: center; }
-        .hologram-placeholder { flex: 1; height: 100%; display: flex; justify-content: center; align-items: center; position: relative; }
-        .hologram-placeholder i { font-size: 150px; color: rgba(0, 210, 255, 0.15); filter: drop-shadow(0 0 20px rgba(0,210,255,0.5)); animation: float 4s ease-in-out infinite; }
-        .ai-stats { display: flex; flex-direction: column; gap: 20px; width: 150px; text-align: right; }
-        .ai-stat-item { display: flex; flex-direction: column; }
-        .ai-stat-item span { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
-        .ai-stat-item strong { font-family: var(--font-mono); font-size: 1.4rem; color: #fff; }
-
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        /* Recent Activities */
-        .activity-list { display: flex; flex-direction: column; gap: 15px; }
-        .activity-item { display: flex; align-items: center; gap: 15px; font-size: 0.8rem; }
-        .act-time { font-family: var(--font-mono); color: var(--text-muted); width: 60px; }
-        .act-desc { flex: 1; color: var(--text-main); }
-        .act-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green); }
-
-        /* System Performance Charts Simulation */
-        .perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; height: calc(100% - 30px); }
-        .perf-chart { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
-        .perf-header { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted); }
-        .perf-line { width: 100%; height: 30px; border-bottom: 2px solid var(--border-neon); position: relative; }
-        .perf-line::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 20px; background: linear-gradient(to top, rgba(0,210,255,0.2), transparent); }
-
-        /* --- User Table View (Tab 2) --- */
-        .table-panel { background: var(--bg-panel); border: 1px solid var(--border-dim); border-radius: 8px; flex: 1; display: flex; flex-direction: column; }
-        .table-header { padding: 20px; border-bottom: 1px solid var(--border-dim); display: flex; justify-content: space-between; align-items: center; }
-        .table-header h2 { font-family: var(--font-tech); font-size: 1.5rem; color: #fff; }
-        
-        .table-responsive { flex: 1; overflow-y: auto; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { font-family: var(--font-tech); color: var(--border-neon); padding: 12px 15px; border-bottom: 1px solid var(--border-dim); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.9rem; color: var(--text-main); }
-        tr:hover td { background: rgba(255,255,255,0.03); }
-        
-        .scramble-char { color: var(--border-neon); font-family: var(--font-mono); font-weight: bold; }
+        .data-panel:hover .badge {
+            animation: badgeBreathe 0.5s ease-in-out infinite alternate;
+        }
 
     </style>
 </head>
 <body>
 
-    <!-- Loading Screen -->
-    <div id="loading-overlay">
-        <div class="cyber-spinner"></div>
-        <div style="font-family: var(--font-tech); font-size: 1.5rem; letter-spacing: 5px; color: var(--border-neon);">AUTHENTICATING...</div>
-    </div>
+    <div class="ambient-grid"></div>
+    <div class="glow-saffron"></div>
+    <div class="glow-green"></div>
+    <div class="ashoka-chakra-bg"></div>
+    <div id="particles-container"></div>
 
-    <!-- Main App -->
-    <div class="app-container" id="admin-content">
-        
-        <!-- Header -->
-        <header class="header">
-            <div class="header-logo">
+    <div class="admin-layout" style="display:none;" id="admin-content">
+        <header class="admin-header">
+            <div class="header-title">
                 <img src="vani_logo.jpg" alt="Logo">
-                <div class="header-title">
-                    <h1>V.A.N.I-xAI</h1>
-                    <span>Intelligence Beyond Limits</span>
-                </div>
+                <h1 class="glitch-hover">Bharat Core Command</h1>
             </div>
-
-            <div class="header-title-center">
-                <h1>V.A.N.I-xAI</h1>
-                <span>ADMIN PANEL</span>
-            </div>
-
-            <div class="header-profile">
-                <div class="profile-info">
-                    <div class="profile-icon"><i class="fa-regular fa-user"></i></div>
-                    <div class="profile-text">
-                        <strong>Admin</strong>
-                        <span><i class="fa-solid fa-circle status-dot"></i> Super Administrator</span>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <button class="icon-btn"><i class="fa-regular fa-bell"></i><div class="badge-dot"></div></button>
-                    <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
-                    <button class="icon-btn" onclick="window.location.href='/?launch=true'"><i class="fa-solid fa-right-from-bracket"></i></button>
-                </div>
-            </div>
+            <button class="btn-back glitch-hover" onclick="window.location.href='/?launch=true'">
+                <i class="fa-solid fa-satellite-dish"></i> Return to Console
+            </button>
         </header>
 
-        <!-- Body -->
-        <div class="app-body">
-            
-            <!-- Sidebar -->
-            <nav class="sidebar">
-                <div class="nav-item active" onclick="switchTab('dashboard-view', this)"><i class="fa-solid fa-house"></i> DASHBOARD</div>
-                <div class="nav-item" onclick="switchTab('users-view', this)"><i class="fa-solid fa-user-astronaut"></i> USERS</div>
-            </nav>
+        <main class="data-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-users-viewfinder" style="color:var(--saffron);"></i> Registered Personnel</h2>
+                <div class="badge" id="user-count">Scanning...</div>
+            </div>
 
-            <!-- Content Area -->
-            <main class="content-area">
-                
-                <!-- DASHBOARD VIEW -->
-                <div id="dashboard-view" class="view-section active">
-                    <div class="dashboard-grid">
-                        
-                        <!-- System Status -->
-                        <div class="panel p-sys-status">
-                            <div class="panel-header">SYSTEM STATUS</div>
-                            <div class="sys-status-content">
-                                <div class="ring-group">
-                                    <div class="ring-item"><span style="font-size:0.7rem; color:var(--text-muted)">CPU USAGE</span><div class="ring">25%</div></div>
-                                    <div class="ring-item"><span style="font-size:0.7rem; color:var(--text-muted)">MEMORY</span><div class="ring">40%</div></div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Hash</th>
+                            <th>Identity Name</th>
+                            <th>Clearance Email</th>
+                            <th>Security PIN</th>
+                            <th>Registration Sync</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                        <tr>
+                            <td colspan="5">
+                                <div class="loading-state">
+                                    <div class="loader-spinner"></div><br>
+                                    Decrypting Database...
                                 </div>
-                                <div class="globe-placeholder"></div>
-                                <div class="ring-group">
-                                    <div class="ring-item"><span style="font-size:0.7rem; color:var(--text-muted)">NETWORK</span><div class="ring">60%</div></div>
-                                    <div class="ring-item"><span style="font-size:0.7rem; color:var(--text-muted)">DISK SPACE</span><div class="ring">75%</div></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- AI Activity -->
-                        <div class="panel p-ai-monitor">
-                            <div class="panel-header">AI ACTIVITY MONITOR</div>
-                            <div class="ai-monitor-content">
-                                <div class="hologram-placeholder"><i class="fa-brands fa-connectdevelop"></i></div>
-                                <div class="ai-stats">
-                                    <div class="ai-stat-item"><span>TIME SPENT AI DISPLAY</span><strong>87%</strong></div>
-                                    <div class="ai-stat-item"><span>RESPONSE SATISFACTION</span><strong>94%</strong></div>
-                                    <div class="ai-stat-item"><span>DATA PROCESSED</span><strong>87%</strong></div>
-                                    <div class="ai-stat-item"><span>UPTIME</span><strong>06 MINUTES</strong></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Stat 1 -->
-                        <div class="panel p-stat-1 stat-card">
-                            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
-                            <div class="stat-info">
-                                <span class="stat-title">TOTAL USERS</span>
-                                <span class="stat-val" id="dash-user-count">...</span>
-                                <span class="stat-trend"><i class="fa-solid fa-arrow-trend-up"></i> 12.5% from last month</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Stat 2 -->
-                        <div class="panel p-stat-2 stat-card">
-                            <div class="stat-icon"><i class="fa-solid fa-wave-square"></i></div>
-                            <div class="stat-info">
-                                <span class="stat-title">ACTIVE SESSIONS</span>
-                                <span class="stat-val">342</span>
-                                <span class="stat-trend"><i class="fa-solid fa-arrow-trend-up"></i> 8.7% from last month</span>
-                            </div>
-                        </div>
-
-                        <!-- Stat 3 -->
-                        <div class="panel p-stat-3 stat-card">
-                            <div class="stat-icon"><i class="fa-solid fa-cube"></i></div>
-                            <div class="stat-info">
-                                <span class="stat-title">AI REQUESTS</span>
-                                <span class="stat-val">8,756</span>
-                                <span class="stat-trend"><i class="fa-solid fa-arrow-trend-up"></i> 15.3% from last month</span>
-                            </div>
-                        </div>
-
-                        <!-- Stat 4 -->
-                        <div class="panel p-stat-4 stat-card">
-                            <div class="stat-icon"><i class="fa-regular fa-clock"></i></div>
-                            <div class="stat-info">
-                                <span class="stat-title">SYSTEM UPTIME</span>
-                                <span class="stat-val">99.9%</span>
-                                <span class="stat-trend" style="color:var(--accent-green)">Running Smoothly</span>
-                            </div>
-                        </div>
-
-                        <!-- Recent Activities -->
-                        <div class="panel p-recent">
-                            <div class="panel-header">RECENT ACTIVITIES</div>
-                            <div class="activity-list" id="activity-feed">
-                                <div class="activity-item"><span class="act-time">10:24 AM</span><span class="act-desc">User <strong>Admin</strong> logged in</span><div class="act-dot"></div></div>
-                                <div class="activity-item"><span class="act-time">10:18 AM</span><span class="act-desc">AI Model Updated Successfully</span><div class="act-dot"></div></div>
-                                <div class="activity-item"><span class="act-time">10:15 AM</span><span class="act-desc">New User Registered: <strong style="color:var(--border-neon)">user_1258</strong></span><div class="act-dot" style="background:var(--border-neon)"></div></div>
-                                <div class="activity-item"><span class="act-time">10:10 AM</span><span class="act-desc">Database Backup Completed</span><div class="act-dot"></div></div>
-                                <div class="activity-item"><span class="act-time">10:05 AM</span><span class="act-desc">Security Scan Completed</span><div class="act-dot"></div></div>
-                            </div>
-                        </div>
-
-                        <!-- System Performance -->
-                        <div class="panel p-perf">
-                            <div class="panel-header">SYSTEM PERFORMANCE</div>
-                            <div class="perf-grid">
-                                <div class="perf-chart"><div class="perf-header"><span>CPU</span><span>25%</span></div><div class="perf-line"></div></div>
-                                <div class="perf-chart"><div class="perf-header"><span>RAM</span><span style="color:#a855f7">40%</span></div><div class="perf-line" style="border-color:#a855f7"></div></div>
-                                <div class="perf-chart"><div class="perf-header"><span>NETWORK</span><span style="color:var(--accent-red)">60%</span></div><div class="perf-line" style="border-color:var(--accent-red)"></div></div>
-                                <div class="perf-chart"><div class="perf-header"><span>DISK</span><span>75%</span></div><div class="perf-line"></div></div>
-                            </div>
-                        </div>
-
-                        <!-- Server Map -->
-                        <div class="panel p-map">
-                            <div class="panel-header">SERVER MAP</div>
-                            <div style="width:100%; height:calc(100% - 30px); background: radial-gradient(rgba(255,255,255,0.05) 2px, transparent 2px); background-size: 15px 15px; position:relative;">
-                                <!-- Map node placeholders -->
-                                <div style="position:absolute; top:30%; left:20%; width:10px; height:10px; background:var(--accent-red); border-radius:50%; box-shadow:0 0 15px var(--accent-red); animation:blink 2s infinite"></div>
-                                <div style="position:absolute; top:50%; left:60%; width:8px; height:8px; background:var(--border-neon); border-radius:50%; box-shadow:0 0 10px var(--border-neon);"></div>
-                                <div style="position:absolute; top:40%; left:80%; width:8px; height:8px; background:var(--border-neon); border-radius:50%; box-shadow:0 0 10px var(--border-neon);"></div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- USERS VIEW -->
-                <div id="users-view" class="view-section">
-                    <div class="table-panel">
-                        <div class="table-header">
-                            <h2><i class="fa-solid fa-users-viewfinder" style="margin-right:10px; color:var(--border-neon)"></i> User Database Core</h2>
-                            <button class="icon-btn" onclick="loadUsers()"><i class="fa-solid fa-rotate-right"></i></button>
-                        </div>
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID HASH</th>
-                                        <th>IDENTITY NAME</th>
-                                        <th>CLEARANCE EMAIL</th>
-                                        <th>SECURITY PIN</th>
-                                        <th>REGISTRATION SYNC</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="user-table-body">
-                                    <!-- Populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-            </main>
-        </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
     </div>
 
     <!-- Firebase SDK -->
@@ -526,27 +545,22 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Check Auth
+        // Enforce Admin Access
         auth.onAuthStateChanged(user => {
-            if (user && user.email === 'official.vani.xai76@gmail.com') {
-                document.getElementById('loading-overlay').style.display = 'none';
-                document.getElementById('admin-content').style.display = 'flex';
-                loadUsers();
-            } else if (user) {
-                window.location.href = '/?launch=true';
+            if (user) {
+                if (user.email === 'official.vani.xai76@gmail.com') {
+                    // Access Granted
+                    document.getElementById('admin-content').style.display = 'block';
+                    loadUsers();
+                } else {
+                    // Intruder
+                    alert("SECURITY BREACH: Unauthorized access detected. Redirecting.");
+                    window.location.href = '/?launch=true';
+                }
             } else {
                 window.location.href = '/auth-vani-xai.html';
             }
         });
-
-        // Tab Switcher
-        function switchTab(tabId, el) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-        }
 
         // Sci-Fi Text Scramble Effect
         class TextScramble {
@@ -583,7 +597,7 @@
                         output += to;
                     } else if (this.frame >= start) {
                         if (!char || Math.random() < 0.28) {
-                            char = this.chars[Math.floor(Math.random() * this.chars.length)];
+                            char = this.randomChar();
                             this.queue[i].char = char;
                         }
                         output += `<span class="scramble-char">${char}</span>`;
@@ -599,71 +613,75 @@
                     this.frame++;
                 }
             }
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
         }
 
-        // Load Users
+        // Load Users from Firestore
         async function loadUsers() {
             try {
+                const snapshot = await firebase.firestore().collection('users').orderBy('createdAt', 'desc').get();
                 const tbody = document.getElementById('user-table-body');
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; color:var(--border-neon);"><i class="fa-solid fa-circle-notch fa-spin"></i> DECRYPTING...</td></tr>';
-                
-                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
                 tbody.innerHTML = '';
                 
-                // Update stats
-                const dashUserCount = document.getElementById('dash-user-count');
-                const countFx = new TextScramble(dashUserCount);
-                countFx.setText(snapshot.docs.length);
+                const countBadge = document.getElementById('user-count');
+                const fx = new TextScramble(countBadge);
+                fx.setText(snapshot.docs.length + " ACTIVE");
 
                 let delay = 0;
-                let userIndex = 0;
-
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const dateStr = data.createdAt ? data.createdAt.toDate().toLocaleDateString() + ' ' + data.createdAt.toDate().toLocaleTimeString() : 'Unknown';
                     const tr = document.createElement('tr');
-                    
+                    tr.className = 'row-jitter';
+                    tr.style.animationDelay = `${delay}s`;
+                    delay += 0.15; // Stagger effect
+
                     const safeName = (data.name || 'N/A').replace(/"/g, '&quot;');
                     const safeEmail = (data.email || 'N/A').replace(/"/g, '&quot;');
                     const safePin = (data.pin ? String(data.pin) : 'NOT SET').replace(/"/g, '&quot;');
 
                     tr.innerHTML = `
-                        <td style="font-family:var(--font-mono); color:var(--text-muted);" class="scramble-target" data-text="${doc.id}">Loading...</td>
-                        <td style="color:#fff;" class="scramble-target" data-text="${safeName}">Loading...</td>
-                        <td class="scramble-target" data-text="${safeEmail}">Loading...</td>
-                        <td style="color:var(--border-neon); font-family:var(--font-mono)" class="scramble-target" data-text="${safePin}">***</td>
-                        <td style="font-size:0.8rem;" class="scramble-target" data-text="${dateStr}">Loading...</td>
+                        <td style="font-size:0.75rem; color:#64748b;" class="scramble-target" data-text="${doc.id}">Loading...</td>
+                        <td class="name-cell scramble-target" data-text="${safeName}">Loading...</td>
+                        <td class="email-cell scramble-target" data-text="${safeEmail}">Loading...</td>
+                        <td class="pin-cell scramble-target" style="color:var(--saffron)" data-text="${safePin}">***</td>
+                        <td style="font-size:0.8rem; color:#94a3b8;" class="scramble-target" data-text="${dateStr}">Loading...</td>
                     `;
                     tbody.appendChild(tr);
 
-                    // Scramble row text
+                    // Scramble text animation for each cell
                     setTimeout(() => {
                         tr.querySelectorAll('.scramble-target').forEach(el => {
                             const targetText = el.getAttribute('data-text');
-                            new TextScramble(el).setText(targetText);
+                            const scrambler = new TextScramble(el);
+                            scrambler.setText(targetText);
                         });
-                    }, delay * 1000 + 300);
-                    
-                    delay += 0.1;
-
-                    // Dynamically populate "Recent Activities" with first 3 users
-                    if (userIndex < 3) {
-                        const timeStr = data.createdAt ? data.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Unknown';
-                        const activityFeed = document.getElementById('activity-feed');
-                        if (userIndex === 0) activityFeed.innerHTML = ''; // clear mock on first valid entry
-                        
-                        const actEl = document.createElement('div');
-                        actEl.className = 'activity-item';
-                        actEl.innerHTML = `<span class="act-time">${timeStr}</span><span class="act-desc">New User Registered: <strong style="color:var(--border-neon)">${safeName}</strong></span><div class="act-dot" style="background:var(--border-neon)"></div>`;
-                        activityFeed.prepend(actEl);
-                    }
-                    userIndex++;
+                    }, delay * 1000 + 500); // Wait for row fade in + offset
                 });
             } catch (err) {
-                console.error(err);
-                document.getElementById('user-table-body').innerHTML = `<tr><td colspan="5" style="color:var(--accent-red); text-align:center;"><strong>Database Error:</strong> ${err.message}</td></tr>`;
+                console.error("Error loading users:", err);
+                const countBadge = document.getElementById('user-count');
+                countBadge.textContent = "Error";
+                const tbody = document.getElementById('user-table-body');
+                tbody.innerHTML = `<tr><td colspan="5" style="color:red; text-align:center;"><strong>Database Error:</strong> ${err.message}</td></tr>`;
             }
         }
+
+        // Generate Particles
+        function generateParticles() {
+            const container = document.getElementById('particles-container');
+            for(let i = 0; i < 35; i++) {
+                let p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(p);
+            }
+        }
+        generateParticles();
     </script>
 </body>
 </html>
