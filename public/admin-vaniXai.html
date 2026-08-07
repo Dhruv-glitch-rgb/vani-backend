@@ -30,95 +30,57 @@
             position: relative;
         }
 
-        /* --- Holographic Background --- */
-        .ambient-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+        /* --- Advanced Futuristic Animations --- */
+        
+        /* 1. Hexagon Matrix Background */
+        .hex-grid {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: 
-                linear-gradient(rgba(234, 88, 12, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(22, 163, 74, 0.08) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: 0;
-            pointer-events: none;
-            animation: gridPulse 4s ease-in-out infinite alternate, moveGrid 30s linear infinite;
+                radial-gradient(circle at center, transparent 0%, var(--bg-deep) 70%),
+                url('data:image/svg+xml;utf8,<svg width="40" height="69.2820323" xmlns="http://www.w3.org/2000/svg"><path d="M40 17.3205081L20 5.77350269 0 17.3205081V40.4145188L20 51.9615242 40 40.4145188V17.3205081z" stroke="rgba(30, 58, 138, 0.05)" fill="none" stroke-width="1"/></svg>');
+            background-size: cover, 60px 103.923px;
+            z-index: 0; pointer-events: none;
+            animation: panHex 40s linear infinite;
         }
 
-        @keyframes moveGrid {
-            0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(25px) scale(1.02); }
-            100% { transform: translateY(50px) scale(1); }
-        }
-        @keyframes gridPulse {
-            0% { opacity: 0.6; }
-            100% { opacity: 1; }
+        @keyframes panHex {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 0 0, 60px 103.923px; }
         }
 
-        .ashoka-chakra-bg {
+        /* 2. Interactive Mouse Glow (Controlled by JS) */
+        .mouse-glow {
             position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80vh; height: 80vh;
-            border: 2px dashed rgba(30, 58, 138, 0.15);
+            width: 600px; height: 600px;
             border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
-            animation: slowSpin 20s linear infinite;
-            box-shadow: 0 0 100px rgba(234, 88, 12, 0.08) inset, 0 0 100px rgba(22, 163, 74, 0.08) inset;
-        }
-        .ashoka-chakra-bg::before {
-            content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-            border: 1px solid rgba(30, 58, 138, 0.05); border-radius: 50%;
-            animation: slowSpin 30s linear infinite reverse;
-        }
-        .ashoka-chakra-bg::after {
-            content: "☸";
-            position: absolute;
-            top: 50%; left: 50%;
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.08) 0%, transparent 60%);
             transform: translate(-50%, -50%);
-            font-size: 60vh;
-            color: rgba(30, 58, 138, 0.05);
-            text-shadow: 0 0 40px rgba(30, 58, 138, 0.15);
+            pointer-events: none;
+            z-index: 1;
+            transition: width 0.3s, height 0.3s;
         }
 
-        @keyframes slowSpin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-
-        .glow-saffron {
-            position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vw;
-            background: radial-gradient(circle, rgba(234, 88, 12, 0.15) 0%, transparent 60%);
-            z-index: 0; filter: blur(60px);
-            animation: pulseGlow 4s ease-in-out infinite alternate, floatOrb 10s ease-in-out infinite;
-        }
-        .glow-green {
-            position: fixed; bottom: -10%; right: -10%; width: 50vw; height: 50vw;
-            background: radial-gradient(circle, rgba(22, 163, 74, 0.15) 0%, transparent 60%);
-            z-index: 0; filter: blur(60px);
-            animation: pulseGlow 5s ease-in-out infinite alternate-reverse, floatOrb 12s ease-in-out infinite reverse;
-        }
-
-        @keyframes pulseGlow {
-            0% { opacity: 0.4; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1.1); }
-        }
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(30px, -30px); }
-            100% { transform: translate(0, 0); }
-        }
-
-        /* --- Floating Particles --- */
-        .particle {
+        /* 3. Cybernetic Data Scan Line */
+        .cyber-scan {
             position: fixed;
-            background: rgba(30, 58, 138, 0.3);
-            width: 3px; height: 3px;
-            border-radius: 50%;
+            top: -10vh; left: 0; width: 100vw; height: 5px;
+            background: linear-gradient(90deg, transparent, var(--saffron), var(--india-green), transparent);
+            box-shadow: 0 0 20px var(--saffron), 0 0 40px var(--india-green);
+            z-index: 9999;
             pointer-events: none;
-            animation: floatUp 8s linear infinite;
+            opacity: 0.6;
+            animation: radarSweep 6s cubic-bezier(0.8, 0, 0.2, 1) infinite;
         }
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            20% { opacity: 1; transform: translateY(80vh) scale(1); }
-            80% { opacity: 1; transform: translateY(20vh) scale(1); }
-            100% { transform: translateY(-10vh) scale(0); opacity: 0; }
+        .cyber-scan::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 200px;
+            background: linear-gradient(to bottom, rgba(30, 58, 138, 0.05), transparent);
+        }
+
+        @keyframes radarSweep {
+            0% { top: -10vh; opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { top: 110vh; opacity: 0; }
         }
 
         /* --- Layout & Core --- */
@@ -367,12 +329,13 @@
 
         tr {
             opacity: 0;
-            animation: rowFadeIn 0.5s ease-out forwards;
+            transform-origin: top center;
+            animation: rowFlipIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        @keyframes rowFadeIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+        @keyframes rowFlipIn {
+            0% { opacity: 0; transform: perspective(1000px) rotateX(-90deg) translateY(-20px); }
+            100% { opacity: 1; transform: perspective(1000px) rotateX(0deg) translateY(0); }
         }
 
         tr:hover td {
@@ -478,20 +441,19 @@
     </style>
 </head>
 <body>
-
-    <div class="ambient-grid"></div>
-    <div class="glow-saffron"></div>
-    <div class="glow-green"></div>
-    <div class="ashoka-chakra-bg"></div>
-    <div id="particles-container"></div>
+    
+    <!-- Advanced Animations -->
+    <div class="hex-grid"></div>
+    <div class="mouse-glow" id="cursorGlow"></div>
+    <div class="cyber-scan"></div>
 
     <div class="admin-layout" style="display:none;" id="admin-content">
         <header class="admin-header">
             <div class="header-title">
                 <img src="vani_logo.jpg" alt="Logo">
-                <h1 class="glitch-hover">Bharat Core Command</h1>
+                <h1>Bharat Core Command</h1>
             </div>
-            <button class="btn-back glitch-hover" onclick="window.location.href='/?launch=true'">
+            <button class="btn-back" onclick="window.location.href='/?launch=true'">
                 <i class="fa-solid fa-satellite-dish"></i> Return to Console
             </button>
         </header>
@@ -544,6 +506,15 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+
+        // Advanced Mouse Tracking Glow
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.getElementById('cursorGlow');
+            if(glow) {
+                glow.style.left = e.clientX + 'px';
+                glow.style.top = e.clientY + 'px';
+            }
+        });
 
         // Enforce Admin Access
         auth.onAuthStateChanged(user => {
@@ -668,20 +639,6 @@
                 tbody.innerHTML = `<tr><td colspan="5" style="color:red; text-align:center;"><strong>Database Error:</strong> ${err.message}</td></tr>`;
             }
         }
-
-        // Generate Particles
-        function generateParticles() {
-            const container = document.getElementById('particles-container');
-            for(let i = 0; i < 35; i++) {
-                let p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + 'vw';
-                p.style.animationDuration = (Math.random() * 4 + 4) + 's';
-                p.style.animationDelay = (Math.random() * 5) + 's';
-                container.appendChild(p);
-            }
-        }
-        generateParticles();
     </script>
 </body>
 </html>
