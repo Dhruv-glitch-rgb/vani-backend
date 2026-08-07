@@ -570,7 +570,8 @@
                 this.update = this.update.bind(this);
             }
             setText(newText) {
-                const oldText = this.el.innerText;
+                const oldText = String(this.el.innerText || this.el.textContent || '');
+                newText = String(newText || '');
                 const length = Math.max(oldText.length, newText.length);
                 const promise = new Promise((resolve) => this.resolve = resolve);
                 this.queue = [];
@@ -637,11 +638,15 @@
                     tr.style.animationDelay = `${delay}s`;
                     delay += 0.15; // Stagger effect
 
+                    const safeName = (data.name || 'N/A').replace(/"/g, '&quot;');
+                    const safeEmail = (data.email || 'N/A').replace(/"/g, '&quot;');
+                    const safePin = (data.pin ? String(data.pin) : 'NOT SET').replace(/"/g, '&quot;');
+
                     tr.innerHTML = `
                         <td style="font-size:0.75rem; color:#64748b;" class="scramble-target" data-text="${doc.id}">Loading...</td>
-                        <td class="name-cell scramble-target" data-text="${data.name || 'N/A'}">Loading...</td>
-                        <td class="email-cell scramble-target" data-text="${data.email || 'N/A'}">Loading...</td>
-                        <td class="pin-cell scramble-target" style="color:var(--saffron)" data-text="${data.pin ? data.pin : 'NOT SET'}">***</td>
+                        <td class="name-cell scramble-target" data-text="${safeName}">Loading...</td>
+                        <td class="email-cell scramble-target" data-text="${safeEmail}">Loading...</td>
+                        <td class="pin-cell scramble-target" style="color:var(--saffron)" data-text="${safePin}">***</td>
                         <td style="font-size:0.8rem; color:#94a3b8;" class="scramble-target" data-text="${dateStr}">Loading...</td>
                     `;
                     tbody.appendChild(tr);
