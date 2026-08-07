@@ -6,28 +6,21 @@
     <title>Initializing V.A.N.I-xAI Core...</title>
     <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --accent-cyan: #06b6d4;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg: #030613;
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ea;
+            --neon-green: #39ff14;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -36,221 +29,219 @@
             position: relative;
         }
 
-        /* Animated Grid Background */
-        .cyber-grid {
+        /* Particle Canvas Background */
+        #particle-canvas {
             position: absolute;
-            width: 200vw;
-            height: 200vh;
-            background-image: 
-                linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
-            background-size: 40px 40px;
-            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-            animation: gridMove 20s linear infinite;
-            z-index: 0;
-            opacity: 0.4;
-        }
-
-        @keyframes gridMove {
-            0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
-            100% { transform: perspective(500px) rotateX(60deg) translateY(40px) translateZ(-200px); }
-        }
-
-        /* Ambient Glows */
-        .ambient-glow {
-            position: absolute;
-            width: 40vw;
-            height: 40vw;
-            border-radius: 50%;
-            filter: blur(100px);
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1;
-            opacity: 0.3;
-            animation: pulseGlow 4s ease-in-out infinite alternate;
-        }
-        .glow-1 { top: -10%; left: -10%; background: var(--accent-cyan); }
-        .glow-2 { bottom: -10%; right: -10%; background: var(--accent-purple); }
-
-        @keyframes pulseGlow {
-            0% { opacity: 0.2; transform: scale(1); }
-            100% { opacity: 0.4; transform: scale(1.1); }
         }
 
-        /* Glassmorphism Card */
-        .splash-card {
+        /* HUD Overlay */
+        .hud-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Glitch effect on corners */
+        .hud-corner {
+            position: absolute; width: 50px; height: 50px;
+            border: 2px solid var(--neon-blue);
+            z-index: 5;
+            opacity: 0.7;
+        }
+        .tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+        /* Main Container */
+        .splash-core {
             position: relative;
             z-index: 10;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 50px;
-            text-align: center;
             width: 90%;
-            max-width: 500px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(6, 182, 212, 0.2);
-            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            max-width: 600px;
+            background: rgba(3, 6, 19, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.1) inset;
+            padding: 40px;
+            border-radius: 4px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
         }
 
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(40px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Logo Animation */
-        .logo-container {
+        /* Logo Area */
+        .core-logo-wrapper {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             margin: 0 auto 30px;
         }
 
-        .vani-logo {
-            width: 100%;
-            height: 100%;
+        .core-logo {
+            width: 100%; height: 100%;
             border-radius: 50%;
+            border: 2px solid var(--neon-blue);
             object-fit: cover;
             position: relative;
-            z-index: 2;
-            border: 2px solid var(--accent-cyan);
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
-            animation: floatLogo 3s ease-in-out infinite;
+            z-index: 5;
+            box-shadow: 0 0 30px var(--neon-blue);
         }
 
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* Scanning Ring */
-        .scanner-ring {
+        /* Orbiting Rings */
+        .orbit-ring {
             position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            border: 2px solid transparent;
-            border-top-color: var(--accent-cyan);
-            border-bottom-color: var(--accent-purple);
+            top: -20px; left: -20px; right: -20px; bottom: -20px;
             border-radius: 50%;
-            z-index: 1;
-            animation: spinRing 2s linear infinite;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--neon-pink);
+            border-bottom: 2px solid var(--neon-blue);
+            animation: spin 3s linear infinite;
+        }
+        .orbit-ring:nth-child(2) {
+            top: -35px; left: -35px; right: -35px; bottom: -35px;
+            border-top: 2px solid var(--neon-green);
+            border-bottom: 2px solid transparent;
+            animation: spin 5s linear infinite reverse;
         }
 
-        @keyframes spinRing {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* User Identity Section */
-        .user-identity {
+        /* User Profile */
+        .auth-profile {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            gap: 20px;
             margin-bottom: 30px;
             opacity: 0;
-            animation: fadeIn 1s ease 1s forwards;
+            animation: fadeIn 1s 1.5s forwards;
         }
 
-        .user-avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
+        .auth-avatar {
+            width: 60px; height: 60px;
+            border-radius: 4px;
+            border: 1px solid var(--neon-blue);
             object-fit: cover;
-            border: 2px solid var(--text-muted);
-            background: var(--bg-color);
+            filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.5));
         }
 
-        .welcome-text {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
+        .auth-details {
+            text-align: left;
+        }
+
+        .auth-title {
+            font-size: 0.8rem;
+            color: var(--neon-pink);
             text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .user-name {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .auth-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-blue);
         }
 
-        /* Progress Bar */
-        .progress-container {
+        /* Progress System */
+        .loading-system {
+            margin-top: 30px;
+        }
+
+        .progress-track {
             width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 15px;
+            height: 15px;
+            background: #000;
+            border: 1px solid rgba(0, 243, 255, 0.5);
+            padding: 2px;
             position: relative;
+            overflow: hidden;
         }
 
-        .progress-bar {
+        .progress-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-            border-radius: 10px;
-            box-shadow: 0 0 10px var(--accent-cyan);
+            background: var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
             transition: width 0.1s linear;
         }
 
-        /* Terminal Loading Text */
-        .terminal-text {
-            font-family: 'Fira Code', monospace;
+        .progress-scan {
+            position: absolute;
+            top: 0; left: 0; height: 100%; width: 20px;
+            background: #fff;
+            opacity: 0.5;
+            filter: blur(5px);
+            animation: scanBar 1.5s linear infinite;
+        }
+
+        @keyframes scanBar {
+            0% { left: -20px; }
+            100% { left: 100%; }
+        }
+
+        /* Terminal output */
+        .terminal-log {
+            margin-top: 15px;
             font-size: 0.9rem;
-            color: var(--accent-cyan);
+            color: var(--neon-green);
+            text-align: left;
             height: 20px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 15px;
-            background: var(--accent-cyan);
-            animation: blink 1s step-end infinite;
-            vertical-align: middle;
-            margin-left: 5px;
+        .terminal-percent {
+            color: var(--neon-pink);
+            font-weight: bold;
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+        @keyframes fadeIn { to { opacity: 1; } }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
     </style>
 </head>
 <body>
+    <!-- Particle Background -->
+    <canvas id="particle-canvas"></canvas>
 
-    <div class="cyber-grid"></div>
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
+    <!-- HUD Overlay -->
+    <div class="hud-overlay"></div>
+    <div class="hud-corner tl"></div>
+    <div class="hud-corner tr"></div>
+    <div class="hud-corner bl"></div>
+    <div class="hud-corner br"></div>
 
-    <div class="splash-card">
-        <div class="logo-container">
-            <div class="scanner-ring"></div>
-            <img src="vani_icon.png" alt="V.A.N.I-xAI" class="vani-logo">
+    <div class="splash-core">
+        <div class="core-logo-wrapper">
+            <div class="orbit-ring"></div>
+            <div class="orbit-ring"></div>
+            <img src="vani_icon.png" class="core-logo" alt="V.A.N.I-xAI">
         </div>
 
-        <div class="user-identity">
-            <img src="https://ui-avatars.com/api/?name=User&background=0b0f19&color=06b6d4" alt="User" class="user-avatar" id="user-avatar">
-            <div>
-                <div class="welcome-text">Authenticating Commander</div>
-                <div class="user-name" id="user-name">Loading...</div>
+        <div class="auth-profile">
+            <img src="" id="user-avatar" class="auth-avatar" style="display:none;">
+            <div class="auth-details">
+                <div class="auth-title">Authorized Personnel</div>
+                <div class="auth-name" id="user-name">ACCESSING...</div>
             </div>
         </div>
 
-        <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-        
-        <div class="terminal-text">
-            <span id="loading-status">Establishing secure connection</span><span class="cursor"></span>
+        <div class="loading-system">
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-bar"></div>
+                <div class="progress-scan"></div>
+            </div>
+            <div class="terminal-log">
+                <span id="loading-status">Establishing Secure Connection...</span>
+                <span class="terminal-percent" id="loading-percent">0%</span>
+            </div>
         </div>
     </div>
 
@@ -258,75 +249,128 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script>
-        // Initialize Firebase
+        /* --- Particle System Background --- */
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<100; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2 + 1,
+                    speedY: Math.random() * 2 - 1,
+                    speedX: Math.random() * 2 - 1,
+                    color: Math.random() > 0.5 ? '#00f3ff' : '#ff00ea'
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.globalCompositeOperation = 'lighter';
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if(p.x < 0) p.x = width;
+                if(p.x > width) p.x = 0;
+                if(p.y < 0) p.y = height;
+                if(p.y > height) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        initCanvas();
+        animateParticles();
+        window.addEventListener('resize', initCanvas);
+
+        /* --- Hacker Text Decoder Effect --- */
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+        function decodeText(element, finalString) {
+            let iterations = 0;
+            const interval = setInterval(() => {
+                element.innerText = finalString.split('').map((letter, index) => {
+                    if (index < iterations) return finalString[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                if (iterations >= finalString.length) clearInterval(interval);
+                iterations += 1/3;
+            }, 30);
+        }
+
+        /* --- Firebase & Loading Logic --- */
         const firebaseConfig = {
             apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
             authDomain: "vani-nzdrsr.firebaseapp.com",
             projectId: "vani-nzdrsr",
             storageBucket: "vani-nzdrsr.firebasestorage.app",
             messagingSenderId: "908306821780",
-            appId: "1:908306821780:web:02e878153145968d113a81",
-            measurementId: "G-RJB5892YTQ"
+            appId: "1:908306821780:web:02e878153145968d113a81"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // UI Elements
         const userNameEl = document.getElementById('user-name');
         const userAvatarEl = document.getElementById('user-avatar');
         const progressBar = document.getElementById('progress-bar');
         const statusText = document.getElementById('loading-status');
+        const percentText = document.getElementById('loading-percent');
 
-        // Status messages sequence
-        const statuses = [
-            "Establishing secure connection",
-            "Verifying biometrics and credentials",
-            "Syncing neural networks",
-            "Loading Windows Automation drivers",
-            "Connecting to ADB bridge",
-            "Initializing OpenRouter AI Engine",
-            "Finalizing V.A.N.I-xAI Core"
+        const logs = [
+            "Bypassing mainframe security protocols",
+            "Syncing quantum neural network nodes",
+            "Decrypting Commander biometric hash",
+            "Initializing PyAutoGUI automation core",
+            "Mounting ADB shell bridge connection",
+            "Allocating OpenRouter API subroutines",
+            "Calibrating visual recognition modules",
+            "System Online. Granting Access."
         ];
 
-        // Random duration between 8000ms (8s) and 10000ms (10s)
-        const totalDuration = Math.floor(Math.random() * 2000) + 8000;
-        const intervalTime = 50; // update every 50ms
-        const steps = totalDuration / intervalTime;
+        // Random duration between 8000ms and 10000ms
+        const duration = Math.floor(Math.random() * 2000) + 8000;
+        const tick = 50;
+        const totalSteps = duration / tick;
         let currentStep = 0;
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Fetch User Details
+                // Fetch Identity
                 const name = user.displayName || user.email.split('@')[0];
-                const photo = user.photoURL || `https://ui-avatars.com/api/?name=${name}&background=0b0f19&color=06b6d4`;
+                const photo = user.photoURL || `https://ui-avatars.com/api/?name=${name}&background=030613&color=00f3ff&rounded=true`;
                 
-                userNameEl.textContent = name;
-                userAvatarEl.src = photo;
+                setTimeout(() => {
+                    userAvatarEl.src = photo;
+                    userAvatarEl.style.display = 'block';
+                    decodeText(userNameEl, name.toUpperCase());
+                }, 1500);
 
-                // Start Progress Animation
-                const progressInterval = setInterval(() => {
+                // Progress Bar
+                const interval = setInterval(() => {
                     currentStep++;
-                    const percent = (currentStep / steps) * 100;
+                    const percent = Math.floor((currentStep / totalSteps) * 100);
                     progressBar.style.width = `${percent}%`;
+                    percentText.innerText = `${percent}%`;
 
-                    // Update Status Text based on progress
-                    const statusIndex = Math.min(
-                        Math.floor((percent / 100) * statuses.length), 
-                        statuses.length - 1
-                    );
-                    statusText.textContent = statuses[statusIndex] + "...";
+                    const logIndex = Math.min(Math.floor((percent / 100) * logs.length), logs.length - 1);
+                    if(percent < 100) statusText.innerText = logs[logIndex] + "...";
+                    else statusText.innerText = "ACCESS GRANTED";
 
-                    if (currentStep >= steps) {
-                        clearInterval(progressInterval);
-                        statusText.textContent = "System Ready. Launching...";
-                        setTimeout(() => {
-                            window.location.href = '/?launch=true';
-                        }, 500);
+                    if (currentStep >= totalSteps) {
+                        clearInterval(interval);
+                        setTimeout(() => window.location.href = '/?launch=true', 500);
                     }
-                }, intervalTime);
+                }, tick);
 
             } else {
-                // Not logged in, shouldn't be here
                 window.location.href = '/auth-vani-xai.html';
             }
         });
