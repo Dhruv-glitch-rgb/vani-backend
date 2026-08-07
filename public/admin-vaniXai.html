@@ -30,58 +30,7 @@
             position: relative;
         }
 
-        /* --- Advanced Futuristic Animations --- */
-        
-        /* 1. Hexagon Matrix Background */
-        .hex-grid {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: 
-                radial-gradient(circle at center, transparent 0%, var(--bg-deep) 70%),
-                url('data:image/svg+xml;utf8,<svg width="40" height="69.2820323" xmlns="http://www.w3.org/2000/svg"><path d="M40 17.3205081L20 5.77350269 0 17.3205081V40.4145188L20 51.9615242 40 40.4145188V17.3205081z" stroke="rgba(30, 58, 138, 0.05)" fill="none" stroke-width="1"/></svg>');
-            background-size: cover, 60px 103.923px;
-            z-index: 0; pointer-events: none;
-            animation: panHex 40s linear infinite;
-        }
 
-        @keyframes panHex {
-            0% { background-position: 0 0, 0 0; }
-            100% { background-position: 0 0, 60px 103.923px; }
-        }
-
-        /* 2. Interactive Mouse Glow (Controlled by JS) */
-        .mouse-glow {
-            position: fixed;
-            width: 600px; height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(234, 88, 12, 0.08) 0%, transparent 60%);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 1;
-            transition: width 0.3s, height 0.3s;
-        }
-
-        /* 3. Cybernetic Data Scan Line */
-        .cyber-scan {
-            position: fixed;
-            top: -10vh; left: 0; width: 100vw; height: 5px;
-            background: linear-gradient(90deg, transparent, var(--saffron), var(--india-green), transparent);
-            box-shadow: 0 0 20px var(--saffron), 0 0 40px var(--india-green);
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0.6;
-            animation: radarSweep 6s cubic-bezier(0.8, 0, 0.2, 1) infinite;
-        }
-        .cyber-scan::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 200px;
-            background: linear-gradient(to bottom, rgba(30, 58, 138, 0.05), transparent);
-        }
-
-        @keyframes radarSweep {
-            0% { top: -10vh; opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { top: 110vh; opacity: 0; }
-        }
 
         /* --- Layout & Core --- */
         .admin-layout {
@@ -322,30 +271,12 @@
             border-left: 3px solid transparent; 
             border-radius: 12px 0 0 12px; 
         }
-        td:last-child { 
-            border-right: 1px solid rgba(255,255,255,0.8); 
-            border-radius: 0 12px 12px 0; 
-        }
-
-        tr {
-            opacity: 0;
-            transform-origin: top center;
-            animation: rowFlipIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        @keyframes rowFlipIn {
-            0% { opacity: 0; transform: perspective(1000px) rotateX(-90deg) translateY(-20px); }
-            100% { opacity: 1; transform: perspective(1000px) rotateX(0deg) translateY(0); }
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 1rem;
         }
 
         tr:hover td {
             background: rgba(255, 255, 255, 0.95);
-            transform: scale(1.02);
-            box-shadow: 0 15px 30px rgba(30, 58, 138, 0.1);
-            z-index: 10;
-        }
-        tr:hover td:first-child {
-            border-left: 3px solid var(--saffron);
         }
 
         .pin-cell {
@@ -354,11 +285,6 @@
             font-size: 1.2rem;
             color: var(--saffron);
             letter-spacing: 6px;
-            background: rgba(234, 88, 12, 0.05);
-            padding: 5px 15px;
-            border-radius: 8px;
-            border: 1px dashed rgba(234, 88, 12, 0.2);
-            display: inline-block;
         }
         
         .name-cell {
@@ -442,10 +368,7 @@
 </head>
 <body>
     
-    <!-- Advanced Animations -->
-    <div class="hex-grid"></div>
-    <div class="mouse-glow" id="cursorGlow"></div>
-    <div class="cyber-scan"></div>
+
 
     <div class="admin-layout" style="display:none;" id="admin-content">
         <header class="admin-header">
@@ -507,14 +430,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Advanced Mouse Tracking Glow
-        document.addEventListener('mousemove', (e) => {
-            const glow = document.getElementById('cursorGlow');
-            if(glow) {
-                glow.style.left = e.clientX + 'px';
-                glow.style.top = e.clientY + 'px';
-            }
-        });
+
 
         // Enforce Admin Access
         auth.onAuthStateChanged(user => {
@@ -533,63 +449,8 @@
             }
         });
 
-        // Sci-Fi Text Scramble Effect
-        class TextScramble {
-            constructor(el) {
-                this.el = el;
-                this.chars = '!<>-_\\/[]{}—=+*^?#_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                this.update = this.update.bind(this);
-            }
-            setText(newText) {
-                const oldText = String(this.el.innerText || this.el.textContent || '');
-                newText = String(newText || '');
-                const length = Math.max(oldText.length, newText.length);
-                const promise = new Promise((resolve) => this.resolve = resolve);
-                this.queue = [];
-                for (let i = 0; i < length; i++) {
-                    const from = oldText[i] || '';
-                    const to = newText[i] || '';
-                    const start = Math.floor(Math.random() * 40);
-                    const end = start + Math.floor(Math.random() * 40);
-                    this.queue.push({ from, to, start, end });
-                }
-                cancelAnimationFrame(this.frameRequest);
-                this.frame = 0;
-                this.update();
-                return promise;
-            }
-            update() {
-                let output = '';
-                let complete = 0;
-                for (let i = 0, n = this.queue.length; i < n; i++) {
-                    let { from, to, start, end, char } = this.queue[i];
-                    if (this.frame >= end) {
-                        complete++;
-                        output += to;
-                    } else if (this.frame >= start) {
-                        if (!char || Math.random() < 0.28) {
-                            char = this.randomChar();
-                            this.queue[i].char = char;
-                        }
-                        output += `<span class="scramble-char">${char}</span>`;
-                    } else {
-                        output += from;
-                    }
-                }
-                this.el.innerHTML = output;
-                if (complete === this.queue.length) {
-                    this.resolve();
-                } else {
-                    this.frameRequest = requestAnimationFrame(this.update);
-                    this.frame++;
-                }
-            }
-            randomChar() {
-                return this.chars[Math.floor(Math.random() * this.chars.length)];
-            }
-        }
 
-        // Load Users from Firestore
+
         async function loadUsers() {
             try {
                 const snapshot = await firebase.firestore().collection('users').orderBy('createdAt', 'desc').get();
@@ -597,39 +458,25 @@
                 tbody.innerHTML = '';
                 
                 const countBadge = document.getElementById('user-count');
-                const fx = new TextScramble(countBadge);
-                fx.setText(snapshot.docs.length + " ACTIVE");
+                countBadge.textContent = snapshot.docs.length + " ACTIVE";
 
-                let delay = 0;
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const dateStr = data.createdAt ? data.createdAt.toDate().toLocaleDateString() + ' ' + data.createdAt.toDate().toLocaleTimeString() : 'Unknown';
                     const tr = document.createElement('tr');
-                    tr.className = 'row-jitter';
-                    tr.style.animationDelay = `${delay}s`;
-                    delay += 0.15; // Stagger effect
 
                     const safeName = (data.name || 'N/A').replace(/"/g, '&quot;');
                     const safeEmail = (data.email || 'N/A').replace(/"/g, '&quot;');
                     const safePin = (data.pin ? String(data.pin) : 'NOT SET').replace(/"/g, '&quot;');
 
                     tr.innerHTML = `
-                        <td style="font-size:0.75rem; color:#64748b;" class="scramble-target" data-text="${doc.id}">Loading...</td>
-                        <td class="name-cell scramble-target" data-text="${safeName}">Loading...</td>
-                        <td class="email-cell scramble-target" data-text="${safeEmail}">Loading...</td>
-                        <td class="pin-cell scramble-target" style="color:var(--saffron)" data-text="${safePin}">***</td>
-                        <td style="font-size:0.8rem; color:#94a3b8;" class="scramble-target" data-text="${dateStr}">Loading...</td>
+                        <td style="font-size:0.75rem; color:#64748b;">${doc.id}</td>
+                        <td class="name-cell">${safeName}</td>
+                        <td class="email-cell">${safeEmail}</td>
+                        <td class="pin-cell" style="color:var(--saffron)">${safePin}</td>
+                        <td style="font-size:0.8rem; color:#94a3b8;">${dateStr}</td>
                     `;
                     tbody.appendChild(tr);
-
-                    // Scramble text animation for each cell
-                    setTimeout(() => {
-                        tr.querySelectorAll('.scramble-target').forEach(el => {
-                            const targetText = el.getAttribute('data-text');
-                            const scrambler = new TextScramble(el);
-                            scrambler.setText(targetText);
-                        });
-                    }, delay * 1000 + 500); // Wait for row fade in + offset
                 });
             } catch (err) {
                 console.error("Error loading users:", err);
