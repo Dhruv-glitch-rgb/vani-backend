@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequently Asked Questions - V.A.N.I-xAI</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <div class="docs-page">
+        <!-- Landing Navbar -->
+        <nav class="landing-navbar">
+            <div class="landing-nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
+                <img src="./vani_icon.png" alt="V.A.N.I-xAI Icon">
+                <span>V.A.N.I-xAI</span>
+            </div>
+            <div class="landing-nav-actions">
+                <a href="/" class="nav-link-item">Home</a>
+                <a href="/faq" class="nav-link-item active">FAQs</a>
+                <a href="/about-founder" class="nav-link-item">Founder</a>
+                <a href="/about-developer" class="nav-link-item">Developer</a>
+            </div>
+        </nav>
+
+        <div class="docs-container animate-pop">
+            <h1 class="docs-title">Frequently Asked Questions</h1>
+            <p class="docs-date">Answers to common queries regarding system controls, mobile setups, and automated messaging.</p>
+
+            <div class="docs-content">
+                <section class="docs-section-block faq-item-box">
+                    <h3><i class="fa-solid fa-circle-question"></i> What exactly is V.A.N.I-xAI?</h3>
+                    <p>V.A.N.I-xAI (Vāṇī Adhyātmik Navīn Intellect) is a locally-run conversational interface companion. It allows you to use voice commands or typed text prompts to control your computer and mobile phone screens, automate calls, take screenshots, and send messages.</p>
+                </section>
+
+                <section class="docs-section-block faq-item-box">
+                    <h3><i class="fa-solid fa-circle-question"></i> Do I need a Google Gemini API Key to use it?</h3>
+                    <p>No, an API key is completely optional! Without an API key, V.A.N.I-xAI uses a local offline regex parser to map your direct commands. If you do paste a Gemini API Key in the settings, you can speak to V.A.N.I-xAI using flexible, conversational natural language.</p>
+                </section>
+
+                <section class="docs-section-block faq-item-box">
+                    <h3><i class="fa-solid fa-circle-question"></i> Why does the WhatsApp Desktop call trigger fail?</h3>
+                    <p>For WhatsApp calls to trigger on your computer, you **must** have the official **WhatsApp Desktop application** installed from the Windows Microsoft Store and be logged in. Browser-based WhatsApp Web does not support voice/video call protocols.</p>
+                </section>
+
+                <section class="docs-section-block faq-item-box">
+                    <h3><i class="fa-solid fa-circle-question"></i> My mobile commands say "XML matching failed". Why?</h3>
+                    <p>This happens if the phone screen is locked or if the WhatsApp chat screen takes too long to load due to network delays. Ensure your phone screen is unlocked (no passcode lock) when launching commands. The assistant now automatically wakes the display and retries scanning up to 3 times to find UI buttons before giving up.</p>
+                </section>
+
+                <section class="docs-section-block faq-item-box">
+                    <h3><i class="fa-solid fa-circle-question"></i> Where are screenshots saved?</h3>
+                    <p>Screenshots taken using "take screenshot" or "take mobile screenshot" are saved locally inside the `static/screenshots` folder of the project directory. They are rendered as previews inside your chat window for convenience.</p>
+                </section>
+            </div>
+
+            <button class="cta-btn docs-btn" onclick="window.location.href='/'">
+                <i class="fa-solid fa-arrow-left"></i> Back to Home
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <div class="footer-links">
+                <a href="/faq">FAQs</a> &bull; 
+                <a href="/privacy">Privacy Policy</a> &bull; 
+                <a href="/terms">Terms & Conditions</a> &bull; 
+                <a href="/about-founder">About the Founder</a> &bull; 
+                <a href="/about-developer">About the Developer</a> &bull; 
+                <a href="https://vani-xin.blogspot.com/" target="_blank" rel="noopener noreferrer">V.A.N.I-xAI Blog</a>
+            </div>
+            <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved.</p>
+            <p style="margin-top: 10px; font-weight: 700; color: var(--accent-green);">🇮🇳 Proudly Made in India</p>
+        </footer>
+    </div>
+
+</body>
+</html>

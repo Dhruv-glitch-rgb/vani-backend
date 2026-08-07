@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="a2k3hsJ7OMGBcqvaocR8ke0mnvEWpDVxs5WkqQogH04" />
+    <title>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <!-- Landing Page Screen -->
+    <div class="landing-page" id="landing-page">
+        <!-- Landing Navbar -->
+        <nav class="landing-navbar slide-up-fade">
+            <div class="landing-nav-logo" onclick="window.location.href='./index.html'" style="cursor: pointer;">
+                <img src="./vani_icon.png" class="pulse-icon" alt="V.A.N.I-xAI Icon">
+                <span>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</span>
+            </div>
+            <div class="landing-nav-actions">
+                <div class="nav-status">
+                    <span class="dot green pulse-dot"></span> System Live
+                </div>
+                <button class="nav-cta-btn animate-hover-scale"
+                    onclick="document.getElementById('launch-console-btn').click()">
+                    Console <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="landing-hero">
+            <div class="hero-text slide-up-fade delay-1">
+                <div class="hero-badge pulse-glow-badge"><i class="fa-solid fa-bolt"></i> Jarvis-Level AI Assistant
+                </div>
+                <h1 class="hero-title animate-gradient-text">V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</h1>
+                <p class="hero-desc">
+                    <strong>Purpose of the App:</strong> V.A.N.I-xAI is an advanced AI assistant designed to help you
+                    execute local scripts, control your Windows desktop, and run ADB commands on connected Android
+                    devices using voice and text commands. We require account authentication (via Google or Email) to
+                    securely save your API keys, preferences, and ensure only you can access your local computer
+                    controls through our service.
+                </p>
+                <div class="hero-ctas">
+                    <button class="cta-btn animate-hover-scale" id="launch-console-btn">
+                        <span>Launch Console</span> <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                    <a href="#features-section" class="secondary-btn">
+                        Explore Features <i class="fa-solid fa-arrow-down"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image-container slide-up-fade delay-2">
+                <div class="hero-card floating-card">
+                    <img src="./vani_logo.jpg" alt="V.A.N.I-xAI Logo">
+                </div>
+            </div>
+        </header>
+
+        <!-- Features Section -->
+        <section class="landing-section slide-up-fade delay-3" id="features-section">
+            <div class="section-header">
+                <div class="section-tag">Capabilities</div>
+                <h2>Unified Automation Capabilities</h2>
+                <p>Exposing advanced operations across desktop applications and mobile operating systems.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card animate-hover-card">
+                    <div class="icon-box blue animate-pulse"><i class="fa-solid fa-microphone-lines"></i></div>
+                    <div class="feature-info">
+                        <h3>Voice & Text Controls</h3>
+                        <p>Simulate operations hands-free via continuous Web Speech API voice synthesis or type direct
+                            text scripts in the prompt.</p>
+                    </div>
+                </div>
+                <div class="feature-card animate-hover-card">
+                    <div class="icon-box indigo animate-pulse"><i class="fa-solid fa-desktop"></i></div>
+                    <div class="feature-info">
+                        <h3>Windows OS Scripting</h3>
+                        <p>Instantly capture full-screen screenshots, lock your workstation, modify audio volumes, open
+                            URLs, and close processes.</p>
+                    </div>
+                </div>
+                <div class="feature-card animate-hover-card">
+                    <div class="icon-box orange animate-pulse"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <div class="feature-info">
+                        <h3>Android ADB Control</h3>
+                        <p>Trigger operations on mobile screens: run app packages, capture mobile screen, run key
+                            events, swipe display, and type text.</p>
+                    </div>
+                </div>
+                <div class="feature-card animate-hover-card">
+                    <div class="icon-box green animate-pulse"><i class="fa-brands fa-whatsapp"></i></div>
+                    <div class="feature-info">
+                        <h3>WhatsApp Call & Text</h3>
+                        <p>Launch WhatsApp chat interfaces and trigger automated voice/video calls or text messages on
+                            desktop and mobile.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Architecture Stepper -->
+        <section class="landing-section slide-up-fade delay-4">
+            <div class="section-header">
+                <div class="section-tag">How it Works</div>
+                <h2>Interactive Command Workflow</h2>
+                <p>Learn how V.A.N.I-xAI processes your prompt inputs and converts them into native OS calls:</p>
+            </div>
+            <div class="workflow-stepper">
+                <div class="step-card-visual animate-hover-card">
+                    <div class="step-icon-badge"><i class="fa-solid fa-microphone"></i></div>
+                    <div class="step-meta-num">Phase 01</div>
+                    <h4>Command Input</h4>
+                    <p>User voice transcripts are captured using Web Speech recognition, or direct instructions are
+                        entered in the input prompt.</p>
+                </div>
+                <div class="step-card-visual animate-hover-card">
+                    <div class="step-icon-badge"><i class="fa-solid fa-brain"></i></div>
+                    <div class="step-meta-num">Phase 02</div>
+                    <h4>Intent Parsing</h4>
+                    <p>The NLP parser queries the OpenRouter API (or runs local fallback regex schemas) to identify the
+                        target action and parameters.</p>
+                </div>
+                <div class="step-card-visual animate-hover-card">
+                    <div class="step-icon-badge"><i class="fa-solid fa-route"></i></div>
+                    <div class="step-meta-num">Phase 03</div>
+                    <h4>Platform Routing</h4>
+                    <p>Routing rules dispatch execution either to local desktop PyAutoGUI scripts or USB ADB shell
+                        commands on the mobile device.</p>
+                </div>
+                <div class="step-card-visual animate-hover-card">
+                    <div class="step-icon-badge"><i class="fa-solid fa-tv"></i></div>
+                    <div class="step-meta-num">Phase 04</div>
+                    <h4>Response & Preview</h4>
+                    <p>Execution logs and screenshot captures are pulled, parsed, and displayed dynamically in your live
+                        console chat window.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Integration Guide Section -->
+        <section class="landing-section gray-bg slide-up-fade">
+            <div>
+                <div class="section-header">
+                    <div class="section-tag">Setup</div>
+                    <h2>Android Connection Setup</h2>
+                    <p>V.A.N.I-xAI auto-configures Android platform tools. Connect your phone in three steps:</p>
+                </div>
+                <div class="setup-grid">
+                    <div class="setup-card animate-hover-card">
+                        <div class="step-num">01</div>
+                        <h3>USB Connection</h3>
+                        <p>Connect your Android phone to the computer using a high-quality USB cable.</p>
+                    </div>
+                    <div class="setup-card animate-hover-card">
+                        <div class="step-num">02</div>
+                        <h3>USB Debugging</h3>
+                        <p>Go to Settings > Developer Options on your phone, and enable the "USB Debugging" toggle.</p>
+                    </div>
+                    <div class="setup-card animate-hover-card">
+                        <div class="step-num">03</div>
+                        <h3>Authorize Keys</h3>
+                        <p>Accept the connection request dialog on your phone screen to authorize USB debugging keys.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack section -->
+        <section class="landing-section slide-up-fade">
+            <div class="section-header">
+                <div class="section-tag">System Stack</div>
+                <h2>Elite Core Engine</h2>
+                <p>Powering state-of-the-art automation and conversational synthesis.</p>
+            </div>
+            <div class="tech-stack-row">
+                <div class="tech-badge-card animate-hover-card"><i class="fa-brands fa-python text-blue-logo"></i>
+                    Python Engine</div>
+                <div class="tech-badge-card animate-hover-card"><i class="fa-solid fa-microphone text-indigo-logo"></i>
+                    Web Speech API</div>
+                <div class="tech-badge-card animate-hover-card"><i class="fa-solid fa-terminal text-orange-logo"></i>
+                    ADB Debugger</div>
+                <div class="tech-badge-card animate-hover-card"><i class="fa-solid fa-robot text-green-logo"></i>
+                    OpenRouter AI</div>
+                <div class="tech-badge-card animate-hover-card"><i class="fa-solid fa-gears text-purple-logo"></i>
+                    PyAutoGUI</div>
+            </div>
+        </section>
+
+        <footer class="landing-footer slide-up-fade">
+            <div class="footer-links">
+                <a href="/faq">FAQs</a> &bull;
+                <a href="/privacy">Privacy Policy</a> &bull;
+                <a href="/terms">Terms & Conditions</a> &bull;
+                <a href="/about-founder">About the Founder</a> &bull;
+                <a href="/about-developer">About the Developer</a> &bull;
+                <a href="https://vani-xin.blogspot.com/" target="_blank" rel="noopener noreferrer">V.A.N.I-xAI Blog</a>
+            </div>
+            <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved.</p>
+            <p style="margin-top: 10px; font-weight: 700; color: var(--accent-green);">🇮🇳 Proudly Made in India</p>
+        </footer>
+    </div>
+
+    <!-- Main Workspace Console Screen -->
+    <div class="app-container hidden" id="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <img src="./vani_icon.png" class="header-icon" alt="V.A.N.I-xAI Icon">
+                <h1>V.A.N.I-xAI <span>Console</span></h1>
+            </div>
+            <div class="status-indicators">
+                <div class="status-badge" id="server-status">
+                    <span class="dot green"></span> System Live
+                </div>
+                <div class="status-badge" id="adb-status">
+                    <span class="dot red" id="adb-dot"></span> <span id="adb-text">ADB Disconnected</span>
+                </div>
+                <button class="nav-cta-btn" id="btn-signout"
+                    style="background:#f43f5e; color:white; padding: 6px 12px; font-size: 0.8rem;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="app-workspace">
+            <!-- Left Side: Chat & Voice Command Interface -->
+            <section class="panel chat-panel">
+                <div class="panel-header">
+                    <i class="fa-solid fa-comments"></i> Command Console
+                </div>
+                <div class="chat-history" id="chat-history">
+                    <div class="message system">
+                        <div class="message-content">
+                            V.A.N.I-xAI initialized. I am ready to process your commands. Try typing
+                            <code>take screenshot</code>, <code>lock workstation</code>, or
+                            <code>whatsapp video call to 9555778474 on desktop</code>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Feedback Waveform -->
+                <div class="voice-feedback" id="voice-feedback">
+                    <div class="waveform" id="waveform">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    <p id="voice-status-text">Click the mic or speak "Hey Assistant" to start voice commands.</p>
+                </div>
+
+                <!-- Input Controls -->
+                <div class="input-controls">
+                    <button class="voice-btn" id="voice-btn" title="Toggle Voice Recognition">
+                        <i class="fa-solid fa-microphone" id="mic-icon"></i>
+                    </button>
+                    <input type="text" id="text-input"
+                        placeholder="Speak or type a command here (e.g. 'open youtube.com')..." autocomplete="off">
+                    <button class="send-btn" id="send-btn" title="Send Command">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Right Side: Control drawer & System Logs -->
+            <section class="panel control-panel">
+                <div class="panel-header">
+                    <i class="fa-solid fa-gears"></i> Control Center
+                </div>
+
+                <!-- API Configuration -->
+                <div class="control-group">
+                    <h3><i class="fa-solid fa-key"></i> OpenRouter API Configuration</h3>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <input type="password" id="api-key-input" placeholder="Enter OpenRouter API Key (Optional)">
+                    </div>
+                    <p class="help-text">Without an API Key, local semantic rules parse simple system controls offline.
+                    </p>
+                </div>
+
+                <!-- ADB Device Management -->
+                <div class="control-group">
+                    <div class="group-header">
+                        <h3><i class="fa-solid fa-mobile-screen-button"></i> Connected Devices</h3>
+                        <button class="icon-action-btn" id="refresh-adb" title="Scan for devices">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </button>
+                    </div>
+                    <div class="device-list" id="device-list">
+                        <div class="no-devices">No mobile devices detected. Check connection.</div>
+                    </div>
+                </div>
+
+
+
+                <!-- Command Reference Cheat Sheet -->
+                <div class="control-group reference-group">
+                    <h3><i class="fa-solid fa-circle-question"></i> V.A.N.I-xAI Action Center</h3>
+                    <div class="quick-commands-list">
+                        <div class="reference-section-title">Windows Controls</div>
+                        <div class="quick-cmd-item" onclick="useCommand('take screenshot')">
+                            <strong>Take Screenshot:</strong> <code>take screenshot</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('lock workstation')">
+                            <strong>Lock Workstation:</strong> <code>lock workstation</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('open youtube.com')">
+                            <strong>Open Website:</strong> <code>open youtube.com</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('volume up')">
+                            <strong>Volume Controls:</strong> <code>volume up</code> / <code>volume down</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('open notepad')">
+                            <strong>Open Desktop App:</strong> <code>open notepad</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('close notepad')">
+                            <strong>Close Desktop App:</strong> <code>close notepad</code>
+                        </div>
+
+                        <div class="reference-section-title">WhatsApp Controls</div>
+                        <div class="quick-cmd-item"
+                            onclick="useCommand('whatsapp video call to 9555778474 on desktop')">
+                            <strong>Desktop Call:</strong> <code>whatsapp video call to 9555778474 on desktop</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('whatsapp call to 9555778474 on desktop')">
+                            <strong>Desktop Voice Call:</strong> <code>whatsapp call to 9555778474 on desktop</code>
+                        </div>
+                        <div class="quick-cmd-item"
+                            onclick="useCommand('send whatsapp message to 9555778474 saying hello on desktop')">
+                            <strong>Desktop Message:</strong> <code>send whatsapp message saying hello on desktop</code>
+                        </div>
+
+                        <div class="reference-section-title">Android Controls</div>
+                        <div class="quick-cmd-item" onclick="useCommand('take mobile screenshot')">
+                            <strong>Capture Screenshot:</strong> <code>take mobile screenshot</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('press home on mobile')">
+                            <strong>Press Key events:</strong> <code>press home on mobile</code> /
+                            <code>press back</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('swipe up on mobile')">
+                            <strong>Swipe Gesture:</strong> <code>swipe up on mobile</code> / <code>swipe down</code>
+                        </div>
+                        <div class="quick-cmd-item" onclick="useCommand('type hello on mobile')">
+                            <strong>Type Text:</strong> <code>type hello on mobile</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Management -->
+                <div class="control-group">
+                    <h3><i class="fa-solid fa-user"></i> Account Session</h3>
+                    <button class="nav-cta-btn" id="btn-signout-large"
+                        style="background:#f43f5e; color:white; width: 100%; margin-top: 10px; padding: 12px; font-size: 1rem; display: flex; justify-content: center; align-items: center; gap: 8px; border-radius: 12px;">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out of V.A.N.I-xAI
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Firebase SDK (Modular v9 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81",
+            measurementId: "G-RJB5892YTQ"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+    </script>
+    <!-- Script -->
+    <script src="./main.js"></script>
+</body>
+
+</html>

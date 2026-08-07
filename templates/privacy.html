@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - V.A.N.I-xAI</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="docs-page">
+        <!-- Landing Navbar -->
+        <nav class="landing-navbar">
+            <div class="landing-nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
+                <img src="{{ url_for('static', filename='vani_icon.png') }}" alt="V.A.N.I-xAI Icon">
+                <span>V.A.N.I-xAI</span>
+            </div>
+            <div class="landing-nav-actions">
+                <a href="/" class="nav-link-item">Home</a>
+                <a href="/faq" class="nav-link-item">FAQs</a>
+                <a href="/about-founder" class="nav-link-item">Founder</a>
+                <a href="/about-developer" class="nav-link-item">Developer</a>
+            </div>
+        </nav>
+
+        <div class="docs-container animate-pop">
+            <h1 class="docs-title">Privacy Policy</h1>
+            <p class="docs-date">Last Updated: August 6, 2026</p>
+
+            <div class="docs-content">
+                <section class="docs-section-block">
+                    <h2>1. Data Collection & Privacy First</h2>
+                    <p>V.A.N.I-xAI is designed as a **locally-hosted** software application. It does not gather, store, or transmit your personal data, chat records, automation logs, phone numbers, or captured screen images to any external developer databases. All variables and logs remain completely on your local computer.</p>
+                </section>
+
+                <section class="docs-section-block">
+                    <h2>2. Local Logs & Screenshots</h2>
+                    <p>Logs printed to the terminal console are stored in volatile local buffers for live rendering in the UI. Taken screenshots (such as desktop captures or ADB mobile screen snapshots) are saved directly to your workspace `static/screenshots` directory. They are never sent to third-party endpoints and can be cleared manually at any time.</p>
+                </section>
+
+                <section class="docs-section-block">
+                    <h2>3. Third-Party APIs (Gemini API)</h2>
+                    <p>When you enter a custom Google Gemini API Key, queries that you type or speak are sent directly to Google's Generative AI API to parse intent parameters. The storage, security, and usage of that query text are subject to Google's Privacy Policies.</p>
+                </section>
+
+                <section class="docs-section-block">
+                    <h2>4. ADB & Android Debug Security</h2>
+                    <p>Android mobile integration operates entirely over a direct USB cable link using local ADB commands. You control which phone is authorized. No remote server or third-party connections are initiated during ADB shell operations.</p>
+                </section>
+
+                <section class="docs-section-block">
+                    <h2>5. Local Browser Storage</h2>
+                    <p>The web console preserves configuration values (such as your optional API key) in your browser's local sandbox storage (`localStorage`). This is sandboxed inside your local client browser and never uploaded anywhere.</p>
+                </section>
+            </div>
+
+            <button class="cta-btn docs-btn" onclick="window.location.href='/'">
+                <i class="fa-solid fa-arrow-left"></i> Back to Home
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <div class="footer-links">
+                <a href="/faq">FAQs</a> &bull; 
+                <a href="/privacy">Privacy Policy</a> &bull; 
+                <a href="/terms">Terms & Conditions</a> &bull; 
+                <a href="/about-founder">About the Founder</a> &bull; 
+                <a href="/about-developer">About the Developer</a> &bull; 
+                <a href="https://vani-xin.blogspot.com/" target="_blank" rel="noopener noreferrer">V.A.N.I-xAI Blog</a>
+            </div>
+            <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved.</p>
+            <p style="margin-top: 10px; font-weight: 700; color: var(--accent-green);">🇮🇳 Proudly Made in India</p>
+        </footer>
+    </div>
+
+</body>
+</html>

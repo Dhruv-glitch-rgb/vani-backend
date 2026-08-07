@@ -1,0 +1,4 @@
+Flask==3.0.0
+Flask-Cors==4.0.0
+pyautogui==0.9.54
+gunicorn==21.2.0

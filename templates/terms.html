@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions - V.A.N.I-xAI</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="docs-page">
+        <!-- Landing Navbar -->
+        <nav class="landing-navbar">
+            <div class="landing-nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
+                <img src="{{ url_for('static', filename='vani_icon.png') }}" alt="V.A.N.I-xAI Icon">
+                <span>V.A.N.I-xAI</span>
+            </div>
+            <div class="landing-nav-actions">
+                <a href="/" class="nav-link-item">Home</a>
+                <a href="/faq" class="nav-link-item">FAQs</a>
+                <a href="/about-founder" class="nav-link-item">Founder</a>
+                <a href="/about-developer" class="nav-link-item">Developer</a>
+            </div>
+        </nav>
+
+        <div class="docs-container animate-pop">
+            <h1 class="docs-title">Terms & Conditions</h1>
+            <p class="docs-date">Last Updated: August 6, 2026</p>
+
+            <div class="docs-content">
+                <section class="docs-section-block">
+                    <h2>1. Agreement to Terms</h2>
+                    <p>By launching and utilizing the V.A.N.I-xAI (Vāṇī Adhyātmik Navīn Intellect) system, you agree to comply with and be bound by these terms. If you do not agree, please close this application and discontinue use.</p>
+                </section>
+
+                <section class="docs-section-block">
+                    <h2>2. Local Operations & Script Execution</h2>
+                    <p>V.A.N.I-xAI operates as a local utility executing commands directly on your Windows host environment and connected Android mobile devices (via USB ADB interfaces). You authorize this application to run commands, trigger keystrokes, and capture screenshots on your local computer and authorized mobile device as direct responses to your explicit voice and text prompts.</p>
+                </section>
+
+                <section class="docs-section-block">
+                    <h2>3. API Configurations & Service Terms</h2>
+                    <p>To use online conversational parsing features, you may optionally supply a custom Google Gemini API Key. All queries processed via the Gemini API are governed by Google's Generative AI terms of service. You agree that you are solely responsible for managing your API key usage quotas and expenses.</p>
+                </section>
+
+                <section class="docs-section-block">
+                    <h2>4. Responsible Use & Device Safety</h2>
+                    <p>You agree not to use the automated calling, messaging, or device swipe features of V.A.N.I-xAI to distribute unsolicited spam messages, initiate automated harassing calls, or carry out malicious activities. Under no circumstances shall the developers of V.A.N.I-xAI be liable for any system lockouts, lost mobile settings, or data alterations resulting from custom automation scripts.</p>
+                </section>
+
+                <section class="docs-section-block">
+                    <h2>5. Modification of Services</h2>
+                    <p>We reserve the right to modify, refine, or temporarily restrict any system API commands, screen swipe metrics, or layout definitions at any time to preserve software stability and compatibility with Windows and Android updates.</p>
+                </section>
+            </div>
+
+            <button class="cta-btn docs-btn" onclick="window.location.href='/'">
+                <i class="fa-solid fa-arrow-left"></i> Back to Home
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <div class="footer-links">
+                <a href="/faq">FAQs</a> &bull; 
+                <a href="/privacy">Privacy Policy</a> &bull; 
+                <a href="/terms">Terms & Conditions</a> &bull; 
+                <a href="/about-founder">About the Founder</a> &bull; 
+                <a href="/about-developer">About the Developer</a> &bull; 
+                <a href="https://vani-xin.blogspot.com/" target="_blank" rel="noopener noreferrer">V.A.N.I-xAI Blog</a>
+            </div>
+            <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved.</p>
+            <p style="margin-top: 10px; font-weight: 700; color: var(--accent-green);">🇮🇳 Proudly Made in India</p>
+        </footer>
+    </div>
+
+</body>
+</html>
