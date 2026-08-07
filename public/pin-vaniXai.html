@@ -234,11 +234,21 @@
     <div class="texture-grid"></div>
 
     <div class="pin-container">
-        <img src="vani_icon.png" class="auth-logo" alt="V.A.N.I-xAI">
+        <img src="vani_logo.jpg" class="auth-logo" alt="V.A.N.I-xAI">
         <h2 id="pin-title">Security Gateway</h2>
         <p class="subtitle" id="pin-subtitle">Authenticating session...</p>
         
         <div class="loading-spinner" id="loading-spinner"></div>
+
+        <!-- Length Selection Area -->
+        <div id="length-selection-area" style="display: none; margin-bottom: 20px;">
+            <p style="margin-bottom: 15px; color: var(--accent-primary);">Choose PIN Length:</p>
+            <div style="display: flex; justify-content: center; gap: 15px;">
+                <button class="num-btn" style="font-size:1.2rem; width: 60px; height:60px;" onclick="selectPinLength(4)">4</button>
+                <button class="num-btn" style="font-size:1.2rem; width: 60px; height:60px;" onclick="selectPinLength(6)">6</button>
+                <button class="num-btn" style="font-size:1.2rem; width: 60px; height:60px;" onclick="selectPinLength(8)">8</button>
+            </div>
+        </div>
 
         <div id="pin-interaction-area" style="display: none;">
             <!-- PIN Dots -->
@@ -446,6 +456,18 @@
             }
         });
 
+        const lengthSelectionArea = document.getElementById('length-selection-area');
+
+        function selectPinLength(len) {
+            maxPinLength = len;
+            lengthSelectionArea.style.display = 'none';
+            interactionArea.style.display = 'block';
+            titleEl.textContent = 'Create Security PIN';
+            subtitleEl.innerHTML = `Set your <b>${len}</b> digit security PIN`;
+            drawDots(len);
+            hiddenInput.focus();
+        }
+
         // --- Main Auth Flow ---
         
         auth.onAuthStateChanged(async user => {
@@ -465,15 +487,17 @@
                         subtitleEl.textContent = 'Please verify your identity to continue';
                         drawDots(maxPinLength);
                         setLoading(false);
+                        interactionArea.style.display = 'block';
+                        hiddenInput.focus();
                     } else {
-                        // User has no PIN -> Setup Mode
+                        // User has no PIN -> Setup Mode (Show Length Selection First)
                         mode = 'setup';
-                        maxPinLength = 8;
                         
-                        titleEl.textContent = 'Create Security PIN';
-                        subtitleEl.innerHTML = 'Set a <b>4, 6, or 8</b> digit security PIN';
-                        drawDots(8);
+                        titleEl.textContent = 'Setup Security PIN';
+                        subtitleEl.innerHTML = 'First, select how long you want your PIN to be.';
                         setLoading(false);
+                        interactionArea.style.display = 'none';
+                        lengthSelectionArea.style.display = 'block';
                     }
                 } catch (error) {
                     console.error("Firestore error:", error);
