@@ -305,11 +305,13 @@
         const statusMsg = document.getElementById('status-msg');
         const hiddenInput = document.getElementById('hidden-pin-input');
         
-        let mode = 'check'; // 'check', 'setup', 'verify'
+        let mode = 'check'; // 'check', 'setup', 'verify', 'reset_verify'
         let currentUser = null;
         let expectedPin = null;
         let currentPin = '';
         let maxPinLength = 8; // Default max
+        const urlParams = new URLSearchParams(window.location.search);
+        const action = urlParams.get('action');
 
         // Show/Hide Loading
         function setLoading(isLoading) {
@@ -349,7 +351,7 @@
                 } else {
                     statusMsg.innerHTML = '';
                 }
-            } else if (mode === 'verify') {
+            } else if (mode === 'verify' || mode === 'reset_verify') {
                 if (currentPin.length === expectedPin.length) {
                     verifyPin();
                 }
@@ -369,11 +371,22 @@
 
         async function verifyPin() {
             if (currentPin === expectedPin) {
-                statusMsg.textContent = "Access Granted.";
-                statusMsg.className = 'msg-text';
-                // Set session token
-                sessionStorage.setItem('pin_verified', 'true');
-                setTimeout(() => window.location.href = '/login-loading-vaniXai.html', 500);
+                if (mode === 'reset_verify') {
+                    // Start Setup Mode
+                    mode = 'setup';
+                    currentPin = '';
+                    hiddenInput.value = '';
+                    statusMsg.textContent = '';
+                    interactionArea.style.display = 'none';
+                    lengthSelectionArea.style.display = 'block';
+                    titleEl.textContent = 'Setup New PIN';
+                    subtitleEl.innerHTML = 'First, select how long you want your new PIN to be.';
+                } else {
+                    statusMsg.textContent = "Access Granted.";
+                    statusMsg.className = 'msg-text';
+                    sessionStorage.setItem('pin_verified', 'true');
+                    setTimeout(() => window.location.href = '/login-loading-vaniXai.html', 500);
+                }
             } else {
                 statusMsg.textContent = "Incorrect PIN.";
                 statusMsg.className = 'msg-text msg-error';
@@ -443,7 +456,7 @@
             if (e.key === 'Enter') {
                 if (mode === 'setup') {
                     savePin();
-                } else if (mode === 'verify') {
+                } else if (mode === 'verify' || mode === 'reset_verify') {
                     if (currentPin.length > 0) verifyPin();
                 }
             }
@@ -462,7 +475,7 @@
             maxPinLength = len;
             lengthSelectionArea.style.display = 'none';
             interactionArea.style.display = 'block';
-            titleEl.textContent = 'Create Security PIN';
+            titleEl.textContent = action === 'reset' ? 'Create New PIN' : 'Create Security PIN';
             subtitleEl.innerHTML = `Set your <b>${len}</b> digit security PIN`;
             drawDots(len);
             hiddenInput.focus();
@@ -478,21 +491,31 @@
                 try {
                     const doc = await db.collection('users').doc(user.uid).get();
                     if (doc.exists && doc.data().pin) {
-                        // User has a PIN -> Verify Mode
                         expectedPin = doc.data().pin;
                         maxPinLength = expectedPin.length;
-                        mode = 'verify';
-                        
-                        titleEl.textContent = 'Enter Security PIN';
-                        subtitleEl.textContent = 'Please verify your identity to continue';
-                        drawDots(maxPinLength);
-                        setLoading(false);
-                        interactionArea.style.display = 'block';
-                        hiddenInput.focus();
+
+                        if (action === 'reset') {
+                            // User wants to reset -> Reset Verify Mode
+                            mode = 'reset_verify';
+                            titleEl.textContent = 'Reset Security PIN';
+                            subtitleEl.textContent = 'Enter your CURRENT PIN to verify identity';
+                            drawDots(maxPinLength);
+                            setLoading(false);
+                            interactionArea.style.display = 'block';
+                            hiddenInput.focus();
+                        } else {
+                            // Normal Login -> Verify Mode
+                            mode = 'verify';
+                            titleEl.textContent = 'Enter Security PIN';
+                            subtitleEl.textContent = 'Please verify your identity to continue';
+                            drawDots(maxPinLength);
+                            setLoading(false);
+                            interactionArea.style.display = 'block';
+                            hiddenInput.focus();
+                        }
                     } else {
                         // User has no PIN -> Setup Mode (Show Length Selection First)
                         mode = 'setup';
-                        
                         titleEl.textContent = 'Setup Security PIN';
                         subtitleEl.innerHTML = 'First, select how long you want your PIN to be.';
                         setLoading(false);
