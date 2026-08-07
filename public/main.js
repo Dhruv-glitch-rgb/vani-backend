@@ -265,12 +265,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Firebase Auth State Listener
     if (typeof auth !== 'undefined') {
-        auth.onAuthStateChanged(user => {
-            if (user && shouldLaunch) {
-                // Auto-launch if authenticated and requested
-                landingPage.classList.add('hidden');
-                appContainer.classList.remove('hidden');
-                addTerminalLog(`[SYSTEM] Authenticated as ${user.email}. Session active.`);
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                authInstance = user;
+                // Admin Panel check
+                if (user.email === 'official.vani.xai76@gmail.com') {
+                    const adminBtn = document.getElementById('admin-panel-btn');
+                    if(adminBtn) {
+                        adminBtn.style.display = 'inline-flex';
+                        adminBtn.addEventListener('click', () => {
+                            window.location.href = '/admin-vaniXai.html';
+                        });
+                    }
+                }
+                if (shouldLaunch) {
+                    // Auto-launch if authenticated and requested
+                    landingPage.classList.add('hidden');
+                    appContainer.classList.remove('hidden');
+                    addTerminalLog(`[SYSTEM] Authenticated as ${user.email}. Session active.`);
+                }
+            } else {
+                authInstance = null;
             }
         });
     }

@@ -19,6 +19,13 @@
 
 <body>
 
+    <script>
+        // Enforce Security PIN Verification
+        if (sessionStorage.getItem('pin_verified') !== 'true') {
+            window.location.href = '/auth-vani-xai.html';
+        }
+    </script>
+
     <!-- Landing Page Screen -->
     <div class="landing-page" id="landing-page">
         <!-- Landing Navbar -->
@@ -228,6 +235,10 @@
                 <div class="status-badge" id="adb-status">
                     <span class="dot red" id="adb-dot"></span> <span id="adb-text">ADB Disconnected</span>
                 </div>
+                <button class="nav-cta-btn" id="admin-panel-btn"
+                    style="display:none; background:#ff9933; color:white; padding: 6px 12px; font-size: 0.8rem; margin-right: 10px;">
+                    <i class="fa-solid fa-user-shield"></i> Admin Panel
+                </button>
                 <button class="nav-cta-btn" id="btn-signout"
                     style="background:#f43f5e; color:white; padding: 6px 12px; font-size: 0.8rem;">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security PIN - V.A.N.I-xAI</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --accent-primary: #38bdf8;
+            --accent-secondary: #818cf8;
+            --error-color: #ef4444;
+            --success-color: #22c55e;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Ambient Glows */
+        .ambient-core {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw; height: 80vw;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 50%);
+            z-index: 0;
+            animation: breathe 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes breathe {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+
+        /* Grid */
+        .texture-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Glass Container */
+        .pin-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 420px;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.15);
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Header */
+        .auth-logo {
+            width: 70px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+        }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        /* PIN Display Area */
+        .pin-display {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            min-height: 20px;
+        }
+
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .pin-dot.filled {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+        
+        .pin-dot.error {
+            background: var(--error-color);
+            border-color: var(--error-color);
+            box-shadow: 0 0 10px var(--error-color);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Invisible Input for Desktop Keyboard */
+        #hidden-pin-input {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            opacity: 0;
+        }
+
+        /* Interactive NumPad (Mobile Only) */
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            justify-content: center;
+        }
+
+        /* Hide NumPad on Desktop */
+        @media (min-width: 769px) {
+            .numpad {
+                display: none;
+            }
+            .pin-container::after {
+                content: "Please use your keyboard to enter the PIN";
+                display: block;
+                margin-top: 20px;
+                color: var(--text-dim);
+                font-size: 0.8rem;
+                font-family: 'Space Grotesk', sans-serif;
+            }
+        }
+
+        .num-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .num-btn:active, .num-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            transform: scale(0.95);
+        }
+        
+        .num-btn.action {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        .msg-text {
+            margin-top: 20px;
+            height: 20px;
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+        }
+        
+        .msg-error {
+            color: var(--error-color);
+        }
+
+        .loading-spinner {
+            display: none;
+            margin: 20px auto;
+            width: 30px; height: 30px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="ambient-core"></div>
+    <div class="texture-grid"></div>
+
+    <div class="pin-container">
+        <img src="vani_icon.png" class="auth-logo" alt="V.A.N.I-xAI">
+        <h2 id="pin-title">Security Gateway</h2>
+        <p class="subtitle" id="pin-subtitle">Authenticating session...</p>
+        
+        <div class="loading-spinner" id="loading-spinner"></div>
+
+        <div id="pin-interaction-area" style="display: none;">
+            <!-- PIN Dots -->
+            <div class="pin-display" id="pin-dots">
+                <!-- Dots will be generated via JS based on expected length -->
+            </div>
+
+            <!-- Hidden input to capture keyboard events on Desktop -->
+            <input type="password" id="hidden-pin-input" inputmode="numeric" pattern="[0-9]*">
+
+            <!-- Mobile NumPad -->
+            <div class="numpad" id="numpad">
+                <button class="num-btn" data-num="1">1</button>
+                <button class="num-btn" data-num="2">2</button>
+                <button class="num-btn" data-num="3">3</button>
+                <button class="num-btn" data-num="4">4</button>
+                <button class="num-btn" data-num="5">5</button>
+                <button class="num-btn" data-num="6">6</button>
+                <button class="num-btn" data-num="7">7</button>
+                <button class="num-btn" data-num="8">8</button>
+                <button class="num-btn" data-num="9">9</button>
+                <button class="num-btn action" id="btn-clear"><i class="fa-solid fa-xmark"></i></button>
+                <button class="num-btn" data-num="0">0</button>
+                <button class="num-btn action" id="btn-backspace"><i class="fa-solid fa-delete-left"></i></button>
+            </div>
+
+            <div class="msg-text" id="status-msg"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // UI Elements
+        const titleEl = document.getElementById('pin-title');
+        const subtitleEl = document.getElementById('pin-subtitle');
+        const spinner = document.getElementById('loading-spinner');
+        const interactionArea = document.getElementById('pin-interaction-area');
+        const dotsContainer = document.getElementById('pin-dots');
+        const statusMsg = document.getElementById('status-msg');
+        const hiddenInput = document.getElementById('hidden-pin-input');
+        
+        let mode = 'check'; // 'check', 'setup', 'verify'
+        let currentUser = null;
+        let expectedPin = null;
+        let currentPin = '';
+        let maxPinLength = 8; // Default max
+
+        // Show/Hide Loading
+        function setLoading(isLoading) {
+            spinner.style.display = isLoading ? 'block' : 'none';
+            interactionArea.style.display = isLoading ? 'none' : 'block';
+            if(!isLoading) hiddenInput.focus();
+        }
+
+        // Draw Dots
+        function drawDots(length) {
+            dotsContainer.innerHTML = '';
+            for(let i=0; i<length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'pin-dot';
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        // Update Dots UI based on input
+        function updateDots() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < currentPin.length) {
+                    dot.classList.add('filled');
+                    dot.classList.remove('error');
+                } else {
+                    dot.classList.remove('filled', 'error');
+                }
+            });
+            hiddenInput.value = currentPin; // keep hidden input in sync
+
+            // Auto-submit logic based on mode
+            if (mode === 'setup') {
+                if (currentPin.length === 4 || currentPin.length === 6 || currentPin.length === 8) {
+                    statusMsg.innerHTML = 'Press <b>Enter</b> to confirm, or continue typing.';
+                    statusMsg.className = 'msg-text';
+                } else {
+                    statusMsg.innerHTML = '';
+                }
+            } else if (mode === 'verify') {
+                if (currentPin.length === expectedPin.length) {
+                    verifyPin();
+                }
+            }
+        }
+
+        function triggerError() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach(dot => dot.classList.add('error'));
+            setTimeout(() => {
+                currentPin = '';
+                updateDots();
+            }, 500);
+        }
+
+        // --- Logic Handlers ---
+
+        async function verifyPin() {
+            if (currentPin === expectedPin) {
+                statusMsg.textContent = "Access Granted.";
+                statusMsg.className = 'msg-text';
+                // Set session token
+                sessionStorage.setItem('pin_verified', 'true');
+                setTimeout(() => window.location.href = '/login-loading-vaniXai.html', 500);
+            } else {
+                statusMsg.textContent = "Incorrect PIN.";
+                statusMsg.className = 'msg-text msg-error';
+                triggerError();
+            }
+        }
+
+        async function savePin() {
+            if (currentPin.length !== 4 && currentPin.length !== 6 && currentPin.length !== 8) {
+                statusMsg.textContent = "PIN must be exactly 4, 6, or 8 digits.";
+                statusMsg.className = 'msg-text msg-error';
+                triggerError();
+                return;
+            }
+
+            setLoading(true);
+            try {
+                await db.collection('users').doc(currentUser.uid).set({
+                    email: currentUser.email,
+                    name: currentUser.displayName || currentUser.email.split('@')[0],
+                    pin: currentPin,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                statusMsg.textContent = "Security PIN configured successfully.";
+                sessionStorage.setItem('pin_verified', 'true');
+                setTimeout(() => window.location.href = '/login-loading-vaniXai.html', 1000);
+            } catch (err) {
+                console.error(err);
+                statusMsg.textContent = "Error saving PIN. Please try again.";
+                setLoading(false);
+            }
+        }
+
+        // --- Event Listeners ---
+
+        // Screen Keyboard / Buttons
+        document.querySelectorAll('.num-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(btn.dataset.num) {
+                    if (currentPin.length < maxPinLength) {
+                        currentPin += btn.dataset.num;
+                        updateDots();
+                    }
+                }
+            });
+        });
+
+        document.getElementById('btn-backspace').addEventListener('click', () => {
+            currentPin = currentPin.slice(0, -1);
+            updateDots();
+        });
+
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            currentPin = '';
+            updateDots();
+        });
+
+        // Desktop Physical Keyboard via Hidden Input
+        hiddenInput.addEventListener('input', (e) => {
+            const val = e.target.value.replace(/[^0-9]/g, '');
+            currentPin = val.slice(0, maxPinLength);
+            updateDots();
+        });
+
+        hiddenInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (mode === 'setup') {
+                    savePin();
+                } else if (mode === 'verify') {
+                    if (currentPin.length > 0) verifyPin();
+                }
+            }
+        });
+
+        // Force focus on click anywhere
+        document.addEventListener('click', () => {
+            if (interactionArea.style.display !== 'none') {
+                hiddenInput.focus();
+            }
+        });
+
+        // --- Main Auth Flow ---
+        
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                currentUser = user;
+                setLoading(true);
+                
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists && doc.data().pin) {
+                        // User has a PIN -> Verify Mode
+                        expectedPin = doc.data().pin;
+                        maxPinLength = expectedPin.length;
+                        mode = 'verify';
+                        
+                        titleEl.textContent = 'Enter Security PIN';
+                        subtitleEl.textContent = 'Please verify your identity to continue';
+                        drawDots(maxPinLength);
+                        setLoading(false);
+                    } else {
+                        // User has no PIN -> Setup Mode
+                        mode = 'setup';
+                        maxPinLength = 8;
+                        
+                        titleEl.textContent = 'Create Security PIN';
+                        subtitleEl.innerHTML = 'Set a <b>4, 6, or 8</b> digit security PIN';
+                        drawDots(8);
+                        setLoading(false);
+                    }
+                } catch (error) {
+                    console.error("Firestore error:", error);
+                    subtitleEl.textContent = "Database connection error.";
+                }
+            } else {
+                window.location.href = '/auth-vani-xai.html';
+            }
+        });
+
+    </script>
+</body>
+</html>

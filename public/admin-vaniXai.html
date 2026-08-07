@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bharat Core | Admin Panel</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #050a0f;
+            --saffron: #ff9933;
+            --white-glow: #ffffff;
+            --india-green: #138808;
+            --navy-blue: #000080;
+            --text-main: #f8fafc;
+            --glass-bg: rgba(10, 15, 25, 0.75);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Bharat Theme Background Elements */
+        .ambient-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 153, 51, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(19, 136, 8, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ashoka-chakra-bg {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vh; height: 80vh;
+            border: 2px dashed rgba(0, 0, 128, 0.15);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+            animation: slowSpin 60s linear infinite;
+        }
+        .ashoka-chakra-bg::after {
+            content: "☸";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60vh;
+            color: rgba(0, 0, 128, 0.05);
+        }
+
+        @keyframes slowSpin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        .glow-saffron {
+            position: fixed; top: -20%; left: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(255, 153, 51, 0.15) 0%, transparent 60%);
+            z-index: 0; filter: blur(50px);
+        }
+        .glow-green {
+            position: fixed; bottom: -20%; right: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(19, 136, 8, 0.15) 0%, transparent 60%);
+            z-index: 0; filter: blur(50px);
+        }
+
+        /* Layout */
+        .admin-layout {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title img {
+            width: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--saffron);
+            box-shadow: 0 0 15px rgba(255, 153, 51, 0.4);
+        }
+
+        h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--saffron) 0%, var(--white-glow) 50%, var(--india-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-back:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--saffron);
+            box-shadow: 0 0 15px rgba(255, 153, 51, 0.3);
+        }
+
+        /* Data Container */
+        .data-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 153, 51, 0.3);
+            border-bottom: 1px solid rgba(19, 136, 8, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .panel-header h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.5rem;
+            color: var(--white-glow);
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            background: rgba(255, 153, 51, 0.2);
+            color: var(--saffron);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid rgba(255, 153, 51, 0.4);
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.9rem;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .pin-cell {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: var(--saffron);
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(255, 153, 51, 0.5);
+        }
+        
+        .name-cell {
+            font-weight: 600;
+            color: var(--white-glow);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--saffron);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .loader-spinner {
+            display: inline-block;
+            width: 40px; height: 40px;
+            border: 3px solid rgba(255, 153, 51, 0.2);
+            border-top: 3px solid var(--saffron);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="ambient-grid"></div>
+    <div class="glow-saffron"></div>
+    <div class="glow-green"></div>
+    <div class="ashoka-chakra-bg"></div>
+
+    <div class="admin-layout" style="display:none;" id="admin-content">
+        <header class="admin-header">
+            <div class="header-title">
+                <img src="vani_icon.png" alt="Logo">
+                <h1>Bharat Core Command</h1>
+            </div>
+            <button class="btn-back" onclick="window.location.href='/?launch=true'">
+                <i class="fa-solid fa-satellite-dish"></i> Return to Console
+            </button>
+        </header>
+
+        <main class="data-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-users-viewfinder" style="color:var(--saffron);"></i> Registered Personnel</h2>
+                <div class="badge" id="user-count">Scanning...</div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Hash</th>
+                            <th>Identity Name</th>
+                            <th>Clearance Email</th>
+                            <th>Security PIN</th>
+                            <th>Registration Sync</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                        <tr>
+                            <td colspan="5">
+                                <div class="loading-state">
+                                    <div class="loader-spinner"></div><br>
+                                    Decrypting Database...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Enforce Admin Access
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                if (user.email === 'official.vani.xai76@gmail.com') {
+                    // Access Granted
+                    document.getElementById('admin-content').style.display = 'block';
+                    fetchUserData();
+                } else {
+                    // Intruder
+                    alert("SECURITY BREACH: Unauthorized access detected. Redirecting.");
+                    window.location.href = '/?launch=true';
+                }
+            } else {
+                window.location.href = '/auth-vani-xai.html';
+            }
+        });
+
+        async function fetchUserData() {
+            const tbody = document.getElementById('user-table-body');
+            const countBadge = document.getElementById('user-count');
+            
+            try {
+                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+                tbody.innerHTML = '';
+                
+                countBadge.textContent = `${snapshot.size} Personnel Found`;
+
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 30px;">No personnel records found in database.</td></tr>`;
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const tr = document.createElement('tr');
+                    
+                    // Format Date
+                    let dateStr = "Unknown";
+                    if (data.createdAt) {
+                        dateStr = data.createdAt.toDate().toLocaleString();
+                    }
+
+                    tr.innerHTML = `
+                        <td style="font-size:0.75rem; color:#64748b;">${doc.id}</td>
+                        <td class="name-cell">${data.name || 'N/A'}</td>
+                        <td>${data.email || 'N/A'}</td>
+                        <td class="pin-cell">${data.pin ? data.pin : '<span style="color:#ef4444">NOT SET</span>'}</td>
+                        <td style="font-size:0.8rem; color:#94a3b8;">${dateStr}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (err) {
+                console.error("Error fetching users:", err);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 30px; color:#ef4444;">Error decrypting database. Ensure Firestore is enabled and rules allow read access.</td></tr>`;
+                countBadge.textContent = "Error";
+            }
+        }
+    </script>
+</body>
+</html>
