@@ -436,6 +436,45 @@
             box-shadow: 0 10px 20px rgba(234, 88, 12, 0.15);
         }
 
+        /* --- Scramble & Glitch Effects --- */
+        .scramble-char {
+            color: var(--saffron);
+            font-family: monospace;
+            opacity: 0.8;
+            font-weight: bold;
+        }
+
+        .glitch-hover {
+            position: relative;
+        }
+        .glitch-hover:hover {
+            animation: glitchSkew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+            color: var(--saffron);
+        }
+
+        @keyframes glitchSkew {
+            0% { transform: translate(0) skew(0deg); }
+            20% { transform: translate(-2px, 1px) skew(2deg); }
+            40% { transform: translate(-1px, -1px) skew(-2deg); }
+            60% { transform: translate(2px, 1px) skew(0deg); }
+            80% { transform: translate(1px, -1px) skew(1deg); }
+            100% { transform: translate(0) skew(0deg); }
+        }
+
+        .row-jitter:hover {
+            animation: jitter 0.1s infinite;
+        }
+        
+        @keyframes jitter {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(1px); }
+            100% { transform: translateX(-1px); }
+        }
+
+        .data-panel:hover .badge {
+            animation: badgeBreathe 0.5s ease-in-out infinite alternate;
+        }
+
     </style>
 </head>
 <body>
@@ -450,9 +489,9 @@
         <header class="admin-header">
             <div class="header-title">
                 <img src="vani_logo.jpg" alt="Logo">
-                <h1>Bharat Core Command</h1>
+                <h1 class="glitch-hover">Bharat Core Command</h1>
             </div>
-            <button class="btn-back" onclick="window.location.href='/?launch=true'">
+            <button class="btn-back glitch-hover" onclick="window.location.href='/?launch=true'">
                 <i class="fa-solid fa-satellite-dish"></i> Return to Console
             </button>
         </header>
@@ -523,55 +562,114 @@
             }
         });
 
-        async function fetchUserData() {
-            const tbody = document.getElementById('user-table-body');
-            const countBadge = document.getElementById('user-count');
-            
+        // Sci-Fi Text Scramble Effect
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\/[]{}—=+*^?#_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                this.update = this.update.bind(this);
+            }
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            update() {
+                let output = '';
+                let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
+                        }
+                        output += `<span class="scramble-char">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
+
+        // Load Users from Firestore
+        async function loadUsers() {
             try {
-                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+                const snapshot = await firebase.firestore().collection('users').orderBy('createdAt', 'desc').get();
+                const tbody = document.getElementById('users-tbody');
                 tbody.innerHTML = '';
                 
-                countBadge.textContent = `${snapshot.size} Personnel Found`;
+                const countBadge = document.getElementById('user-count');
+                const fx = new TextScramble(countBadge);
+                fx.setText(snapshot.docs.length + " ACTIVE");
 
-                if (snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 30px;">No personnel records found in database.</td></tr>`;
-                    return;
-                }
-
+                let delay = 0;
                 snapshot.forEach(doc => {
                     const data = doc.data();
+                    const dateStr = data.createdAt ? data.createdAt.toDate().toLocaleDateString() + ' ' + data.createdAt.toDate().toLocaleTimeString() : 'Unknown';
                     const tr = document.createElement('tr');
-                    
-                    // Format Date
-                    let dateStr = "Unknown";
-                    if (data.createdAt) {
-                        dateStr = data.createdAt.toDate().toLocaleString();
-                    }
+                    tr.className = 'row-jitter';
+                    tr.style.animationDelay = `${delay}s`;
+                    delay += 0.15; // Stagger effect
 
                     tr.innerHTML = `
-                        <td style="font-size:0.75rem; color:#64748b;">${doc.id}</td>
-                        <td class="name-cell">${data.name || 'N/A'}</td>
-                        <td class="email-cell">${data.email || 'N/A'}</td>
-                        <td class="pin-cell">${data.pin ? data.pin : '<span style="color:#ef4444">NOT SET</span>'}</td>
-                        <td style="font-size:0.8rem; color:#94a3b8;">${dateStr}</td>
+                        <td style="font-size:0.75rem; color:#64748b;" class="scramble-target" data-text="${doc.id}">Loading...</td>
+                        <td class="name-cell scramble-target" data-text="${data.name || 'N/A'}">Loading...</td>
+                        <td class="email-cell scramble-target" data-text="${data.email || 'N/A'}">Loading...</td>
+                        <td class="pin-cell scramble-target" style="color:var(--saffron)" data-text="${data.pin ? data.pin : 'NOT SET'}">***</td>
+                        <td style="font-size:0.8rem; color:#94a3b8;" class="scramble-target" data-text="${dateStr}">Loading...</td>
                     `;
                     tbody.appendChild(tr);
-                });
 
+                    // Scramble text animation for each cell
+                    setTimeout(() => {
+                        tr.querySelectorAll('.scramble-target').forEach(el => {
+                            const targetText = el.getAttribute('data-text');
+                            const scrambler = new TextScramble(el);
+                            scrambler.setText(targetText);
+                        });
+                    }, delay * 1000 + 500); // Wait for row fade in + offset
+                });
             } catch (err) {
-                console.error("Error fetching users:", err);
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 30px; color:#ef4444;">Error decrypting database. Ensure Firestore is enabled and rules allow read access.</td></tr>`;
+                console.error("Error loading users:", err);
+                const countBadge = document.getElementById('user-count');
                 countBadge.textContent = "Error";
             }
         }
 
+        // Generate Particles
         function generateParticles() {
             const container = document.getElementById('particles-container');
-            for(let i = 0; i < 20; i++) {
+            for(let i = 0; i < 35; i++) {
                 let p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random() * 100 + 'vw';
-                p.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                p.style.animationDuration = (Math.random() * 4 + 4) + 's';
                 p.style.animationDelay = (Math.random() * 5) + 's';
                 container.appendChild(p);
             }
