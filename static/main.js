@@ -1,5 +1,6 @@
 // API Configuration
-const BACKEND_URL = '';
+const BACKEND_URL = 'https://vani-backend-52w1.onrender.com';
+const API_KEY_STORAGE_KEY = 'vani_api_key';
 
 // UI Elements
 const chatHistory = document.getElementById('chat-history');
