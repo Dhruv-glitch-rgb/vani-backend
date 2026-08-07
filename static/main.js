@@ -277,12 +277,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Landing page CTA handler
     if (launchConsoleBtn) {
         launchConsoleBtn.addEventListener('click', () => {
-            // TEMPORARILY BYPASSED LOGIN
-            landingPage.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-            addTerminalLog(`[SYSTEM] Authentication bypassed. Session active.`);
-            
-            /* Original Auth Code:
             if (typeof auth !== 'undefined' && auth.currentUser) {
                 landingPage.classList.add('hidden');
                 appContainer.classList.remove('hidden');
@@ -291,7 +285,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 // Redirect to Auth Page
                 window.location.href = './auth-vani-xai.html';
             }
-            */
         });
     }
 
