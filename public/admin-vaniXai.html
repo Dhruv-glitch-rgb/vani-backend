@@ -212,35 +212,79 @@
         @keyframes pulseIcon { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
 
         .badge {
-            background: linear-gradient(135deg, rgba(234, 88, 12, 0.1), rgba(234, 88, 12, 0.2));
+            background: rgba(30, 58, 138, 0.2);
             color: var(--saffron);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 0.95rem;
-            font-weight: 800;
-            border: 1px solid rgba(234, 88, 12, 0.4);
-            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
             letter-spacing: 2px;
-            text-transform: uppercase;
-            animation: badgeBreathe 2s ease-in-out infinite alternate;
-        }
-        @keyframes badgeBreathe {
-            0% { box-shadow: 0 0 10px rgba(234, 88, 12, 0.1); transform: scale(1); }
-            100% { box-shadow: 0 0 20px rgba(234, 88, 12, 0.4); transform: scale(1.02); }
+            border: 1px solid rgba(234, 88, 12, 0.3);
+            box-shadow: 0 0 15px rgba(234, 88, 12, 0.1);
         }
 
-        /* Table */
+        /* --- Controls Bar --- */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .controls-left { display: flex; gap: 15px; flex: 1; }
+        
+        .search-input {
+            flex: 1;
+            max-width: 300px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Space Grotesk';
+            outline: none;
+        }
+        .search-input:focus { border-color: var(--saffron); }
+        
+        .sort-select {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Space Grotesk';
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .btn-export {
+            background: rgba(22, 163, 74, 0.2);
+            border: 1px solid var(--india-green);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-export:hover { background: var(--india-green); }
+
+        /* --- Table Styling --- */
         .table-responsive {
             overflow-x: auto;
             position: relative;
             z-index: 2;
-            padding-bottom: 20px; /* space for hover effects */
+            padding-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 12px; /* more spacing for floating effect */
+            border-spacing: 0 12px;
             text-align: left;
         }
 
@@ -271,10 +315,7 @@
             border-left: 3px solid transparent; 
             border-radius: 12px 0 0 12px; 
         }
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            font-size: 1rem;
-        }
-
+        
         tr:hover td {
             background: rgba(255, 255, 255, 0.95);
         }
@@ -295,9 +336,62 @@
         }
         .email-cell {
             color: var(--text-dim);
-            font-weight: 500;
+            font-weight: 600;
         }
 
+        /* --- Action Buttons --- */
+        .btn-action {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            transition: 0.2s;
+        }
+        .btn-action.delete:hover { background: #ef4444; border-color: #ef4444; }
+        .btn-action.reset:hover { background: var(--saffron); border-color: var(--saffron); }
+
+        /* --- Logs Panel --- */
+        .logs-panel {
+            margin-top: 30px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .logs-header {
+            font-family: 'Rajdhani';
+            color: var(--white-glow);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .log-list {
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .log-item {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .log-item span.email { color: var(--saffron); font-weight: bold; }
+        .log-item span.time { color: #94a3b8; font-size: 0.75rem; }
+
+        /* --- Loader --- */
         .loading-state {
             text-align: center;
             padding: 80px;
@@ -387,6 +481,18 @@
                 <div class="badge" id="user-count">Scanning...</div>
             </div>
 
+            <div class="controls-bar">
+                <div class="controls-left">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search by name or email..." oninput="handleSearch()">
+                    <select id="sortSelect" class="sort-select" onchange="handleSort()">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="name">Name A-Z</option>
+                    </select>
+                </div>
+                <button class="btn-export" onclick="exportCSV()"><i class="fa-solid fa-download"></i> Export CSV</button>
+            </div>
+
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -396,11 +502,12 @@
                             <th>Clearance Email</th>
                             <th>Security PIN</th>
                             <th>Registration Sync</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 <div class="loading-state">
                                     <div class="loader-spinner"></div><br>
                                     Decrypting Database...
@@ -409,6 +516,13 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="logs-panel">
+                <div class="logs-header"><i class="fa-solid fa-network-wired" style="color:var(--saffron);"></i> Live Activity Feed</div>
+                <div class="log-list" id="logList">
+                    <div class="log-item" style="color:#94a3b8; justify-content:center;">Connecting to live stream...</div>
+                </div>
             </div>
         </main>
     </div>
@@ -451,41 +565,133 @@
 
 
 
+        let allUsers = [];
+
         async function loadUsers() {
             try {
-                const snapshot = await firebase.firestore().collection('users').orderBy('createdAt', 'desc').get();
-                const tbody = document.getElementById('user-table-body');
-                tbody.innerHTML = '';
-                
-                const countBadge = document.getElementById('user-count');
-                countBadge.textContent = snapshot.docs.length + " ACTIVE";
-
+                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+                allUsers = [];
                 snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const dateStr = data.createdAt ? data.createdAt.toDate().toLocaleDateString() + ' ' + data.createdAt.toDate().toLocaleTimeString() : 'Unknown';
-                    const tr = document.createElement('tr');
-
-                    const safeName = (data.name || 'N/A').replace(/"/g, '&quot;');
-                    const safeEmail = (data.email || 'N/A').replace(/"/g, '&quot;');
-                    const safePin = (data.pin ? String(data.pin) : 'NOT SET').replace(/"/g, '&quot;');
-
-                    tr.innerHTML = `
-                        <td style="font-size:0.75rem; color:#64748b;">${doc.id}</td>
-                        <td class="name-cell">${safeName}</td>
-                        <td class="email-cell">${safeEmail}</td>
-                        <td class="pin-cell" style="color:var(--saffron)">${safePin}</td>
-                        <td style="font-size:0.8rem; color:#94a3b8;">${dateStr}</td>
-                    `;
-                    tbody.appendChild(tr);
+                    allUsers.push({ id: doc.id, ...doc.data() });
                 });
+                renderTable();
             } catch (err) {
                 console.error("Error loading users:", err);
                 const countBadge = document.getElementById('user-count');
                 countBadge.textContent = "Error";
                 const tbody = document.getElementById('user-table-body');
-                tbody.innerHTML = `<tr><td colspan="5" style="color:red; text-align:center;"><strong>Database Error:</strong> ${err.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;"><strong>Database Error:</strong> ${err.message}</td></tr>`;
             }
         }
+
+        function renderTable() {
+            const tbody = document.getElementById('user-table-body');
+            tbody.innerHTML = '';
+            
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const sort = document.getElementById('sortSelect').value;
+
+            // Filter
+            let filtered = allUsers.filter(u => 
+                (u.name || '').toLowerCase().includes(search) || 
+                (u.email || '').toLowerCase().includes(search)
+            );
+
+            // Sort
+            filtered.sort((a, b) => {
+                const tA = a.createdAt ? a.createdAt.toMillis() : 0;
+                const tB = b.createdAt ? b.createdAt.toMillis() : 0;
+                if (sort === 'newest') return tB - tA;
+                if (sort === 'oldest') return tA - tB;
+                if (sort === 'name') return (a.name || '').localeCompare(b.name || '');
+                return 0;
+            });
+
+            document.getElementById('user-count').textContent = filtered.length + " ACTIVE";
+
+            filtered.forEach(data => {
+                const dateStr = data.createdAt ? data.createdAt.toDate().toLocaleDateString() + ' ' + data.createdAt.toDate().toLocaleTimeString() : 'Unknown';
+                const tr = document.createElement('tr');
+
+                const safeName = (data.name || 'N/A').replace(/"/g, '&quot;');
+                const safeEmail = (data.email || 'N/A').replace(/"/g, '&quot;');
+                const safePin = (data.pin ? String(data.pin) : 'NOT SET').replace(/"/g, '&quot;');
+
+                tr.innerHTML = `
+                    <td style="font-size:0.75rem; color:#64748b;">${data.id}</td>
+                    <td class="name-cell">${safeName}</td>
+                    <td class="email-cell">${safeEmail}</td>
+                    <td class="pin-cell" style="color:var(--saffron)">${safePin}</td>
+                    <td style="font-size:0.8rem; color:#94a3b8;">${dateStr}</td>
+                    <td>
+                        <button class="btn-action reset" onclick="resetUserPin('${data.id}')" title="Force Pin Reset"><i class="fa-solid fa-key"></i></button>
+                        <button class="btn-action delete" onclick="deleteUser('${data.id}')" title="Delete User"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleSearch() { renderTable(); }
+        function handleSort() { renderTable(); }
+
+        async function deleteUser(id) {
+            if(!confirm("Are you sure you want to permanently delete this user's data?")) return;
+            try {
+                await db.collection('users').doc(id).delete();
+                allUsers = allUsers.filter(u => u.id !== id);
+                renderTable();
+            } catch(e) { alert("Error deleting user: " + e.message); }
+        }
+
+        async function resetUserPin(id) {
+            if(!confirm("Are you sure you want to force this user to reset their PIN?")) return;
+            try {
+                await db.collection('users').doc(id).update({ pin: firebase.firestore.FieldValue.delete() });
+                const user = allUsers.find(u => u.id === id);
+                if(user) user.pin = null;
+                renderTable();
+            } catch(e) { alert("Error resetting PIN: " + e.message); }
+        }
+
+        function exportCSV() {
+            if(allUsers.length === 0) return alert("No data to export.");
+            let csvContent = "data:text/csv;charset=utf-8,ID,Name,Email,PIN,Date Joined\\n";
+            allUsers.forEach(u => {
+                const dateStr = u.createdAt ? u.createdAt.toDate().toISOString() : 'Unknown';
+                csvContent += `"${u.id}","${u.name || ''}","${u.email || ''}","${u.pin || ''}","${dateStr}"\\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "vanixai_users.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Live Logs Subscription
+        function setupLogsListener() {
+            db.collection('logs').orderBy('timestamp', 'desc').limit(20).onSnapshot(snapshot => {
+                const logList = document.getElementById('logList');
+                logList.innerHTML = '';
+                if(snapshot.empty) {
+                    logList.innerHTML = '<div class="log-item" style="color:#94a3b8; justify-content:center;">No recent activity</div>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const time = data.timestamp ? data.timestamp.toDate().toLocaleTimeString() : 'Just now';
+                    logList.innerHTML += `
+                        <div class="log-item">
+                            <div><span class="email">${data.email || 'Unknown'}</span> - ${data.activity}</div>
+                            <span class="time">${time}</span>
+                        </div>
+                    `;
+                });
+            });
+        }
+        setupLogsListener();
     </script>
 </body>
 </html>

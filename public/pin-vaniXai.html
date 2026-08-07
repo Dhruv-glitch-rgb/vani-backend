@@ -369,6 +369,16 @@
 
         // --- Logic Handlers ---
 
+        async function logActivity(msg) {
+            try {
+                await db.collection('logs').add({
+                    activity: msg,
+                    email: currentUser.email || 'Unknown',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch(e) { console.error("Logging error:", e); }
+        }
+
         async function verifyPin() {
             if (currentPin === expectedPin) {
                 if (mode === 'reset_verify') {
@@ -385,6 +395,7 @@
                     statusMsg.textContent = "Access Granted.";
                     statusMsg.className = 'msg-text';
                     sessionStorage.setItem('pin_verified', 'true');
+                    await logActivity("Security PIN Verified");
                     setTimeout(() => window.location.href = '/login-loading-vaniXai.html', 500);
                 }
             } else {
@@ -413,6 +424,7 @@
 
                 statusMsg.textContent = "Security PIN configured successfully.";
                 sessionStorage.setItem('pin_verified', 'true');
+                await logActivity("Security PIN Configured");
                 setTimeout(() => window.location.href = '/login-loading-vaniXai.html', 1000);
             } catch (err) {
                 console.error(err);

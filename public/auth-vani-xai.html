@@ -607,6 +607,18 @@
             loading.style.display = 'none';
         }
 
+        // Helper for logging
+        async function logActivityAndRedirect(msg, user) {
+            try {
+                await db.collection('logs').add({
+                    activity: msg,
+                    email: user.email || 'Unknown',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (e) { console.error("Log error", e); }
+            window.location.href = '/pin-vaniXai.html';
+        }
+
         // Email Auth
         btnLogin.addEventListener('click', () => {
             const email = emailInput.value.trim();
@@ -618,11 +630,11 @@
 
             if (isSignUpMode) {
                 auth.createUserWithEmailAndPassword(email, password)
-                    .then(() => window.location.href = '/pin-vaniXai.html')
+                    .then((creds) => logActivityAndRedirect("New User Registered", creds.user))
                     .catch(err => showError(err.message));
             } else {
                 auth.signInWithEmailAndPassword(email, password)
-                    .then(() => window.location.href = '/pin-vaniXai.html')
+                    .then((creds) => logActivityAndRedirect("User Logged In", creds.user))
                     .catch(err => showError(err.message));
             }
         });
@@ -632,7 +644,10 @@
             loading.style.display = 'flex';
             errorMsg.style.display = 'none';
             auth.signInWithPopup(provider)
-                .then(() => window.location.href = '/pin-vaniXai.html')
+                .then((creds) => {
+                    const isNew = creds.additionalUserInfo?.isNewUser;
+                    logActivityAndRedirect(isNew ? "New User Registered via Google" : "User Logged In via Google", creds.user);
+                })
                 .catch(err => {
                     if (err.code !== 'auth/popup-closed-by-user') {
                         showError(err.message);
@@ -642,9 +657,9 @@
                 });
         });
 
-        // Redirect if already logged in
+        // Redirect if already logged in (Don't log this to avoid spam on refresh)
         auth.onAuthStateChanged(user => {
-            if (user) {
+            if (user && !loading.style.display.includes('flex')) {
                 window.location.href = '/pin-vaniXai.html';
             }
         });
