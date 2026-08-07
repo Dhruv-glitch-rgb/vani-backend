@@ -664,6 +664,8 @@
                 console.error("Error loading users:", err);
                 const countBadge = document.getElementById('user-count');
                 countBadge.textContent = "Error";
+                const tbody = document.getElementById('user-table-body');
+                tbody.innerHTML = `<tr><td colspan="5" style="color:red; text-align:center;"><strong>Database Error:</strong> ${err.message}</td></tr>`;
             }
         }
 
