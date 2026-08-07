@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-deep: #050a0f;
-            --saffron: #ff9933;
-            --white-glow: #ffffff;
-            --india-green: #138808;
-            --navy-blue: #000080;
-            --text-main: #f8fafc;
-            --glass-bg: rgba(10, 15, 25, 0.75);
+            --bg-deep: #f8fafc;
+            --saffron: #ea580c; /* Deeper saffron for contrast on light */
+            --white-glow: #0f172a; /* Dark text for headings */
+            --india-green: #16a34a; /* Slightly deeper green */
+            --navy-blue: #1e3a8a;
+            --text-main: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.85);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,8 +35,8 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                linear-gradient(rgba(255, 153, 51, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(19, 136, 8, 0.05) 1px, transparent 1px);
+                linear-gradient(rgba(234, 88, 12, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(22, 163, 74, 0.08) 1px, transparent 1px);
             background-size: 50px 50px;
             z-index: 0;
             pointer-events: none;
@@ -53,12 +53,12 @@
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 80vh; height: 80vh;
-            border: 2px dashed rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(30, 58, 138, 0.1);
             border-radius: 50%;
             z-index: 0;
             pointer-events: none;
             animation: slowSpin 40s linear infinite;
-            box-shadow: 0 0 100px rgba(255, 153, 51, 0.1) inset, 0 0 100px rgba(19, 136, 8, 0.1) inset;
+            box-shadow: 0 0 100px rgba(234, 88, 12, 0.05) inset, 0 0 100px rgba(22, 163, 74, 0.05) inset;
         }
         .ashoka-chakra-bg::after {
             content: "☸";
@@ -66,21 +66,21 @@
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             font-size: 60vh;
-            color: rgba(255, 255, 255, 0.03);
-            text-shadow: 0 0 30px rgba(255, 153, 51, 0.2);
+            color: rgba(30, 58, 138, 0.04);
+            text-shadow: 0 0 30px rgba(30, 58, 138, 0.1);
         }
 
         @keyframes slowSpin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
 
         .glow-saffron {
             position: fixed; top: -10%; left: -10%; width: 40vw; height: 40vw;
-            background: radial-gradient(circle, rgba(255, 153, 51, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.15) 0%, transparent 70%);
             z-index: 0; filter: blur(60px);
             animation: pulseGlow 5s ease-in-out infinite alternate;
         }
         .glow-green {
             position: fixed; bottom: -10%; right: -10%; width: 40vw; height: 40vw;
-            background: radial-gradient(circle, rgba(19, 136, 8, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.15) 0%, transparent 70%);
             z-index: 0; filter: blur(60px);
             animation: pulseGlow 5s ease-in-out infinite alternate-reverse;
         }
@@ -106,7 +106,7 @@
             align-items: center;
             margin-bottom: 40px;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             position: relative;
         }
         
@@ -114,8 +114,8 @@
             content: '';
             position: absolute;
             bottom: -1px; left: 0;
-            width: 100%; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--saffron), var(--white-glow), var(--india-green), transparent);
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--saffron), var(--navy-blue), var(--india-green), transparent);
             animation: scanLine 3s linear infinite;
         }
 
@@ -136,7 +136,7 @@
             object-fit: cover;
             border-radius: 50%;
             border: 2px solid var(--saffron);
-            box-shadow: 0 0 20px rgba(255, 153, 51, 0.5);
+            box-shadow: 0 0 20px rgba(234, 88, 12, 0.3);
             animation: floatLogo 3s ease-in-out infinite;
         }
 
@@ -149,18 +149,17 @@
             font-family: 'Rajdhani', sans-serif;
             font-size: 2.8rem;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--saffron) 0%, var(--white-glow) 50%, var(--india-green) 100%);
+            background: linear-gradient(90deg, var(--saffron) 0%, var(--navy-blue) 50%, var(--india-green) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
             letter-spacing: 3px;
-            text-shadow: 0 0 30px rgba(255,255,255,0.1);
         }
 
         .btn-back {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.1);
+            color: var(--text-main);
             padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
@@ -170,17 +169,17 @@
             transition: 0.3s;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         .btn-back::before {
             content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(234, 88, 12, 0.1), transparent);
             transition: 0.5s;
         }
         .btn-back:hover::before { left: 100%; }
         .btn-back:hover {
-            background: rgba(255,255,255,0.1);
             border-color: var(--saffron);
-            box-shadow: 0 0 20px rgba(255, 153, 51, 0.4);
+            box-shadow: 0 8px 15px rgba(234, 88, 12, 0.15);
             transform: translateY(-2px);
         }
 
@@ -189,12 +188,12 @@
             background: var(--glass-bg);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-top: 1px solid rgba(255, 153, 51, 0.4);
-            border-bottom: 1px solid rgba(19, 136, 8, 0.4);
+            border: 1px solid rgba(255, 255, 255, 1);
+            border-top: 2px solid rgba(234, 88, 12, 0.8);
+            border-bottom: 2px solid rgba(22, 163, 74, 0.8);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 50px rgba(255, 153, 51, 0.05) inset;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 0 50px rgba(255, 255, 255, 0.5) inset;
             position: relative;
         }
 
@@ -202,7 +201,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.01) 2px, rgba(0,0,0,0.01) 4px);
             border-radius: 20px;
             pointer-events: none;
         }
@@ -225,14 +224,14 @@
         }
 
         .badge {
-            background: rgba(255, 153, 51, 0.15);
+            background: rgba(234, 88, 12, 0.1);
             color: var(--saffron);
             padding: 8px 18px;
             border-radius: 30px;
             font-size: 0.9rem;
             font-weight: 700;
-            border: 1px solid rgba(255, 153, 51, 0.5);
-            box-shadow: 0 0 15px rgba(255, 153, 51, 0.2);
+            border: 1px solid rgba(234, 88, 12, 0.3);
+            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.1);
             letter-spacing: 1px;
         }
 
@@ -252,30 +251,33 @@
 
         th {
             font-family: 'Rajdhani', sans-serif;
-            color: var(--text-dim);
+            color: #64748b;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-size: 0.95rem;
             padding: 15px 20px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
         }
 
         td {
             padding: 18px 20px;
-            background: rgba(0, 0, 0, 0.3);
+            background: #ffffff;
             font-size: 0.95rem;
-            border-top: 1px solid rgba(255,255,255,0.02);
-            border-bottom: 1px solid rgba(255,255,255,0.02);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-left: none;
+            border-right: none;
             transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
         
-        td:first-child { border-left: 1px solid rgba(255,255,255,0.02); border-radius: 8px 0 0 8px; }
-        td:last-child { border-right: 1px solid rgba(255,255,255,0.02); border-radius: 0 8px 8px 0; }
+        td:first-child { border-left: 1px solid rgba(0,0,0,0.05); border-radius: 8px 0 0 8px; }
+        td:last-child { border-right: 1px solid rgba(0,0,0,0.05); border-radius: 0 8px 8px 0; }
 
         tr:hover td {
-            background: rgba(255, 153, 51, 0.05);
-            border-color: rgba(255, 153, 51, 0.2);
-            box-shadow: 0 0 20px rgba(255, 153, 51, 0.1) inset;
+            background: rgba(234, 88, 12, 0.03);
+            border-color: rgba(234, 88, 12, 0.1);
+            transform: scale(1.01);
+            box-shadow: 0 4px 8px rgba(234, 88, 12, 0.1);
         }
 
         .pin-cell {
@@ -284,7 +286,6 @@
             font-size: 1.1rem;
             color: var(--saffron);
             letter-spacing: 4px;
-            text-shadow: 0 0 10px rgba(255, 153, 51, 0.6);
         }
         
         .name-cell {
@@ -306,13 +307,13 @@
         .loader-spinner {
             display: inline-block;
             width: 50px; height: 50px;
-            border: 3px solid rgba(255, 153, 51, 0.1);
+            border: 3px solid rgba(234, 88, 12, 0.1);
             border-top: 3px solid var(--saffron);
             border-bottom: 3px solid var(--india-green);
             border-radius: 50%;
             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
             margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(255, 153, 51, 0.3);
+            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.2);
         }
 
     </style>
