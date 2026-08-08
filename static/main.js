@@ -280,9 +280,11 @@ if (backendUrlInput) {
 // Page Initialization
 window.addEventListener('DOMContentLoaded', () => {
     // Load Settings
-    const isDark = localStorage.getItem('vani_dark_mode') === 'true';
-    if (isDark) {
+    const theme = localStorage.getItem('vani_theme') || (localStorage.getItem('vani_dark_mode') === 'true' ? 'dark' : 'light');
+    if (theme === 'dark') {
         document.body.classList.add('dark-theme');
+    } else if (theme === 'inxv') {
+        document.body.classList.add('inxv-theme');
     }
     
     // Check if launched from auth redirect

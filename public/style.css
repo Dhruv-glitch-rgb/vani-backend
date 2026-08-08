@@ -2014,3 +2014,80 @@ body.dark-theme .pulse-glow-badge {
     0% { box-shadow: 0 0 5px rgba(0, 240, 255, 0.2); border-color: rgba(0, 240, 255, 0.3); }
     100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.6); border-color: rgba(0, 240, 255, 0.8); }
 }
+
+/* --- InX.V Theme (Mandala) --- */
+body.inxv-theme {
+    --bg-main: #2b0b14;
+    --panel-bg: rgba(255, 245, 235, 0.85); /* Warm frosted glass */
+    --panel-border: rgba(180, 50, 70, 0.4);
+    
+    --text-primary: #3a1c22;
+    --text-secondary: #5e3b44;
+    --text-muted: #85616b;
+    
+    --accent-indigo: #00767a; /* Teal */
+    --accent-indigo-glow: rgba(0, 118, 122, 0.35);
+    --accent-blue: #a3223f; /* Maroon */
+    
+    background-image: url('./inxv_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.inxv-theme .message.user .message-content {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+    color: white;
+}
+
+body.inxv-theme .message.bot .message-content {
+    background: rgba(255, 255, 255, 0.9);
+    border-left: 3px solid var(--accent-blue) !important;
+    color: var(--text-primary);
+}
+
+body.inxv-theme .cta-btn {
+    border: none !important;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo)) !important;
+    box-shadow: 0 5px 15px rgba(163, 34, 63, 0.3) !important;
+    color: white !important;
+}
+
+body.inxv-theme .cta-btn:hover {
+    box-shadow: 0 8px 20px rgba(163, 34, 63, 0.5) !important;
+}
+
+body.inxv-theme .nav-cta-btn {
+    color: var(--text-primary) !important;
+    border-color: rgba(163, 34, 63, 0.3) !important;
+}
+body.inxv-theme .nav-cta-btn:hover {
+    color: var(--accent-blue) !important;
+}
+
+body.inxv-theme .setting-control select, 
+body.inxv-theme .setting-control input {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(163, 34, 63, 0.2);
+    color: var(--text-primary);
+}
+
+body.inxv-theme .pulse-glow-badge {
+    animation: inxvPulse 2s infinite alternate !important;
+}
+
+@keyframes inxvPulse {
+    0% { box-shadow: 0 0 5px rgba(163, 34, 63, 0.15); border-color: rgba(163, 34, 63, 0.2); }
+    100% { box-shadow: 0 0 15px rgba(163, 34, 63, 0.4); border-color: rgba(163, 34, 63, 0.6); }
+}
+
+body.inxv-theme .landing-navbar {
+    background: rgba(255, 245, 235, 0.9);
+}
+
+body.inxv-theme .hero-title {
+    background: linear-gradient(135deg, #a3223f, #00767a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

@@ -171,14 +171,15 @@
                 <h2><i class="fa-solid fa-palette"></i> Appearance</h2>
                 <div class="setting-item">
                     <div class="setting-info">
-                        <h4>Dark Mode Theme</h4>
-                        <p>Toggle the Futuristic Cyberpunk Dark UI.</p>
+                        <h4>UI Theme</h4>
+                        <p>Select your interface theme.</p>
                     </div>
                     <div class="setting-control">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="themeToggle">
-                            <span class="slider"></span>
-                        </label>
+                        <select id="themeSelect">
+                            <option value="light">Premium Light (Default)</option>
+                            <option value="dark">Cyberpunk Dark</option>
+                            <option value="inxv">InX.V Theme (Mandala)</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -239,19 +240,21 @@
     <script>
         // Load Settings
         document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('vani_dark_mode') === 'true';
+            const savedTheme = localStorage.getItem('vani_theme') || (localStorage.getItem('vani_dark_mode') === 'true' ? 'dark' : 'light');
             const savedAutoSpeak = localStorage.getItem('vani_auto_speak') !== 'false';
             const savedRate = localStorage.getItem('vani_speech_rate') || '1.0';
             const savedPersonality = localStorage.getItem('vani_personality') || 'helpful';
 
-            document.getElementById('themeToggle').checked = savedTheme;
+            document.getElementById('themeSelect').value = savedTheme;
             document.getElementById('autoSpeakToggle').checked = savedAutoSpeak;
             document.getElementById('speechRateSlider').value = savedRate;
             document.getElementById('speechRateVal').textContent = savedRate + 'x';
             document.getElementById('aiPersonality').value = savedPersonality;
 
-            if (savedTheme) {
+            if (savedTheme === 'dark') {
                 document.body.classList.add('dark-theme');
+            } else if (savedTheme === 'inxv') {
+                document.body.classList.add('inxv-theme');
             }
         });
 
@@ -260,12 +263,12 @@
         });
 
         document.getElementById('saveSettingsBtn').addEventListener('click', () => {
-            const isDark = document.getElementById('themeToggle').checked;
+            const selectedTheme = document.getElementById('themeSelect').value;
             const autoSpeak = document.getElementById('autoSpeakToggle').checked;
             const rate = document.getElementById('speechRateSlider').value;
             const personality = document.getElementById('aiPersonality').value;
 
-            localStorage.setItem('vani_dark_mode', isDark);
+            localStorage.setItem('vani_theme', selectedTheme);
             localStorage.setItem('vani_auto_speak', autoSpeak);
             localStorage.setItem('vani_speech_rate', rate);
             localStorage.setItem('vani_personality', personality);
@@ -274,10 +277,11 @@
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-check"></i> Saved!';
             
-            if (isDark) {
+            document.body.classList.remove('dark-theme', 'inxv-theme');
+            if (selectedTheme === 'dark') {
                 document.body.classList.add('dark-theme');
-            } else {
-                document.body.classList.remove('dark-theme');
+            } else if (selectedTheme === 'inxv') {
+                document.body.classList.add('inxv-theme');
             }
 
             setTimeout(() => {
