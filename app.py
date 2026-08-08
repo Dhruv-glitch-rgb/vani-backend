@@ -8,6 +8,8 @@ import adb_helper
 import desktop_helper
 import nlp_parser
 import memory_manager
+import autonomous_agent
+import voice_agent
 
 # Setup flask app
 # Ensure template and static folders are loaded from correct directories
@@ -133,6 +135,33 @@ def handle_command():
             else:
                 add_log(f"Running desktop execution: Send WhatsApp message to '{phone_number}'")
                 result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, message_text)
+
+        elif action == 'cross_device_whatsapp_paste':
+            phone_number = parsed.get('phone_number')
+            add_log(f"Running Swarm execution: Read PC clipboard and WhatsApp to '{phone_number}'")
+            clipboard_text = desktop_helper.get_clipboard_text()
+            if not clipboard_text.strip():
+                success = False
+                result_message = "Clipboard is empty or could not be read."
+            else:
+                if adb_helper.is_device_connected():
+                    add_log(f"Swarm: Sending clipboard via Mobile WhatsApp")
+                    result_message = adb_helper.send_whatsapp_message(phone_number, clipboard_text)
+                else:
+                    add_log(f"Swarm: Sending clipboard via Desktop WhatsApp")
+                    result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, clipboard_text)
+
+        elif action == 'build_semantic_index':
+            import semantic_search
+            add_log("Running Semantic execution: Building index")
+            semantic_search.searcher.build_index_async(WORKSPACE_DIR)
+            result_message = "Started building semantic index in the background. This may take a while."
+            
+        elif action == 'semantic_search':
+            query = parsed.get('query')
+            import semantic_search
+            add_log(f"Running Semantic execution: Searching for '{query}'")
+            result_message = semantic_search.searcher.search(query)
 
         elif action == 'take_screenshot':
             add_log("Running desktop execution: Capture screenshot")
@@ -284,6 +313,8 @@ def handle_command():
     # Store assistant response in memory if it's a valid string message
     if success and isinstance(result_message, str) and result_message.strip():
         memory_manager.add_message('assistant', result_message)
+        # Speak the response if voice agent is active
+        voice_agent.speak(result_message)
     
     response_data = {
         'success': success,
@@ -329,6 +360,12 @@ def about_developer_page():
 if __name__ == '__main__':
     # Initialize ADB download/setup in a background thread so server starts instantly
     threading.Thread(target=adb_helper.ensure_adb, daemon=True).start()
+    
+    # Start Autonomous Agent
+    autonomous_agent.start_agent()
+    
+    # Start Voice Agent
+    voice_agent.start_agent()
     
     # Run Flask server locally
     app.run(host='127.0.0.1', port=5000, debug=True)

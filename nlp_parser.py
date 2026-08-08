@@ -109,6 +109,30 @@ def parse_with_rules(text):
             'target': target
         }
 
+    # 2.5 Cross-Device WhatsApp Paste
+    clipboard_wa_match = re.search(
+        r'(?:whatsapp|send)\s+(?:pc\s+)?(?:clipboard|link|text|screen)\s+(?:to\s+)?(\+?[\d\s\-]+)', 
+        text_lower
+    )
+    if clipboard_wa_match:
+        phone_number = clipboard_wa_match.group(1).strip()
+        return {
+            'action': 'cross_device_whatsapp_paste',
+            'phone_number': phone_number
+        }
+        
+    # 2.6 Semantic Search
+    semantic_match = re.search(r'(?:find|search|where is).*(?:document|file|presentation|text).*(?:about|where i talked about|mentioning)\s+(.*)', text_lower)
+    if semantic_match:
+        return {
+            'action': 'semantic_search',
+            'query': semantic_match.group(1).strip()
+        }
+    
+    index_match = re.search(r'(?:build|create|start)\s+(?:semantic\s+)?index', text_lower)
+    if index_match:
+        return {'action': 'build_semantic_index'}
+
     # 3. Cellular Phone Call
     # Match: "call 12345", "phone call to 12345", "dial 12345"
     phone_call_match = re.search(r'\b(?:call|phone\s+call|dial)\s+(?:to\s+)?(\+?[\d\s\-]{5,})', text_lower)
@@ -261,6 +285,23 @@ Possible Actions and schemas:
   "phone_number": "123456789",
   "message_text": "custom message based on user prompt",
   "target": "desktop" | "mobile" (infer from user context, default to null if not specified)
+}}
+
+7.5. Paste PC Clipboard and Send via WhatsApp (Swarm Intelligence):
+{{
+  "action": "cross_device_whatsapp_paste",
+  "phone_number": "123456789"
+}}
+
+7.6. Build Semantic Index:
+{{
+  "action": "build_semantic_index"
+}}
+
+7.7. Semantic File Search (God-Mode):
+{{
+  "action": "semantic_search",
+  "query": "the topic to search for"
 }}
 
 8. Take desktop screenshot:

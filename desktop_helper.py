@@ -13,8 +13,23 @@ except Exception:
 
 from logger import log_status as logger_log
 
+try:
+    import pyperclip
+except ImportError:
+    pyperclip = None
+
 def log_status(message):
     logger_log('DESKTOP', message)
+
+def get_clipboard_text():
+    """Retrieve text from the desktop clipboard."""
+    if pyperclip is None:
+        return ""
+    try:
+        return pyperclip.paste()
+    except Exception as e:
+        log_status(f"Failed to read clipboard: {e}")
+        return ""
 
 # Standard app mapping
 APP_MAP = {
