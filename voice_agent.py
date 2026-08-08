@@ -2,16 +2,19 @@ import time
 import threading
 import logger
 import os
+import asyncio
 
 try:
     import pyaudio
     import numpy as np
     from openwakeword.model import Model
-    import edge_tts
-    import asyncio
 except ImportError:
     pyaudio = None
     Model = None
+
+try:
+    import edge_tts
+except ImportError:
     edge_tts = None
 
 def log_status(message):

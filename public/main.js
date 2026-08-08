@@ -1,5 +1,8 @@
 // API Configuration
-const BACKEND_URL = 'https://vani-backend-52w1.onrender.com';
+// Dynamic Backend URL to support local Jarvis testing and Render fallback
+const BACKEND_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? '' // Use relative path for local server
+    : 'https://vani-backend-52w1.onrender.com';
 const API_KEY_STORAGE_KEY = 'vani_api_key';
 
 // UI Elements
