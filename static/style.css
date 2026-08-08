@@ -1497,3 +1497,49 @@ body.dark-mode .faq-answer,
 body.dark-mode .text-muted {
     color: #cbd5e1 !important;
 }
+
+
+/* Additional Dark Mode Overrides */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .input-controls input,
+body.dark-mode .input-with-icon input,
+body.dark-mode .sys-input-wrapper input {
+    background-color: rgba(15, 23, 42, 0.9) !important;
+    color: #f8fafc !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #94a3b8 !important;
+}
+body.dark-mode .message.assistant .message-content,
+body.dark-mode .message.system .message-content {
+    background-color: rgba(30, 41, 59, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #f8fafc !important;
+}
+body.dark-mode .message.user .message-content {
+    background: linear-gradient(135deg, #b45309, #92400e) !important; 
+    color: #ffffff !important;
+}
+body.dark-mode .device-item,
+body.dark-mode .terminal-logs {
+    background-color: rgba(15, 23, 42, 0.9) !important;
+    color: #f8fafc !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+body.dark-mode .secondary-btn,
+body.dark-mode .nav-cta-btn {
+    color: #f8fafc !important;
+}
+body.dark-mode .nav-cta-btn {
+    background: #334155 !important;
+}
+body.dark-mode .nav-cta-btn:hover {
+    background: var(--accent-indigo) !important;
+}
+body.dark-mode .hero-card {
+    background: transparent !important;
+}
