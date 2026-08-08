@@ -196,44 +196,6 @@ async function pollLogs() {
     }
 }
 
-// Fetch ADB device status
-async function checkAdbStatus() {
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/adb/status`, { headers: { 'Bypass-Tunnel-Reminder': 'true' } });
-        if (!response.ok) return;
-        const data = await response.json();
-        
-        // Update Indicator Badge
-        if (data.connected) {
-            adbDot.className = 'dot green';
-            adbText.textContent = `${data.devices.length} ADB Connected`;
-        } else {
-            adbDot.className = 'dot red';
-            adbText.textContent = 'ADB Disconnected';
-        }
-
-        // Render device list dropdown
-        let listHtml = '';
-        if (data.devices && data.devices.length > 0) {
-            data.devices.forEach(dev => {
-                listHtml += `
-                    <div class="device-item">
-                        <div class="device-info">
-                            <i class="fa-solid fa-mobile-screen"></i>
-                            <span>${dev.id}</span>
-                        </div>
-                        <div class="device-status">${dev.status}</div>
-                    </div>
-                `;
-            });
-        } else {
-            listHtml = '<div class="no-devices">No mobile devices detected. Check connection.</div>';
-        }
-        deviceList.innerHTML = listHtml;
-    } catch (err) {
-        console.error("ADB status check failed", err);
-    }
-}
 
 // Handle clicking on reference template commands
 function useCommand(commandString) {
@@ -249,12 +211,6 @@ textInput.addEventListener('keydown', (e) => {
     }
 });
 voiceBtn.addEventListener('click', toggleVoice);
-refreshAdbBtn.addEventListener('click', () => {
-    addTerminalLog("[ADB] Scanning for USB/Wi-Fi devices...");
-    checkAdbStatus();
-});
-
-
 // Load Backend URL from local storage on load
 if (backendUrlInput) {
     backendUrlInput.value = localStorage.getItem('vani_backend_url') || '';
@@ -340,15 +296,11 @@ window.addEventListener('DOMContentLoaded', () => {
     // Init Recognition
     initSpeechRecognition();
 
-    // Initial Status Checks
-    checkAdbStatus();
     if (terminalLogs) {
         pollLogs();
         logPollingInterval = setInterval(pollLogs, 1500);
     }
 
-    // Set polling timers
-    adbPollingInterval = setInterval(checkAdbStatus, 5000);
     
     addTerminalLog("[SYSTEM] V.A.N.I-xAI interface loaded.");
 });

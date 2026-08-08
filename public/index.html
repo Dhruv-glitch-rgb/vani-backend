@@ -234,9 +234,7 @@
                 <div class="status-badge" id="server-status">
                     <span class="dot green"></span> System Live
                 </div>
-                <div class="status-badge" id="adb-status">
-                    <span class="dot red" id="adb-dot"></span> <span id="adb-text">ADB Disconnected</span>
-                </div>
+
                 <button class="nav-cta-btn" id="admin-panel-btn"
                     style="display:none; background:#ff9933; color:white; padding: 6px 12px; font-size: 0.8rem; margin-right: 10px;">
                     <i class="fa-solid fa-user-shield"></i> Admin Panel
@@ -310,18 +308,7 @@
                     <p class="help-text">Provide a secure tunnel URL (e.g. localtunnel) to control your local PC from the cloud.</p>
                 </div>
 
-                <!-- ADB Device Management -->
-                <div class="control-group">
-                    <div class="group-header">
-                        <h3><i class="fa-solid fa-mobile-screen-button"></i> Connected Devices</h3>
-                        <button class="icon-action-btn" id="refresh-adb" title="Scan for devices">
-                            <i class="fa-solid fa-arrows-rotate"></i>
-                        </button>
-                    </div>
-                    <div class="device-list" id="device-list">
-                        <div class="no-devices">No mobile devices detected. Check connection.</div>
-                    </div>
-                </div>
+
                 <!-- Security Settings -->
                 <div class="control-group">
                     <div class="group-header">
@@ -355,33 +342,6 @@
                             <strong>Close Desktop App:</strong> <code>close notepad</code>
                         </div>
 
-                        <div class="reference-section-title">WhatsApp Controls</div>
-                        <div class="quick-cmd-item"
-                            onclick="useCommand('whatsapp video call to 9555778474 on desktop')">
-                            <strong>Desktop Call:</strong> <code>whatsapp video call to 9555778474 on desktop</code>
-                        </div>
-                        <div class="quick-cmd-item" onclick="useCommand('whatsapp call to 9555778474 on desktop')">
-                            <strong>Desktop Voice Call:</strong> <code>whatsapp call to 9555778474 on desktop</code>
-                        </div>
-                        <div class="quick-cmd-item"
-                            onclick="useCommand('send whatsapp message to 9555778474 saying hello on desktop')">
-                            <strong>Desktop Message:</strong> <code>send whatsapp message saying hello on desktop</code>
-                        </div>
-
-                        <div class="reference-section-title">Android Controls</div>
-                        <div class="quick-cmd-item" onclick="useCommand('take mobile screenshot')">
-                            <strong>Capture Screenshot:</strong> <code>take mobile screenshot</code>
-                        </div>
-                        <div class="quick-cmd-item" onclick="useCommand('press home on mobile')">
-                            <strong>Press Key events:</strong> <code>press home on mobile</code> /
-                            <code>press back</code>
-                        </div>
-                        <div class="quick-cmd-item" onclick="useCommand('swipe up on mobile')">
-                            <strong>Swipe Gesture:</strong> <code>swipe up on mobile</code> / <code>swipe down</code>
-                        </div>
-                        <div class="quick-cmd-item" onclick="useCommand('type hello on mobile')">
-                            <strong>Type Text:</strong> <code>type hello on mobile</code>
-                        </div>
                     </div>
                 </div>
 

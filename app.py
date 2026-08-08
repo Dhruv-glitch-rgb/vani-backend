@@ -9,7 +9,6 @@ import threading
 from collections import deque
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
-import adb_helper
 import desktop_helper
 import nlp_parser
 import memory_manager
@@ -45,15 +44,6 @@ def index():
 def auth():
     return render_template('auth-vani-xai.html')
 
-# Endpoint: Check ADB Status
-@app.route('/api/adb/status', methods=['GET'])
-def adb_status():
-    connected = adb_helper.is_device_connected()
-    devices = adb_helper.list_devices()
-    return jsonify({
-        'connected': connected,
-        'devices': devices
-    })
 
 # Endpoint: Run command
 @app.route('/api/command', methods=['POST'])
@@ -88,57 +78,17 @@ def handle_command():
             add_log(f"Running desktop automation: {desktop_action} ('{value}')")
             result_message = desktop_helper.use_desktop_app(desktop_action, value)
 
-        elif action == 'open_mobile_app':
-            package_name = parsed.get('package_name')
-            if adb_helper.is_device_connected():
-                add_log(f"Running mobile execution: Open package '{package_name}'")
-                result = adb_helper.open_mobile_app(package_name)
-                result_message = f"Mobile app opened. System output: {result}"
-            else:
-                success = False
-                result_message = "No Android device connected. Please connect a device via USB with USB debugging enabled."
-
-        elif action == 'close_mobile_app':
-            package_name = parsed.get('package_name')
-            if adb_helper.is_device_connected():
-                add_log(f"Running mobile execution: Close package '{package_name}'")
-                result = adb_helper.close_mobile_app(package_name)
-                result_message = f"Closed mobile app '{package_name}'."
-            else:
-                success = False
-                result_message = "No Android device connected."
-
-        elif action == 'make_phone_call':
-            phone_number = parsed.get('phone_number')
-            if adb_helper.is_device_connected():
-                add_log(f"Running mobile execution: Make phone call to '{phone_number}'")
-                result = adb_helper.make_phone_call(phone_number)
-                result_message = f"Phone call triggered on mobile. System output: {result}"
-            else:
-                success = False
-                result_message = "No Android device connected."
-
         elif action == 'make_whatsapp_call':
             phone_number = parsed.get('phone_number')
             call_type = parsed.get('call_type', 'voice')
-            target = parsed.get('target')
-            if target == 'mobile' or (target != 'desktop' and adb_helper.is_device_connected()):
-                add_log(f"Running mobile execution: Make WhatsApp {call_type} call to '{phone_number}'")
-                result_message = adb_helper.make_whatsapp_call(phone_number, call_type)
-            else:
-                add_log(f"Running desktop execution: Make WhatsApp {call_type} call to '{phone_number}'")
-                result_message = desktop_helper.make_desktop_whatsapp_call(phone_number, call_type)
+            add_log(f"Running desktop execution: Make WhatsApp {call_type} call to '{phone_number}'")
+            result_message = desktop_helper.make_desktop_whatsapp_call(phone_number, call_type)
 
         elif action == 'send_whatsapp_message':
             phone_number = parsed.get('phone_number')
             message_text = parsed.get('message_text')
-            target = parsed.get('target')
-            if target == 'mobile' or (target != 'desktop' and adb_helper.is_device_connected()):
-                add_log(f"Running mobile execution: Send WhatsApp message to '{phone_number}'")
-                result_message = adb_helper.send_whatsapp_message(phone_number, message_text)
-            else:
-                add_log(f"Running desktop execution: Send WhatsApp message to '{phone_number}'")
-                result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, message_text)
+            add_log(f"Running desktop execution: Send WhatsApp message to '{phone_number}'")
+            result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, message_text)
 
         elif action == 'cross_device_whatsapp_paste':
             phone_number = parsed.get('phone_number')
@@ -148,12 +98,8 @@ def handle_command():
                 success = False
                 result_message = "Clipboard is empty or could not be read."
             else:
-                if adb_helper.is_device_connected():
-                    add_log(f"Swarm: Sending clipboard via Mobile WhatsApp")
-                    result_message = adb_helper.send_whatsapp_message(phone_number, clipboard_text)
-                else:
-                    add_log(f"Swarm: Sending clipboard via Desktop WhatsApp")
-                    result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, clipboard_text)
+                add_log(f"Swarm: Sending clipboard via Desktop WhatsApp")
+                result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, clipboard_text)
 
         elif action == 'build_semantic_index':
             import semantic_search
@@ -173,15 +119,6 @@ def handle_command():
             if isinstance(result_message, dict) and not result_message.get('success', True):
                 success = False
 
-        elif action == 'take_mobile_screenshot':
-            if adb_helper.is_device_connected():
-                add_log("Running mobile execution: Capture screenshot")
-                result_message = adb_helper.take_mobile_screenshot()
-                if isinstance(result_message, dict) and not result_message.get('success', True):
-                    success = False
-            else:
-                success = False
-                result_message = "No Android device connected to capture screenshot."
 
         elif action == 'lock_windows':
             add_log("Running desktop execution: Lock workstation")
@@ -197,32 +134,6 @@ def handle_command():
             add_log(f"Running desktop execution: Open URL '{url_val}'")
             result_message = desktop_helper.open_url(url_val)
 
-        elif action == 'swipe_mobile':
-            direction = parsed.get('direction', 'up')
-            if adb_helper.is_device_connected():
-                add_log(f"Running mobile execution: Swipe {direction}")
-                result_message = adb_helper.swipe_mobile(direction)
-            else:
-                success = False
-                result_message = "No Android device connected to swipe."
-
-        elif action == 'press_mobile_key':
-            key = parsed.get('key', 'home')
-            if adb_helper.is_device_connected():
-                add_log(f"Running mobile execution: Press key {key}")
-                result_message = adb_helper.press_mobile_key(key)
-            else:
-                success = False
-                result_message = "No Android device connected to press key."
-
-        elif action == 'type_mobile_text':
-            type_text = parsed.get('text', '')
-            if adb_helper.is_device_connected():
-                add_log(f"Running mobile execution: Type text '{type_text}'")
-                result_message = adb_helper.type_mobile_text(type_text)
-            else:
-                success = False
-                result_message = "No Android device connected to type text."
 
         elif action == 'analyze_screen':
             add_log("Running vision execution: Analyze screen")
@@ -362,9 +273,6 @@ def about_developer_page():
     return render_template('about_developer.html')
 
 if __name__ == '__main__':
-    # Initialize ADB download/setup in a background thread so server starts instantly
-    threading.Thread(target=adb_helper.ensure_adb, daemon=True).start()
-    
     # Start Autonomous Agent
     autonomous_agent.start_agent()
     

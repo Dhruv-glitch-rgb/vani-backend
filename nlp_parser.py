@@ -50,25 +50,15 @@ def parse_with_rules(text):
     if url_match:
         return {'action': 'open_url', 'url': url_match.group(1)}
     elif text_lower.startswith('open ') or text_lower.startswith('go to '):
-        parts = text_lower.split(' ')
+        parts = text_lower.replace('go to ', '').replace('open ', '').strip().split(' ')
         potential_url = parts[-1]
+        
+        # If it has a dot, treat as URL
         if '.' in potential_url and len(potential_url) > 3 and not potential_url.endswith('.'):
             return {'action': 'open_url', 'url': potential_url}
-
-    # 0.5 Swipe Mobile
-    swipe_match = re.search(r'swipe\s+(up|down|left|right)(?:\s+on\s+mobile|\s+on\s+phone)?', text_lower)
-    if swipe_match:
-        return {'action': 'swipe_mobile', 'direction': swipe_match.group(1)}
-
-    # 0.6 Mobile Keys
-    mobile_key_match = re.search(r'press\s+(home|back|app_switch|recent|power|volume_up|volume_down)(?:\s+on\s+mobile|\s+on\s+phone)?', text_lower)
-    if mobile_key_match:
-        return {'action': 'press_mobile_key', 'key': mobile_key_match.group(1)}
-
-    # 0.7 Type Text Mobile
-    mobile_type_match = re.search(r'type\s+(?:text\s+)?(.*)\s+on\s+mobile', text_lower)
-    if mobile_type_match:
-        return {'action': 'type_mobile_text', 'text': mobile_type_match.group(1)}
+        # If it's a known website or a single word, treat as URL
+        elif len(parts) == 1 and potential_url not in ['notepad', 'calculator', 'cmd', 'terminal', 'explorer', 'settings']:
+            return {'action': 'open_url', 'url': f"https://www.{potential_url}.com"}
     
     # 1. WhatsApp Call
     # Match voice/video whatsapp calls. E.g. "whatsapp video call to 12345", "whatsapp call 12345"
