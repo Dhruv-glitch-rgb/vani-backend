@@ -1,5 +1,10 @@
 import os
 import sys
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 import threading
 from collections import deque
 from flask import Flask, request, jsonify, render_template, send_from_directory
@@ -55,7 +60,6 @@ def adb_status():
 def handle_command():
     data = request.json or {}
     command = data.get('command', '').strip()
-    api_key = data.get('api_key', '').strip()
 
     if not command:
         return jsonify({'error': 'No command provided'}), 400
@@ -66,7 +70,7 @@ def handle_command():
     memory_manager.add_message('user', command)
     
     # Parse the command
-    parsed = nlp_parser.parse_command(command, api_key)
+    parsed = nlp_parser.parse_command(command)
     action = parsed.get('action')
     
     result_message = ""
@@ -233,8 +237,8 @@ def handle_command():
                     encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
                 
                 vision_prompt = command
-                # Use the API key provided by the frontend, or fall back to an environment variable
-                use_key = api_key if api_key else os.environ.get("OPENROUTER_API_KEY", "")
+                # Use the API key from environment variable
+                use_key = os.environ.get("OPENROUTER_API_KEY", "")
                 
                 req = urllib.request.Request(
                     url="https://openrouter.ai/api/v1/chat/completions",

@@ -12,3 +12,5 @@ python-docx==1.1.0
 openwakeword==0.6.0; sys_platform == 'win32'
 pyaudio==0.2.14; sys_platform == 'win32'
 edge-tts==6.1.10
+
+python-dotenv==1.0.1

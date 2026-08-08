@@ -15,7 +15,6 @@ const voiceBtn = document.getElementById('voice-btn');
 const micIcon = document.getElementById('mic-icon');
 const waveform = document.getElementById('waveform');
 const voiceStatusText = document.getElementById('voice-status-text');
-const apiKeyInput = document.getElementById('api-key-input');
 const backendUrlInput = document.getElementById('backend-url-input');
 const refreshAdbBtn = document.getElementById('refresh-adb');
 const deviceList = document.getElementById('device-list');
@@ -146,8 +145,6 @@ async function submitCommand(commandText) {
     addChatMessage('user', commandText);
     textInput.value = '';
 
-    const apiKey = apiKeyInput.value.trim();
-
     try {
         const response = await fetch(`${BACKEND_URL}/api/command`, {
             method: 'POST',
@@ -155,7 +152,7 @@ async function submitCommand(commandText) {
                 'Content-Type': 'application/json',
                 'Bypass-Tunnel-Reminder': 'true' 
             },
-            body: JSON.stringify({ command: commandText, api_key: apiKey })
+            body: JSON.stringify({ command: commandText })
         });
 
         const data = await response.json();
@@ -257,16 +254,6 @@ refreshAdbBtn.addEventListener('click', () => {
     checkAdbStatus();
 });
 
-// Load API key from local storage on load
-const savedKey = localStorage.getItem('antigravity_openrouter_key');
-if (savedKey && apiKeyInput) {
-    apiKeyInput.value = savedKey;
-}
-
-apiKeyInput.addEventListener('change', () => {
-    localStorage.setItem('antigravity_openrouter_key', apiKeyInput.value.trim());
-    addTerminalLog("[SETTINGS] OpenRouter API Key saved locally.");
-});
 
 // Load Backend URL from local storage on load
 if (backendUrlInput) {

@@ -122,7 +122,7 @@ def parse_with_rules(text):
         }
         
     # 2.6 Semantic Search
-    semantic_match = re.search(r'(?:find|search|where is).*(?:document|file|presentation|text).*(?:about|where i talked about|mentioning)\s+(.*)', text_lower)
+    semantic_match = re.search(r'(?:find|search|where is).*(?:document|file|presentation|text).*(?:about|where i talked about|mentioning|related to)\s+(.*)', text_lower)
     if semantic_match:
         return {
             'action': 'semantic_search',
@@ -226,12 +226,11 @@ def parse_with_rules(text):
         'message': f"I couldn't parse the command '{text}'. Please try a supported command format."
     }
 
-def parse_command(text, api_key=None):
+def parse_command(text):
     """
     Parse user prompt. Uses OpenRouter if configured, else falls back to regex rules.
     """
-    # Fallback to environment variable if no key is provided by the frontend
-    api_key = api_key or os.environ.get("OPENROUTER_API_KEY", "")
+    api_key = os.environ.get("OPENROUTER_API_KEY", "")
 
     try:
         prompt = f"""
