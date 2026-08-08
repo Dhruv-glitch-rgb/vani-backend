@@ -1,7 +1,10 @@
 // Dynamic Backend URL to support local Jarvis testing and Render fallback
-const BACKEND_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? '' // Use relative path for local server
-    : 'https://vani-backend-52w1.onrender.com';
+let BACKEND_URL = localStorage.getItem('vani_backend_url');
+if (!BACKEND_URL) {
+    BACKEND_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? '' // Use relative path for local server
+        : 'https://vani-backend-52w1.onrender.com';
+}
 const API_KEY_STORAGE_KEY = 'vani_api_key';
 
 // UI Elements
@@ -13,6 +16,7 @@ const micIcon = document.getElementById('mic-icon');
 const waveform = document.getElementById('waveform');
 const voiceStatusText = document.getElementById('voice-status-text');
 const apiKeyInput = document.getElementById('api-key-input');
+const backendUrlInput = document.getElementById('backend-url-input');
 const refreshAdbBtn = document.getElementById('refresh-adb');
 const deviceList = document.getElementById('device-list');
 const adbDot = document.getElementById('adb-dot');
@@ -254,10 +258,30 @@ refreshAdbBtn.addEventListener('click', () => {
 });
 
 // Load API key from local storage on load
+const savedKey = localStorage.getItem('antigravity_openrouter_key');
+if (savedKey && apiKeyInput) {
+    apiKeyInput.value = savedKey;
+}
+
 apiKeyInput.addEventListener('change', () => {
     localStorage.setItem('antigravity_openrouter_key', apiKeyInput.value.trim());
     addTerminalLog("[SETTINGS] OpenRouter API Key saved locally.");
 });
+
+// Load Backend URL from local storage on load
+if (backendUrlInput) {
+    backendUrlInput.value = localStorage.getItem('vani_backend_url') || '';
+    backendUrlInput.addEventListener('change', () => {
+        const val = backendUrlInput.value.trim();
+        if (val) {
+            localStorage.setItem('vani_backend_url', val.replace(/\/$/, ''));
+        } else {
+            localStorage.removeItem('vani_backend_url');
+        }
+        addTerminalLog("[SETTINGS] Backend URL saved locally. Reloading...");
+        setTimeout(() => window.location.reload(), 1000);
+    });
+}
 
 // Page Initialization
 window.addEventListener('DOMContentLoaded', () => {
@@ -267,12 +291,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Firebase Auth State Listener
     if (typeof auth !== 'undefined') {
-        auth.onAuthStateChanged(user => {
-            if (user && shouldLaunch) {
-                // Auto-launch if authenticated and requested
-                landingPage.classList.add('hidden');
-                appContainer.classList.remove('hidden');
-                addTerminalLog(`[SYSTEM] Authenticated as ${user.email}. Session active.`);
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                authInstance = user;
+                // Admin Panel check
+                if (user.email === 'official.vani.xai76@gmail.com') {
+                    const adminBtn = document.getElementById('admin-panel-btn');
+                    if(adminBtn) {
+                        adminBtn.style.display = 'inline-flex';
+                        adminBtn.addEventListener('click', () => {
+                            window.location.href = '/admin-vaniXai.html';
+                        });
+                    }
+                }
+                if (shouldLaunch) {
+                    // Auto-launch if authenticated and requested
+                    landingPage.classList.add('hidden');
+                    appContainer.classList.remove('hidden');
+                    addTerminalLog(`[SYSTEM] Authenticated as ${user.email}. Session active.`);
+                }
+            } else {
+                authInstance = null;
             }
         });
     }
