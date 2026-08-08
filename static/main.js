@@ -145,6 +145,33 @@ async function submitCommand(commandText) {
     addChatMessage('user', commandText);
     textInput.value = '';
 
+    // Mobile Client-Side Intercept for URLs
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+        let lowerCmd = commandText.toLowerCase().trim();
+        if (lowerCmd.startsWith("open ") || lowerCmd.startsWith("go to ")) {
+            let parts = lowerCmd.replace("go to ", "").replace("open ", "").trim().split(" ");
+            let potentialUrl = parts[parts.length - 1];
+            
+            if (potentialUrl.includes(".") && potentialUrl.length > 3 && !potentialUrl.endsWith(".")) {
+                // Keep as is
+            } else if (parts.length === 1 && !['notepad', 'calculator', 'cmd', 'terminal', 'explorer', 'settings'].includes(potentialUrl)) {
+                potentialUrl = `https://www.${potentialUrl}.com`;
+            } else {
+                potentialUrl = "";
+            }
+
+            if (potentialUrl) {
+                if (!potentialUrl.startsWith("http")) {
+                    potentialUrl = "https://" + potentialUrl;
+                }
+                addChatMessage('bot', `Opening ${potentialUrl} on your mobile browser...`);
+                window.open(potentialUrl, '_blank');
+                return; // Do not send to backend
+            }
+        }
+    }
+
     try {
         const response = await fetch(`${BACKEND_URL}/api/command`, {
             method: 'POST',
