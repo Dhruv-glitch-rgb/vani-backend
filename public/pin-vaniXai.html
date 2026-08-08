@@ -8,30 +8,16 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
     <style>
         :root {
-            --bg-dark: #020617;
             --accent-primary: #38bdf8;
             --accent-secondary: #818cf8;
             --error-color: #ef4444;
             --success-color: #22c55e;
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
+        /* Specific PIN Page Styles (Overrides) */
 
         /* Ambient Glows */
         .ambient-core {
@@ -59,20 +45,14 @@
             z-index: 1;
         }
 
-        /* Glass Container */
+        /* Glass Container Override */
         .pin-container {
             position: relative;
             z-index: 10;
             width: 90%;
             max-width: 420px;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 30px;
             padding: 50px 40px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.15);
             animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
@@ -228,12 +208,12 @@
 
     </style>
 </head>
-<body>
+<body class="dark-theme" style="height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; margin: 0;">
 
     <div class="ambient-core"></div>
     <div class="texture-grid"></div>
 
-    <div class="pin-container">
+    <div class="pin-container glass-panel">
         <img src="vani_logo.jpg" class="auth-logo" alt="V.A.N.I-xAI">
         <h2 id="pin-title">Security Gateway</h2>
         <p class="subtitle" id="pin-subtitle">Authenticating session...</p>
@@ -544,5 +524,70 @@
         });
 
     </script>
+
+<!-- Dark Mode Toggle Snippet -->
+<style>
+  .dark-mode-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--accent-indigo, #FF9933);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .dark-mode-toggle-btn:hover {
+    transform: scale(1.1);
+  }
+  /* Dark mode overrides */
+  body.dark-mode {
+    --bg-main: #0f172a;
+    --panel-bg: rgba(30, 41, 59, 0.85);
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+</style>
+<button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
+  <span id="darkModeIcon">🌙</span>
+</button>
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('darkModeToggle');
+    const body = document.body;
+    const icon = document.getElementById('darkModeIcon');
+    
+    // Check local storage for theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      icon.textContent = '☀️';
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        icon.textContent = '☀️';
+      } else {
+        localStorage.setItem('theme', 'light');
+        icon.textContent = '🌙';
+      }
+    });
+  })();
+</script>
+
 </body>
 </html>

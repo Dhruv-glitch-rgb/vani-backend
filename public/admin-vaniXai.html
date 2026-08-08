@@ -8,29 +8,16 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
     <style>
         :root {
-            --bg-deep: #f8fafc;
             --saffron: #ea580c; 
             --white-glow: #0f172a; 
             --india-green: #16a34a; 
             --navy-blue: #1e3a8a;
-            --text-main: #334155;
-            --glass-bg: rgba(255, 255, 255, 0.6); /* More transparent for frosted glass */
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-
+        /* --- Admin Specific Overrides --- */
 
         /* --- Layout & Core --- */
         .admin-layout {
@@ -149,20 +136,11 @@
             transform: translateY(-3px) scale(1.05);
         }
 
-        /* --- Data Panel & Glassmorphism --- */
+        /* --- Data Panel Override --- */
         .data-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
             border-top: 3px solid rgba(234, 88, 12, 0.8);
             border-bottom: 3px solid rgba(22, 163, 74, 0.8);
-            border-radius: 20px;
             padding: 40px;
-            box-shadow: 
-                0 20px 40px rgba(0,0,0,0.05), 
-                0 0 50px rgba(255, 255, 255, 0.8) inset,
-                0 0 20px rgba(30, 58, 138, 0.05);
             position: relative;
             overflow: hidden;
         }
@@ -273,52 +251,7 @@
         }
         .btn-export:hover { background: var(--india-green); }
 
-        /* --- Table Styling --- */
-        .table-responsive {
-            overflow-x: auto;
-            position: relative;
-            z-index: 2;
-            padding-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 12px;
-            text-align: left;
-        }
-
-        th {
-            font-family: 'Rajdhani', sans-serif;
-            color: var(--navy-blue);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 1rem;
-            padding: 15px 20px;
-            border-bottom: 2px solid rgba(30, 58, 138, 0.1);
-        }
-
-        td {
-            padding: 20px 25px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(5px);
-            font-size: 1rem;
-            border: 1px solid rgba(255,255,255,0.8);
-            border-left: none;
-            border-right: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            position: relative;
-        }
-        
-        td:first-child { 
-            border-left: 3px solid transparent; 
-            border-radius: 12px 0 0 12px; 
-        }
-        
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.95);
-        }
+        /* --- Specific Table Cells --- */
 
         .pin-cell {
             font-family: 'Courier New', Courier, monospace;
@@ -458,6 +391,34 @@
             animation: badgeBreathe 0.5s ease-in-out infinite alternate;
         }
 
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            .header-title {
+                flex-direction: column;
+                gap: 10px;
+            }
+            h1 { font-size: 1.8rem; }
+            .data-panel { padding: 20px; }
+            .panel-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .controls-left {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-input { max-width: 100%; }
+        }
+
     </style>
 </head>
 <body>
@@ -475,7 +436,7 @@
             </button>
         </header>
 
-        <main class="data-panel">
+        <main class="data-panel glass-panel">
             <div class="panel-header">
                 <h2><i class="fa-solid fa-users-viewfinder" style="color:var(--saffron);"></i> Registered Personnel</h2>
                 <div class="badge" id="user-count">Scanning...</div>
@@ -493,8 +454,8 @@
                 <button class="btn-export" onclick="exportCSV()"><i class="fa-solid fa-download"></i> Export CSV</button>
             </div>
 
-            <div class="table-responsive">
-                <table>
+            <div class="sys-table-wrapper" style="position: relative; z-index: 2; padding-bottom: 20px;">
+                <table class="sys-table">
                     <thead>
                         <tr>
                             <th>ID Hash</th>
@@ -618,12 +579,12 @@
                 const safePin = (data.pin ? String(data.pin) : 'NOT SET').replace(/"/g, '&quot;');
 
                 tr.innerHTML = `
-                    <td style="font-size:0.75rem; color:#64748b;">${data.id}</td>
-                    <td class="name-cell">${safeName}</td>
-                    <td class="email-cell">${safeEmail}</td>
-                    <td class="pin-cell" style="color:var(--saffron)">${safePin}</td>
-                    <td style="font-size:0.8rem; color:#94a3b8;">${dateStr}</td>
-                    <td>
+                    <td data-label="ID" style="font-size:0.75rem; color:#64748b;">${data.id}</td>
+                    <td data-label="Name" class="name-cell">${safeName}</td>
+                    <td data-label="Email" class="email-cell">${safeEmail}</td>
+                    <td data-label="PIN" class="pin-cell" style="color:var(--saffron)">${safePin}</td>
+                    <td data-label="Joined" style="font-size:0.8rem; color:#94a3b8;">${dateStr}</td>
+                    <td data-label="Actions">
                         <button class="btn-action reset" onclick="resetUserPin('${data.id}')" title="Force Pin Reset"><i class="fa-solid fa-key"></i></button>
                         <button class="btn-action delete" onclick="deleteUser('${data.id}')" title="Delete User"><i class="fa-solid fa-trash"></i></button>
                     </td>
@@ -693,5 +654,70 @@
         }
         setupLogsListener();
     </script>
+
+<!-- Dark Mode Toggle Snippet -->
+<style>
+  .dark-mode-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--accent-indigo, #FF9933);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .dark-mode-toggle-btn:hover {
+    transform: scale(1.1);
+  }
+  /* Dark mode overrides */
+  body.dark-mode {
+    --bg-main: #0f172a;
+    --panel-bg: rgba(30, 41, 59, 0.85);
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+</style>
+<button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
+  <span id="darkModeIcon">🌙</span>
+</button>
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('darkModeToggle');
+    const body = document.body;
+    const icon = document.getElementById('darkModeIcon');
+    
+    // Check local storage for theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      icon.textContent = '☀️';
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        icon.textContent = '☀️';
+      } else {
+        localStorage.setItem('theme', 'light');
+        icon.textContent = '🌙';
+      }
+    });
+  })();
+</script>
+
 </body>
 </html>

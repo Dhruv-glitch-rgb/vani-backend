@@ -89,5 +89,70 @@
         </footer>
     </div>
 
+
+<!-- Dark Mode Toggle Snippet -->
+<style>
+  .dark-mode-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--accent-indigo, #FF9933);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .dark-mode-toggle-btn:hover {
+    transform: scale(1.1);
+  }
+  /* Dark mode overrides */
+  body.dark-mode {
+    --bg-main: #0f172a;
+    --panel-bg: rgba(30, 41, 59, 0.85);
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+</style>
+<button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
+  <span id="darkModeIcon">🌙</span>
+</button>
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('darkModeToggle');
+    const body = document.body;
+    const icon = document.getElementById('darkModeIcon');
+    
+    // Check local storage for theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      icon.textContent = '☀️';
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        icon.textContent = '☀️';
+      } else {
+        localStorage.setItem('theme', 'light');
+        icon.textContent = '🌙';
+      }
+    });
+  })();
+</script>
+
 </body>
 </html>

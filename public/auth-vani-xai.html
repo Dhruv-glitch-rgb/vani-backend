@@ -12,432 +12,79 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <link rel="stylesheet" href="./style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
-        }
+        /* Page Specific Overrides */
+        .logo-container { margin-top: 20px; margin-bottom: 30px; }
+        .logo-container img { width: 140px; height: auto; }
+        .auth-title { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .auth-subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 30px; }
+        .auth-subtitle span.brand { color: var(--accent-green); font-weight: 600; }
+        .auth-desc { font-size: 0.95rem; color: var(--text-muted); max-width: 320px; line-height: 1.6; margin-bottom: 50px; }
 
-        body {
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .auth-container {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-            display: flex;
-            width: 100%;
-            max-width: 1100px;
-            min-height: 700px;
-            overflow: hidden;
-        }
-
-        /* Left Panel - Branding */
-        .auth-left {
-            flex: 1;
-            background: linear-gradient(to bottom, #ffffff, #fdfbf7 40%, #eef5fb 100%);
-            padding: 60px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            border-right: 1px solid rgba(0, 0, 0, 0.03);
-        }
-
-        .logo-container {
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-
-        .logo-container img {
-            width: 140px;
-            height: auto;
-        }
-
-        .auth-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 8px;
-        }
-
-        .auth-subtitle {
-            font-size: 1.1rem;
-            color: #475569;
-            margin-bottom: 30px;
-        }
-
-        .auth-subtitle span.brand {
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        .auth-desc {
-            font-size: 0.95rem;
-            color: #64748b;
-            max-width: 320px;
-            line-height: 1.6;
-            margin-bottom: 50px;
-        }
-
-        .features-row {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 80px;
-        }
-
-        .feature-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .feature-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .feature-icon.blue {
-            background: #eff6ff;
-            color: #3b82f6;
-        }
-
-        .feature-icon.green {
-            background: #f0fdf4;
-            color: #10b981;
-        }
-
-        .feature-icon.orange {
-            background: #fffbeb;
-            color: #f59e0b;
-        }
-
-        .feature-icon.purple {
-            background: #faf5ff;
-            color: #a855f7;
-        }
-
-        .feature-text {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #475569;
-            text-align: center;
-            line-height: 1.2;
-        }
+        .features-row { display: flex; gap: 20px; justify-content: center; margin-bottom: 80px; }
+        .feature-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .feature-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .feature-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .feature-icon.green { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .feature-icon.orange { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+        .feature-icon.purple { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+        .feature-text { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-align: center; line-height: 1.2; }
 
         .taj-mahal-bg {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 200px;
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 200px;
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1200px-Taj_Mahal_%28Edited%29.jpeg');
-            background-size: cover;
-            background-position: center bottom;
-            opacity: 0.1;
-            mask-image: linear-gradient(to top, black 0%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+            background-size: cover; background-position: center bottom;
+            opacity: 0.1; mask-image: linear-gradient(to top, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
         }
 
-        /* Right Panel - Login */
-        .auth-right {
-            flex: 1;
-            padding: 60px;
-            display: flex;
-            flex-direction: column;
-            background: white;
-            position: relative;
-        }
+        .lang-selector { position: absolute; top: 30px; right: 30px; border: 1px solid var(--panel-border); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .form-container { max-width: 400px; width: 100%; margin: auto; display: flex; flex-direction: column; }
+        
+        .welcome-title { font-size: 2.2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; text-align: center; }
+        .welcome-sub { font-size: 0.95rem; color: var(--text-muted); text-align: center; margin-bottom: 30px; }
+        .welcome-sub span { color: var(--accent-blue); font-weight: 600; }
 
-        .lang-selector {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            border: 1px solid #e2e8f0;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #475569;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
+        .btn-google img { width: 20px; height: 20px; }
 
-        .form-container {
-            max-width: 400px;
-            width: 100%;
-            margin: auto;
-            display: flex;
-            flex-direction: column;
-        }
+        .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--panel-border); }
+        .divider:not(:empty)::before { margin-right: 15px; }
+        .divider:not(:empty)::after { margin-left: 15px; }
 
-        .welcome-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #0f172a;
-            margin-bottom: 8px;
-            text-align: center;
-        }
+        .toggle-password { position: absolute; right: 14px; color: var(--text-muted); cursor: pointer; }
+        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-size: 0.85rem; }
+        .remember-me { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); }
+        .forgot-pass { color: #3b82f6; text-decoration: none; font-weight: 500; }
+        
+        .signup-text { text-align: center; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 30px; }
+        .signup-text a { color: #3b82f6; font-weight: 600; text-decoration: none; }
+        .security-badges { display: flex; gap: 12px; justify-content: space-between; margin-bottom: 30px; }
+        .sec-badge { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; color: var(--text-secondary); background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--panel-border); }
+        .terms-text { text-align: center; font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+        .terms-text a { color: #3b82f6; text-decoration: none; }
 
-        .welcome-sub {
-            font-size: 0.95rem;
-            color: #64748b;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .welcome-sub span {
-            color: #3b82f6;
-            font-weight: 600;
-        }
-
-        .btn-google {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            color: #334155;
-            font-size: 0.95rem;
-            font-weight: 600;
-            padding: 14px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 24px;
-        }
-
-        .btn-google:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-        }
-
-        .btn-google img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: #94a3b8;
-            font-size: 0.85rem;
-            margin-bottom: 24px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .divider:not(:empty)::before {
-            margin-right: 15px;
-        }
-
-        .divider:not(:empty)::after {
-            margin-left: 15px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #334155;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 14px;
-            color: #94a3b8;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 14px 14px 14px 40px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .input-wrapper input:focus {
-            border-color: #3b82f6;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 14px;
-            color: #94a3b8;
-            cursor: pointer;
-        }
-
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            font-size: 0.85rem;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #64748b;
-        }
-
-        .forgot-pass {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .btn-submit {
-            background: linear-gradient(to right, #3b82f6, #10b981);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: opacity 0.2s;
-            margin-bottom: 24px;
-        }
-
-        .btn-submit:hover {
-            opacity: 0.9;
-        }
-
-        .signup-text {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 30px;
-        }
-
-        .signup-text a {
-            color: #3b82f6;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .security-badges {
-            display: flex;
-            gap: 12px;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-
-        .sec-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.7rem;
-            color: #64748b;
-            background: #f8fafc;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #f1f5f9;
-        }
-
-        .terms-text {
-            text-align: center;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            line-height: 1.5;
-        }
-
-        .terms-text a {
-            color: #3b82f6;
-            text-decoration: none;
-        }
-
-        /* Loading Overlay */
-        #loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(4px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            display: none;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(59, 130, 246, 0.2);
-            border-top-color: #3b82f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Error Message */
-        #error-msg {
-            color: #ef4444;
-            font-size: 0.85rem;
-            text-align: center;
-            margin-bottom: 12px;
-            display: none;
+        #loading-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--panel-bg); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 100; border-radius: var(--border-radius-lg); }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        #error-msg { color: #ef4444; font-size: 0.85rem; text-align: center; margin-bottom: 12px; display: none; }
+        
+        @media (max-width: 768px) {
+            .split-container { flex-direction: column; min-height: auto; border-radius: 0; }
+            .split-left { padding: 40px 20px; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.05); }
+            .features-row { flex-wrap: wrap; margin-bottom: 40px; }
+            .split-right { padding: 40px 20px; }
+            .lang-selector { position: static; margin-bottom: 20px; width: max-content; align-self: flex-end; }
+            .security-badges { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="auth-container">
+    <div class="split-container glass-panel">
         <!-- Left Branding Panel -->
-        <div class="auth-left">
+        <div class="split-left">
             <div class="logo-container">
                 <img src="./vani_icon.png" alt="Logo">
             </div>
@@ -473,7 +120,7 @@
         </div>
 
         <!-- Right Login Panel -->
-        <div class="auth-right">
+        <div class="split-right">
             <div class="lang-selector">
                 <i class="fa-solid fa-globe"></i> English <i class="fa-solid fa-chevron-down"
                     style="font-size: 0.7rem; margin-left: 4px;"></i>
@@ -485,25 +132,25 @@
 
                 <div id="error-msg"></div>
 
-                <button class="btn-google" id="btn-google">
+                <button class="sys-btn-outline btn-google" id="btn-google" style="margin-bottom:24px; width:100%;">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
                     Continue with Google
                 </button>
 
                 <div class="divider">or</div>
 
-                <div class="input-group">
+                <div class="sys-input-group">
                     <label>Email or Gmail</label>
-                    <div class="input-wrapper">
-                        <i class="fa-regular fa-envelope"></i>
+                    <div class="sys-input-wrapper">
+                        <i class="fa-regular fa-envelope icon-left"></i>
                         <input type="email" id="email" placeholder="Enter your email or Gmail">
                     </div>
                 </div>
 
-                <div class="input-group">
+                <div class="sys-input-group">
                     <label>Password</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-lock"></i>
+                    <div class="sys-input-wrapper">
+                        <i class="fa-solid fa-lock icon-left"></i>
                         <input type="password" id="password" placeholder="Enter your password">
                         <i class="fa-regular fa-eye-slash toggle-password" id="toggle-pw"></i>
                     </div>
@@ -516,7 +163,7 @@
                     <a href="#" class="forgot-pass">Forgot password?</a>
                 </div>
 
-                <button class="btn-submit" id="btn-login">
+                <button class="sys-btn-solid btn-submit" id="btn-login" style="margin-bottom:24px;">
                     Sign In <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
@@ -664,6 +311,71 @@
             }
         });
     </script>
+
+<!-- Dark Mode Toggle Snippet -->
+<style>
+  .dark-mode-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--accent-indigo, #FF9933);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .dark-mode-toggle-btn:hover {
+    transform: scale(1.1);
+  }
+  /* Dark mode overrides */
+  body.dark-mode {
+    --bg-main: #0f172a;
+    --panel-bg: rgba(30, 41, 59, 0.85);
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+</style>
+<button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
+  <span id="darkModeIcon">🌙</span>
+</button>
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('darkModeToggle');
+    const body = document.body;
+    const icon = document.getElementById('darkModeIcon');
+    
+    // Check local storage for theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      icon.textContent = '☀️';
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        icon.textContent = '☀️';
+      } else {
+        localStorage.setItem('theme', 'light');
+        icon.textContent = '🌙';
+      }
+    });
+  })();
+</script>
+
 </body>
 
 </html>

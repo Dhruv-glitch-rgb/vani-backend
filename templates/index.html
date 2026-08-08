@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="a2k3hsJ7OMGBcqvaocR8ke0mnvEWpDVxs5WkqQogH04" />
     <title>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
     <!-- Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
@@ -13,17 +14,26 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
+
+    <script>
+        // Enforce Security PIN Verification only if launching the console
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldLaunchConsole = urlParams.get('launch') === 'true';
+        if (shouldLaunchConsole && sessionStorage.getItem('pin_verified') !== 'true') {
+            window.location.href = '/auth-vani-xai.html';
+        }
+    </script>
 
     <!-- Landing Page Screen -->
     <div class="landing-page" id="landing-page">
         <!-- Landing Navbar -->
         <nav class="landing-navbar slide-up-fade">
             <div class="landing-nav-logo" onclick="window.location.href='./index.html'" style="cursor: pointer;">
-                <img src="/static/vani_icon.png" class="pulse-icon" alt="V.A.N.I-xAI Icon">
+                <img src="./vani_icon.png" class="pulse-icon" alt="V.A.N.I-xAI Icon">
                 <span>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</span>
             </div>
             <div class="landing-nav-actions">
@@ -44,7 +54,11 @@
                 </div>
                 <h1 class="hero-title animate-gradient-text">V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</h1>
                 <p class="hero-desc">
-                    <strong>Purpose of the App:</strong> V.A.N.I-xAI is an advanced AI assistant designed to help you execute local scripts, control your Windows desktop, and run ADB commands on connected Android devices using voice and text commands. We require account authentication (via Google or Email) to securely save your API keys, preferences, and ensure only you can access your local computer controls through our service.
+                    <strong>Purpose of the App:</strong> V.A.N.I-xAI is an advanced AI assistant designed to help you
+                    execute local scripts, control your Windows desktop, and run ADB commands on connected Android
+                    devices using voice and text commands. We require account authentication (via Google or Email) to
+                    securely save your API keys, preferences, and ensure only you can access your local computer
+                    controls through our service.
                 </p>
                 <div class="hero-ctas">
                     <button class="cta-btn animate-hover-scale" id="launch-console-btn">
@@ -57,7 +71,7 @@
             </div>
             <div class="hero-image-container slide-up-fade delay-2">
                 <div class="hero-card floating-card">
-                    <img src="/static/vani_logo.jpg" alt="V.A.N.I-xAI Logo">
+                    <img src="./vani_logo.jpg" alt="V.A.N.I-xAI Logo">
                 </div>
             </div>
         </header>
@@ -213,7 +227,7 @@
         <!-- Header -->
         <header class="app-header">
             <div class="logo">
-                <img src="/static/vani_icon.png" class="header-icon" alt="V.A.N.I-xAI Icon">
+                <img src="./vani_icon.png" class="header-icon" alt="V.A.N.I-xAI Icon">
                 <h1>V.A.N.I-xAI <span>Console</span></h1>
             </div>
             <div class="status-indicators">
@@ -223,6 +237,10 @@
                 <div class="status-badge" id="adb-status">
                     <span class="dot red" id="adb-dot"></span> <span id="adb-text">ADB Disconnected</span>
                 </div>
+                <button class="nav-cta-btn" id="admin-panel-btn"
+                    style="display:none; background:#ff9933; color:white; padding: 6px 12px; font-size: 0.8rem; margin-right: 10px;">
+                    <i class="fa-solid fa-user-shield"></i> Admin Panel
+                </button>
                 <button class="nav-cta-btn" id="btn-signout"
                     style="background:#f43f5e; color:white; padding: 6px 12px; font-size: 0.8rem;">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
@@ -304,9 +322,15 @@
                         <div class="no-devices">No mobile devices detected. Check connection.</div>
                     </div>
                 </div>
-
-
-
+                <!-- Security Settings -->
+                <div class="control-group">
+                    <div class="group-header">
+                        <h3><i class="fa-solid fa-lock"></i> Security Settings</h3>
+                    </div>
+                    <button class="nav-cta-btn" onclick="window.location.href='/pin-vaniXai.html?action=reset'" style="width: 100%; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.5); color: #ef4444; margin-top: 10px;">
+                        <i class="fa-solid fa-key"></i> Reset Security PIN
+                    </button>
+                </div>
                 <!-- Command Reference Cheat Sheet -->
                 <div class="control-group reference-group">
                     <h3><i class="fa-solid fa-circle-question"></i> V.A.N.I-xAI Action Center</h3>
@@ -364,14 +388,24 @@
                 <!-- Account Management -->
                 <div class="control-group">
                     <h3><i class="fa-solid fa-user"></i> Account Session</h3>
-                    <button class="nav-cta-btn" id="btn-signout-large" style="background:#f43f5e; color:white; width: 100%; margin-top: 10px; padding: 12px; font-size: 1rem; display: flex; justify-content: center; align-items: center; gap: 8px; border-radius: 12px;">
+                    <button class="nav-cta-btn" id="btn-signout-large"
+                        style="background:#f43f5e; color:white; width: 100%; margin-top: 10px; padding: 12px; font-size: 1rem; display: flex; justify-content: center; align-items: center; gap: 8px; border-radius: 12px;">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out of V.A.N.I-xAI
                     </button>
                 </div>
             </section>
         </main>
+        <!-- Native Mobile Bottom Navigation (Visible only on < 768px) -->
+        <div class="mobile-bottom-nav" style="display: none;">
+            <div class="nav-status">
+                <span class="dot green pulse-dot"></span> System Live
+            </div>
+            <button class="nav-cta-btn animate-hover-scale" style="margin:0;"
+                onclick="document.getElementById('launch-console-btn').click()">
+                Console <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
     </div>
-
     <!-- Firebase SDK (Modular v9 Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -392,7 +426,72 @@
         const auth = firebase.auth();
     </script>
     <!-- Script -->
-    <script src="/static/main.js"></script>
+    <script src="./main.js"></script>
+
+<!-- Dark Mode Toggle Snippet -->
+<style>
+  .dark-mode-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--accent-indigo, #FF9933);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .dark-mode-toggle-btn:hover {
+    transform: scale(1.1);
+  }
+  /* Dark mode overrides */
+  body.dark-mode {
+    --bg-main: #0f172a;
+    --panel-bg: rgba(30, 41, 59, 0.85);
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+</style>
+<button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
+  <span id="darkModeIcon">🌙</span>
+</button>
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('darkModeToggle');
+    const body = document.body;
+    const icon = document.getElementById('darkModeIcon');
+    
+    // Check local storage for theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      icon.textContent = '☀️';
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        icon.textContent = '☀️';
+      } else {
+        localStorage.setItem('theme', 'light');
+        icon.textContent = '🌙';
+      }
+    });
+  })();
+</script>
+
 </body>
 
 </html>

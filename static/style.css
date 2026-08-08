@@ -1454,3 +1454,46 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* Dark Mode Enhancements */
+body.dark-mode .landing-navbar {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+body.dark-mode .nav-status,
+body.dark-mode .hero-card,
+body.dark-mode .feature-card,
+body.dark-mode .glass-panel,
+body.dark-mode .auth-box,
+body.dark-mode .terminal-container,
+body.dark-mode .faq-item,
+body.dark-mode .privacy-card,
+body.dark-mode .terms-card,
+body.dark-mode .console-panel,
+body.dark-mode .chat-history,
+body.dark-mode .input-area {
+    background: rgba(30, 41, 59, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #f8fafc !important;
+}
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode a {
+    color: #f8fafc;
+}
+body.dark-mode .hero-title {
+    background: linear-gradient(135deg, var(--accent-orange), #fff) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+body.dark-mode .hero-desc,
+body.dark-mode .feature-info p,
+body.dark-mode .faq-answer,
+body.dark-mode .text-muted {
+    color: #cbd5e1 !important;
+}
