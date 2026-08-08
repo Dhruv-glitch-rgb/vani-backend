@@ -12,7 +12,7 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         /* Page Specific Overrides */
         .logo-container { margin-top: 20px; margin-bottom: 30px; }
@@ -86,7 +86,7 @@
         <!-- Left Branding Panel -->
         <div class="split-left">
             <div class="logo-container">
-                <img src="./vani_icon.png" alt="Logo">
+                <img src="{{ url_for('static', filename='vani_icon.png') }}" alt="Logo">
             </div>
 
             <h1 class="auth-title">V.A.N.I-xAI</h1>

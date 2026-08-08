@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="a2k3hsJ7OMGBcqvaocR8ke0mnvEWpDVxs5WkqQogH04" />
     <title>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</title>
-    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='vani_icon.png') }}" type="image/x-icon">
     <!-- Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
@@ -14,7 +14,7 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
@@ -32,8 +32,8 @@
     <div class="landing-page" id="landing-page">
         <!-- Landing Navbar -->
         <nav class="landing-navbar slide-up-fade">
-            <div class="landing-nav-logo" onclick="window.location.href='./index.html'" style="cursor: pointer;">
-                <img src="./vani_icon.png" class="pulse-icon" alt="V.A.N.I-xAI Icon">
+            <div class="landing-nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
+                <img src="{{ url_for('static', filename='vani_icon.png') }}" class="pulse-icon" alt="V.A.N.I-xAI Icon">
                 <span>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</span>
             </div>
             <div class="landing-nav-actions">
@@ -71,7 +71,7 @@
             </div>
             <div class="hero-image-container slide-up-fade delay-2">
                 <div class="hero-card floating-card">
-                    <img src="./vani_logo.jpg" alt="V.A.N.I-xAI Logo">
+                    <img src="{{ url_for('static', filename='vani_logo.jpg') }}" alt="V.A.N.I-xAI Logo">
                 </div>
             </div>
         </header>
@@ -227,7 +227,7 @@
         <!-- Header -->
         <header class="app-header">
             <div class="logo">
-                <img src="./vani_icon.png" class="header-icon" alt="V.A.N.I-xAI Icon">
+                <img src="{{ url_for('static', filename='vani_icon.png') }}" class="header-icon" alt="V.A.N.I-xAI Icon">
                 <h1>V.A.N.I-xAI <span>Console</span></h1>
             </div>
             <div class="status-indicators">
@@ -436,7 +436,7 @@
         const auth = firebase.auth();
     </script>
     <!-- Script -->
-    <script src="./main.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 
 <!-- Dark Mode Toggle Snippet -->
 <style>
