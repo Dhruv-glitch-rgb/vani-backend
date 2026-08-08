@@ -1955,3 +1955,62 @@ input:focus, textarea:focus {
     box-shadow: 0 0 25px rgba(99, 102, 241, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3) !important;
     transform: translateY(-2px) scale(1.02);
 }
+
+/* --- Dark Theme Overrides --- */
+body.dark-theme {
+    --bg-main: #060913;
+    --panel-bg: rgba(10, 15, 30, 0.75);
+    --panel-border: rgba(0, 240, 255, 0.3);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    
+    --accent-indigo: #00f0ff;
+    --accent-indigo-glow: rgba(0, 240, 255, 0.35);
+    
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(0, 102, 255, 0.08) 0%, transparent 50%),
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+    background-size: 150% 150%, 150% 150%, 150% 150%, 30px 30px, 30px 30px;
+}
+
+body.dark-theme .message.bot .message-content {
+    background: rgba(0, 240, 255, 0.05);
+}
+
+body.dark-theme .cta-btn {
+    border: 1px solid rgba(0, 240, 255, 0.4) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2) !important;
+    color: var(--accent-indigo) !important;
+}
+
+body.dark-theme .cta-btn:hover {
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.6), inset 0 0 10px rgba(0, 240, 255, 0.3) !important;
+    border-color: rgba(0, 240, 255, 0.9) !important;
+}
+
+body.dark-theme .nav-cta-btn {
+    border: 1px solid rgba(0, 240, 255, 0.4) !important;
+    color: var(--accent-indigo) !important;
+}
+
+body.dark-theme .setting-control select, 
+body.dark-theme .setting-control input {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+}
+
+body.dark-theme .pulse-glow-badge {
+    animation: neonPulse 2s infinite alternate !important;
+}
+
+@keyframes neonPulse {
+    0% { box-shadow: 0 0 5px rgba(0, 240, 255, 0.2); border-color: rgba(0, 240, 255, 0.3); }
+    100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.6); border-color: rgba(0, 240, 255, 0.8); }
+}

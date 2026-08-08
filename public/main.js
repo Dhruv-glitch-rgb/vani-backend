@@ -124,6 +124,27 @@ function addChatMessage(sender, content, actionName = null, imageUrl = null) {
     messageDiv.innerHTML = html;
     chatHistory.appendChild(messageDiv);
     chatHistory.scrollTop = chatHistory.scrollHeight;
+
+    // Auto-Speak Logic for Bot/Assistant
+    if (sender !== 'user' && localStorage.getItem('vani_auto_speak') !== 'false') {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Stop any ongoing speech
+            
+            // Strip markdown/html from content for speaking
+            const cleanText = content.replace(/<[^>]+>/g, '').replace(/[*_~`]/g, '');
+            const msg = new SpeechSynthesisUtterance(cleanText);
+            
+            const rate = parseFloat(localStorage.getItem('vani_speech_rate') || '1.0');
+            msg.rate = rate;
+            
+            // Try to pick a good voice
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Microsoft') && v.lang.startsWith('en'));
+            if (preferredVoice) msg.voice = preferredVoice;
+
+            window.speechSynthesis.speak(msg);
+        }
+    }
 }
 
 // Add Custom Line to Terminal Logs Window
@@ -179,7 +200,10 @@ async function submitCommand(commandText) {
                 'Content-Type': 'application/json',
                 'Bypass-Tunnel-Reminder': 'true' 
             },
-            body: JSON.stringify({ command: commandText })
+            body: JSON.stringify({ 
+                command: commandText,
+                personality: localStorage.getItem('vani_personality') || 'helpful'
+            })
         });
 
         const data = await response.json();
@@ -255,6 +279,12 @@ if (backendUrlInput) {
 
 // Page Initialization
 window.addEventListener('DOMContentLoaded', () => {
+    // Load Settings
+    const isDark = localStorage.getItem('vani_dark_mode') === 'true';
+    if (isDark) {
+        document.body.classList.add('dark-theme');
+    }
+    
     // Check if launched from auth redirect
     const urlParams = new URLSearchParams(window.location.search);
     const shouldLaunch = urlParams.get('launch') === 'true';

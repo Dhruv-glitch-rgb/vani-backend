@@ -216,11 +216,17 @@ def parse_with_rules(text):
         'message': f"I couldn't parse the command '{text}'. Please try a supported command format."
     }
 
-def parse_command(text):
+def parse_command(text, personality='helpful'):
     """
     Parse user prompt. Uses OpenRouter if configured, else falls back to regex rules.
     """
     api_key = os.environ.get("OPENROUTER_API_KEY", "")
+
+    personality_rule = "- Adopt a friendly, helpful, and clear assistant persona."
+    if personality == 'jarvis':
+        personality_rule = "- Adopt the persona of JARVIS, a highly advanced, professional, and slightly futuristic AI system. Address the user with respect, use crisp and concise technical language."
+    elif personality == 'sarcastic':
+        personality_rule = "- Adopt a highly sarcastic, witty, and slightly condescending but humorous persona. Reluctantly help the user while making fun of their simple requests."
 
     try:
         prompt = f"""
@@ -347,6 +353,7 @@ Possible Actions and schemas:
 RULES FOR CHAT RESPONSE:
 - If the user asks about your creator or developer, you MUST state that you were created by "DHRUV SAGAR" and provide these two links exactly: https://vani-nzdrsr.web.app/about-founder and https://vani-nzdrsr.web.app/about-developer
 - If the user asks for your name, you MUST reply with "V.A.N.I-xAI"
+- {personality_rule}
 
 17. Analyze Screen (If the user asks what is on their screen, or wants to see/understand the current desktop display):
 {{

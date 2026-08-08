@@ -59,8 +59,10 @@ def handle_command():
     # Store user command in memory
     memory_manager.add_message('user', command)
     
+    personality = data.get('personality', 'helpful')
+    
     # Parse the command
-    parsed = nlp_parser.parse_command(command)
+    parsed = nlp_parser.parse_command(command, personality=personality)
     action = parsed.get('action')
     
     result_message = ""
