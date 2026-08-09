@@ -6,6 +6,16 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/*/blocked-by-vani-xai0419",
+        "destination": "/blocked.html"
+      },
+      {
+        "source": "/*/banned-by-vani-xai0419",
+        "destination": "/banned.html"
+      }
     ]
   }
 }

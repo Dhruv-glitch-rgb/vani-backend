@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Banned - V.A.N.I-xAI</title>
+    <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --error-color: #ef4444;
+            --saffron: #ea580c;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #000 url('/inxv_bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            text-align: center;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1;
+        }
+
+        .content {
+            position: relative; z-index: 2;
+            background: transparent;
+            padding: 40px;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        .logo { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--error-color); margin-bottom: 20px; box-shadow: 0 0 30px rgba(239,68,68,0.5); }
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-top: 15px; border: 3px solid #333; filter: grayscale(100%); }
+        
+        h1 { font-family: 'Rajdhani', sans-serif; color: var(--error-color); font-size: 4rem; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 20px rgba(239,68,68,0.5); }
+        h2 { font-size: 1.5rem; color: #f8fafc; margin: 0 0 30px 0; letter-spacing: 2px;}
+        
+        .info-box {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 25px 40px; border-radius: 15px; margin-bottom: 30px;
+            max-width: 600px; width: 90%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+        .info-box p { margin: 10px 0; font-size: 1.1rem; color: #cbd5e1; }
+        .reason { color: var(--error-color); font-weight: bold; font-size: 1.3rem !important; margin-top: 15px !important; }
+        
+        .btn {
+            background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.5);
+            color: white; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-family: 'Outfit';
+            font-size: 1.2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn:hover { background: rgba(239, 68, 68, 0.4); box-shadow: 0 0 20px rgba(239,68,68,0.4); transform: translateY(-2px); }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="content">
+        <img src="/vani_logo.jpg" class="logo" alt="V.A.N.I">
+        <h1>ACCOUNT BANNED</h1>
+        <h2 id="userName">Verifying Identity...</h2>
+
+        <img src="/vani_icon.png" class="profile-img" id="profileImage" alt="User">
+
+        <div class="info-box">
+            <p><i class="fa-solid fa-envelope"></i> <span id="userEmail">Loading...</span></p>
+            <p class="reason"><i class="fa-solid fa-ban"></i> Reason: <span id="banReason">Contacting Server...</span>
+            </p>
+            <p style="margin-top:10px; color:var(--error-color); font-weight:bold;">This ban is permanent.</p>
+        </div>
+
+        <button class="btn" onclick="signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Extract Identity Name from URL: /Dhruv/banned-by-vani-xai0419
+        const pathSegments = window.location.pathname.split('/');
+        if (pathSegments.length > 1 && pathSegments[1]) {
+            document.getElementById('userName').textContent = decodeURIComponent(pathSegments[1]).replace(/-/g, ' ');
+        }
+
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                document.getElementById('userEmail').textContent = user.email;
+                if (user.photoURL) document.getElementById('profileImage').src = user.photoURL;
+                if (!document.getElementById('userName').textContent || document.getElementById('userName').textContent === 'Verifying Identity...') {
+                    document.getElementById('userName').textContent = user.displayName || user.email.split('@')[0];
+                }
+
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        document.getElementById('banReason').textContent = data.banReason || 'Severe violation of terms.';
+                    }
+                } catch (e) { console.error(e); }
+            } else {
+                window.location.href = '/auth-vani-xai.html';
+            }
+        });
+
+        function signOut() {
+            auth.signOut().then(() => window.location.href = '/auth-vani-xai.html');
+        }
+    </script>
+</body>
+
+</html>

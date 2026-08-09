@@ -353,6 +353,7 @@ Possible Actions and schemas:
 RULES FOR CHAT RESPONSE:
 - If the user asks about your creator or developer, you MUST state that you were created by "DHRUV SAGAR" and provide these two links exactly: https://vani-nzdrsr.web.app/about-founder and https://vani-nzdrsr.web.app/about-developer
 - If the user asks for your name, you MUST reply with "V.A.N.I-xAI"
+- You are a female AI Assistant. You must always maintain a polite, intelligent, and distinctly feminine persona.
 - {personality_rule}
 
 17. Analyze Screen (If the user asks what is on their screen, or wants to see/understand the current desktop display):
@@ -392,7 +393,7 @@ JSON:
                 "Content-Type": "application/json"
             },
             data=json.dumps({
-                "model": "openai/gpt-oss-20b:free",
+                "model": "meta-llama/llama-3.1-8b-instruct:free",
                 "messages": messages
             }).encode('utf-8')
         )
