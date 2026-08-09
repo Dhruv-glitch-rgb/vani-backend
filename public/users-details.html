@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details - V.A.N.I-xAI</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000 url('/inxv_bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            background: rgba(20, 20, 25, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+        }
+
+        h2 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #6366f1, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: #94a3b8;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: #64748b;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .input-wrapper input:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #6366f1, #10b981);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #error-msg {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="content">
+        <div class="logo-container">
+            <img src="./vani_icon.png" alt="V.A.N.I-xAI Icon">
+        </div>
+        <h2>Complete Your Profile</h2>
+        <p class="subtitle">Please provide your contact details to continue.</p>
+
+        <div id="error-msg"></div>
+
+        <div class="input-group">
+            <label>Name</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="user-name" disabled>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Email Address</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="user-email" disabled>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Contact Number</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-phone"></i>
+                <input type="text" id="user-phone" placeholder="Enter your mobile number">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Instagram Username</label>
+            <div class="input-wrapper">
+                <i class="fa-brands fa-instagram"></i>
+                <input type="text" id="user-insta" placeholder="@username">
+            </div>
+        </div>
+
+        <button class="btn-submit" id="btn-continue">
+            <span id="btn-text">Continue <i class="fa-solid fa-arrow-right"></i></span>
+            <div class="spinner" id="btn-spinner"></div>
+        </button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81",
+            measurementId: "G-RJB5892YTQ"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const nameInput = document.getElementById('user-name');
+        const emailInput = document.getElementById('user-email');
+        const phoneInput = document.getElementById('user-phone');
+        const instaInput = document.getElementById('user-insta');
+        const btnContinue = document.getElementById('btn-continue');
+        const btnText = document.getElementById('btn-text');
+        const btnSpinner = document.getElementById('btn-spinner');
+        const errorMsg = document.getElementById('error-msg');
+
+        let currentUser = null;
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // Set readonly fields
+                emailInput.value = user.email || 'No email provided';
+                nameInput.value = user.displayName || user.email.split('@')[0];
+
+                // Check if user already provided details
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        
+                        // If they already have both, we can either redirect or let them update.
+                        // We will prefill it and let them update. If they just logged in, they might want to continue.
+                        if (data.contactNumber) phoneInput.value = data.contactNumber;
+                        if (data.instagram) instaInput.value = data.instagram;
+                        
+                        // Auto-skip logic: If details are already filled and valid, we could redirect immediately.
+                        // However, to allow updates, we'll let them click continue.
+                        // Or if you prefer seamless flow, uncomment the below to skip:
+                        if (data.contactNumber && data.instagram && !window.location.search.includes('edit=true')) {
+                            window.location.href = '/pin-vaniXai.html';
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error fetching user details", e);
+                }
+            } else {
+                // Not logged in, go back to auth
+                window.location.href = '/auth-vani-xai.html';
+            }
+        });
+
+        btnContinue.addEventListener('click', async () => {
+            if (!currentUser) return;
+
+            const phone = phoneInput.value.trim();
+            const insta = instaInput.value.trim();
+
+            if (!phone || !insta) {
+                errorMsg.innerText = "Please provide both Contact Number and Instagram Username.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'block';
+
+            try {
+                await db.collection('users').doc(currentUser.uid).set({
+                    email: currentUser.email,
+                    name: currentUser.displayName || currentUser.email.split('@')[0],
+                    contactNumber: phone,
+                    instagram: insta,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                // Successfully saved, proceed to PIN
+                window.location.href = '/pin-vaniXai.html';
+            } catch (error) {
+                console.error("Error saving details:", error);
+                errorMsg.innerText = "Error saving details. Please try again.";
+                errorMsg.style.display = 'block';
+                btnText.style.display = 'block';
+                btnSpinner.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
