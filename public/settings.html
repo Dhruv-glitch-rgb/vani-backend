@@ -166,6 +166,27 @@
                 <p style="color: var(--text-secondary); margin-top: 5px;">Customize your AI assistant's behavior and interface.</p>
             </div>
 
+            <!-- User Profile -->
+            <div class="settings-section">
+                <h2><i class="fa-solid fa-user"></i> Account Profile</h2>
+                <div class="setting-item" style="display: flex; gap: 20px; align-items: center;">
+                    <img id="profileImage" src="vani_icon.png" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-indigo); object-fit: cover;">
+                    <div style="flex: 1;">
+                        <h3 id="profileName" style="margin-bottom: 5px; color: var(--text-primary);">Loading...</h3>
+                        <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem;">...</p>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Security PIN: <strong>****</strong></p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button class="nav-cta-btn" id="btnUpdateAvatar" style="font-size: 0.8rem; padding: 6px 12px;">
+                            <i class="fa-solid fa-image"></i> Change Avatar
+                        </button>
+                        <button class="nav-cta-btn" id="btnChangePin" style="font-size: 0.8rem; padding: 6px 12px; border-color: var(--error-color); color: var(--error-color);">
+                            <i class="fa-solid fa-key"></i> Reset PIN
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Appearance -->
             <div class="settings-section">
                 <h2><i class="fa-solid fa-palette"></i> Appearance</h2>
@@ -237,7 +258,61 @@
         </div>
     </div>
 
+    <!-- Firebase SDK (Modular v9 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Auth State Listener
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                const nameEl = document.getElementById('profileName');
+                const emailEl = document.getElementById('profileEmail');
+                const avatarEl = document.getElementById('profileImage');
+
+                nameEl.textContent = user.displayName || user.email.split('@')[0];
+                emailEl.textContent = user.email;
+                avatarEl.src = user.photoURL || `https://ui-avatars.com/api/?name=${nameEl.textContent}&background=020617&color=38bdf8`;
+            } else {
+                window.location.href = '/auth-vani-xai.html';
+            }
+        });
+
+        document.getElementById('btnChangePin').addEventListener('click', () => {
+            if (confirm("Are you sure you want to reset your PIN? You will be redirected to the setup page.")) {
+                window.location.href = '/pin-vaniXai.html?reset=true';
+            }
+        });
+
+        document.getElementById('btnUpdateAvatar').addEventListener('click', async () => {
+            const user = auth.currentUser;
+            if (!user) return;
+            const newUrl = prompt("Enter the URL of your new profile image:");
+            if (newUrl && newUrl.trim() !== '') {
+                try {
+                    await user.updateProfile({ photoURL: newUrl.trim() });
+                    document.getElementById('profileImage').src = newUrl.trim();
+                    alert("Profile image updated successfully!");
+                } catch (e) {
+                    alert("Error updating profile image: " + e.message);
+                }
+            }
+        });
         // Load Settings
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('vani_theme') || (localStorage.getItem('vani_dark_mode') === 'true' ? 'dark' : 'light');
