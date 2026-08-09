@@ -2059,11 +2059,13 @@ body.inxv-theme .cta-btn:hover {
 }
 
 body.inxv-theme .nav-cta-btn {
-    color: var(--text-primary) !important;
-    border-color: rgba(163, 34, 63, 0.3) !important;
+    background: rgba(163, 34, 63, 0.1) !important;
+    color: var(--accent-blue) !important;
+    border: 1px solid rgba(163, 34, 63, 0.3) !important;
 }
 body.inxv-theme .nav-cta-btn:hover {
-    color: var(--accent-blue) !important;
+    background: var(--accent-blue) !important;
+    color: white !important;
 }
 
 body.inxv-theme .setting-control select, 
