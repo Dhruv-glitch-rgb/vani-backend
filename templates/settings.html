@@ -8,9 +8,13 @@
     <title>Settings - V.A.N.I-xAI</title>
     <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <!-- Stylesheet -->
     <link rel="stylesheet" href="./style.css">
     <style>
@@ -23,7 +27,7 @@
             backdrop-filter: blur(12px);
             border-radius: var(--border-radius-lg);
             border: 1px solid var(--panel-border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             animation: slideUpFade 0.5s ease-out;
         }
 
@@ -70,11 +74,13 @@
             color: var(--text-secondary);
         }
 
-        .setting-control select, .setting-control input[type="text"], .setting-control input[type="password"] {
+        .setting-control select,
+        .setting-control input[type="text"],
+        .setting-control input[type="password"] {
             padding: 10px 14px;
             border-radius: var(--border-radius-sm);
-            border: 1px solid rgba(0,0,0,0.1);
-            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
             font-family: 'Outfit', sans-serif;
             font-size: 0.95rem;
             color: var(--text-primary);
@@ -83,7 +89,8 @@
             transition: var(--transition-smooth);
         }
 
-        .setting-control select:focus, .setting-control input:focus {
+        .setting-control select:focus,
+        .setting-control input:focus {
             border-color: var(--accent-indigo);
             box-shadow: 0 0 10px var(--accent-indigo-glow);
         }
@@ -125,11 +132,11 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background-color: var(--accent-indigo);
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(24px);
         }
 
@@ -139,9 +146,42 @@
         }
 
         @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+        
+        /* Modal Styles for Avatar */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--panel-bg); border: 1px solid var(--panel-border);
+            border-radius: var(--border-radius-md); padding: 25px; width: 90%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;
+        }
+        .modal-content h3 { margin-top: 0; color: var(--text-primary); margin-bottom: 20px; }
+        .modal-btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .modal-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid var(--panel-border);
+            padding: 12px; border-radius: var(--border-radius-sm); color: var(--text-primary);
+            font-family: 'Outfit', sans-serif; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+        .modal-btn:hover { background: var(--accent-indigo); color: white; }
+        
+        /* Cropper Container */
+        .img-container { max-height: 400px; width: 100%; margin-bottom: 20px; background: #000; }
+        .img-container img { max-width: 100%; }
+        
     </style>
 </head>
 
@@ -163,24 +203,28 @@
         <div class="settings-container">
             <div class="settings-header">
                 <h1><i class="fa-solid fa-gear"></i> System Settings</h1>
-                <p style="color: var(--text-secondary); margin-top: 5px;">Customize your AI assistant's behavior and interface.</p>
+                <p style="color: var(--text-secondary); margin-top: 5px;">Customize your AI assistant's behavior and
+                    interface.</p>
             </div>
 
             <!-- User Profile -->
             <div class="settings-section">
                 <h2><i class="fa-solid fa-user"></i> Account Profile</h2>
                 <div class="setting-item" style="display: flex; gap: 20px; align-items: center;">
-                    <img id="profileImage" src="vani_icon.png" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-indigo); object-fit: cover;">
+                    <img id="profileImage" src="vani_icon.png" alt="Profile"
+                        style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-indigo); object-fit: cover;">
                     <div style="flex: 1;">
                         <h3 id="profileName" style="margin-bottom: 5px; color: var(--text-primary);">Loading...</h3>
                         <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem;">...</p>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Security PIN: <strong>****</strong></p>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Security PIN:
+                            <strong>****</strong></p>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 10px;">
                         <button class="nav-cta-btn" id="btnUpdateAvatar" style="font-size: 0.8rem; padding: 6px 12px;">
                             <i class="fa-solid fa-image"></i> Change Avatar
                         </button>
-                        <button class="nav-cta-btn" id="btnChangePin" style="font-size: 0.8rem; padding: 6px 12px; border-color: var(--error-color); color: var(--error-color);">
+                        <button class="nav-cta-btn" id="btnChangePin"
+                            style="font-size: 0.8rem; padding: 6px 12px; border-color: var(--error-color); color: var(--error-color);">
                             <i class="fa-solid fa-key"></i> Reset PIN
                         </button>
                     </div>
@@ -254,10 +298,13 @@
             <div class="settings-section">
                 <h2><i class="fa-solid fa-clock-rotate-left"></i> Chat History</h2>
                 <div class="setting-item" style="flex-direction: column; align-items: stretch;">
-                    <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">Your past conversations with V.A.N.I-xAI.</p>
-                    
-                    <div id="chatHistoryList" style="max-height: 400px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; gap: 15px; border: 1px solid var(--panel-border);">
-                        <div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Loading chat history...</div>
+                    <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">Your past
+                        conversations with V.A.N.I-xAI.</p>
+
+                    <div id="chatHistoryList"
+                        style="max-height: 400px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; gap: 15px; border: 1px solid var(--panel-border);">
+                        <div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Loading chat
+                            history...</div>
                     </div>
                 </div>
             </div>
@@ -270,10 +317,39 @@
         </div>
     </div>
 
+    <!-- Avatar Selection Modal -->
+    <div class="modal-overlay" id="avatarSelectionModal">
+        <div class="modal-content">
+            <h3>Update Profile Picture</h3>
+            <div class="modal-btn-group">
+                <button class="modal-btn" id="btnUploadNew"><i class="fa-solid fa-upload"></i> Upload New Image</button>
+                <button class="modal-btn" id="btnRevertDefault"><i class="fa-brands fa-google"></i> Revert to Google Avatar</button>
+                <button class="modal-btn" id="btnCancelSelection" style="background: var(--error-color); color: white; border-color: transparent;"><i class="fa-solid fa-times"></i> Cancel</button>
+            </div>
+            <input type="file" id="avatarFileInput" accept="image/png, image/jpeg, image/jpg" style="display: none;">
+        </div>
+    </div>
+
+    <!-- Cropper Modal -->
+    <div class="modal-overlay" id="cropperModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>Crop Image</h3>
+            <div class="img-container">
+                <img id="cropperImage" src="">
+            </div>
+            <div class="modal-btn-group" style="flex-direction: row;">
+                <button class="modal-btn" id="btnCancelCrop" style="flex: 1; background: var(--error-color); color: white;"><i class="fa-solid fa-times"></i> Cancel</button>
+                <button class="modal-btn" id="btnSaveCrop" style="flex: 1; background: var(--accent-indigo); color: white;"><i class="fa-solid fa-check"></i> Save Crop</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK (Modular v9 Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <!-- Cropper.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -312,9 +388,9 @@
             const listEl = document.getElementById('chatHistoryList');
             try {
                 const snapshot = await db.collection('users').doc(uid).collection('chats')
-                                         .orderBy('timestamp', 'asc')
-                                         .limit(100).get();
-                
+                    .orderBy('timestamp', 'asc')
+                    .limit(100).get();
+
                 if (snapshot.empty) {
                     listEl.innerHTML = '<div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">No chat history found. Start a conversation!</div>';
                     return;
@@ -324,11 +400,11 @@
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const date = data.timestamp ? data.timestamp.toDate() : new Date();
-                    const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    
+                    const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
                     const senderName = data.sender === 'user' ? 'You' : 'V.A.N.I';
                     const color = data.sender === 'user' ? 'var(--accent-primary)' : 'var(--accent-indigo)';
-                    
+
                     html += `
                         <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.8rem;">
@@ -354,18 +430,107 @@
             }
         });
 
-        document.getElementById('btnUpdateAvatar').addEventListener('click', async () => {
+        // Avatar Management Variables
+        let cropper = null;
+        const selectionModal = document.getElementById('avatarSelectionModal');
+        const cropperModal = document.getElementById('cropperModal');
+        const fileInput = document.getElementById('avatarFileInput');
+        const cropperImage = document.getElementById('cropperImage');
+
+        // Show Selection Modal
+        document.getElementById('btnUpdateAvatar').addEventListener('click', () => {
+            selectionModal.classList.add('active');
+        });
+
+        // Cancel Selection
+        document.getElementById('btnCancelSelection').addEventListener('click', () => {
+            selectionModal.classList.remove('active');
+        });
+
+        // Trigger File Input
+        document.getElementById('btnUploadNew').addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Revert to Default Avatar
+        document.getElementById('btnRevertDefault').addEventListener('click', async () => {
             const user = auth.currentUser;
             if (!user) return;
-            const newUrl = prompt("Enter the URL of your new profile image:");
-            if (newUrl && newUrl.trim() !== '') {
-                try {
-                    await user.updateProfile({ photoURL: newUrl.trim() });
-                    document.getElementById('profileImage').src = newUrl.trim();
-                    alert("Profile image updated successfully!");
-                } catch (e) {
-                    alert("Error updating profile image: " + e.message);
-                }
+            
+            try {
+                // Find Google photoUrl from provider data, if exists
+                let googlePhoto = null;
+                user.providerData.forEach(profile => {
+                    if (profile.providerId === 'google.com' && profile.photoURL) {
+                        googlePhoto = profile.photoURL;
+                    }
+                });
+
+                const finalPhoto = googlePhoto || `https://ui-avatars.com/api/?name=${user.displayName || user.email.split('@')[0]}&background=020617&color=38bdf8`;
+                
+                await user.updateProfile({ photoURL: finalPhoto });
+                document.getElementById('profileImage').src = finalPhoto;
+                selectionModal.classList.remove('active');
+                alert("Successfully reverted to default profile picture!");
+            } catch (e) {
+                alert("Error reverting profile image: " + e.message);
+            }
+        });
+
+        // Handle File Selection
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    selectionModal.classList.remove('active'); // Close selection
+                    cropperImage.src = event.target.result;
+                    cropperModal.classList.add('active'); // Open cropper
+                    
+                    if (cropper) { cropper.destroy(); }
+                    cropper = new Cropper(cropperImage, {
+                        aspectRatio: 1, // Square crop
+                        viewMode: 1,
+                        background: false
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+            // Reset input so same file can be chosen again
+            e.target.value = '';
+        });
+
+        // Cancel Crop
+        document.getElementById('btnCancelCrop').addEventListener('click', () => {
+            cropperModal.classList.remove('active');
+            if (cropper) { cropper.destroy(); cropper = null; }
+        });
+
+        // Save Crop
+        document.getElementById('btnSaveCrop').addEventListener('click', async () => {
+            const user = auth.currentUser;
+            if (!user || !cropper) return;
+
+            // Get cropped image as Base64 JPEG (compresses to save space)
+            const canvas = cropper.getCroppedCanvas({ width: 200, height: 200 });
+            const base64Image = canvas.toDataURL('image/jpeg', 0.7);
+
+            const btn = document.getElementById('btnSaveCrop');
+            const ogText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+            
+            try {
+                // Save base64 to Firebase Auth Profile
+                await user.updateProfile({ photoURL: base64Image });
+                document.getElementById('profileImage').src = base64Image;
+                
+                cropperModal.classList.remove('active');
+                if (cropper) { cropper.destroy(); cropper = null; }
+            } catch (e) {
+                console.error(e);
+                alert("Failed to save image. It might be too large. Try zooming in more or using a smaller image.");
+            } finally {
+                btn.innerHTML = ogText;
             }
         });
         // Load Settings
@@ -406,7 +571,7 @@
             const btn = document.getElementById('saveSettingsBtn');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-check"></i> Saved!';
-            
+
             document.body.classList.remove('dark-theme', 'inxv-theme');
             if (selectedTheme === 'dark') {
                 document.body.classList.add('dark-theme');
@@ -420,4 +585,5 @@
         });
     </script>
 </body>
+
 </html>
