@@ -489,7 +489,10 @@
                         <option value="name">Name A-Z</option>
                     </select>
                 </div>
-                <button class="btn-export" onclick="exportCSV()"><i class="fa-solid fa-download"></i> Export CSV</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-export" onclick="window.location.href='/admin-users-list.html'" style="background: rgba(99, 102, 241, 0.2); border-color: #6366f1;"><i class="fa-solid fa-address-book"></i> User Details</button>
+                    <button class="btn-export" onclick="exportCSV()"><i class="fa-solid fa-download"></i> Export CSV</button>
+                </div>
             </div>
 
             <div class="sys-table-wrapper" style="position: relative; z-index: 2; padding-bottom: 20px;">

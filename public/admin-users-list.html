@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Details List - Admin | V.A.N.I-xAI</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Core Styling - Borrowed from Admin Panel */
+        :root {
+            --bg-main: #000 url('/inxv_bg.jpg') no-repeat center center fixed;
+            --panel-bg: rgba(20, 10, 10, 0.85);
+            --panel-border: rgba(234, 88, 12, 0.3);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-indigo: #6366f1;
+            --accent-green: #10b981;
+            --error-color: #ef4444;
+            --saffron: #ff9933;
+            --white-glow: #ffffff;
+            --india-green: #138808;
+            --navy-blue: #000080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: var(--bg-main);
+            background-size: cover;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .admin-layout {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-title img {
+            height: 50px;
+            width: auto;
+            border-radius: 8px;
+        }
+
+        .header-title h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.2rem;
+            color: var(--white-glow);
+            text-shadow: 0 0 15px rgba(255,255,255,0.2);
+            letter-spacing: 2px;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Outfit';
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .data-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .panel-header h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2rem;
+            color: var(--white-glow);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--accent-indigo);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        /* --- Table Styling --- */
+        .sys-table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .sys-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Space Grotesk', sans-serif;
+            text-align: left;
+        }
+        
+        .sys-table th {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            color: var(--saffron);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            white-space: nowrap;
+        }
+        
+        .sys-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+        
+        .sys-table tr:last-child td { border-bottom: none; }
+        .sys-table tr:hover { background: rgba(255,255,255,0.02); }
+
+        .name-cell { font-weight: 700; color: #fff; }
+        .email-cell { color: #94a3b8; }
+        .data-cell { color: var(--accent-indigo); font-weight: 600; }
+        .empty-cell { color: #475569; font-style: italic; }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            border-radius: 8px;
+            font-family: 'Outfit';
+            font-size: 1rem;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--accent-indigo);
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .header-title h1 { font-size: 1.5rem; }
+            .panel-header h2 { font-size: 1.5rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="admin-layout" style="display:none;" id="admin-content">
+        <header class="admin-header">
+            <div class="header-title">
+                <img src="vani_logo.jpg" alt="Logo">
+                <h1>Users Contact Database</h1>
+            </div>
+            <button class="btn-back" onclick="window.location.href='/admin-vaniXai.html'">
+                <i class="fa-solid fa-arrow-left"></i> Back to Main Admin
+            </button>
+        </header>
+
+        <main class="data-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-address-book" style="color:var(--accent-indigo);"></i> User Information Logs</h2>
+                <div class="badge" id="user-count">Loading...</div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by name, email, contact number, or instagram..." oninput="handleSearch()">
+            </div>
+
+            <div class="sys-table-wrapper">
+                <table class="sys-table">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Email Address</th>
+                            <th>Contact Number</th>
+                            <th>Instagram Username</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--saffron);">Fetching secure records from Firebase...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let allUsers = [];
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Ensure only admin has access
+                if (user.email === 'official.vani.xai76@gmail.com') {
+                    document.getElementById('admin-content').style.display = 'flex';
+                    fetchUserDetails();
+                } else {
+                    alert("SECURITY BREACH: Unauthorized access.");
+                    window.location.href = '/?launch=true';
+                }
+            } else {
+                window.location.href = '/auth-vani-xai.html';
+            }
+        });
+
+        async function fetchUserDetails() {
+            try {
+                const snapshot = await db.collection('users').get();
+                allUsers = [];
+                snapshot.forEach(doc => {
+                    allUsers.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sort by most recently updated
+                allUsers.sort((a, b) => {
+                    const dateA = a.lastUpdated ? a.lastUpdated.toMillis() : (a.createdAt ? a.createdAt.toMillis() : 0);
+                    const dateB = b.lastUpdated ? b.lastUpdated.toMillis() : (b.createdAt ? b.createdAt.toMillis() : 0);
+                    return dateB - dateA;
+                });
+
+                document.getElementById('user-count').innerText = `${allUsers.length} Records Found`;
+                renderTable(allUsers);
+            } catch (error) {
+                console.error("Error fetching users", error);
+                document.getElementById('table-body').innerHTML = `<tr><td colspan="5" style="text-align:center; color: #ef4444;">Error loading database: ${error.message}</td></tr>`;
+                document.getElementById('user-count').innerText = `Error`;
+            }
+        }
+
+        function renderTable(dataArray) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            if (dataArray.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No records found.</td></tr>`;
+                return;
+            }
+
+            dataArray.forEach(user => {
+                const tr = document.createElement('tr');
+                
+                // Date formatting
+                let dateStr = '<span class="empty-cell">N/A</span>';
+                if (user.lastUpdated) {
+                    dateStr = user.lastUpdated.toDate().toLocaleString();
+                } else if (user.createdAt) {
+                    dateStr = user.createdAt.toDate().toLocaleString() + " (Created)";
+                }
+
+                // Handle missing fields nicely
+                const phoneStr = user.contactNumber ? `<span class="data-cell"><i class="fa-solid fa-phone" style="font-size:0.8rem; margin-right:5px; color:#94a3b8;"></i>${user.contactNumber}</span>` : '<span class="empty-cell">Not Provided</span>';
+                const instaStr = user.instagram ? `<span class="data-cell" style="color: #E1306C;"><i class="fa-brands fa-instagram" style="font-size:0.8rem; margin-right:5px;"></i>${user.instagram}</span>` : '<span class="empty-cell">Not Provided</span>';
+
+                tr.innerHTML = `
+                    <td class="name-cell">${user.name || user.email.split('@')[0] || 'Unknown'}</td>
+                    <td class="email-cell">${user.email || 'No Email'}</td>
+                    <td>${phoneStr}</td>
+                    <td>${instaStr}</td>
+                    <td style="font-size: 0.85rem; color:#94a3b8;">${dateStr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!query) {
+                renderTable(allUsers);
+                return;
+            }
+            const filtered = allUsers.filter(u => {
+                const name = (u.name || "").toLowerCase();
+                const email = (u.email || "").toLowerCase();
+                const phone = (u.contactNumber || "").toLowerCase();
+                const insta = (u.instagram || "").toLowerCase();
+                return name.includes(query) || email.includes(query) || phone.includes(query) || insta.includes(query);
+            });
+            renderTable(filtered);
+        }
+
+    </script>
+</body>
+</html>
