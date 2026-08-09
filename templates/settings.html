@@ -250,6 +250,18 @@
                 </div>
             </div>
 
+            <!-- Chat History -->
+            <div class="settings-section">
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> Chat History</h2>
+                <div class="setting-item" style="flex-direction: column; align-items: stretch;">
+                    <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">Your past conversations with V.A.N.I-xAI.</p>
+                    
+                    <div id="chatHistoryList" style="max-height: 400px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; gap: 15px; border: 1px solid var(--panel-border);">
+                        <div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Loading chat history...</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="save-settings-container">
                 <button class="cta-btn animate-hover-scale" id="saveSettingsBtn" style="margin: 0 auto;">
                     <i class="fa-solid fa-floppy-disk"></i> Save Preferences
@@ -288,10 +300,53 @@
                 nameEl.textContent = user.displayName || user.email.split('@')[0];
                 emailEl.textContent = user.email;
                 avatarEl.src = user.photoURL || `https://ui-avatars.com/api/?name=${nameEl.textContent}&background=020617&color=38bdf8`;
+
+                // Fetch Chat History
+                fetchChatHistory(user.uid);
             } else {
                 window.location.href = '/auth-vani-xai.html';
             }
         });
+
+        async function fetchChatHistory(uid) {
+            const listEl = document.getElementById('chatHistoryList');
+            try {
+                const snapshot = await db.collection('users').doc(uid).collection('chats')
+                                         .orderBy('timestamp', 'asc')
+                                         .limit(100).get();
+                
+                if (snapshot.empty) {
+                    listEl.innerHTML = '<div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">No chat history found. Start a conversation!</div>';
+                    return;
+                }
+
+                let html = '';
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.timestamp ? data.timestamp.toDate() : new Date();
+                    const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const senderName = data.sender === 'user' ? 'You' : 'V.A.N.I';
+                    const color = data.sender === 'user' ? 'var(--accent-primary)' : 'var(--accent-indigo)';
+                    
+                    html += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.8rem;">
+                                <strong style="color: ${color};">${senderName}</strong>
+                                <span style="color: var(--text-muted);">${timeStr}</span>
+                            </div>
+                            <div style="font-size: 0.95rem; color: var(--text-primary); word-break: break-word;">${data.content}</div>
+                        </div>
+                    `;
+                });
+                listEl.innerHTML = html;
+                // Scroll to bottom
+                listEl.scrollTop = listEl.scrollHeight;
+            } catch (err) {
+                console.error("Error fetching chats:", err);
+                listEl.innerHTML = '<div style="text-align: center; color: var(--error-color); font-size: 0.9rem;">Error loading chat history. Make sure Firestore rules are set.</div>';
+            }
+        }
 
         document.getElementById('btnChangePin').addEventListener('click', () => {
             if (confirm("Are you sure you want to reset your PIN? You will be redirected to the setup page.")) {

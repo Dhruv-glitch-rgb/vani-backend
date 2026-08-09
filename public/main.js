@@ -125,6 +125,24 @@ function addChatMessage(sender, content, actionName = null, imageUrl = null) {
     chatHistory.appendChild(messageDiv);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
+    // Save to Firestore if user is authenticated
+    try {
+        if (typeof auth !== 'undefined' && typeof db !== 'undefined') {
+            const user = auth.currentUser;
+            if (user) {
+                db.collection('users').doc(user.uid).collection('chats').add({
+                    sender: sender,
+                    content: content,
+                    actionName: actionName || null,
+                    imageUrl: imageUrl || null,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }).catch(e => console.error("Firestore Error:", e));
+            }
+        }
+    } catch (e) {
+        console.error("Error saving chat:", e);
+    }
+
     // Auto-Speak Logic for Bot/Assistant
     if (sender !== 'user' && localStorage.getItem('vani_auto_speak') !== 'false') {
         if ('speechSynthesis' in window) {

@@ -364,6 +364,7 @@
     <!-- Firebase SDK (Modular v9 Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -379,6 +380,7 @@
             firebase.initializeApp(firebaseConfig);
         }
         const auth = firebase.auth();
+        const db = firebase.firestore();
     </script>
     <!-- Script -->
     <script src="./main.js"></script>
