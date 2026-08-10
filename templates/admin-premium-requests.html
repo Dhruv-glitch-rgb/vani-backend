@@ -265,22 +265,31 @@
 
         async function fetchRequests() {
             try {
-                // Fetch pending requests
+                // Fetch pending requests (without orderBy to avoid missing index error)
                 const snapshot = await db.collection('premium_requests')
                                          .where('status', '==', 'pending')
-                                         .orderBy('submittedAt', 'asc')
                                          .get();
                 
                 const tbody = document.getElementById('table-body');
                 tbody.innerHTML = '';
 
                 if (snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending requests found.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No pending requests found.</td></tr>`;
                     return;
                 }
 
-                snapshot.forEach(doc => {
-                    const req = doc.data();
+                // Sort in memory by submittedAt
+                const docs = [];
+                snapshot.forEach(doc => docs.push({ id: doc.id, data: doc.data() }));
+                docs.sort((a, b) => {
+                    const timeA = a.data.submittedAt ? a.data.submittedAt.toMillis() : 0;
+                    const timeB = b.data.submittedAt ? b.data.submittedAt.toMillis() : 0;
+                    return timeA - timeB;
+                });
+
+                docs.forEach(docObj => {
+                    const req = docObj.data;
+                    const docId = docObj.id;
                     const tr = document.createElement('tr');
                     const dateStr = req.submittedAt ? req.submittedAt.toDate().toLocaleString() : 'N/A';
                     
@@ -291,8 +300,8 @@
                         <td style="font-family:monospace;">${req.transactionId}</td>
                         <td style="color:#94a3b8; font-size:0.85rem;">${dateStr}</td>
                         <td>
-                            <button class="btn-action btn-approve" onclick="approveRequest('${doc.id}', '${req.userId}', ${req.monthsRequested})">Approve</button>
-                            <button class="btn-action btn-reject" onclick="rejectRequest('${doc.id}')">Reject</button>
+                            <button class="btn-action btn-approve" onclick="approveRequest('${docId}', '${req.userId}', ${req.monthsRequested})">Approve</button>
+                            <button class="btn-action btn-reject" onclick="rejectRequest('${docId}')">Reject</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
