@@ -485,7 +485,7 @@
             </div>
 
             <p style="text-align: center; color: var(--saffron); font-size: 0.85rem; margin-bottom: 20px;">
-                <i class="fa-solid fa-circle-info"></i> After payment, fill out the form below and attach a screenshot. Approval takes up to 24 hours.
+                <i class="fa-solid fa-circle-info"></i> After payment, fill out this form. <strong>You MUST email your payment screenshot to official.vani.xai76@gmail.com</strong> with your Transaction ID.
             </p>
 
             <form id="verificationForm">
@@ -504,14 +504,7 @@
                     <input type="text" id="payPhone" required placeholder="Phone number">
                 </div>
 
-                <div class="form-group">
-                    <label>Payment Screenshot *</label>
-                    <label class="file-input-wrapper" id="fileWrapper">
-                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--accent-primary); margin-bottom: 10px;"></i><br>
-                        <span id="fileName">Click to browse or drag & drop</span>
-                        <input type="file" id="payScreenshot" accept="image/*" required>
-                    </label>
-                </div>
+
 
                 <div id="upload-status">Uploading... Please wait.</div>
                 
@@ -576,15 +569,7 @@
         function closeModal() {
             modal.classList.remove('active');
             form.reset();
-            document.getElementById('fileName').innerText = "Click to browse or drag & drop";
         }
-
-        // File Input UI Update
-        document.getElementById('payScreenshot').addEventListener('change', function(e) {
-            if (this.files && this.files[0]) {
-                document.getElementById('fileName').innerText = this.files[0].name;
-            }
-        });
 
         // Form Submission
         form.addEventListener('submit', async (e) => {
@@ -593,82 +578,14 @@
 
             const btnSubmit = document.getElementById('btnSubmit');
             const statusDiv = document.getElementById('upload-status');
-            const fileInput = document.getElementById('payScreenshot');
-            const file = fileInput.files[0];
-
-            if(!file) {
-                alert("Please attach a payment screenshot.");
-                return;
-            }
-
-            // Client-side image compression
-            async function compressImage(file, maxSizeMB = 1) {
-                return new Promise((resolve, reject) => {
-                    if (file.size <= maxSizeMB * 1024 * 1024) {
-                        resolve(file);
-                        return;
-                    }
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = event => {
-                        const img = new Image();
-                        img.src = event.target.result;
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            const MAX_WIDTH = 600;
-                            const MAX_HEIGHT = 600;
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > height) {
-                                if (width > MAX_WIDTH) {
-                                    height *= MAX_WIDTH / width;
-                                    width = MAX_WIDTH;
-                                }
-                            } else {
-                                if (height > MAX_HEIGHT) {
-                                    width *= MAX_HEIGHT / height;
-                                    height = MAX_HEIGHT;
-                                }
-                            }
-                            canvas.width = width;
-                            canvas.height = height;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, width, height);
-                            
-                            canvas.toBlob(blob => {
-                                const compressedFile = new File([blob], file.name, {
-                                    type: 'image/jpeg',
-                                    lastModified: Date.now()
-                                });
-                                resolve(compressedFile);
-                            }, 'image/jpeg', 0.5); // 50% quality
-                        };
-                        img.onerror = error => reject(error);
-                    };
-                    reader.onerror = error => reject(error);
-                });
-            }
 
             btnSubmit.disabled = true;
             btnSubmit.style.opacity = '0.5';
             statusDiv.style.display = 'block';
-            statusDiv.innerText = 'Optimizing screenshot...';
+            statusDiv.innerText = 'Submitting request...';
 
             try {
-                // Compress the image before uploading (compress if > 100KB)
-                const finalFile = await compressImage(file, 0.1);
-
-                statusDiv.innerText = 'Uploading screenshot (almost done)...';
-
-                // 1. Upload Screenshot to Storage
-                const storageRef = storage.ref(`premium_receipts/${currentUser.uid}/${Date.now()}_${finalFile.name}`);
-                await storageRef.put(finalFile);
-                const downloadURL = await storageRef.getDownloadURL();
-
-                statusDiv.innerText = 'Submitting request...';
-
-                // 2. Save Request to Firestore
+                // Save Request to Firestore without screenshot
                 await db.collection('premium_requests').add({
                     userId: currentUser.uid,
                     userEmail: currentUser.email,
@@ -677,12 +594,12 @@
                     planName: selectedPlan,
                     monthsRequested: selectedMonths,
                     transactionId: document.getElementById('txnId').value,
-                    screenshotUrl: downloadURL,
+                    screenshotUrl: 'email', // placeholder
                     status: 'pending',
                     submittedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                alert("Your payment verification request has been submitted successfully! The admin will review and approve it within 24 hours.");
+                alert("Request submitted! Please EMAIL your payment screenshot to official.vani.xai76@gmail.com to get approved within 24 hours.");
                 closeModal();
                 
             } catch(error) {
