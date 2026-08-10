@@ -398,6 +398,14 @@
                         const data = userDoc.data();
                         const now = new Date();
                         let isLockedOut = false;
+
+                        // 1. Auto-generate V.A.N.I-xAI ID if missing
+                        if (!data.vaniId) {
+                            const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                            const randomDigits = Math.floor(1000 + Math.random() * 9000);
+                            const newVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
+                            await db.collection('users').doc(user.uid).update({ vaniId: newVaniId });
+                        }
                         
                         if (data.isPremium) {
                             // Check Premium Expiry

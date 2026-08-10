@@ -215,8 +215,18 @@
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     if(userDoc.exists) {
                         userData = userDoc.data();
+                        
+                        // Self-heal: Generate VANI ID if missing
+                        let displayVaniId = userData.vaniId;
+                        if (!displayVaniId) {
+                            const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                            const randomDigits = Math.floor(1000 + Math.random() * 9000);
+                            displayVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
+                            await db.collection('users').doc(user.uid).update({ vaniId: displayVaniId });
+                        }
+
                         document.getElementById('userEmail').innerText = user.email;
-                        document.getElementById('vaniId').innerText = 'ID: ' + (userData.vani_id || 'Not generated');
+                        document.getElementById('vaniId').innerText = 'ID: ' + displayVaniId;
                         if(userData.photoURL) {
                             document.getElementById('userAvatar').src = userData.photoURL;
                         }
