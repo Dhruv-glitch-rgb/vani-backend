@@ -165,11 +165,11 @@
         .badge-master { background: #ede9fe; color: #6d28d9; }
         .badge-premium { background: #dcfce7; color: #15803d; } // Fallback
 
-        /* Cancel Button */
+        /* Cancel Button Upgraded */
         .btn-cancel {
-            background: #fee2e2;
-            color: #b91c1c;
-            border: 1px solid #fca5a5;
+            background: linear-gradient(135deg, #f87171, #ef4444);
+            color: white;
+            border: none;
             padding: 8px 15px;
             border-radius: 8px;
             font-family: 'Outfit';
@@ -177,13 +177,29 @@
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
         }
 
         .btn-cancel:hover {
-            background: #ef4444;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn-copy {
+            background: #e0f2fe;
+            color: #0284c7;
+            border: 1px solid #bae6fd;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-copy:hover {
+            background: #0284c7;
             color: white;
-            border-color: #ef4444;
-            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
         }
         
         .btn-cancel:disabled {
@@ -255,6 +271,7 @@
                     <tr>
                         <th>User</th>
                         <th>V.A.N.I-xAI ID</th>
+                        <th>Activation Key</th>
                         <th>Current Plan</th>
                         <th>Expiry Date</th>
                         <th>Actions</th>
@@ -311,6 +328,7 @@
                     let expiryStr = 'N/A';
                     let planName = 'Free';
                     let badgeClass = 'badge-free';
+                    let activationKeyStr = 'N/A';
                     
                     if (isPremium) {
                         expiryStr = userData.premiumExpiry.toDate().toLocaleDateString();
@@ -331,17 +349,24 @@
                                 if(usedTime > maxTime) {
                                     maxTime = usedTime;
                                     latestKey = d;
+                                    latestKey.id = k.id;
                                 }
                             });
                             
-                            if (latestKey && latestKey.planName) {
-                                planName = latestKey.planName;
-                                let p = planName.toLowerCase();
-                                if(p.includes('starter')) badgeClass = 'badge-starter';
-                                else if(p.includes('pro')) badgeClass = 'badge-pro';
-                                else if(p.includes('advanced')) badgeClass = 'badge-advanced';
-                                else if(p.includes('master')) badgeClass = 'badge-master';
-                                else badgeClass = 'badge-premium';
+                            if (latestKey) {
+                                activationKeyStr = latestKey.id;
+                                if (latestKey.planName) {
+                                    planName = latestKey.planName;
+                                    let p = planName.toLowerCase();
+                                    if(p.includes('starter')) badgeClass = 'badge-starter';
+                                    else if(p.includes('pro')) badgeClass = 'badge-pro';
+                                    else if(p.includes('advanced')) badgeClass = 'badge-advanced';
+                                    else if(p.includes('master')) badgeClass = 'badge-master';
+                                    else badgeClass = 'badge-premium';
+                                } else {
+                                    planName = 'Premium';
+                                    badgeClass = 'badge-premium';
+                                }
                             } else {
                                 planName = 'Premium';
                                 badgeClass = 'badge-premium';
@@ -369,6 +394,10 @@
                             </div>
                         </td>
                         <td style="font-family:monospace; font-weight:600; color:#0369a1;">${vaniId}</td>
+                        <td style="font-family:monospace; font-size: 0.85rem; color:#475569;">
+                            ${activationKeyStr}
+                            ${activationKeyStr !== 'N/A' ? `<button class="btn-copy" onclick="navigator.clipboard.writeText('${activationKeyStr}'); alert('Copied: ${activationKeyStr}')" title="Copy Key"><i class="fa-solid fa-copy"></i></button>` : ''}
+                        </td>
                         <td><span class="badge ${badgeClass}">${planName}</span></td>
                         <td style="font-weight:600;">${expiryStr}</td>
                         <td>
