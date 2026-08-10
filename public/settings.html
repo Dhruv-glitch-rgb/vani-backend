@@ -216,6 +216,7 @@
                     <div style="flex: 1;">
                         <h3 id="profileName" style="margin-bottom: 5px; color: var(--text-primary);">Loading...</h3>
                         <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem;">...</p>
+                        <p id="profileInstagram" style="color: #E1306C; font-size: 0.9rem; margin-top: 5px; display: none;"><i class="fa-brands fa-instagram"></i> <span></span></p>
                         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Security PIN:
                             <strong>****</strong></p>
                     </div>
@@ -372,10 +373,25 @@
                 const nameEl = document.getElementById('profileName');
                 const emailEl = document.getElementById('profileEmail');
                 const avatarEl = document.getElementById('profileImage');
+                const instaEl = document.getElementById('profileInstagram');
 
                 nameEl.textContent = user.displayName || user.email.split('@')[0];
                 emailEl.textContent = user.email;
                 avatarEl.src = user.photoURL || `https://ui-avatars.com/api/?name=${nameEl.textContent}&background=020617&color=38bdf8`;
+
+                // Fetch extra details from Firestore
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.instagram) {
+                            instaEl.querySelector('span').textContent = data.instagram;
+                            instaEl.style.display = 'block';
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error fetching user details", e);
+                }
 
                 // Fetch Chat History
                 fetchChatHistory(user.uid);
