@@ -238,7 +238,7 @@
             <img src="vani_logo.jpg" alt="V.A.N.I-xAI">
             <h1>InAixVAi <span>Portal</span></h1>
         </div>
-        <a href="/admin-premium-requests.html" class="nav-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i> Back to Requests</a>
+        <a href="/admin-vaniXai.html" class="nav-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i> Back to Main Admin</a>
     </nav>
 
     <div class="portal-container">
@@ -285,14 +285,6 @@
         
         const auth = firebase.auth();
         const db = firebase.firestore();
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const backBtn = document.getElementById('backBtn');
-            if (document.referrer.includes('admin-vaniXai.html')) {
-                backBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Back to Main Admin';
-                backBtn.href = '/admin-vaniXai.html';
-            }
-        });
 
         auth.onAuthStateChanged(user => {
             if (user && user.email === 'official.vani.xai76@gmail.com') {
