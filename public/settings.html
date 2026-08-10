@@ -384,6 +384,10 @@
                 // Fetch extra details from Firestore
                 try {
                     const doc = await db.collection('users').doc(user.uid).get();
+                    let currentVaniId = '';
+                    let needUpdate = false;
+                    let updates = {};
+
                     if (doc.exists) {
                         const data = doc.data();
                         if (data.instagram) {
@@ -391,12 +395,32 @@
                             instaEl.style.display = 'block';
                         }
                         if (data.vaniId) {
-                            vaniIdEl.querySelector('span').textContent = data.vaniId;
-                            vaniIdEl.style.display = 'block';
+                            currentVaniId = data.vaniId;
                         }
                     }
+
+                    // Auto-generate if missing (Self-healing)
+                    if (!currentVaniId) {
+                        const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                        const randomDigits = Math.floor(1000 + Math.random() * 9000);
+                        currentVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
+                        updates.vaniId = currentVaniId;
+                        updates.name = user.displayName || user.email.split('@')[0];
+                        updates.email = user.email;
+                        needUpdate = true;
+                    }
+
+                    // Display it
+                    vaniIdEl.querySelector('span').textContent = currentVaniId;
+                    vaniIdEl.style.display = 'block';
+
+                    // Save if we generated a new one
+                    if (needUpdate) {
+                        await db.collection('users').doc(user.uid).set(updates, { merge: true });
+                    }
+
                 } catch (e) {
-                    console.error("Error fetching user details", e);
+                    console.error("Error fetching/updating user details", e);
                 }
 
                 // Fetch Chat History
