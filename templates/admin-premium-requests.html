@@ -235,6 +235,38 @@
 
 
 
+    <!-- Key Modal -->
+    <div class="modal" id="keyModal" style="z-index: 9999;">
+        <div class="modal-content" style="max-width: 450px; background: rgba(20, 10, 10, 0.95); border: 1px solid rgba(234, 88, 12, 0.4); text-align: left; padding: 25px; box-shadow: 0 0 40px rgba(234, 88, 12, 0.2);">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <img src="vani_logo.jpg" alt="Logo" style="width: 50px; height: 50px; margin: 0; box-shadow: none;">
+                <div>
+                    <h3 style="margin:0; font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; color: #fff;">V.A.N.I-xAI</h3>
+                    <p style="margin:0; color: #94a3b8; font-size: 0.9rem;" id="modalEmail">user@email.com</p>
+                </div>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <p style="margin: 0 0 5px; color: #cbd5e1; font-size: 0.9rem;"><strong>V.A.N.I-xAI ID:</strong> <span id="modalVaniId" style="color: #38bdf8;">Loading...</span></p>
+                <p style="margin: 0 0 5px; color: #cbd5e1; font-size: 0.9rem;"><strong>Plan:</strong> <span id="modalPlanName" style="color: var(--saffron);">...</span></p>
+                <p style="margin: 0; color: #cbd5e1; font-size: 0.9rem;"><strong>Expires:</strong> <span id="modalExpire">...</span></p>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; text-align: center; border: 1px dashed rgba(255,255,255,0.2);">
+                <p style="margin: 0 0 10px; color: #94a3b8; font-size: 0.85rem;">ACTIVATION KEY</p>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                    <span id="modalActivationKey" style="font-family: monospace; font-size: 1.1rem; color: #34d399; font-weight: bold; word-break: break-all;">KEY-123</span>
+                    <button class="btn-action" id="btnCopyKey" style="background: #0f766e; border-color: #14b8a6; color: white; padding: 8px 12px; margin: 0;" title="Copy Key">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <p id="copyStatusText" style="text-align: center; color: #10b981; font-size: 0.85rem; margin-top: 15px; opacity: 0; transition: 0.2s;">Key successfully copied!</p>
+            <p style="text-align: center; color: #64748b; font-size: 0.8rem; margin: 5px 0 0;">Press <strong>Enter</strong> to copy, press again to close.</p>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -300,7 +332,7 @@
                         <td style="font-family:monospace;">${req.transactionId}</td>
                         <td style="color:#94a3b8; font-size:0.85rem;">${dateStr}</td>
                         <td>
-                            <button class="btn-action btn-approve" onclick="approveRequest('${docId}', '${req.userId}', ${req.monthsRequested}, '${req.planName}', '${req.userName.replace(/'/g, "\\'")}')">Generate Key</button>
+                            <button class="btn-action btn-approve" onclick="approveRequest('${docId}', '${req.userId}', ${req.monthsRequested}, '${req.planName}', '${req.userName.replace(/'/g, "\\'")}', '${req.userEmail}')">Generate Key</button>
                             <button class="btn-action btn-reject" onclick="rejectRequest('${docId}')">Reject</button>
                         </td>
                     `;
@@ -315,7 +347,7 @@
 
 
         // Action Logic
-        async function approveRequest(requestId, userId, months, planName, userName) {
+        async function approveRequest(requestId, userId, months, planName, userName, userEmail) {
             if(!confirm("Are you sure you want to generate an activation key for this request?")) return;
             
             try {
@@ -324,6 +356,18 @@
                 const random4 = Math.floor(1000 + Math.random() * 9000);
                 const safePlanName = (planName || 'PLAN').split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
                 const activationKey = `V.A.N.I-xAI-${safePlanName}-${namePart}-${random4}`;
+
+                // Fetch VANI ID
+                const userDoc = await db.collection('users').doc(userId).get();
+                let vaniId = 'Not Generated';
+                if (userDoc.exists && userDoc.data().vaniId) {
+                    vaniId = userDoc.data().vaniId;
+                }
+                
+                // Calculate Expiry
+                const expireDate = new Date();
+                expireDate.setMonth(expireDate.getMonth() + (months || 1));
+                const expireDateStr = expireDate.toLocaleDateString();
 
                 // 2. Save Key to Database
                 await db.collection('activation_keys').doc(activationKey).set({
@@ -341,8 +385,50 @@
                     approvedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                // 4. Alert Admin to copy
-                alert("Activation Key Generated Successfully!\n\nPlease copy this key and send it to the user:\n\n" + activationKey);
+                // 4. Show Custom Modal
+                document.getElementById('modalEmail').innerText = userEmail || 'No Email';
+                document.getElementById('modalVaniId').innerText = vaniId;
+                document.getElementById('modalPlanName').innerText = planName || 'Premium';
+                document.getElementById('modalExpire').innerText = expireDateStr;
+                document.getElementById('modalActivationKey').innerText = activationKey;
+                
+                const modal = document.getElementById('keyModal');
+                const copyStatus = document.getElementById('copyStatusText');
+                copyStatus.style.opacity = 0;
+                
+                let hasCopied = false;
+                
+                const doCopy = () => {
+                    navigator.clipboard.writeText(activationKey);
+                    copyStatus.style.opacity = 1;
+                    hasCopied = true;
+                };
+                
+                document.getElementById('btnCopyKey').onclick = doCopy;
+                
+                modal.classList.add('active');
+                
+                const handleKey = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space') {
+                        e.preventDefault();
+                        if (!hasCopied) {
+                            doCopy();
+                        } else {
+                            modal.classList.remove('active');
+                            document.removeEventListener('keydown', handleKey);
+                        }
+                    }
+                };
+                document.addEventListener('keydown', handleKey);
+                
+                // Allow clicking outside to close
+                modal.onclick = (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                        document.removeEventListener('keydown', handleKey);
+                    }
+                };
+
                 fetchRequests(); // refresh table
 
             } catch(e) {
