@@ -214,7 +214,10 @@
                     <img id="profileImage" src="vani_icon.png" alt="Profile"
                         style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-indigo); object-fit: cover;">
                     <div style="flex: 1;">
-                        <h3 id="profileName" style="margin-bottom: 5px; color: var(--text-primary);">Loading...</h3>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <h3 id="profileName" style="margin-bottom: 5px; color: var(--text-primary);">Loading...</h3>
+                            <span id="premiumBadge" style="display:none; background: linear-gradient(135deg, #f59e0b, #ea580c); color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;"><i class="fa-solid fa-crown"></i> Premium</span>
+                        </div>
                         <p id="profileVaniId" style="color: var(--accent-indigo); font-weight: bold; font-size: 0.95rem; margin-top: 5px; display: none;"><i class="fa-solid fa-id-badge"></i> <span></span></p>
                         <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">...</p>
                         <p id="profileInstagram" style="color: #E1306C; font-size: 0.9rem; margin-top: 5px; display: none;"><i class="fa-brands fa-instagram"></i> <span></span></p>
@@ -228,6 +231,10 @@
                         <button class="nav-cta-btn" id="btnChangePin"
                             style="font-size: 0.8rem; padding: 6px 12px; border-color: var(--error-color); color: var(--error-color);">
                             <i class="fa-solid fa-key"></i> Reset PIN
+                        </button>
+                        <button class="nav-cta-btn" id="btnUpgrade" onclick="window.location.href='/premium.html'"
+                            style="font-size: 0.8rem; padding: 6px 12px; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple)); color: white; border: none; display: none;">
+                            <i class="fa-solid fa-gem"></i> Upgrade
                         </button>
                     </div>
                 </div>
@@ -396,6 +403,15 @@
                         }
                         if (data.vaniId) {
                             currentVaniId = data.vaniId;
+                        }
+                        
+                        // Check Premium Status
+                        if (data.isPremium && data.premiumExpiry && data.premiumExpiry.toDate() > new Date()) {
+                            document.getElementById('premiumBadge').style.display = 'inline-block';
+                            document.getElementById('btnUpgrade').style.display = 'none';
+                        } else {
+                            document.getElementById('premiumBadge').style.display = 'none';
+                            document.getElementById('btnUpgrade').style.display = 'inline-block';
                         }
                     }
 

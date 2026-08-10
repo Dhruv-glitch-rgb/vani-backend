@@ -44,38 +44,111 @@
         }
 
         .content {
-            position: relative; z-index: 2;
+            position: relative;
+            z-index: 2;
             background: transparent;
             padding: 40px;
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             animation: slideUp 0.5s ease-out;
         }
-        @keyframes slideUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        
-        .logo { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--error-color); margin-bottom: 20px; box-shadow: 0 0 30px rgba(239,68,68,0.5); }
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-top: 15px; border: 3px solid #333; filter: grayscale(100%); }
-        
-        h1 { font-family: 'Rajdhani', sans-serif; color: var(--error-color); font-size: 4rem; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 20px rgba(239,68,68,0.5); }
-        h2 { font-size: 1.5rem; color: #f8fafc; margin: 0 0 30px 0; letter-spacing: 2px;}
-        
-        .info-box {
-            background: rgba(0,0,0,0.7);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 25px 40px; border-radius: 15px; margin-bottom: 30px;
-            max-width: 600px; width: 90%;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
-        .info-box p { margin: 10px 0; font-size: 1.1rem; color: #cbd5e1; }
-        .reason { color: var(--error-color); font-weight: bold; font-size: 1.3rem !important; margin-top: 15px !important; }
-        
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--error-color);
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: 15px;
+            border: 3px solid #333;
+            filter: grayscale(100%);
+        }
+
+        h1 {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--error-color);
+            font-size: 4rem;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #f8fafc;
+            margin: 0 0 30px 0;
+            letter-spacing: 2px;
+        }
+
+        .info-box {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 25px 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .info-box p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+        }
+
+        .reason {
+            color: var(--error-color);
+            font-weight: bold;
+            font-size: 1.3rem !important;
+            margin-top: 15px !important;
+        }
+
         .btn {
-            background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.5);
-            color: white; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-family: 'Outfit';
-            font-size: 1.2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: 0.3s;
         }
-        .btn:hover { background: rgba(239, 68, 68, 0.4); box-shadow: 0 0 20px rgba(239,68,68,0.4); transform: translateY(-2px); }
+
+        .btn:hover {
+            background: rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 

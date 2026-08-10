@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Plans - V.A.N.I-xAI</title>
+    <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #020617;
+            --surface-color: rgba(30, 41, 59, 0.5);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #38bdf8;
+            --accent-indigo: #6366f1;
+            --accent-purple: #a855f7;
+            --saffron: #ea580c;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-color) url('inxv_bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .logo-container img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-primary);
+        }
+
+        .logo-container h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8rem;
+            margin: 0;
+            background: linear-gradient(135deg, #38bdf8, #818cf8, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .nav-links button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Main Container */
+        .premium-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .premium-header h2 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f59e0b, #ea580c, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .premium-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .pricing-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
+        }
+
+        .pricing-card.best-value {
+            border-color: var(--saffron);
+            transform: scale(1.05);
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+        }
+
+        .pricing-card.best-value:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 10px 30px rgba(234, 88, 12, 0.2);
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: var(--saffron);
+            color: #fff;
+            padding: 5px 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transform: rotate(45deg);
+            text-transform: uppercase;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .plan-duration {
+            font-size: 1.1rem;
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .plan-features li {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-features li i {
+            color: var(--accent-primary);
+        }
+
+        .btn-upgrade {
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-family: 'Outfit';
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-upgrade:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .pricing-card.best-value .btn-upgrade {
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+        }
+
+        /* Verification Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: var(--error-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin-bottom: 25px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            display: inline-block;
+            width: fit-content;
+            margin: 0 auto 25px auto;
+            display: block;
+        }
+
+        .qr-container img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .upi-id-box {
+            text-align: center;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--accent-primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Outfit';
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .file-input-wrapper {
+            background: rgba(0,0,0,0.3);
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-input-wrapper:hover {
+            border-color: var(--accent-primary);
+        }
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .btn-submit {
+            background: var(--accent-primary);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: 700;
+            font-family: 'Outfit';
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        #upload-status {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-card.best-value {
+                transform: scale(1);
+            }
+            .pricing-card.best-value:hover {
+                transform: scale(1) translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo-container" onclick="window.location.href='/'">
+            <img src="/vani_icon.png" alt="V.A.N.I-xAI">
+            <h1>V.A.N.I-xAI</h1>
+        </div>
+        <div class="nav-links">
+            <button onclick="window.location.href='/settings.html'"><i class="fa-solid fa-gear"></i> Settings</button>
+        </div>
+    </nav>
+
+    <div class="premium-container">
+        <div class="premium-header">
+            <h2>Upgrade to Premium</h2>
+            <p>Unlock unrestricted access, faster responses, and ultimate AI capabilities.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Starter -->
+            <div class="pricing-card">
+                <div class="plan-name">Starter</div>
+                <div class="plan-price">₹99<span>/mo</span></div>
+                <div class="plan-duration">1 Month Access</div>
+                <ul class="plan-features">
+                    <li><i class="fa-solid fa-check"></i> Unlimited Queries</li>
+                    <li><i class="fa-solid fa-check"></i> Fast Response Time</li>
+                    <li><i class="fa-solid fa-check"></i> Priority Support</li>
+                </ul>
+                <button class="btn-upgrade" onclick="openModal('Starter', 99, 1)">Upgrade Now</button>
+            </div>
+
+            <!-- Pro -->
+            <div class="pricing-card">
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">₹179</div>
+                <div class="plan-duration">2 Months Access</div>
+                <ul class="plan-features">
+                    <li><i class="fa-solid fa-check"></i> Everything in Starter</li>
+                    <li><i class="fa-solid fa-check"></i> Early Access Features</li>
+                    <li><i class="fa-solid fa-check"></i> Advanced Reasoning</li>
+                </ul>
+                <button class="btn-upgrade" onclick="openModal('Pro', 179, 2)">Upgrade Now</button>
+            </div>
+
+            <!-- Advanced -->
+            <div class="pricing-card">
+                <div class="plan-name">Advanced</div>
+                <div class="plan-price">₹349</div>
+                <div class="plan-duration">4 Months Access</div>
+                <ul class="plan-features">
+                    <li><i class="fa-solid fa-check"></i> Everything in Pro</li>
+                    <li><i class="fa-solid fa-check"></i> Extended Context Memory</li>
+                    <li><i class="fa-solid fa-check"></i> VIP Discord Role</li>
+                </ul>
+                <button class="btn-upgrade" onclick="openModal('Advanced', 349, 4)">Upgrade Now</button>
+            </div>
+
+            <!-- Master -->
+            <div class="pricing-card best-value">
+                <div class="badge">Best Value</div>
+                <div class="plan-name" style="color: var(--saffron);">Master</div>
+                <div class="plan-price">₹499</div>
+                <div class="plan-duration">6 Months Access</div>
+                <ul class="plan-features">
+                    <li><i class="fa-solid fa-star" style="color: var(--saffron);"></i> Highest Priority Queue</li>
+                    <li><i class="fa-solid fa-check"></i> All Premium Features</li>
+                    <li><i class="fa-solid fa-check"></i> Beta Tester Access</li>
+                    <li><i class="fa-solid fa-check"></i> Dedicated Support Line</li>
+                </ul>
+                <button class="btn-upgrade" onclick="openModal('Master', 499, 6)">Get Best Value</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="modal-title">Manual UPI Payment</h3>
+            
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">Scan the QR code below to pay <strong id="modal-amount" style="color:#fff;">₹0</strong> for the <strong id="modal-plan" style="color:var(--accent-primary);">Plan</strong>.</p>
+
+            <div class="qr-container">
+                <img src="/upi_qr.jpg" alt="UPI QR Code" onerror="this.src='/upi_qr.png'">
+            </div>
+
+            <div class="upi-id-box">
+                official.vani.xai76@okicici
+            </div>
+
+            <p style="text-align: center; color: var(--saffron); font-size: 0.85rem; margin-bottom: 20px;">
+                <i class="fa-solid fa-circle-info"></i> After payment, fill out the form below and attach a screenshot. Approval takes up to 24 hours.
+            </p>
+
+            <form id="verificationForm">
+                <div class="form-group">
+                    <label>Transaction ID / UTR Number *</label>
+                    <input type="text" id="txnId" required placeholder="e.g. 123456789012">
+                </div>
+
+                <div class="form-group">
+                    <label>Your Full Name *</label>
+                    <input type="text" id="payName" required placeholder="Name on account">
+                </div>
+
+                <div class="form-group">
+                    <label>Contact Number *</label>
+                    <input type="text" id="payPhone" required placeholder="Phone number">
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Screenshot *</label>
+                    <label class="file-input-wrapper" id="fileWrapper">
+                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--accent-primary); margin-bottom: 10px;"></i><br>
+                        <span id="fileName">Click to browse or drag & drop</span>
+                        <input type="file" id="payScreenshot" accept="image/*" required>
+                    </label>
+                </div>
+
+                <div id="upload-status">Uploading... Please wait.</div>
+                
+                <button type="submit" class="btn-submit" id="btnSubmit">Submit for Verification</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        let currentUser = null;
+        let selectedPlan = null;
+        let selectedMonths = 0;
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                // Prefill user details if possible
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if(doc.exists) {
+                        const data = doc.data();
+                        document.getElementById('payName').value = data.name || '';
+                        document.getElementById('payPhone').value = data.contactNumber || '';
+                    }
+                });
+            } else {
+                window.location.href = '/auth-vani-xai.html';
+            }
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('paymentModal');
+        const form = document.getElementById('verificationForm');
+        
+        function openModal(planName, price, months) {
+            selectedPlan = planName;
+            selectedMonths = months;
+            document.getElementById('modal-plan').innerText = planName;
+            document.getElementById('modal-amount').innerText = '₹' + price;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            form.reset();
+            document.getElementById('fileName').innerText = "Click to browse or drag & drop";
+        }
+
+        // File Input UI Update
+        document.getElementById('payScreenshot').addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                document.getElementById('fileName').innerText = this.files[0].name;
+            }
+        });
+
+        // Form Submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!currentUser) return;
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            const statusDiv = document.getElementById('upload-status');
+            const fileInput = document.getElementById('payScreenshot');
+            const file = fileInput.files[0];
+
+            if(!file) {
+                alert("Please attach a payment screenshot.");
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            btnSubmit.style.opacity = '0.5';
+            statusDiv.style.display = 'block';
+            statusDiv.innerText = 'Uploading screenshot...';
+
+            try {
+                // 1. Upload Screenshot to Storage
+                const storageRef = storage.ref(`premium_receipts/${currentUser.uid}/${Date.now()}_${file.name}`);
+                await storageRef.put(file);
+                const downloadURL = await storageRef.getDownloadURL();
+
+                statusDiv.innerText = 'Submitting request...';
+
+                // 2. Save Request to Firestore
+                await db.collection('premium_requests').add({
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    userName: document.getElementById('payName').value,
+                    contactNumber: document.getElementById('payPhone').value,
+                    planName: selectedPlan,
+                    monthsRequested: selectedMonths,
+                    transactionId: document.getElementById('txnId').value,
+                    screenshotUrl: downloadURL,
+                    status: 'pending',
+                    submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert("Your payment verification request has been submitted successfully! The admin will review and approve it within 24 hours.");
+                closeModal();
+                
+            } catch(error) {
+                console.error("Error submitting request:", error);
+                alert("An error occurred: " + error.message);
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.style.opacity = '1';
+                statusDiv.style.display = 'none';
+            }
+        });
+
+    </script>
+</body>
+</html>

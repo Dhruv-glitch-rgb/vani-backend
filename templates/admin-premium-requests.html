@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Verification - Admin</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #020617;
+            --surface-color: rgba(30, 41, 59, 0.5);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #38bdf8;
+            --accent-indigo: #6366f1;
+            --saffron: #ea580c;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-color) url('inxv_bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Admin Layout Structure */
+        .admin-layout {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title img {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            border: 2px solid var(--saffron);
+        }
+
+        .header-title h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--saffron);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .data-panel {
+            flex: 1;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .panel-header h2 {
+            font-size: 2rem;
+            margin: 0;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Table */
+        .sys-table-wrapper {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .sys-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        
+        .sys-table th {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            color: var(--saffron);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+        
+        .sys-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+        
+        .sys-table tr:hover { background: rgba(255,255,255,0.02); }
+
+        .btn-action {
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: 'Outfit';
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .btn-approve { background: #22c55e; color: #000; }
+        .btn-reject { background: #ef4444; color: #fff; }
+        .btn-view { background: var(--accent-primary); color: #000; }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            text-align: center;
+        }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px;
+            background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;
+        }
+        .modal-content img {
+            max-width: 100%;
+            max-height: 60vh;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-layout" id="admin-content" style="display: none;">
+        <header class="admin-header">
+            <div class="header-title">
+                <img src="vani_logo.jpg" alt="Logo">
+                <h1>Premium Payment Approvals</h1>
+            </div>
+            <button class="btn-back" onclick="window.location.href='/admin-vaniXai.html'">
+                <i class="fa-solid fa-arrow-left"></i> Back to Main Admin
+            </button>
+        </header>
+
+        <main class="data-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-file-invoice-dollar" style="color:var(--saffron);"></i> Pending Requests</h2>
+            </div>
+
+            <div class="sys-table-wrapper">
+                <table class="sys-table">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Contact / Email</th>
+                            <th>Plan</th>
+                            <th>Txn ID</th>
+                            <th>Date Submitted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--saffron);">Fetching secure records from Firebase...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Screenshot Modal -->
+    <div class="modal" id="screenshotModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="color:#fff; margin-bottom: 20px;">Payment Screenshot</h3>
+            <img id="screenshotImg" src="" alt="Payment Screenshot">
+            <div id="modalTxnId" style="color: var(--accent-primary); font-family: monospace; font-size: 1.2rem;"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        auth.onAuthStateChanged(user => {
+            if (user && user.email === 'official.vani.xai76@gmail.com') {
+                document.getElementById('admin-content').style.display = 'flex';
+                fetchRequests();
+            } else {
+                alert("SECURITY BREACH: Unauthorized access.");
+                window.location.href = '/?launch=true';
+            }
+        });
+
+        async function fetchRequests() {
+            try {
+                // Fetch pending requests
+                const snapshot = await db.collection('premium_requests')
+                                         .where('status', '==', 'pending')
+                                         .orderBy('submittedAt', 'asc')
+                                         .get();
+                
+                const tbody = document.getElementById('table-body');
+                tbody.innerHTML = '';
+
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No pending requests found.</td></tr>`;
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const req = doc.data();
+                    const tr = document.createElement('tr');
+                    const dateStr = req.submittedAt ? req.submittedAt.toDate().toLocaleString() : 'N/A';
+                    
+                    tr.innerHTML = `
+                        <td style="font-weight:bold; color:#fff;">${req.userName}</td>
+                        <td>${req.contactNumber}<br><span style="color:#94a3b8; font-size:0.85rem;">${req.userEmail}</span></td>
+                        <td style="color:var(--accent-primary);">${req.planName} (${req.monthsRequested} Mo)</td>
+                        <td style="font-family:monospace;">${req.transactionId}</td>
+                        <td style="color:#94a3b8; font-size:0.85rem;">${dateStr}</td>
+                        <td>
+                            <button class="btn-action btn-view" onclick="viewScreenshot('${req.screenshotUrl}', '${req.transactionId}')">View</button>
+                            <button class="btn-action btn-approve" onclick="approveRequest('${doc.id}', '${req.userId}', ${req.monthsRequested})">Approve</button>
+                            <button class="btn-action btn-reject" onclick="rejectRequest('${doc.id}')">Reject</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch(e) {
+                console.error(e);
+                document.getElementById('table-body').innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ef4444;">Error fetching data. Check permissions.</td></tr>`;
+            }
+        }
+
+        // Modal Logic
+        function viewScreenshot(url, txnId) {
+            document.getElementById('screenshotImg').src = url;
+            document.getElementById('modalTxnId').innerText = 'Txn: ' + txnId;
+            document.getElementById('screenshotModal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('screenshotModal').classList.remove('active');
+        }
+
+        // Action Logic
+        async function approveRequest(requestId, userId, months) {
+            if(!confirm("Are you sure you want to approve this request and upgrade the user?")) return;
+            
+            try {
+                // 1. Calculate new expiry date
+                const now = new Date();
+                const expiryDate = new Date(now.setMonth(now.getMonth() + months));
+
+                // 2. Update the user document
+                await db.collection('users').doc(userId).set({
+                    isPremium: true,
+                    premiumExpiry: expiryDate
+                }, { merge: true });
+
+                // 3. Update the request status
+                await db.collection('premium_requests').doc(requestId).update({
+                    status: 'approved',
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert("User successfully upgraded to Premium!");
+                fetchRequests(); // refresh table
+
+            } catch(e) {
+                console.error("Error approving:", e);
+                alert("Error approving request.");
+            }
+        }
+
+        async function rejectRequest(requestId) {
+            if(!confirm("Are you sure you want to reject this request? This cannot be undone.")) return;
+            
+            try {
+                await db.collection('premium_requests').doc(requestId).update({
+                    status: 'rejected',
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert("Request rejected.");
+                fetchRequests();
+            } catch(e) {
+                console.error("Error rejecting:", e);
+                alert("Error rejecting request.");
+            }
+        }
+    </script>
+</body>
+</html>
