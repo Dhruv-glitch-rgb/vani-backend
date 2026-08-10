@@ -208,6 +208,14 @@
         <div id="error-msg"></div>
 
         <div class="input-group">
+            <label>V.A.N.I-xAI Username / ID</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-id-badge" style="color: #6366f1;"></i>
+                <input type="text" id="user-vani-id" disabled style="color: #6366f1; font-weight: bold;">
+            </div>
+        </div>
+
+        <div class="input-group">
             <label>Name</label>
             <div class="input-wrapper">
                 <i class="fa-solid fa-user"></i>
@@ -269,6 +277,7 @@
         const emailInput = document.getElementById('user-email');
         const phoneInput = document.getElementById('user-phone');
         const instaInput = document.getElementById('user-insta');
+        const vaniIdInput = document.getElementById('user-vani-id');
         const btnContinue = document.getElementById('btn-continue');
         const btnText = document.getElementById('btn-text');
         const btnSpinner = document.getElementById('btn-spinner');
@@ -287,21 +296,29 @@
                 // Check if user already provided details
                 try {
                     const doc = await db.collection('users').doc(user.uid).get();
+                    let currentVaniId = '';
+
                     if (doc.exists) {
                         const data = doc.data();
                         
-                        // If they already have both, we can either redirect or let them update.
-                        // We will prefill it and let them update. If they just logged in, they might want to continue.
+                        if (data.vaniId) currentVaniId = data.vaniId;
+
                         if (data.contactNumber) phoneInput.value = data.contactNumber;
                         if (data.instagram) instaInput.value = data.instagram;
                         
-                        // Auto-skip logic: If details are already filled and valid, we could redirect immediately.
-                        // However, to allow updates, we'll let them click continue.
-                        // Or if you prefer seamless flow, uncomment the below to skip:
                         if (data.contactNumber && data.instagram && !window.location.search.includes('edit=true')) {
                             window.location.href = '/pin-vaniXai.html';
                         }
                     }
+
+                    // Generate VANI ID if it doesn't exist
+                    if (!currentVaniId) {
+                        const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                        const randomDigits = Math.floor(1000 + Math.random() * 9000);
+                        currentVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
+                    }
+                    vaniIdInput.value = currentVaniId;
+
                 } catch (e) {
                     console.error("Error fetching user details", e);
                 }
@@ -331,6 +348,7 @@
                 await db.collection('users').doc(currentUser.uid).set({
                     email: currentUser.email,
                     name: currentUser.displayName || currentUser.email.split('@')[0],
+                    vaniId: vaniIdInput.value,
                     contactNumber: phone,
                     instagram: insta,
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()

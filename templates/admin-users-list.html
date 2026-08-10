@@ -237,6 +237,7 @@
                     <thead>
                         <tr>
                             <th>User Name</th>
+                            <th>V.A.N.I ID</th>
                             <th>Email Address</th>
                             <th>Contact Number</th>
                             <th>Instagram Username</th>
@@ -245,7 +246,7 @@
                     </thead>
                     <tbody id="table-body">
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--saffron);">Fetching secure records from Firebase...</td>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--saffron);">Fetching secure records from Firebase...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -317,7 +318,7 @@
             tbody.innerHTML = '';
 
             if (dataArray.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No records found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No records found.</td></tr>`;
                 return;
             }
 
@@ -335,9 +336,11 @@
                 // Handle missing fields nicely
                 const phoneStr = user.contactNumber ? `<span class="data-cell"><i class="fa-solid fa-phone" style="font-size:0.8rem; margin-right:5px; color:#94a3b8;"></i>${user.contactNumber}</span>` : '<span class="empty-cell">Not Provided</span>';
                 const instaStr = user.instagram ? `<span class="data-cell" style="color: #E1306C;"><i class="fa-brands fa-instagram" style="font-size:0.8rem; margin-right:5px;"></i>${user.instagram}</span>` : '<span class="empty-cell">Not Provided</span>';
+                const vaniIdStr = user.vaniId ? `<span class="data-cell" style="color: var(--accent-indigo); font-weight: bold;"><i class="fa-solid fa-id-badge" style="font-size:0.8rem; margin-right:5px;"></i>${user.vaniId}</span>` : '<span class="empty-cell">Auto-generates on login</span>';
 
                 tr.innerHTML = `
                     <td class="name-cell">${user.name || user.email.split('@')[0] || 'Unknown'}</td>
+                    <td>${vaniIdStr}</td>
                     <td class="email-cell">${user.email || 'No Email'}</td>
                     <td>${phoneStr}</td>
                     <td>${instaStr}</td>
@@ -348,17 +351,21 @@
         }
 
         function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const searchTerm = document.getElementById('searchInput').value;
+            const query = searchTerm.toLowerCase().trim();
             if (!query) {
                 renderTable(allUsers);
                 return;
             }
-            const filtered = allUsers.filter(u => {
-                const name = (u.name || "").toLowerCase();
-                const email = (u.email || "").toLowerCase();
-                const phone = (u.contactNumber || "").toLowerCase();
-                const insta = (u.instagram || "").toLowerCase();
-                return name.includes(query) || email.includes(query) || phone.includes(query) || insta.includes(query);
+            const filtered = allUsers.filter(user => {
+                const term = searchTerm.toLowerCase();
+                const name = (user.name || '').toLowerCase();
+                const email = (user.email || '').toLowerCase();
+                const phone = (user.contactNumber || '').toLowerCase();
+                const insta = (user.instagram || '').toLowerCase();
+                const vaniId = (user.vaniId || '').toLowerCase();
+
+                return name.includes(term) || email.includes(term) || phone.includes(term) || insta.includes(term) || vaniId.includes(term);
             });
             renderTable(filtered);
         }

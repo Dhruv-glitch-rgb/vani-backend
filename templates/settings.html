@@ -215,7 +215,8 @@
                         style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-indigo); object-fit: cover;">
                     <div style="flex: 1;">
                         <h3 id="profileName" style="margin-bottom: 5px; color: var(--text-primary);">Loading...</h3>
-                        <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem;">...</p>
+                        <p id="profileVaniId" style="color: var(--accent-indigo); font-weight: bold; font-size: 0.95rem; margin-top: 5px; display: none;"><i class="fa-solid fa-id-badge"></i> <span></span></p>
+                        <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">...</p>
                         <p id="profileInstagram" style="color: #E1306C; font-size: 0.9rem; margin-top: 5px; display: none;"><i class="fa-brands fa-instagram"></i> <span></span></p>
                         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Security PIN:
                             <strong>****</strong></p>
@@ -374,6 +375,7 @@
                 const emailEl = document.getElementById('profileEmail');
                 const avatarEl = document.getElementById('profileImage');
                 const instaEl = document.getElementById('profileInstagram');
+                const vaniIdEl = document.getElementById('profileVaniId');
 
                 nameEl.textContent = user.displayName || user.email.split('@')[0];
                 emailEl.textContent = user.email;
@@ -387,6 +389,10 @@
                         if (data.instagram) {
                             instaEl.querySelector('span').textContent = data.instagram;
                             instaEl.style.display = 'block';
+                        }
+                        if (data.vaniId) {
+                            vaniIdEl.querySelector('span').textContent = data.vaniId;
+                            vaniIdEl.style.display = 'block';
                         }
                     }
                 } catch (e) {
