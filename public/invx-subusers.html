@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InAixVAi Portal - User Subscriptions</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('inxv_bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #1f2937;
+        }
+
+        /* Glassmorphism Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container img {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-container h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #111827;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .logo-container h1 span {
+            color: #0ea5e9;
+        }
+
+        .nav-btn {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Outfit';
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        /* Main Container */
+        .portal-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .portal-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .portal-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+            color: #1e293b;
+        }
+
+        .portal-header p {
+            margin: 0;
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* Table Design */
+        .table-wrapper {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 18px 25px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: rgba(248, 250, 252, 0.8);
+            color: #475569;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            color: #1e293b;
+            font-size: 0.95rem;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(241, 245, 249, 0.5);
+        }
+
+        /* Badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .badge-free { background: #f1f5f9; color: #64748b; }
+        .badge-starter { background: #dbeafe; color: #1d4ed8; }
+        .badge-pro { background: #fce7f3; color: #be185d; }
+        .badge-advanced { background: #fef3c7; color: #b45309; }
+        .badge-master { background: #ede9fe; color: #6d28d9; }
+        .badge-premium { background: #dcfce7; color: #15803d; } // Fallback
+
+        /* Cancel Button */
+        .btn-cancel {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fca5a5;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-family: 'Outfit';
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-cancel:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .user-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-meta img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+        }
+
+        .user-names h4 {
+            margin: 0;
+            font-size: 1rem;
+            color: #0f172a;
+        }
+
+        .user-names p {
+            margin: 2px 0 0;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .loader {
+            display: block;
+            margin: 50px auto;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-left-color: #0ea5e9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo-container">
+            <img src="vani_logo.jpg" alt="V.A.N.I-xAI">
+            <h1>InAixVAi <span>Portal</span></h1>
+        </div>
+        <a href="/admin-premium-requests.html" class="nav-btn"><i class="fa-solid fa-arrow-left"></i> Back to Requests</a>
+    </nav>
+
+    <div class="portal-container">
+        <div class="portal-header">
+            <h2>User Subscription Directory</h2>
+            <p>Monitor active plans and revoke access securely.</p>
+        </div>
+
+        <div class="loader" id="pageLoader"></div>
+
+        <div class="table-wrapper" id="tableWrapper" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>V.A.N.I-xAI ID</th>
+                        <th>Current Plan</th>
+                        <th>Expiry Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- Rows injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        auth.onAuthStateChanged(user => {
+            if (user && user.email === 'official.vani.xai76@gmail.com') {
+                loadUsers();
+            } else {
+                alert("Unauthorized Access. Admins only.");
+                window.location.href = '/';
+            }
+        });
+
+        async function loadUsers() {
+            try {
+                const snapshot = await db.collection('users').get();
+                const tbody = document.getElementById('userTableBody');
+                tbody.innerHTML = '';
+                
+                const now = new Date();
+
+                for (let doc of snapshot.docs) {
+                    const userData = doc.data();
+                    const uid = doc.id;
+                    
+                    let isPremium = userData.isPremium && userData.premiumExpiry && userData.premiumExpiry.toDate() > now;
+                    let expiryStr = 'N/A';
+                    let planName = 'Free';
+                    let badgeClass = 'badge-free';
+                    
+                    if (isPremium) {
+                        expiryStr = userData.premiumExpiry.toDate().toLocaleDateString();
+                        
+                        // Find the actual plan name from activation keys
+                        const keySnap = await db.collection('activation_keys')
+                                                .where('userId', '==', uid)
+                                                .where('isUsed', '==', true)
+                                                .get();
+                        
+                        if (!keySnap.empty) {
+                            // Find the most recently used key
+                            let latestKey = null;
+                            let maxTime = 0;
+                            keySnap.forEach(k => {
+                                const d = k.data();
+                                const usedTime = d.usedAt ? d.usedAt.toMillis() : 0;
+                                if(usedTime > maxTime) {
+                                    maxTime = usedTime;
+                                    latestKey = d;
+                                }
+                            });
+                            
+                            if (latestKey && latestKey.planName) {
+                                planName = latestKey.planName;
+                                let p = planName.toLowerCase();
+                                if(p.includes('starter')) badgeClass = 'badge-starter';
+                                else if(p.includes('pro')) badgeClass = 'badge-pro';
+                                else if(p.includes('advanced')) badgeClass = 'badge-advanced';
+                                else if(p.includes('master')) badgeClass = 'badge-master';
+                                else badgeClass = 'badge-premium';
+                            } else {
+                                planName = 'Premium';
+                                badgeClass = 'badge-premium';
+                            }
+                        } else {
+                            planName = 'Premium';
+                            badgeClass = 'badge-premium';
+                        }
+                    }
+
+                    const name = userData.name || userData.displayName || uid;
+                    const email = userData.email || 'No Email';
+                    const vaniId = userData.vaniId || '<span style="color:#94a3b8">Not Generated</span>';
+                    const avatar = userData.photoURL || `https://ui-avatars.com/api/?name=${name}&background=e2e8f0&color=0f172a`;
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <div class="user-meta">
+                                <img src="${avatar}" alt="Avatar">
+                                <div class="user-names">
+                                    <h4>${name}</h4>
+                                    <p>${email}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-family:monospace; font-weight:600; color:#0369a1;">${vaniId}</td>
+                        <td><span class="badge ${badgeClass}">${planName}</span></td>
+                        <td style="font-weight:600;">${expiryStr}</td>
+                        <td>
+                            ${isPremium 
+                                ? `<button class="btn-cancel" onclick="cancelPlan('${uid}')"><i class="fa-solid fa-ban"></i> Cancel Plan</button>` 
+                                : `<button class="btn-cancel" disabled>No Active Plan</button>`
+                            }
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+
+                document.getElementById('pageLoader').style.display = 'none';
+                document.getElementById('tableWrapper').style.display = 'block';
+
+            } catch(e) {
+                console.error("Error loading users:", e);
+                alert("Error loading users database.");
+            }
+        }
+
+        async function cancelPlan(userId) {
+            if(!confirm("Are you absolutely sure you want to cancel this user's subscription?\n\nThey will instantly lose premium access.")) return;
+            
+            try {
+                // Instantly revoke premium
+                await db.collection('users').doc(userId).update({
+                    isPremium: false,
+                    premiumExpiry: null
+                });
+                
+                alert("Subscription has been successfully canceled.");
+                
+                // Refresh table quietly
+                document.getElementById('tableWrapper').style.display = 'none';
+                document.getElementById('pageLoader').style.display = 'block';
+                loadUsers();
+
+            } catch(e) {
+                console.error("Error canceling plan:", e);
+                alert("Error canceling subscription: " + e.message);
+            }
+        }
+    </script>
+</body>
+</html>
