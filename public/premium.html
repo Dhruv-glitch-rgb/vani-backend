@@ -615,8 +615,8 @@
                         img.src = event.target.result;
                         img.onload = () => {
                             const canvas = document.createElement('canvas');
-                            const MAX_WIDTH = 1200;
-                            const MAX_HEIGHT = 1200;
+                            const MAX_WIDTH = 600;
+                            const MAX_HEIGHT = 600;
                             let width = img.width;
                             let height = img.height;
 
@@ -642,7 +642,7 @@
                                     lastModified: Date.now()
                                 });
                                 resolve(compressedFile);
-                            }, 'image/jpeg', 0.7); // 70% quality
+                            }, 'image/jpeg', 0.5); // 50% quality
                         };
                         img.onerror = error => reject(error);
                     };
@@ -653,13 +653,13 @@
             btnSubmit.disabled = true;
             btnSubmit.style.opacity = '0.5';
             statusDiv.style.display = 'block';
-            statusDiv.innerText = 'Compressing image...';
+            statusDiv.innerText = 'Optimizing screenshot...';
 
             try {
-                // Compress the image before uploading (compress if > 500KB)
-                const finalFile = await compressImage(file, 0.5);
+                // Compress the image before uploading (compress if > 100KB)
+                const finalFile = await compressImage(file, 0.1);
 
-                statusDiv.innerText = 'Uploading screenshot...';
+                statusDiv.innerText = 'Uploading screenshot (almost done)...';
 
                 // 1. Upload Screenshot to Storage
                 const storageRef = storage.ref(`premium_receipts/${currentUser.uid}/${Date.now()}_${finalFile.name}`);
