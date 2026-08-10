@@ -320,15 +320,16 @@
             
             try {
                 // 1. Generate Key: V.A.N.I-xAI-(name of plan)-first 4 letters of user's name-Random 4 digits
-                const namePart = (userName || 'USER').substring(0, 4).toUpperCase();
+                const namePart = (userName || 'USER').substring(0, 4).toUpperCase().replace(/[^A-Z]/g, '');
                 const random4 = Math.floor(1000 + Math.random() * 9000);
-                const activationKey = `V.A.N.I-xAI-${planName.toUpperCase()}-${namePart}-${random4}`;
+                const safePlanName = (planName || 'PLAN').split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
+                const activationKey = `V.A.N.I-xAI-${safePlanName}-${namePart}-${random4}`;
 
                 // 2. Save Key to Database
                 await db.collection('activation_keys').doc(activationKey).set({
-                    userId: userId,
-                    months: months,
-                    planName: planName,
+                    userId: userId || 'unknown',
+                    months: months || 1,
+                    planName: planName || 'Unknown',
                     generatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     isUsed: false
                 });
@@ -346,7 +347,7 @@
 
             } catch(e) {
                 console.error("Error generating key:", e);
-                alert("Error generating key.");
+                alert("Error generating key: " + e.message);
             }
         }
 

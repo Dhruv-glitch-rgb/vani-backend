@@ -300,7 +300,7 @@
                         <td style="font-family:monospace;">${req.transactionId}</td>
                         <td style="color:#94a3b8; font-size:0.85rem;">${dateStr}</td>
                         <td>
-                            <button class="btn-action btn-approve" onclick="approveRequest('${docId}', '${req.userId}', ${req.monthsRequested})">Approve</button>
+                            <button class="btn-action btn-approve" onclick="approveRequest('${docId}', '${req.userId}', ${req.monthsRequested}, '${req.planName}', '${req.userName.replace(/'/g, "\\'")}')">Generate Key</button>
                             <button class="btn-action btn-reject" onclick="rejectRequest('${docId}')">Reject</button>
                         </td>
                     `;
@@ -315,32 +315,39 @@
 
 
         // Action Logic
-        async function approveRequest(requestId, userId, months) {
-            if(!confirm("Are you sure you want to approve this request and upgrade the user?")) return;
+        async function approveRequest(requestId, userId, months, planName, userName) {
+            if(!confirm("Are you sure you want to generate an activation key for this request?")) return;
             
             try {
-                // 1. Calculate new expiry date
-                const now = new Date();
-                const expiryDate = new Date(now.setMonth(now.getMonth() + months));
+                // 1. Generate Key: V.A.N.I-xAI-(name of plan)-first 4 letters of user's name-Random 4 digits
+                const namePart = (userName || 'USER').substring(0, 4).toUpperCase().replace(/[^A-Z]/g, '');
+                const random4 = Math.floor(1000 + Math.random() * 9000);
+                const safePlanName = (planName || 'PLAN').split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
+                const activationKey = `V.A.N.I-xAI-${safePlanName}-${namePart}-${random4}`;
 
-                // 2. Update the user document
-                await db.collection('users').doc(userId).set({
-                    isPremium: true,
-                    premiumExpiry: expiryDate
-                }, { merge: true });
+                // 2. Save Key to Database
+                await db.collection('activation_keys').doc(activationKey).set({
+                    userId: userId || 'unknown',
+                    months: months || 1,
+                    planName: planName || 'Unknown',
+                    generatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    isUsed: false
+                });
 
                 // 3. Update the request status
                 await db.collection('premium_requests').doc(requestId).update({
-                    status: 'approved',
+                    status: 'key_generated',
+                    activationKey: activationKey,
                     approvedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                alert("User successfully upgraded to Premium!");
+                // 4. Alert Admin to copy
+                alert("Activation Key Generated Successfully!\n\nPlease copy this key and send it to the user:\n\n" + activationKey);
                 fetchRequests(); // refresh table
 
             } catch(e) {
-                console.error("Error approving:", e);
-                alert("Error approving request.");
+                console.error("Error generating key:", e);
+                alert("Error generating key: " + e.message);
             }
         }
 
