@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V.A.N.I-xAI - INSPIRE Awards-MANAK 2026 Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #059669; /* Emerald Green to match theme */
+            --secondary: #0ea5e9;
+            --accent: #f59e0b; 
+            --text-main: #0f172a;
+            --text-muted: #475569;
+        }
+        body {
+            margin: 0; padding: 0;
+            /* The user must save the provided image as inspire_bg.jpg in the same directory */
+            background: url('inspire_bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+        }
+        
+        /* Glassmorphism Header */
+        header {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .hero-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 5rem;
+            color: #064e3b;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 10px 0 20px 0;
+            font-weight: 700;
+        }
+        .badge {
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            color: #fff;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        /* Glassmorphism Cards */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto 50px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.2rem;
+            color: #064e3b;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid rgba(5, 150, 105, 0.2);
+            padding-bottom: 15px;
+        }
+        .card h2 i {
+            color: var(--primary);
+        }
+        
+        /* Grid Layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; }
+        
+        .stat-box {
+            background: rgba(5, 150, 105, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+        .stat-box h3 { margin: 0; font-size: 2.5rem; color: var(--primary); }
+        .stat-box p { margin: 5px 0 0; font-weight: 600; color: #064e3b; }
+
+        ul.custom-list { list-style: none; padding: 0; }
+        ul.custom-list li {
+            position: relative; padding-left: 35px; margin-bottom: 18px;
+            color: var(--text-muted); font-size: 1.05rem;
+        }
+        ul.custom-list li::before {
+            content: '\f135'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; left: 0; top: 2px; color: var(--primary); font-size: 1.2rem;
+        }
+        ul.custom-list li strong { color: var(--text-main); }
+        
+        .flowchart {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 25px; border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            margin-top: 20px; font-family: 'Outfit', sans-serif; font-weight: 600;
+            color: #0f172a; font-size: 1.2rem; line-height: 2.2;
+        }
+        .flowchart span {
+            color: #fff; background: var(--primary);
+            padding: 4px 12px; border-radius: 8px; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+        }
+        
+        .footer {
+            text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.9);
+            color: var(--text-muted); font-size: 1rem; border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        .footer strong { color: #0f172a; }
+        
+        /* Presentation specific utility */
+        .present-btn {
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--primary); color: white; border: none;
+            padding: 15px 25px; border-radius: 30px; font-family: 'Outfit'; font-weight: bold;
+            font-size: 1.1rem; cursor: pointer; box-shadow: 0 10px 25px rgba(5, 150, 105, 0.4);
+            z-index: 1000; transition: transform 0.2s;
+        }
+        .present-btn:hover { transform: scale(1.05); }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .hero-title { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="present-btn" onclick="window.print()">
+        <i class="fa-solid fa-print"></i> Print / Save as PDF
+    </button>
+
+    <header>
+        <span class="badge">INSPIRE Awards–MANAK 2026-27</span>
+        <h1 class="hero-title">V.A.N.I-xAI</h1>
+        <p class="hero-subtitle">(Vāṇī Adhyātmik Navīn Intellect)</p>
+        <p style="color: var(--text-muted); max-width: 750px; margin: 0 auto; font-size: 1.25rem; font-weight: 600;">
+            A next-generation, indigenous AI ecosystem engineered to solve grassroots societal challenges, democratize digital learning, and empower the student community of India.
+        </p>
+    </header>
+
+    <div class="container">
+        
+        <!-- DIRECT PRESENTATION INFO 1: Executive Summary -->
+        <div class="card">
+            <h2><i class="fa-solid fa-bullseye"></i> Problem Statement & Solution</h2>
+            <div class="grid-2">
+                <div>
+                    <h3 style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> The Problem</h3>
+                    <p>Rural and semi-urban students in India lack access to high-quality, personalized educational tutoring and technological ideation partners. Existing AI models are expensive, require heavy local processing power, and lack socio-cultural context and safety guardrails for young Indian students.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary)"><i class="fa-solid fa-check-double"></i> The V.A.N.I Solution</h3>
+                    <p>V.A.N.I-xAI bridges this gap by offering a 100% cloud-based, hyper-localized AI gateway. Utilizing a unique <strong>Asymmetric Sub-User Architecture</strong>, it delivers massive server-side computational power directly to low-end devices via a highly optimized web interface, democratizing AI access.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIRECT PRESENTATION INFO 2: Novelty & Technology -->
+        <div class="card">
+            <h2><i class="fa-solid fa-microchip"></i> Novelty & Technological Uniqueness</h2>
+            <ul class="custom-list">
+                <li><strong>Proprietary Access Control (Activation Keys):</strong> Unlike standard logins, V.A.N.I-xAI uses mathematically verified, admin-generated Activation Keys linked exclusively to a unique user ID (e.g., V.A.N.I-xAI-ADVANCED-DHRU-3478). This prevents unauthorized exploitation.</li>
+                <li><strong>Socio-Contextual AI Responses:</strong> The AI engine is specifically instructed to act as a mentor. Instead of directly feeding answers, it uses educational scaffolding to foster genuine innovation and problem-solving in young minds.</li>
+                <li><strong>Dynamic Resource Allocation:</strong> Features a Multi-tier Architecture (Free, Starter, Pro, Advanced, Master) that dynamically scales server processing power based on the user's tier, ensuring maximum economic efficiency.</li>
+                <li><strong>InAixVAi Command Center:</strong> A state-of-the-art administrative portal granting educators real-time oversight of resource utilization, subscription management, and complete platform security.</li>
+            </ul>
+        </div>
+
+    <!-- DIRECT PRESENTATION INFO 2.5: Detailed Functions -->
+        <div class="card">
+            <h2><i class="fa-solid fa-layer-group"></i> Core Platform Features</h2>
+            <div class="grid-2">
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;">Generative AI Workspace</h3>
+                    <p>A fully responsive, modern chat interface where students can interact with the specialized AI. It features an automated self-healing ID system that tags queries for safety and relevance.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;">Dynamic Sub-User Management</h3>
+                    <p>The "InAixVAi" Admin Command Center empowers educators to view all sub-users, check exact plan expiry dates, securely copy active keys, and dynamically revoke access with a single click.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;">Algorithmic Key Generation</h3>
+                    <p>When a user requests a tier upgrade (via UPI QR), the Admin panel calculates and generates a unique, mathematical Activation Key tailored to the user's name, plan, and timeframe.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;">Automated Expiry Protocol</h3>
+                    <p>A built-in temporal security feature that continuously evaluates timestamps and automatically downgrades users precisely when their allotted timeframe ends, requiring no manual intervention.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><i class="fa-solid fa-shield-halved"></i> Security & System Architecture</h2>
+            <ul class="custom-list">
+                <li><strong>Backend Synchronization:</strong> Utilizes Firebase Firestore for real-time, NoSQL database synchronization, ensuring zero data loss and instantaneous state updates across thousands of clients.</li>
+                <li><strong>Strict Authentication Gateway:</strong> Integrates Google Auth to guarantee that only verified, legitimate individuals can access the platform, significantly reducing bot traffic and spam.</li>
+                <li><strong>Multi-layered Verification:</strong> Activation keys must pass three strict checks: Exist in the database, be marked as "Unused", and strictly match the exact authenticated User UID they were generated for.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2><i class="fa-solid fa-shoe-prints"></i> The End-to-End User Flow</h2>
+            <div class="flowchart" style="border-left-color: var(--accent); margin-bottom: 0;">
+                <i class="fa-solid fa-1"></i> <strong>Authentication:</strong> Student securely logs in via Google and is algorithmically assigned a unique V.A.N.I-xAI ID.<br>
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 15px; color: var(--text-muted);"></i><br>
+                <i class="fa-solid fa-2"></i> <strong>Request:</strong> Student submits a Premium access request via the integrated UPI portal.<br>
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 15px; color: var(--text-muted);"></i><br>
+                <i class="fa-solid fa-3"></i> <strong>Approval:</strong> Admin reviews the request and the system generates a secure, single-use Activation Key.<br>
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 15px; color: var(--text-muted);"></i><br>
+                <i class="fa-solid fa-4"></i> <strong>Activation:</strong> Student pastes the key into the Activation Portal. The system runs multi-layered security checks.<br>
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 15px; color: var(--text-muted);"></i><br>
+                <i class="fa-solid fa-5"></i> <strong>Access Granted:</strong> Student gains immediate, tier-specific access to advanced educational AI resources.
+            </div>
+        </div>
+
+        <!-- DIRECT PRESENTATION INFO 3.5: User Guide -->
+        <div class="card">
+            <h2><i class="fa-solid fa-chalkboard-user"></i> User Guide: How to Login & Use</h2>
+            <div class="grid-2">
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;">1. Secure Authentication</h3>
+                    <p>Navigate to the login portal. Due to our strict identity verification protocols, students must authenticate using their Google Account. Click "Continue with Google" to securely sign in. The system will then automatically algorithmically generate your unique V.A.N.I-xAI ID.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;">2. Activating Premium</h3>
+                    <p>If you have received an Activation Key from the Admin, click the "Activate V.A.N.I-xAI" button in the navigation bar. Paste the exact key into the secure portal and click Activate. The system verifies the cryptographic match and instantly upgrades your computational tier.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;">3. Interacting with the AI</h3>
+                    <p>Once authenticated, you enter the Generative AI Workspace. Type your query into the prompt box at the bottom. V.A.N.I-xAI uses socio-contextual awareness, meaning it will guide you through complex educational problems step-by-step rather than simply feeding you answers.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;">4. Managing Your Subscription</h3>
+                    <p>You can check your current subscription tier and exact expiry date at any time by clicking "Settings". When your plan expires, the Automated Temporal Protocol seamlessly downgrades your capabilities back to the Free tier until a new key is activated.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIRECT PRESENTATION INFO 4: Fast Facts / Impact -->
+        <div class="card">
+            <h2><i class="fa-solid fa-chart-line"></i> Projected Social Impact</h2>
+            <div class="grid-3">
+                <div class="stat-box">
+                    <h3>100%</h3>
+                    <p>Cloud-Based (Zero E-Waste)</p>
+                </div>
+                <div class="stat-box">
+                    <h3>10k+</h3>
+                    <p>Queries Handled Efficiently</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Tier 2/3</h3>
+                    <p>Primary Target Demographic</p>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 25px; font-size: 1.1rem;">
+                By utilizing the ₹10,000 DBT fund provided by DST efficiently on cloud-scaling rather than physical materials, V.A.N.I-xAI can be instantly deployed to thousands of local students without any manufacturing overhead.
+            </p>
+        </div>
+
+        <!-- DIRECT PRESENTATION INFO 3.8: Why Select V.A.N.I-xAI -->
+        <div class="card">
+            <h2><i class="fa-solid fa-trophy"></i> Why Select V.A.N.I-xAI?</h2>
+            <div class="grid-2">
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;"><i class="fa-solid fa-check"></i> True Grassroots Applicability</h3>
+                    <p>Most AI models are built for corporate use. V.A.N.I-xAI is explicitly engineered for the Indian student community, focusing on educational mentorship rather than just providing shortcuts.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;"><i class="fa-solid fa-check"></i> Complete Originality</h3>
+                    <p>This is not a simple template. It features a completely original, hand-coded algorithmic Activation Key system and an asymmetric sub-user architecture designed from scratch.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;"><i class="fa-solid fa-check"></i> Perfect MANAK Alignment</h3>
+                    <p>MANAK seeks socially applicable, eco-friendly ideas. V.A.N.I-xAI is 100% zero e-waste, fully paperless, highly cost-efficient, and democratizes technology for rural areas.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary); margin-top:0;"><i class="fa-solid fa-check"></i> Ready-to-Scale Prototype</h3>
+                    <p>This is a fully functional, cloud-deployed platform. The ₹10,000 DBT fund will instantly scale this working prototype to support thousands of concurrent students.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIRECT PRESENTATION INFO 4: Project Roadmap -->
+        <div class="card">
+            <h2><i class="fa-solid fa-rocket"></i> Roadmap to NLEPC & FINE</h2>
+            <p style="font-size: 1.1rem;">Deployment strategy aligned perfectly with the MANAK workflow:</p>
+            <div class="flowchart">
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 15px;"></i> [School Level] ➔ <span>Algorithm Ideation & System Design</span><br>
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 15px;"></i> [DLEPC] ➔ <span>Local Network Prototype Demonstration</span><br>
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 15px;"></i> [SLEPC] ➔ <span>Cloud-Deployed Beta with Active Users</span><br>
+                <i class="fa-solid fa-arrow-down-long" style="margin-right: 15px;"></i> [NLEPC] ➔ <span>Refined Architecture via Mentorship</span><br>
+                <i class="fa-solid fa-flag-checkered" style="margin-right: 15px;"></i> [FINE Showcase] ➔ <span>Global Launch as an Indigenous Indian AI</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p style="font-size: 1.15rem; margin-bottom: 5px; color: #0f172a;">Innovation Submitted by: <strong style="color: var(--primary);">Dhruv Sagar</strong> &nbsp;|&nbsp; Class: <strong>10th</strong></p>
+        <p style="font-size: 1.15rem; margin-top: 5px; margin-bottom: 25px; color: #0f172a;">School: <strong>PM SHRI KV NO.1 AFS CHAKERI KANPUR</strong></p>
+        <p>Project Name: <strong>V.A.N.I-xAI</strong> &nbsp;|&nbsp; Category: <strong>Information Technology / Advanced Software</strong></p>
+        <p style="margin-top: 15px; color: var(--text-muted); font-size: 0.9rem;">&copy; 2026-27 INSPIRE Awards–MANAK Cycle. All rights reserved.</p>
+    </div>
+
+</body>
+</html>
