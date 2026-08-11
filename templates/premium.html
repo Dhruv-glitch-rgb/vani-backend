@@ -383,6 +383,26 @@
             display: none;
         }
 
+        .btn-activate-main {
+            background: linear-gradient(135deg, var(--accent-primary), #2563eb);
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-family: 'Outfit';
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-activate-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
+        }
+
         @media (max-width: 768px) {
             .pricing-card.best-value {
                 transform: scale(1);
@@ -400,7 +420,10 @@
             <img src="/vani_icon.png" alt="V.A.N.I-xAI">
             <h1>V.A.N.I-xAI</h1>
         </div>
-        <div class="nav-links">
+        <div class="nav-links" style="display: flex; gap: 15px;">
+            <button class="btn-activate-main" onclick="window.location.href='/activation-subplan.html'" style="padding: 10px 20px; font-size: 0.9rem; margin-top: 0;">
+                <i class="fa-solid fa-key"></i> Activate V.A.N.I-xAI
+            </button>
             <button onclick="window.location.href='/settings.html'"><i class="fa-solid fa-gear"></i> Settings</button>
         </div>
     </nav>
