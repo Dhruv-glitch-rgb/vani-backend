@@ -58,6 +58,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 function handleInstallClick() {
     if (deferredPrompt) {
+        const customModal = document.getElementById('custom-install-modal');
+        if (customModal) {
+            customModal.style.display = 'flex';
+        } else {
+            triggerNativeInstall();
+        }
+    }
+}
+
+function triggerNativeInstall() {
+    if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
             deferredPrompt = null;
@@ -462,6 +473,23 @@ window.addEventListener('DOMContentLoaded', () => {
     const installBtnSettings = document.getElementById('pwa-install-btn-settings');
     if (installBtnMain) installBtnMain.addEventListener('click', handleInstallClick);
     if (installBtnSettings) installBtnSettings.addEventListener('click', handleInstallClick);
+
+    // Custom Modal Listeners
+    const btnConfirmInstall = document.getElementById('btn-confirm-install');
+    const btnCancelInstall = document.getElementById('btn-cancel-install');
+    const customModal = document.getElementById('custom-install-modal');
+    
+    if (btnConfirmInstall) {
+        btnConfirmInstall.addEventListener('click', () => {
+            if (customModal) customModal.style.display = 'none';
+            triggerNativeInstall();
+        });
+    }
+    if (btnCancelInstall) {
+        btnCancelInstall.addEventListener('click', () => {
+            if (customModal) customModal.style.display = 'none';
+        });
+    }
     
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {

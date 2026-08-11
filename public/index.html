@@ -512,6 +512,102 @@
   })();
 </script>
 
+<!-- Custom PWA Install Modal -->
+<div id="custom-install-modal" class="custom-install-overlay" style="display: none;">
+    <div class="custom-install-box">
+        <div class="install-header">
+            <img src="./vani_icon.png" alt="VANI-xAI Icon" class="install-icon pulse-icon">
+            <div class="install-title">
+                <h3>Install V.A.N.I-xAI</h3>
+                <p>Vāṇī Adhyātmik Navīn Intellect</p>
+            </div>
+        </div>
+        <div class="install-body">
+            <p>Install the official V.A.N.I-xAI app on your device for lightning-fast access, native OS features, and an immersive full-screen experience.</p>
+            <div class="install-features">
+                <span><i class="fa-solid fa-bolt"></i> Instant Access</span>
+                <span><i class="fa-solid fa-mobile-screen"></i> Native Feel</span>
+                <span><i class="fa-solid fa-shield-halved"></i> Secure</span>
+            </div>
+        </div>
+        <div class="install-footer">
+            <button id="btn-cancel-install" class="btn-cancel-install">Cancel</button>
+            <button id="btn-confirm-install" class="btn-confirm-install">Install App</button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Custom Install Modal Styles */
+.custom-install-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(12px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+}
+.custom-install-box {
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 380px;
+    padding: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    animation: slideUpFade 0.4s ease-out;
+}
+.install-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.install-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+}
+.install-title h3 {
+    margin: 0; font-size: 1.25rem; color: #fff; font-family: 'Outfit', sans-serif; font-weight: 700;
+}
+.install-title p {
+    margin: 4px 0 0 0; font-size: 0.75rem; color: var(--saffron); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.install-body p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+.install-features {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px;
+}
+.install-features span {
+    background: rgba(14, 165, 233, 0.1);
+    color: #38bdf8;
+    padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+}
+.install-footer {
+    display: flex; justify-content: flex-end; gap: 12px;
+}
+.btn-cancel-install {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1;
+    padding: 10px 18px; border-radius: 10px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 500; transition: 0.2s;
+}
+.btn-cancel-install:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.btn-confirm-install {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: #fff;
+    border: none; padding: 10px 22px; border-radius: 10px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 600;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4); transition: 0.2s;
+}
+.btn-confirm-install:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5); }
+</style>
+
 </body>
 
 </html>
