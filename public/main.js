@@ -33,9 +33,47 @@ let recognition = null;
 let logPollingInterval = null;
 let adbPollingInterval = null;
 let localLogCount = 0;
+let userTier = 'Free'; // Default tier
+let todayMessageCount = parseInt(localStorage.getItem('vani_daily_msg_count') || '0');
+let lastMessageDate = localStorage.getItem('vani_last_msg_date');
+
+// Reset daily message count if it's a new day
+const today = new Date().toDateString();
+if (lastMessageDate !== today) {
+    todayMessageCount = 0;
+    localStorage.setItem('vani_daily_msg_count', '0');
+    localStorage.setItem('vani_last_msg_date', today);
+}
+
+// PWA Install Logic
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const installBtnMain = document.getElementById('pwa-install-btn');
+    const installBtnSettings = document.getElementById('pwa-install-btn-settings');
+    if (installBtnMain) installBtnMain.style.display = 'inline-flex';
+    if (installBtnSettings) installBtnSettings.style.display = 'inline-flex';
+});
+
+function handleInstallClick() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            deferredPrompt = null;
+        });
+    }
+}
 
 // Initialize Web Speech API
 function initSpeechRecognition() {
+    if (userTier === 'Free' || userTier === 'Starter') {
+        voiceStatusText.textContent = "Voice control requires Pro Tier or above.";
+        voiceBtn.disabled = true;
+        voiceBtn.style.opacity = 0.5;
+        return;
+    }
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
         voiceStatusText.textContent = "Voice control is not supported by your browser (use Chrome/Edge).";
@@ -180,13 +218,29 @@ function addTerminalLog(msg, type = '') {
 async function submitCommand(commandText) {
     if (!commandText.trim()) return;
 
+    // Check Premium Tier Limits
+    if (userTier === 'Free' && todayMessageCount >= 5) {
+        addChatMessage('assistant', 'You have reached your daily limit of 5 messages on the Free Plan. Please upgrade to Starter or higher to continue chatting.', 'error');
+        setTimeout(() => window.location.href = '/premium.html', 3000);
+        return;
+    }
+
+    todayMessageCount++;
+    localStorage.setItem('vani_daily_msg_count', todayMessageCount);
+
     // Display user message in chat
     addChatMessage('user', commandText);
     textInput.value = '';
 
     // Client-Side Intercept for URLs (Mobile & Desktop)
     let lowerCmd = commandText.toLowerCase().trim();
-    if (lowerCmd.startsWith("open ") || lowerCmd.startsWith("go to ")) {
+    if (lowerCmd.startsWith("open ") || lowerCmd.startsWith("go to ") || lowerCmd.includes("whatsapp")) {
+        // Check Advanced Tier requirement for OS/App control
+        if (userTier === 'Free' || userTier === 'Starter' || userTier === 'Pro') {
+            addChatMessage('assistant', 'Local App, OS control, and WhatsApp Automation require the Advanced Tier or higher. Please upgrade to unlock this feature.', 'error');
+            return;
+        }
+
         let parts = lowerCmd.replace("go to ", "").replace("open ", "").trim().split(" ");
         let potentialUrl = parts[parts.length - 1];
         
@@ -324,6 +378,27 @@ window.addEventListener('DOMContentLoaded', () => {
                         });
                     }
                 }
+                
+                // Fetch User Premium Tier
+                if (typeof db !== 'undefined') {
+                    db.collection('users').doc(user.uid).collection('activationKeys')
+                        .orderBy('activatedAt', 'desc').limit(1).get()
+                        .then(snapshot => {
+                            if (!snapshot.empty) {
+                                const keyData = snapshot.docs[0].data();
+                                if (keyData.status === 'active' && keyData.planName) {
+                                    userTier = keyData.planName;
+                                    // Re-initialize speech if they have access now
+                                    if (userTier !== 'Free' && userTier !== 'Starter') {
+                                        voiceBtn.disabled = false;
+                                        voiceBtn.style.opacity = 1;
+                                        voiceStatusText.textContent = "Ready to listen.";
+                                        initSpeechRecognition();
+                                    }
+                                }
+                            }
+                        }).catch(e => console.error("Error fetching tier:", e));
+                }
                 if (shouldLaunch) {
                     // Auto-launch if authenticated and requested
                     landingPage.classList.add('hidden');
@@ -381,7 +456,19 @@ window.addEventListener('DOMContentLoaded', () => {
         pollLogs();
         logPollingInterval = setInterval(pollLogs, 1500);
     }
-
     
+    // PWA Install Listeners
+    const installBtnMain = document.getElementById('pwa-install-btn');
+    const installBtnSettings = document.getElementById('pwa-install-btn-settings');
+    if (installBtnMain) installBtnMain.addEventListener('click', handleInstallClick);
+    if (installBtnSettings) installBtnSettings.addEventListener('click', handleInstallClick);
+    
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service Worker registered', reg))
+            .catch(err => console.error('Service Worker registration failed', err));
+    }
+
     addTerminalLog("[SYSTEM] V.A.N.I-xAI interface loaded.");
 });

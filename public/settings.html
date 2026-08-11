@@ -17,6 +17,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <!-- Stylesheet -->
     <link rel="stylesheet" href="./style.css">
+    
+    <!-- PWA Manifest & Theme Color -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#059669">
     <style>
         .settings-container {
             width: 100%;
@@ -194,6 +198,9 @@
                 <span>V.A.N.I-xAI</span>
             </div>
             <div class="landing-nav-actions">
+                <button id="pwa-install-btn-settings" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; margin-right: 10px; display: none;">
+                    <i class="fa-solid fa-download"></i> Install App
+                </button>
                 <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./index.html'">
                     <i class="fa-solid fa-arrow-left"></i> Back to Console
                 </button>
