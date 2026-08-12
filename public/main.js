@@ -415,13 +415,25 @@ window.addEventListener('DOMContentLoaded', () => {
                 
                 // Fetch User Premium Tier
                 if (typeof db !== 'undefined') {
-                    db.collection('users').doc(user.uid).collection('activationKeys')
-                        .orderBy('activatedAt', 'desc').limit(1).get()
+                    db.collection('activation_keys')
+                        .where('userId', '==', user.uid)
+                        .where('isUsed', '==', true)
+                        .get()
                         .then(snapshot => {
                             if (!snapshot.empty) {
-                                const keyData = snapshot.docs[0].data();
-                                if (keyData.status === 'active' && keyData.planName) {
-                                    userTier = keyData.planName;
+                                let latestKey = null;
+                                let maxTime = 0;
+                                snapshot.forEach(k => {
+                                    const d = k.data();
+                                    const usedTime = d.usedAt ? (typeof d.usedAt.toMillis === 'function' ? d.usedAt.toMillis() : 0) : 0;
+                                    if(usedTime >= maxTime) {
+                                        maxTime = usedTime;
+                                        latestKey = d;
+                                    }
+                                });
+                                
+                                if (latestKey && latestKey.planName) {
+                                    userTier = latestKey.planName;
                                     // Re-initialize speech if they have access now
                                     if (userTier !== 'Free' && userTier !== 'Starter') {
                                         voiceBtn.disabled = false;
