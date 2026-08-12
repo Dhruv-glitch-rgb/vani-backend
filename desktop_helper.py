@@ -18,8 +18,54 @@ try:
 except ImportError:
     pyperclip = None
 
+import json
+
 def log_status(message):
     logger_log('DESKTOP', message)
+
+def make_phone_call(target):
+    """Make a normal cellular phone call by opening tel: URI."""
+    log_status(f"Initiating phone call to {target}")
+    
+    contacts = {}
+    contacts_path = os.path.join(os.path.dirname(__file__), 'contacts.json')
+    if os.path.exists(contacts_path):
+        try:
+            with open(contacts_path, 'r', encoding='utf-8') as f:
+                contacts = json.load(f)
+        except Exception as e:
+            log_status(f"Error reading contacts.json: {e}")
+    else:
+        # Create a default one
+        contacts = {"dhruv sagar": "+919555778474"}
+        try:
+            with open(contacts_path, 'w', encoding='utf-8') as f:
+                json.dump(contacts, f, indent=4)
+        except Exception:
+            pass
+            
+    # Normalize contact names
+    normalized_contacts = {k.lower(): v for k, v in contacts.items()}
+    
+    target_lower = target.lower().strip()
+    phone_number = target
+    if target_lower in normalized_contacts:
+        phone_number = normalized_contacts[target_lower]
+        log_status(f"Found contact '{target}' -> {phone_number}")
+    else:
+        # Check if it contains digits
+        if not re.search(r'\d', target):
+            return f"Could not find contact '{target}' in the contact book."
+            
+    clean_number = re.sub(r'[^\d\+]', '', phone_number)
+    
+    try:
+        # Tel protocol usually opens Windows Phone Link or Skype
+        os.startfile(f"tel:{clean_number}")
+        return f"Initiated phone call to {target}."
+    except Exception as e:
+        log_status(f"Error starting phone call: {e}")
+        return f"Failed to start phone call: {e}"
 
 def get_clipboard_text():
     """Retrieve text from the desktop clipboard."""

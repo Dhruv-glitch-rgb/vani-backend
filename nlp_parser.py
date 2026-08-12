@@ -124,13 +124,15 @@ def parse_with_rules(text):
         return {'action': 'build_semantic_index'}
 
     # 3. Cellular Phone Call
-    # Match: "call 12345", "phone call to 12345", "dial 12345"
-    phone_call_match = re.search(r'\b(?:call|phone\s+call|dial)\s+(?:to\s+)?(\+?[\d\s\-]{5,})', text_lower)
+    # Match: "call dhruv", "phone call to 12345", "dial dhruv sagar"
+    phone_call_match = re.search(r'\b(?:call|phone\s+call\s+to|dial)\s+(.+)$', text_lower)
     if phone_call_match:
-        phone_number = phone_call_match.group(1).strip()
+        target = phone_call_match.group(1).strip()
+        # Remove extra words if any
+        target = re.sub(r'\b(on\s+desktop|on\s+mobile|now)\b', '', target).strip()
         return {
             'action': 'make_phone_call',
-            'phone_number': phone_number
+            'contact_name_or_number': target
         }
 
     # 4. Open Mobile App
@@ -263,7 +265,7 @@ Possible Actions and schemas:
 5. Make a standard cellular phone call:
 {{
   "action": "make_phone_call",
-  "phone_number": "123456789"
+  "contact_name_or_number": "Name of contact (e.g. Dhruv Sagar) or phone number"
 }}
 
 6. Make a WhatsApp Call:
