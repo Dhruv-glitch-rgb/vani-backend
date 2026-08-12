@@ -14,6 +14,7 @@ import nlp_parser
 import memory_manager
 import autonomous_agent
 import voice_agent
+import agentic_loop
 
 # Setup flask app
 # Ensure template and static folders are loaded from correct directories
@@ -106,6 +107,11 @@ def handle_command():
             else:
                 add_log(f"Swarm: Sending clipboard via Desktop WhatsApp")
                 result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, clipboard_text)
+
+        elif action == 'autonomous_goal':
+            goal = parsed.get('goal', '')
+            add_log(f"Running autonomous execution: Goal '{goal}'")
+            result_message = agentic_loop.agent_loop.start_goal(goal)
 
         elif action == 'build_semantic_index':
             import semantic_search

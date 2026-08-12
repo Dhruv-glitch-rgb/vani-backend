@@ -15,10 +15,12 @@ from logger import log_status as logger_log
 
 try:
     import pyperclip
-except ImportError:
-    pyperclip = None
-
 import json
+
+try:
+    import uiautomation as auto
+except ImportError:
+    auto = None
 
 def log_status(message):
     logger_log('DESKTOP', message)
@@ -201,6 +203,20 @@ def use_desktop_app(action, value=None):
     except Exception as e:
         log_status(f"Error during desktop automation: {e}")
         return f"Desktop automation error: {e}"
+
+def get_ui_tree():
+    """Returns a textual representation of the active window's UI tree for AI reasoning."""
+    if auto is None:
+        return {"success": False, "message": "uiautomation package not installed"}
+    try:
+        window = auto.GetForegroundControl()
+        tree_text = []
+        for control, depth in auto.WalkTree(window, getDepth=True, maxDepth=4):
+            indent = ' ' * (depth * 2)
+            tree_text.append(f"{indent}[{control.ControlType}] {control.Name}")
+        return {"success": True, "tree": "\\n".join(tree_text)}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
 
 def make_desktop_whatsapp_call(phone_number, call_type='voice'):
     """Launch WhatsApp Desktop and initiate a voice or video call via keyboard shortcuts."""

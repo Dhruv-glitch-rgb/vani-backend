@@ -369,7 +369,14 @@ RULES FOR CHAT RESPONSE:
   "script": "import os\\nprint('Done')"
 }}
 
-19. Unknown / unsupported action:
+19. Autonomous Agent Goal (God-Mode):
+If the user asks the AI to solve a complex, multi-step desktop task that requires reasoning, vision, or autonomous mouse/keyboard control (e.g., "Read my latest WhatsApp message", "Book a flight", "Analyze the chart on my screen", "Do X on Y app"):
+{{
+  "action": "autonomous_goal",
+  "goal": "The exact goal the user wants the autonomous agent to achieve on the desktop"
+}}
+
+20. Unknown / unsupported action:
 {{
   "action": "unknown",
   "message": "Friendly explanation of what was not understood"
