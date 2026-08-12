@@ -528,8 +528,7 @@ body {
 /* Workspace Grid */
 .app-workspace {
     flex: 1;
-    display: grid;
-    grid-template-columns: 1.8fr 1.2fr;
+    display: flex;
     gap: 20px;
     min-height: 0;
 }
@@ -545,6 +544,11 @@ body {
     flex-direction: column;
     overflow: hidden;
     position: relative;
+}
+
+.control-panel {
+    width: 40%;
+    min-width: 300px;
 }
 
 .panel-header {
@@ -1619,7 +1623,10 @@ body.dark-theme .sys-table td { background: rgba(0,0,0,0.1); }
 /* Responsive adjustments */
 @media (max-width: 992px) {
     .app-workspace {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+    .control-panel {
+        width: 100%;
     }
     .app-container {
         height: auto;
