@@ -294,6 +294,27 @@ async function submitCommand(commandText) {
         const data = await response.json();
         
         if (response.ok && data.success) {
+            if (data.action === 'make_phone_call') {
+                let target = (data.parsed.contact_name_or_number || data.parsed.phone_number || '').trim();
+                let contacts = JSON.parse(localStorage.getItem('vani_contacts') || '{"dhruv sagar": "+919555778474"}');
+                let targetLower = target.toLowerCase();
+                let phoneNumber = target;
+                
+                if (contacts[targetLower]) {
+                    phoneNumber = contacts[targetLower];
+                }
+                
+                let cleanNumber = phoneNumber.replace(/[^\d\+]/g, '');
+                
+                if (cleanNumber) {
+                    addChatMessage('assistant', `Initiating cellular phone call to ${target}...`, 'make_phone_call');
+                    window.location.href = `tel:${cleanNumber}`;
+                } else {
+                    addChatMessage('assistant', `Could not find contact '${target}' in your web contact book.`, 'error');
+                }
+                return;
+            }
+            
             addChatMessage('assistant', data.message, data.action, data.image_url);
         } else {
             addChatMessage('assistant', `Failed: ${data.message || 'Error occurred.'}`, data.action || 'unknown');

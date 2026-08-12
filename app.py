@@ -81,9 +81,8 @@ def handle_command():
             result_message = desktop_helper.use_desktop_app(desktop_action, value)
 
         elif action == 'make_phone_call':
-            target = parsed.get('contact_name_or_number') or parsed.get('phone_number')
-            add_log(f"Running desktop execution: Make phone call to '{target}'")
-            result_message = desktop_helper.make_phone_call(target)
+            success = True
+            result_message = "Phone call handled by client browser."
 
         elif action == 'make_whatsapp_call':
             phone_number = parsed.get('phone_number')
