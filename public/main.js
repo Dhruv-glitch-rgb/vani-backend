@@ -52,8 +52,10 @@ window.addEventListener('beforeinstallprompt', (e) => {
     deferredPrompt = e;
     const installBtnMain = document.getElementById('pwa-install-btn');
     const installBtnSettings = document.getElementById('pwa-install-btn-settings');
+    const installBtnConsole = document.getElementById('pwa-install-btn-console');
     if (installBtnMain) installBtnMain.style.display = 'inline-flex';
     if (installBtnSettings) installBtnSettings.style.display = 'inline-flex';
+    if (installBtnConsole) installBtnConsole.style.display = 'inline-flex';
 });
 
 function handleInstallClick() {
@@ -471,8 +473,10 @@ window.addEventListener('DOMContentLoaded', () => {
     // PWA Install Listeners
     const installBtnMain = document.getElementById('pwa-install-btn');
     const installBtnSettings = document.getElementById('pwa-install-btn-settings');
+    const installBtnConsole = document.getElementById('pwa-install-btn-console');
     if (installBtnMain) installBtnMain.addEventListener('click', handleInstallClick);
     if (installBtnSettings) installBtnSettings.addEventListener('click', handleInstallClick);
+    if (installBtnConsole) installBtnConsole.addEventListener('click', handleInstallClick);
 
     // Custom Modal Listeners
     const btnConfirmInstall = document.getElementById('btn-confirm-install');

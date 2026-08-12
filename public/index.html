@@ -241,11 +241,20 @@
                 <div class="status-badge" id="server-status">
                     <span class="dot green"></span> System Live
                 </div>
+                
+                <button id="pwa-install-btn-console" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; margin-right: 10px; display: none; font-size: 0.8rem; padding: 6px 12px;">
+                    <i class="fa-solid fa-download"></i> Install V.A.N.I-xAI
+                </button>
 
                 <button class="nav-cta-btn animate-hover-scale"
                     style="background: transparent; box-shadow: none; padding: 6px 12px; color: var(--text-secondary);"
                     onclick="window.location.href='./settings.html'" title="Settings">
                     <i class="fa-solid fa-gear" style="font-size: 1rem;"></i> Settings
+                </button>
+                
+                <button class="nav-cta-btn" id="toggle-control-btn"
+                    style="background: transparent; box-shadow: none; padding: 6px 12px; color: var(--text-primary); font-size: 1.2rem;" title="Toggle Control Center">
+                    <i class="fa-solid fa-bars"></i>
                 </button>
 
                 <button class="nav-cta-btn" id="admin-panel-btn"
@@ -305,7 +314,7 @@
             </section>
 
             <!-- Right Side: Control drawer & System Logs -->
-            <section class="panel control-panel">
+            <section class="panel control-panel" id="control-panel" style="display: none;">
                 <div class="panel-header">
                     <i class="fa-solid fa-gears"></i> Control Center
                 </div>
@@ -499,27 +508,40 @@
         <span id="darkModeIcon">🌙</span>
     </button>
     <script>
-        (function () {
+        (function() {
             const toggleBtn = document.getElementById('darkModeToggle');
             const body = document.body;
             const icon = document.getElementById('darkModeIcon');
-
+            
             // Check local storage for theme preference
             if (localStorage.getItem('theme') === 'dark') {
-                body.classList.add('dark-mode');
-                icon.textContent = '☀️';
+              body.classList.add('dark-mode');
+              icon.textContent = '☀️';
             }
-
+            
             toggleBtn.addEventListener('click', () => {
-                body.classList.toggle('dark-mode');
-                if (body.classList.contains('dark-mode')) {
-                    localStorage.setItem('theme', 'dark');
-                    icon.textContent = '☀️';
-                } else {
-                    localStorage.setItem('theme', 'light');
-                    icon.textContent = '🌙';
-                }
+              body.classList.toggle('dark-mode');
+              if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                icon.textContent = '☀️';
+              } else {
+                localStorage.setItem('theme', 'light');
+                icon.textContent = '🌙';
+              }
             });
+
+            // Control Center Toggle Logic
+            const toggleControlBtn = document.getElementById('toggle-control-btn');
+            const controlPanel = document.getElementById('control-panel');
+            if (toggleControlBtn && controlPanel) {
+                toggleControlBtn.addEventListener('click', () => {
+                    if (controlPanel.style.display === 'none' || controlPanel.style.display === '') {
+                        controlPanel.style.display = 'flex'; 
+                    } else {
+                        controlPanel.style.display = 'none';
+                    }
+                });
+            }
         })();
     </script>
 
