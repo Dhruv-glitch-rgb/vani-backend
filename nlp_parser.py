@@ -376,7 +376,19 @@ If the user asks the AI to solve a complex, multi-step desktop task that require
   "goal": "The exact goal the user wants the autonomous agent to achieve on the desktop"
 }}
 
-20. Unknown / unsupported action:
+20. Lockdown / Intruder Trap:
+If the user asks to lock the terminal, secure the PC, or activate intruder trap:
+{{
+  "action": "lockdown"
+}}
+
+21. Swarm Handoff / Device Sync:
+If the user asks to transfer the session, send the screen to their mobile, or sync devices:
+{{
+  "action": "swarm_sync"
+}}
+
+22. Unknown / unsupported action:
 {{
   "action": "unknown",
   "message": "Friendly explanation of what was not understood"

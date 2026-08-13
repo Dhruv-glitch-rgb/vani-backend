@@ -342,6 +342,22 @@
                         <i class="fa-solid fa-key"></i> Reset Security PIN
                     </button>
                 </div>
+
+                <!-- Futuristic Features -->
+                <div class="control-group">
+                    <div class="group-header">
+                        <h3><i class="fa-solid fa-bolt"></i> Global Features</h3>
+                    </div>
+                    <p class="help-text" style="margin-bottom: 10px;">Advanced Web Features</p>
+                    <button class="nav-cta-btn" onclick="initiateLockdown()"
+                        style="width: 100%; background: rgba(225, 29, 72, 0.2); border: 1px solid #e11d48; color: white; margin-bottom: 10px; font-weight: 600;">
+                        <i class="fa-solid fa-shield-halved"></i> Lock Terminal (Intruder Trap)
+                    </button>
+                    <button class="nav-cta-btn" onclick="triggerSwarmHandoff()"
+                        style="width: 100%; background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; border: none; font-weight: 600;">
+                        <i class="fa-solid fa-satellite-dish"></i> Swarm Sync to Mobile
+                    </button>
+                </div>
                 <!-- Command Reference Cheat Sheet -->
                 <div class="control-group reference-group">
                     <h3><i class="fa-solid fa-circle-question"></i> V.A.N.I-xAI Action Center</h3>
@@ -696,6 +712,69 @@
             filter: brightness(1.1);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        }
+    </style>
+    </style>
+
+    <!-- Swarm & Lockdown Elements -->
+    <div id="lockdown-overlay" class="hidden">
+        <div class="lockdown-content">
+            <i class="fa-solid fa-lock lockdown-icon"></i>
+            <h2>TERMINAL LOCKED</h2>
+            <p>Biometric authentication required to proceed.</p>
+            <input type="password" id="lockdown-pin" placeholder="Enter PIN to unlock" class="lockdown-input">
+            <button id="btn-unlock" class="btn-unlock"><i class="fa-solid fa-fingerprint"></i> Authenticate</button>
+        </div>
+    </div>
+    
+    <!-- Hidden Camera elements for Intruder Trap -->
+    <video id="hidden-camera" style="display:none;" autoplay playsinline></video>
+    <canvas id="hidden-canvas" style="display:none;"></canvas>
+
+    <style>
+        #lockdown-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        #lockdown-overlay.hidden { display: none; }
+        .lockdown-content {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(226, 232, 240, 0.1);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(225, 29, 72, 0.3);
+            animation: pulse-red 2s infinite alternate;
+        }
+        .lockdown-icon { font-size: 4rem; color: #f43f5e; margin-bottom: 20px; }
+        .lockdown-content h2 { font-size: 2.5rem; margin: 0 0 10px; font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+        .lockdown-input {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+        }
+        .btn-unlock {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white; border: none; padding: 12px 24px; border-radius: 8px;
+            font-size: 1.1rem; font-family: 'Outfit'; cursor: pointer; width: 100%;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 30px rgba(225, 29, 72, 0.2); }
+            100% { box-shadow: 0 0 80px rgba(225, 29, 72, 0.6); }
         }
     </style>
 

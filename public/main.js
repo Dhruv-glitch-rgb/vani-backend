@@ -314,7 +314,17 @@ async function submitCommand(commandText) {
                 }
                 return;
             }
+            if (data.action === 'lockdown') {
+                addChatMessage('assistant', data.message, 'lockdown');
+                initiateLockdown();
+                return;
+            }
             
+            if (data.action === 'swarm_sync') {
+                triggerSwarmHandoff();
+                return;
+            }
+
             addChatMessage('assistant', data.message, data.action, data.image_url);
         } else {
             addChatMessage('assistant', `Failed: ${data.message || 'Error occurred.'}`, data.action || 'unknown');
@@ -383,6 +393,162 @@ if (backendUrlInput) {
     });
 }
 
+// ----------------------------------------------------
+// FUTURISTIC UPGRADES: SWARM & LOCKDOWN
+// ----------------------------------------------------
+
+let swarmListenerUnsubscribe = null;
+
+function initializeSwarmAndLockdown(user) {
+    // 1. Swarm Listener
+    if (typeof db !== 'undefined') {
+        const swarmRef = db.collection('users').doc(user.uid).collection('swarm').doc('state');
+        swarmListenerUnsubscribe = swarmRef.onSnapshot(doc => {
+            if (doc.exists) {
+                const data = doc.data();
+                // If a handoff was triggered from another device recently (within last 30 seconds)
+                const now = new Date().getTime();
+                const triggerTime = data.triggeredAt ? data.triggeredAt.toMillis() : 0;
+                
+                if (now - triggerTime < 30000 && data.device !== navigator.userAgent) {
+                    addTerminalLog(`[SWARM] Received handoff from another device! Resuming context...`);
+                    // Apply theme if transferred
+                    if (data.theme) {
+                        localStorage.setItem('vani_theme', data.theme);
+                        if(data.theme === 'dark') {
+                            document.body.classList.add('dark-theme');
+                            document.body.classList.remove('inxv-theme');
+                        } else if(data.theme === 'inxv') {
+                            document.body.classList.add('inxv-theme');
+                            document.body.classList.remove('dark-theme');
+                        }
+                    }
+                    // Inform user
+                    addChatMessage('assistant', `Swarm sync complete! Resumed your session from another device.`);
+                    // Acknowledge receipt to stop loop
+                    swarmRef.update({ triggeredAt: 0 });
+                }
+            }
+        });
+    }
+}
+
+// Global Swarm Trigger Function
+async function triggerSwarmHandoff() {
+    if (!authInstance) return;
+    addTerminalLog(`[SWARM] Initiating cross-device handoff...`);
+    const theme = localStorage.getItem('vani_theme') || 'light';
+    
+    if (typeof db !== 'undefined') {
+        await db.collection('users').doc(authInstance.uid).collection('swarm').doc('state').set({
+            theme: theme,
+            device: navigator.userAgent,
+            triggeredAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, {merge: true});
+        
+        addChatMessage('assistant', 'Session context saved to Swarm. Open V.A.N.I-xAI on your phone to resume instantly.');
+    }
+}
+
+// Terminal Lockdown & Intruder Defense
+const lockdownOverlay = document.getElementById('lockdown-overlay');
+const lockdownPin = document.getElementById('lockdown-pin');
+const btnUnlock = document.getElementById('btn-unlock');
+
+function initiateLockdown() {
+    addTerminalLog(`[SECURITY] Initiating Terminal Lockdown!`);
+    lockdownOverlay.classList.remove('hidden');
+    lockdownPin.value = '';
+    lockdownPin.focus();
+    
+    // Start silent capture loop for intruders
+    setupIntruderTrap();
+}
+
+let trapInterval = null;
+
+async function setupIntruderTrap() {
+    const video = document.getElementById('hidden-camera');
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        video.srcObject = stream;
+        
+        // Trap: If they click or type wrong, snap a photo
+        document.addEventListener('click', intruderSnap);
+        lockdownPin.addEventListener('input', intruderSnap);
+        
+    } catch(err) {
+        console.error("Camera access denied for intruder trap", err);
+    }
+}
+
+function intruderSnap() {
+    // Only snap occasionally to prevent spam
+    if (!lockdownOverlay.classList.contains('hidden') && Math.random() > 0.8) {
+        captureAndUploadIntruder();
+    }
+}
+
+function captureAndUploadIntruder() {
+    if (!authInstance) return;
+    const video = document.getElementById('hidden-camera');
+    const canvas = document.getElementById('hidden-canvas');
+    if (!video.srcObject) return;
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    canvas.toBlob(blob => {
+        if (!blob) return;
+        // Upload to Firebase Storage
+        const storageRef = firebase.storage().ref();
+        const intruderRef = storageRef.child(`intruder_alerts/${authInstance.uid}/${new Date().getTime()}.jpg`);
+        intruderRef.put(blob).then(snapshot => {
+            console.log("Intruder photo uploaded secretly!");
+            // Log to Firestore
+            intruderRef.getDownloadURL().then(url => {
+                db.collection('intruder_alerts').add({
+                    userId: authInstance.uid,
+                    photoUrl: url,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            });
+        }).catch(e => console.error("Secret upload failed", e));
+    }, 'image/jpeg', 0.8);
+}
+
+function unlockTerminal() {
+    // Basic pin unlock for now (in production, use WebAuthn)
+    if (lockdownPin.value === '1234') { // Default placeholder pin
+        lockdownOverlay.classList.add('hidden');
+        addTerminalLog(`[SECURITY] Terminal Unlocked. Welcome back.`);
+        
+        // Stop trap
+        document.removeEventListener('click', intruderSnap);
+        lockdownPin.removeEventListener('input', intruderSnap);
+        
+        const video = document.getElementById('hidden-camera');
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
+    } else {
+        lockdownPin.style.borderColor = 'red';
+        setTimeout(() => lockdownPin.style.borderColor = '#334155', 1000);
+        captureAndUploadIntruder(); // They got the pin wrong!
+    }
+}
+
+if (btnUnlock) {
+    btnUnlock.addEventListener('click', unlockTerminal);
+}
+if (lockdownPin) {
+    lockdownPin.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') unlockTerminal();
+    });
+}
+
 // Page Initialization
 window.addEventListener('DOMContentLoaded', () => {
     // Load Settings
@@ -415,6 +581,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 
                 // Fetch User Premium Tier
                 if (typeof db !== 'undefined') {
+                    // Initialize Swarm Listener
+                    initializeSwarmAndLockdown(user);
+                    
                     db.collection('activation_keys')
                         .where('userId', '==', user.uid)
                         .where('isUsed', '==', true)

@@ -113,6 +113,14 @@ def handle_command():
             add_log(f"Running autonomous execution: Goal '{goal}'")
             result_message = agentic_loop.agent_loop.start_goal(goal)
 
+        elif action == 'lockdown':
+            add_log("Triggering Web Terminal Lockdown...")
+            return jsonify({'success': True, 'action_type': 'lockdown', 'message': 'Terminal locked.'})
+
+        elif action == 'swarm_sync':
+            add_log("Triggering Swarm Sync to Mobile...")
+            return jsonify({'success': True, 'action_type': 'swarm_sync', 'message': 'Swarm Handoff Initiated.'})
+
         elif action == 'build_semantic_index':
             import semantic_search
             add_log("Running Semantic execution: Building index")
