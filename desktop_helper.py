@@ -15,6 +15,9 @@ from logger import log_status as logger_log
 
 try:
     import pyperclip
+except ImportError:
+    pyperclip = None
+
 import json
 
 try:
