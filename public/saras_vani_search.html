@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saras_VANI.Search</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --radar-bg: #020617;
+            --radar-grid: rgba(56, 189, 248, 0.2);
+            --radar-sweep: rgba(56, 189, 248, 0.4);
+            --blip-color: #38bdf8;
+            --text-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--radar-bg);
+            color: var(--text-color);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--blip-color);
+            text-shadow: 0 0 10px var(--blip-color);
+        }
+
+        .status-text {
+            position: absolute;
+            bottom: 40px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            color: var(--blip-color);
+            animation: pulse-text 2s infinite alternate;
+            z-index: 100;
+        }
+
+        @keyframes pulse-text {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; text-shadow: 0 0 15px var(--blip-color); }
+        }
+
+        /* Radar CSS */
+        .radar-container {
+            position: relative;
+            width: 80vmin;
+            height: 80vmin;
+            max-width: 600px;
+            max-height: 600px;
+            border-radius: 50%;
+            border: 2px solid var(--radar-grid);
+            background: radial-gradient(circle, transparent 60%, rgba(56,189,248,0.05) 100%);
+            box-shadow: 0 0 50px rgba(56, 189, 248, 0.1);
+            overflow: hidden;
+        }
+
+        .radar-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            background-image: 
+                linear-gradient(var(--radar-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--radar-grid) 1px, transparent 1px);
+            background-size: 10% 10%;
+            background-position: center center;
+            opacity: 0.3;
+        }
+
+        .radar-circles {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 1px solid var(--radar-grid);
+        }
+        
+        .radar-circles::before {
+            content: '';
+            position: absolute;
+            top: 16.66%; left: 16.66%; width: 66.66%; height: 66.66%;
+            border-radius: 50%;
+            border: 1px solid var(--radar-grid);
+        }
+        
+        .radar-circles::after {
+            content: '';
+            position: absolute;
+            top: 33.33%; left: 33.33%; width: 33.33%; height: 33.33%;
+            border-radius: 50%;
+            border: 1px solid var(--radar-grid);
+        }
+
+        .radar-sweep {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 50%; height: 50%;
+            background: linear-gradient(90deg, var(--radar-sweep) 0%, transparent 100%);
+            transform-origin: 0% 100%;
+            border-left: 2px solid var(--blip-color);
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .center-dot {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 10px; height: 10px;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px white;
+        }
+
+        /* Blips */
+        .blip {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--blip-color);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px var(--blip-color), 0 0 30px var(--blip-color);
+            animation: blip-fade 4s infinite linear;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .blip:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: white;
+        }
+        
+        .blip-label {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        @keyframes blip-fade {
+            0% { opacity: 1; }
+            50% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            margin: 0 0 15px;
+            color: var(--blip-color);
+            font-size: 1.5rem;
+        }
+
+        .otp-display {
+            font-size: 3rem;
+            letter-spacing: 10px;
+            font-weight: 700;
+            margin: 20px 0;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .otp-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--radar-grid);
+            padding: 15px;
+            font-size: 2rem;
+            letter-spacing: 10px;
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px 0;
+            outline: none;
+        }
+
+        .otp-input:focus {
+            border-color: var(--blip-color);
+            box-shadow: 0 0 15px rgba(56,189,248,0.3);
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: 'Outfit';
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-action:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--radar-grid);
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .action-buttons {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="/settings-vaniXai.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <div class="title"><i class="fa-solid fa-satellite-dish"></i> Saras_VANI.Search</div>
+    </div>
+
+    <!-- The Radar -->
+    <div class="radar-container" id="radar-container">
+        <div class="radar-grid"></div>
+        <div class="radar-circles"></div>
+        <div class="radar-sweep" id="radar-sweep"></div>
+        <div class="center-dot"></div>
+        
+        <!-- Blips will be injected here by JS -->
+        <div id="blips-container"></div>
+    </div>
+
+    <div class="status-text" id="status-text">Scanning local airspace for Chat Pairings...</div>
+
+    <div class="action-buttons">
+        <button class="btn-action btn-secondary" onclick="openJoinModal()"><i class="fa-solid fa-right-to-bracket"></i> Join via OTP</button>
+    </div>
+
+    <!-- OTP Display Modal (Host) -->
+    <div class="modal-overlay" id="host-modal">
+        <div class="modal-content">
+            <h3><i class="fa-solid fa-satellite"></i> Link Established</h3>
+            <p>Share this secure OTP with the other user to initiate a Chat Link.</p>
+            <div class="otp-display" id="otp-display">----</div>
+            <p id="host-status">Waiting for connection...</p>
+            <button class="btn-action btn-secondary" onclick="closeModals()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- OTP Input Modal (Client) -->
+    <div class="modal-overlay" id="join-modal">
+        <div class="modal-content">
+            <h3><i class="fa-solid fa-link"></i> Join Chat</h3>
+            <p>Enter the 4-digit OTP displayed on the other device.</p>
+            <input type="text" id="otp-input" class="otp-input" maxlength="4" placeholder="••••">
+            <button class="btn-action" id="btn-submit-otp" onclick="submitOtp()"><i class="fa-solid fa-plug"></i> Connect</button>
+            <button class="btn-action btn-secondary" onclick="closeModals()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+    
+    <!-- Logic -->
+    <script src="./saras_vani_search.js"></script>
+</body>
+</html>
