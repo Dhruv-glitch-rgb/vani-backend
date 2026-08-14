@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saras.WebSearch - In-App Web Search & Browser</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #030712;
+            --bg-secondary: #0f172a;
+            --panel-bg: rgba(15, 23, 42, 0.85);
+            --panel-border: rgba(56, 189, 248, 0.25);
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-glow: rgba(6, 182, 212, 0.35);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-hover: rgba(51, 65, 85, 0.9);
+            --border-radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        /* Top Navbar */
+        .search-navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--panel-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            padding: 2px 8px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-cyan);
+            transform: translateY(-1px);
+        }
+
+        .btn-nav.primary {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.35);
+        }
+
+        .btn-nav.primary:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        }
+
+        /* Main Container */
+        .search-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 28px 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Hero Search Box */
+        .search-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            padding: 20px 0 10px;
+        }
+
+        .hero-heading {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        /* Search Input Box */
+        .search-box-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(56, 189, 248, 0.35);
+            border-radius: 50px;
+            padding: 6px 14px 6px 22px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 25px var(--accent-glow);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 12px 35px rgba(6, 182, 212, 0.3), 0 0 35px rgba(6, 182, 212, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .search-engine-icon {
+            font-size: 1.25rem;
+            color: var(--accent-cyan);
+            margin-right: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 1.15rem;
+            font-family: 'Outfit', sans-serif;
+            padding: 8px 0;
+        }
+
+        .search-input::placeholder {
+            color: #64748b;
+        }
+
+        .search-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-icon.mic.active {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+            animation: pulse-mic 1.2s infinite;
+        }
+
+        @keyframes pulse-mic {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-search-submit {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 22px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-search-submit:hover {
+            filter: brightness(1.15);
+            transform: scale(1.03);
+        }
+
+        /* Suggestions Dropdown */
+        .suggestions-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border);
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            padding: 8px 0;
+            display: none;
+            z-index: 200;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .suggestions-dropdown.show {
+            display: block;
+            animation: fadeInDown 0.2s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.15s ease;
+        }
+
+        .suggestion-item i {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .suggestion-item:hover, .suggestion-item.active {
+            background: rgba(6, 182, 212, 0.15);
+            color: white;
+            padding-left: 24px;
+        }
+
+        .suggestion-item:hover i {
+            color: var(--accent-cyan);
+        }
+
+        /* Engine Switcher Tabs */
+        .engine-tabs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .engine-tab {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .engine-tab:hover {
+            color: white;
+            background: rgba(51, 65, 85, 0.8);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .engine-tab.active {
+            background: rgba(6, 182, 212, 0.2);
+            color: #38bdf8;
+            border-color: var(--accent-cyan);
+            font-weight: 600;
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.25);
+        }
+
+        /* Quick Tags */
+        .quick-tags {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+
+        .tag-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tag-pill:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Content Layout: Split view (Search Results + In-App Web Viewer) */
+        .content-workspace {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+            align-items: stretch;
+            min-height: 600px;
+        }
+
+        @media (max-width: 1024px) {
+            .content-workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Results Panel */
+        .results-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            backdrop-filter: blur(12px);
+            overflow-y: auto;
+            max-height: 750px;
+        }
+
+        .panel-title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* AI Overview Card */
+        .ai-overview-card {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(99, 102, 241, 0.15));
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .ai-overview-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .ai-overview-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        /* Search Result Card */
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .result-card:hover {
+            background: var(--card-hover);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .result-favicon {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .result-source {
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .result-url {
+            color: #64748b;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 300px;
+        }
+
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #38bdf8;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .result-title:hover {
+            color: #7dd3fc;
+            text-decoration: underline;
+        }
+
+        .result-snippet {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .result-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .btn-card-action {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-card-action:hover {
+            background: rgba(6, 182, 212, 0.2);
+            color: white;
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-card-action.primary {
+            background: rgba(14, 165, 233, 0.2);
+            color: #38bdf8;
+            border-color: rgba(14, 165, 233, 0.4);
+        }
+
+        .btn-card-action.primary:hover {
+            background: #0ea5e9;
+            color: white;
+        }
+
+        /* In-App Browser Viewer Panel */
+        .viewer-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .viewer-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .viewer-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .viewer-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.15s ease;
+        }
+
+        .viewer-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .viewer-url-bar {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 6px 12px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .viewer-url-bar i {
+            color: #10b981;
+            font-size: 0.75rem;
+        }
+
+        .viewer-url-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #e2e8f0;
+        }
+
+        .viewer-frame-container {
+            flex: 1;
+            min-height: 520px;
+            position: relative;
+            background: #ffffff;
+        }
+
+        .viewer-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .viewer-placeholder {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f172a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            gap: 16px;
+            color: var(--text-muted);
+        }
+
+        .placeholder-icon {
+            font-size: 3.5rem;
+            color: var(--accent-cyan);
+            opacity: 0.8;
+            animation: float-icon 3s ease-in-out infinite;
+        }
+
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* History & Bookmarks Bar */
+        .history-section {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--border-radius);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .history-chips {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .history-chip {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .history-chip:hover {
+            background: rgba(6, 182, 212, 0.15);
+            color: white;
+            border-color: var(--accent-cyan);
+        }
+
+        /* Footer */
+        .search-footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+            color: #64748b;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: auto;
+        }
+
+        .search-footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        .search-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <header class="search-navbar">
+        <a href="./index.html" class="nav-brand">
+            <img src="./vani_icon.png" alt="V.A.N.I-xAI Icon" class="nav-logo-icon">
+            <div>
+                <span class="brand-title">Saras.WebSearch</span>
+                <span class="brand-badge">Zero-Tab Engine</span>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <button class="btn-nav" onclick="clearSearchHistory()" title="Clear Search History">
+                <i class="fa-solid fa-trash-can"></i> Clear History
+            </button>
+            <a href="./index.html" class="btn-nav primary">
+                <i class="fa-solid fa-terminal"></i> Console
+            </a>
+            <a href="./settings.html" class="btn-nav">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="search-container">
+        <!-- Hero Section & Search Bar -->
+        <section class="search-hero">
+            <h1 class="hero-heading">Search The Web Without Leaving The App</h1>
+            <p class="hero-subtitle">
+                Google, browse, and interact with live web intelligence directly inside <strong>V.A.N.I-xAI</strong>. No extra tabs required.
+            </p>
+
+            <div class="search-box-wrapper">
+                <div class="search-bar">
+                    <i class="fa-brands fa-google search-engine-icon" id="current-engine-icon"></i>
+                    <input type="text" id="saras-search-input" class="search-input" placeholder="Google something or enter a website URL..." autocomplete="off">
+                    <div class="search-controls">
+                        <button class="btn-icon" id="btn-clear-search" style="display: none;" title="Clear">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <button class="btn-icon mic" id="btn-voice-search" title="Voice Search">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                        <button class="btn-search-submit" id="btn-execute-search">
+                            <i class="fa-solid fa-magnifying-glass"></i> <span>Search</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Autocomplete Suggestions Dropdown -->
+                <div class="suggestions-dropdown" id="suggestions-box"></div>
+            </div>
+
+            <!-- Multi-Engine Tabs -->
+            <div class="engine-tabs">
+                <button class="engine-tab active" data-engine="google"><i class="fa-brands fa-google"></i> Google</button>
+                <button class="engine-tab" data-engine="duckduckgo"><i class="fa-solid fa-shield-halved"></i> DuckDuckGo</button>
+                <button class="engine-tab" data-engine="bing"><i class="fa-brands fa-microsoft"></i> Bing</button>
+                <button class="engine-tab" data-engine="wikipedia"><i class="fa-brands fa-wikipedia-w"></i> Wikipedia</button>
+                <button class="engine-tab" data-engine="youtube"><i class="fa-brands fa-youtube"></i> YouTube</button>
+                <button class="engine-tab" data-engine="ai"><i class="fa-solid fa-brain"></i> AI Summary</button>
+            </div>
+
+            <!-- Quick Search Tags -->
+            <div class="quick-tags">
+                <span class="tag-pill" onclick="quickSearch('Artificial Intelligence news today')">🤖 AI News</span>
+                <span class="tag-pill" onclick="quickSearch('Python programming tutorials')">🐍 Python</span>
+                <span class="tag-pill" onclick="quickSearch('Quantum computing breakthroughs')">⚛️ Quantum Tech</span>
+                <span class="tag-pill" onclick="quickSearch('Web development modern frameworks')">💻 Web Dev</span>
+                <span class="tag-pill" onclick="quickSearch('ISRO space missions 2026')">🚀 ISRO & Space</span>
+                <span class="tag-pill" onclick="quickSearch('https://en.wikipedia.org')">🌐 Wikipedia</span>
+            </div>
+        </section>
+
+        <!-- History & Recent Searches Bar -->
+        <section class="history-section" id="history-bar">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #94a3b8; font-weight: 600;">
+                <i class="fa-solid fa-clock-rotate-left"></i> Recent Searches:
+            </div>
+            <div class="history-chips" id="recent-search-chips">
+                <span class="history-chip" onclick="quickSearch('Jarvis AI voice assistant')">Jarvis AI voice assistant</span>
+                <span class="history-chip" onclick="quickSearch('VANI-xAI Dhruv Sagar')">VANI-xAI Dhruv Sagar</span>
+            </div>
+        </section>
+
+        <!-- Main Workspace: Split Results & In-App Browser Viewport -->
+        <section class="content-workspace">
+            <!-- Left Panel: Search Results List & AI Overview -->
+            <div class="results-panel" id="results-panel">
+                <div class="panel-title-bar">
+                    <div class="panel-title">
+                        <i class="fa-solid fa-list-check" style="color: var(--accent-cyan);"></i> Live Web Results
+                    </div>
+                    <div class="panel-meta" id="results-meta">Enter a query above</div>
+                </div>
+
+                <!-- AI Quick Synthesis Overview Card -->
+                <div class="ai-overview-card" id="ai-overview-card" style="display: none;">
+                    <div class="ai-overview-header">
+                        <i class="fa-solid fa-sparkles"></i> Saras AI Overview
+                    </div>
+                    <div class="ai-overview-text" id="ai-overview-content">
+                        Searching web and generating instant summary...
+                    </div>
+                </div>
+
+                <!-- Results Items Container -->
+                <div id="results-list" style="display: flex; flex-direction: column; gap: 14px;">
+                    <!-- Default State Welcome -->
+                    <div style="text-align: center; padding: 40px 20px; color: #94a3b8;">
+                        <i class="fa-solid fa-globe" style="font-size: 2.5rem; color: rgba(6, 182, 212, 0.5); margin-bottom: 12px;"></i>
+                        <h3 style="color: white; margin-bottom: 8px;">Ready to Google & Browse</h3>
+                        <p style="font-size: 0.9rem;">Type your search query or pick a topic to view Google & web results with live in-app preview.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: In-App Web Browser Viewport -->
+            <div class="viewer-panel">
+                <div class="viewer-toolbar">
+                    <div class="viewer-controls">
+                        <button class="viewer-btn" id="btn-browser-back" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button class="viewer-btn" id="btn-browser-forward" title="Forward"><i class="fa-solid fa-arrow-right"></i></button>
+                        <button class="viewer-btn" id="btn-browser-refresh" title="Reload"><i class="fa-solid fa-rotate-right"></i></button>
+                    </div>
+                    <div class="viewer-url-bar">
+                        <i class="fa-solid fa-lock"></i>
+                        <span class="viewer-url-text" id="browser-url-display">https://www.google.com</span>
+                    </div>
+                    <div class="viewer-controls">
+                        <button class="viewer-btn" id="btn-browser-newtab" title="Open in External Tab"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                        <button class="viewer-btn" id="btn-browser-fullscreen" title="Toggle Fullscreen"><i class="fa-solid fa-expand"></i></button>
+                    </div>
+                </div>
+
+                <div class="viewer-frame-container" id="viewer-container">
+                    <div class="viewer-placeholder" id="viewer-placeholder">
+                        <i class="fa-solid fa-compass placeholder-icon"></i>
+                        <h3 style="color: white;">In-App Web Viewer</h3>
+                        <p style="max-width: 400px; font-size: 0.9rem;">
+                            Click <strong>"View In-App"</strong> on any search result to open and explore the page directly inside this window without opening a new tab.
+                        </p>
+                    </div>
+                    <iframe id="browser-iframe" class="viewer-iframe" style="display: none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads"></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="search-footer">
+        <p><strong>Saras.WebSearch</strong> &bull; Integrated In-App Search Engine for <a href="./index.html">V.A.N.I-xAI</a> &copy; 2026. Made with ❤️ in India.</p>
+    </footer>
+
+    <!-- Logic Script -->
+    <script src="./saras_web_search.js"></script>
+</body>
+</html>

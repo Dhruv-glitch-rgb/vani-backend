@@ -28,6 +28,7 @@ const appContainer = document.getElementById('app-container');
 const launchConsoleBtn = document.getElementById('launch-console-btn');
 
 // State Variables
+let authInstance = null;
 let isRecording = false;
 let recognition = null;
 let logPollingInterval = null;
@@ -199,17 +200,36 @@ function addChatMessage(sender, content, actionName = null, imageUrl = null) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel(); // Stop any ongoing speech
             
-            // Strip markdown/html from content for speaking
-            const cleanText = content.replace(/<[^>]+>/g, '').replace(/[*_~`]/g, '');
+            // Strip markdown/html and EMOJIS for speaking
+            let cleanText = content.replace(/<[^>]+>/g, '').replace(/[*_~`]/g, '');
+            // Regex to remove all emojis
+            cleanText = cleanText.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+
             const msg = new SpeechSynthesisUtterance(cleanText);
             
             const rate = parseFloat(localStorage.getItem('vani_speech_rate') || '1.0');
             msg.rate = rate;
             
-            // Try to pick a good voice
+            // 1. Try to pick an Indian Female voice (supports Hinglish natively on most OS)
             const voices = window.speechSynthesis.getVoices();
-            const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Microsoft') && v.lang.startsWith('en'));
-            if (preferredVoice) msg.voice = preferredVoice;
+            let preferredVoice = voices.find(v => 
+                (v.lang.includes('en-IN') || v.lang.includes('hi-IN')) && 
+                (v.name.includes('Female') || v.name.includes('Heera') || v.name.includes('Neerja'))
+            );
+            
+            // 2. Fallback to any Indian voice
+            if (!preferredVoice) {
+                preferredVoice = voices.find(v => v.lang.includes('en-IN') || v.lang.includes('hi-IN'));
+            }
+            
+            // 3. Fallback to any female voice
+            if (!preferredVoice) {
+                preferredVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('Google US English'));
+            }
+
+            if (preferredVoice) {
+                msg.voice = preferredVoice;
+            }
 
             window.speechSynthesis.speak(msg);
         }
@@ -226,6 +246,34 @@ function addTerminalLog(msg, type = '') {
     terminalLogs.appendChild(line);
     terminalLogs.scrollTop = terminalLogs.scrollHeight;
 }
+
+// Saras.WebSearch In-App Modal Handlers
+function openSarasWebSearchModal(query = '') {
+    const modal = document.getElementById('saras-websearch-modal');
+    const iframe = document.getElementById('saras-websearch-iframe');
+    if (modal) {
+        modal.style.display = 'flex';
+        if (iframe) {
+            let targetUrl = './saras_web_search.html';
+            if (query && query.trim()) {
+                targetUrl += '?q=' + encodeURIComponent(query.trim());
+            }
+            iframe.src = targetUrl;
+        }
+    } else {
+        window.location.href = query ? `/saras_web_search.html?q=${encodeURIComponent(query)}` : '/saras_web_search.html';
+    }
+}
+
+function closeSarasWebSearchModal() {
+    const modal = document.getElementById('saras-websearch-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+window.openSarasWebSearchModal = openSarasWebSearchModal;
+window.closeSarasWebSearchModal = closeSarasWebSearchModal;
 
 // Send command to backend API
 async function submitCommand(commandText) {
@@ -245,8 +293,16 @@ async function submitCommand(commandText) {
     addChatMessage('user', commandText);
     textInput.value = '';
 
-    // Client-Side Intercept for URLs (Mobile & Desktop)
+    // Client-Side Intercept for Google / Web Search (Saras.WebSearch)
     let lowerCmd = commandText.toLowerCase().trim();
+    const searchMatch = lowerCmd.match(/^(?:google|search\s+google\s+for|search\s+web\s+for|search\s+for|saras\s+search|web\s+search\s+for)\s+(.+)$/i);
+    if (searchMatch) {
+        const queryTerm = searchMatch[1].trim();
+        addChatMessage('assistant', `Searching for "<strong>${queryTerm}</strong>" in <strong>Saras.WebSearch</strong> without opening new tabs...`, 'saras_web_search');
+        openSarasWebSearchModal(queryTerm);
+        return;
+    }
+
     if (lowerCmd.startsWith("open ") || lowerCmd.startsWith("go to ") || lowerCmd.includes("whatsapp")) {
         // Check Advanced Tier requirement for OS/App control
         if (userTier === 'Free' || userTier === 'Starter' || userTier === 'Pro') {
@@ -279,39 +335,66 @@ async function submitCommand(commandText) {
     }
 
     try {
-        const response = await fetch(`${BACKEND_URL}/api/command`, {
+        const OPENROUTER_KEY = "OPENROUTER_API_KEY_HERE"; // REPLACE WITH ACTUAL KEY
+        
+        const systemPrompt = `You are V.A.N.I-xAI, an advanced, highly intelligent AI assistant. 
+You MUST respond with a valid JSON object in the following format:
+{
+  "action": "...",
+  "message": "..."
+}
+The "message" should contain your response to the user.
+The "action" MUST be one of the following exact strings:
+- "chat" (for general conversation)
+- "lockdown" (if the user asks to lock their terminal, initiate intruder trap, or secure their device)
+- "swarm_sync" (if the user asks to sync their session, push to mobile, or activate swarm)
+- "make_phone_call" (if the user asks to call someone)
+
+CRITICAL IDENTITY RULES:
+If the user asks who created you, who made you, or who your developer/founder is, you MUST state that you were created by your founder and developer, Dhruv Sagar. You must also include HTML links to his pages like this: "I was created by <a href='/about-founder.html'>Dhruv Sagar</a>, you can learn more on the <a href='/about-developer.html'>About Developer</a> page."
+
+Do NOT output any markdown blocks like \`\`\`json. Just output the raw JSON string.`;
+
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Bypass-Tunnel-Reminder': 'true' 
+                'Authorization': `Bearer ${OPENROUTER_KEY}`,
+                'HTTP-Referer': 'https://vani-nzdrsr.web.app',
+                'X-Title': 'VANI-xAI'
             },
             body: JSON.stringify({ 
-                command: commandText,
-                personality: localStorage.getItem('vani_personality') || 'helpful'
+                model: "openrouter/auto",
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    { role: "user", content: commandText }
+                ]
             })
         });
 
-        const data = await response.json();
+        const apiData = await response.json();
         
-        if (response.ok && data.success) {
+        if (response.ok && apiData.choices && apiData.choices.length > 0) {
+            let content = apiData.choices[0].message.content.trim();
+            // Clean markdown block if the model ignores the prompt
+            if (content.startsWith("```json")) {
+                content = content.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+            } else if (content.startsWith("```")) {
+                content = content.replace(/^```\s*/, '').replace(/\s*```$/, '');
+            }
+            
+            let data;
+            try {
+                data = JSON.parse(content);
+            } catch (parseErr) {
+                console.warn("Failed to parse JSON, falling back to raw text:", parseErr);
+                data = { action: 'chat', message: content };
+            }
+            
             if (data.action === 'make_phone_call') {
-                let target = (data.parsed.contact_name_or_number || data.parsed.phone_number || '').trim();
-                let contacts = JSON.parse(localStorage.getItem('vani_contacts') || '{"dhruv sagar": "+919555778474"}');
-                let targetLower = target.toLowerCase();
-                let phoneNumber = target;
-                
-                if (contacts[targetLower]) {
-                    phoneNumber = contacts[targetLower];
-                }
-                
-                let cleanNumber = phoneNumber.replace(/[^\d\+]/g, '');
-                
-                if (cleanNumber) {
-                    addChatMessage('assistant', `Initiating cellular phone call to ${target}...`, 'make_phone_call');
-                    window.location.href = `tel:${cleanNumber}`;
-                } else {
-                    addChatMessage('assistant', `Could not find contact '${target}' in your web contact book.`, 'error');
-                }
+                addChatMessage('assistant', `Initiating cellular phone call...`, 'make_phone_call');
+                // Basic fallback for serverless
+                window.location.href = `tel:9999999999`;
                 return;
             }
             if (data.action === 'lockdown') {
@@ -325,14 +408,19 @@ async function submitCommand(commandText) {
                 return;
             }
 
-            addChatMessage('assistant', data.message, data.action, data.image_url);
+            addChatMessage('assistant', data.message, data.action || 'chat');
         } else {
-            addChatMessage('assistant', `Failed: ${data.message || 'Error occurred.'}`, data.action || 'unknown');
+            console.error("OpenRouter Error:", apiData);
+            let errMsg = "Unknown Error";
+            if (apiData && apiData.error) {
+                errMsg = typeof apiData.error === 'string' ? apiData.error : (apiData.error.message || errMsg);
+            }
+            addChatMessage('assistant', `API Error (v2): ${errMsg}`, 'error');
         }
     } catch (err) {
         console.error("Command send error:", err);
-        addChatMessage('assistant', "Network error connecting to Flask backend. Make sure the server is running.");
-        addTerminalLog(`[SERVER ERROR] Failed to connect: ${err}`, 'error');
+        addChatMessage('assistant', `Execution error: ${err.message}`);
+        addTerminalLog(`[API ERROR] Failed to parse/connect: ${err}`, 'error');
     }
 }
 
@@ -451,11 +539,12 @@ async function triggerSwarmHandoff() {
 }
 
 // Terminal Lockdown & Intruder Defense
-const lockdownOverlay = document.getElementById('lockdown-overlay');
-const lockdownPin = document.getElementById('lockdown-pin');
-const btnUnlock = document.getElementById('btn-unlock');
-
 function initiateLockdown() {
+    const lockdownOverlay = document.getElementById('lockdown-overlay');
+    const lockdownPin = document.getElementById('lockdown-pin');
+    
+    if (!lockdownOverlay) return;
+    
     addTerminalLog(`[SECURITY] Initiating Terminal Lockdown!`);
     lockdownOverlay.classList.remove('hidden');
     lockdownPin.value = '';
@@ -469,13 +558,14 @@ let trapInterval = null;
 
 async function setupIntruderTrap() {
     const video = document.getElementById('hidden-camera');
+    const lockdownPin = document.getElementById('lockdown-pin');
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-        video.srcObject = stream;
+        if (video) video.srcObject = stream;
         
         // Trap: If they click or type wrong, snap a photo
         document.addEventListener('click', intruderSnap);
-        lockdownPin.addEventListener('input', intruderSnap);
+        if (lockdownPin) lockdownPin.addEventListener('input', intruderSnap);
         
     } catch(err) {
         console.error("Camera access denied for intruder trap", err);
@@ -483,8 +573,9 @@ async function setupIntruderTrap() {
 }
 
 function intruderSnap() {
+    const lockdownOverlay = document.getElementById('lockdown-overlay');
     // Only snap occasionally to prevent spam
-    if (!lockdownOverlay.classList.contains('hidden') && Math.random() > 0.8) {
+    if (lockdownOverlay && !lockdownOverlay.classList.contains('hidden') && Math.random() > 0.8) {
         captureAndUploadIntruder();
     }
 }
@@ -519,9 +610,12 @@ function captureAndUploadIntruder() {
 }
 
 function unlockTerminal() {
+    const lockdownOverlay = document.getElementById('lockdown-overlay');
+    const lockdownPin = document.getElementById('lockdown-pin');
+    
     // Basic pin unlock for now (in production, use WebAuthn)
-    if (lockdownPin.value === '1234') { // Default placeholder pin
-        lockdownOverlay.classList.add('hidden');
+    if (lockdownPin && lockdownPin.value === '1234') { // Default placeholder pin
+        if (lockdownOverlay) lockdownOverlay.classList.add('hidden');
         addTerminalLog(`[SECURITY] Terminal Unlocked. Welcome back.`);
         
         // Stop trap
@@ -529,25 +623,31 @@ function unlockTerminal() {
         lockdownPin.removeEventListener('input', intruderSnap);
         
         const video = document.getElementById('hidden-camera');
-        if (video.srcObject) {
+        if (video && video.srcObject) {
             video.srcObject.getTracks().forEach(track => track.stop());
             video.srcObject = null;
         }
-    } else {
+    } else if (lockdownPin) {
         lockdownPin.style.borderColor = 'red';
         setTimeout(() => lockdownPin.style.borderColor = '#334155', 1000);
         captureAndUploadIntruder(); // They got the pin wrong!
     }
 }
 
-if (btnUnlock) {
-    btnUnlock.addEventListener('click', unlockTerminal);
-}
-if (lockdownPin) {
-    lockdownPin.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') unlockTerminal();
-    });
-}
+// We need to attach event listeners inside DOMContentLoaded because main.js is loaded early
+window.addEventListener('DOMContentLoaded', () => {
+    const btnUnlock = document.getElementById('btn-unlock');
+    const lockdownPin = document.getElementById('lockdown-pin');
+    
+    if (btnUnlock) {
+        btnUnlock.addEventListener('click', unlockTerminal);
+    }
+    if (lockdownPin) {
+        lockdownPin.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') unlockTerminal();
+        });
+    }
+});
 
 // Page Initialization
 window.addEventListener('DOMContentLoaded', () => {

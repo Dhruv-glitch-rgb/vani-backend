@@ -168,33 +168,24 @@ def handle_command():
                     encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
                 
                 vision_prompt = command
-                # Use the API key from environment variable
-                use_key = os.environ.get("OPENROUTER_API_KEY", "")
-                
-                req = urllib.request.Request(
-                    url="https://openrouter.ai/api/v1/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {use_key}",
-                        "Content-Type": "application/json"
-                    },
-                    data=json.dumps({
-                        "model": "google/gemini-flash-1.5-8b",
-                        "messages": [
-                            {
-                                "role": "user",
-                                "content": [
-                                    {"type": "text", "text": vision_prompt},
-                                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded_string}"}}
-                                ]
-                            }
+                import llm_router
+                messages = [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": vision_prompt},
+                            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded_string}"}}
                         ]
-                    }).encode('utf-8')
-                )
+                    }
+                ]
+                
                 try:
-                    with urllib.request.urlopen(req, timeout=30) as response:
-                        v_data = json.loads(response.read().decode('utf-8'))
-                        result_message = v_data['choices'][0]['message']['content'].strip()
-                        success = True
+                    result_message = llm_router.call_llm_with_fallback(
+                        messages,
+                        models=llm_router.VISION_FREE_MODELS,
+                        timeout_per_model=15
+                    )
+                    success = True
                 except Exception as e:
                     success = False
                     result_message = f"Vision API failed: {e}"
@@ -291,6 +282,15 @@ def about_founder_page():
 @app.route('/about-developer')
 def about_developer_page():
     return render_template('about_developer.html')
+
+@app.route('/saras_web_search.html')
+@app.route('/websearch')
+def saras_web_search_page():
+    return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_web_search.html')
+
+@app.route('/saras_web_search.js')
+def saras_web_search_js():
+    return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_web_search.js')
 
 if __name__ == '__main__':
     # Start Autonomous Agent

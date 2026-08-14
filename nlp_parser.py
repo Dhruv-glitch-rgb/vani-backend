@@ -407,22 +407,12 @@ JSON:
         
         messages.append({"role": "user", "content": f'Analyze this user query: "{text}"'})
 
-        req = urllib.request.Request(
-            url="https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            },
-            data=json.dumps({
-                "model": "meta-llama/llama-3.1-8b-instruct:free",
-                "messages": messages
-            }).encode('utf-8')
+        import llm_router
+        content = llm_router.call_llm_with_fallback(
+            messages,
+            models=llm_router.FAST_FREE_MODELS,
+            timeout_per_model=4
         )
-        
-        with urllib.request.urlopen(req, timeout=15) as response:
-            data = json.loads(response.read().decode('utf-8'))
-            
-        content = data['choices'][0]['message']['content'].strip()
         
         # Clean markdown formatting if model output includes ```json ... ```
         content = re.sub(r'^```json\s*', '', content, flags=re.IGNORECASE)
@@ -438,21 +428,19 @@ JSON:
             
         return parsed
 
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode('utf-8') if hasattr(e, 'read') else str(e)
-        print(f"[NLP_PARSER] OpenRouter HTTP error: {e.code} - {error_body}", flush=True)
+    except Exception as e:
+        error_msg = str(e)
+        print(f"[NLP_PARSER] LLM Router error: {error_msg}. Falling back to rules.", flush=True)
         fallback = parse_with_rules(text)
         if fallback.get('action') == 'unknown':
-            if e.code == 429:
+            if "rate-limited" in error_msg.lower() or "429" in error_msg:
                 return {
                     'action': 'unknown',
-                    'message': "The AI provider (OpenRouter) is currently rate-limited. Please try again shortly or use exact command phrases (like 'take screenshot')."
+                    'message': "The AI models are currently rate-limited. Please try again shortly or use exact command phrases (like 'take screenshot')."
                 }
             return {
                 'action': 'unknown',
-                'message': f"AI Provider Error ({e.code}). Please use an exact command phrase."
+                'message': f"AI Provider Error. Please use an exact command phrase."
             }
         return fallback
-    except Exception as e:
-        print(f"[NLP_PARSER] OpenRouter error: {e}. Falling back to rules.", flush=True)
-        return parse_with_rules(text)
+

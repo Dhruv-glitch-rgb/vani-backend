@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="glowBox" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.95"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="700" fill="url(#bgGrad)" />
+  
+  <!-- Subtle Grid Lines -->
+  <g stroke="rgba(56, 189, 248, 0.07)" stroke-width="1">
+    <line x1="0" y1="100" x2="1200" y2="100" />
+    <line x1="0" y1="200" x2="1200" y2="200" />
+    <line x1="0" y1="300" x2="1200" y2="300" />
+    <line x1="0" y1="400" x2="1200" y2="400" />
+    <line x1="0" y1="500" x2="1200" y2="500" />
+    <line x1="0" y1="600" x2="1200" y2="600" />
+    <line x1="150" y1="0" x2="150" y2="700" />
+    <line x1="300" y1="0" x2="300" y2="700" />
+    <line x1="450" y1="0" x2="450" y2="700" />
+    <line x1="600" y1="0" x2="600" y2="700" />
+    <line x1="750" y1="0" x2="750" y2="700" />
+    <line x1="900" y1="0" x2="900" y2="700" />
+    <line x1="1050" y1="0" x2="1050" y2="700" />
+  </g>
+
+  <!-- Top App Navigation Header -->
+  <rect x="40" y="30" width="1120" height="60" rx="14" fill="#0f172a" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1.5" />
+  <circle cx="75" cy="60" r="16" fill="url(#cyanGrad)" />
+  <text x="70" y="66" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="bold" font-size="16">S</text>
+  
+  <text x="105" y="66" fill="#f8fafc" font-family="'Outfit', sans-serif" font-weight="700" font-size="20">Saras.WebSearch</text>
+  <rect x="280" y="49" width="110" height="22" rx="11" fill="rgba(6, 182, 212, 0.2)" stroke="#06b6d4" stroke-width="1" />
+  <text x="290" y="64" fill="#06b6d4" font-family="'Outfit', sans-serif" font-weight="bold" font-size="10">ZERO-TAB ENGINE</text>
+
+  <!-- Right Navigation Actions -->
+  <rect x="940" y="44" width="100" height="32" rx="8" fill="url(#cyanGrad)" />
+  <text x="962" y="65" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="600" font-size="13">Console ➔</text>
+  <rect x="1050" y="44" width="90" height="32" rx="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" />
+  <text x="1068" y="65" fill="#cbd5e1" font-family="'Outfit', sans-serif" font-weight="500" font-size="13">Settings</text>
+
+  <!-- Search Bar (Glow Highlighted) -->
+  <g filter="url(#neonGlow)">
+    <rect x="250" y="115" width="700" height="52" rx="26" fill="#0b1329" stroke="#38bdf8" stroke-width="2" />
+  </g>
+  <text x="275" y="147" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="bold" font-size="18">G</text>
+  <text x="305" y="147" fill="#f8fafc" font-family="'Outfit', sans-serif" font-size="16">Quantum computing breakthroughs 2026</text>
+  
+  <circle cx="850" cy="141" r="15" fill="rgba(239, 68, 68, 0.2)" stroke="#ef4444" stroke-width="1" />
+  <text x="845" y="146" fill="#ef4444" font-family="sans-serif" font-size="12">🎙️</text>
+  
+  <rect x="875" y="123" width="65" height="36" rx="18" fill="url(#cyanGrad)" />
+  <text x="888" y="146" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="bold" font-size="13">Search</text>
+
+  <!-- Engine Tabs -->
+  <g transform="translate(360, 185)">
+    <rect x="0" y="0" width="80" height="26" rx="13" fill="rgba(6, 182, 212, 0.25)" stroke="#06b6d4" stroke-width="1"/>
+    <text x="15" y="17" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="bold" font-size="11">Google</text>
+    
+    <rect x="90" y="0" width="100" height="26" rx="13" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.1)"/>
+    <text x="102" y="17" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="11">DuckDuckGo</text>
+    
+    <rect x="200" y="0" width="70" height="26" rx="13" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.1)"/>
+    <text x="218" y="17" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="11">Bing</text>
+    
+    <rect x="280" y="0" width="90" height="26" rx="13" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.1)"/>
+    <text x="294" y="17" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="11">Wikipedia</text>
+    
+    <rect x="380" y="0" width="95" height="26" rx="13" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.1)"/>
+    <text x="392" y="17" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="11">AI Summary</text>
+  </g>
+
+  <!-- Split View: Left Results + Right In-App Browser -->
+  
+  <!-- LEFT: Search Results Panel -->
+  <g transform="translate(40, 230)">
+    <rect width="530" height="430" rx="14" fill="url(#glowBox)" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1.5"/>
+    <text x="20" y="32" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="700" font-size="15">LIVE SEARCH RESULTS</text>
+    <text x="410" y="32" fill="#64748b" font-family="'Outfit', sans-serif" font-size="12">4 Sources Found</text>
+    <line x1="20" y1="45" x2="510" y2="45" stroke="rgba(255,255,255,0.08)"/>
+
+    <!-- AI Overview Box -->
+    <rect x="20" y="60" width="490" height="85" rx="10" fill="rgba(6, 182, 212, 0.12)" stroke="rgba(6, 182, 212, 0.4)" stroke-width="1"/>
+    <text x="35" y="80" fill="#06b6d4" font-family="'Outfit', sans-serif" font-weight="bold" font-size="12">✨ SARAS AI OVERVIEW</text>
+    <text x="35" y="102" fill="#e2e8f0" font-family="'Outfit', sans-serif" font-size="12">Recent breakthroughs in 2026 achieve topological qubit stability,</text>
+    <text x="35" y="122" fill="#e2e8f0" font-family="'Outfit', sans-serif" font-size="12">reducing error rates by 100x and accelerating quantum advantage.</text>
+
+    <!-- Result Card 1 -->
+    <g transform="translate(20, 160)">
+      <rect width="490" height="115" rx="10" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(255,255,255,0.06)"/>
+      <circle cx="25" cy="22" r="6" fill="#38bdf8"/>
+      <text x="40" y="26" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="600" font-size="11">Google Search • quantum.google.com</text>
+      <text x="20" y="52" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="bold" font-size="15">Topological Quantum Processors &amp; Roadmap</text>
+      <text x="20" y="74" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="12">Comprehensive overview of next-gen fault-tolerant quantum systems...</text>
+      <rect x="20" y="86" width="105" height="20" rx="4" fill="rgba(14, 165, 233, 0.25)" stroke="#0ea5e9"/>
+      <text x="30" y="100" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="600" font-size="10">🔍 View In-App</text>
+      <rect x="135" y="86" width="80" height="20" rx="4" fill="rgba(255,255,255,0.08)"/>
+      <text x="145" y="100" fill="#cbd5e1" font-family="'Outfit', sans-serif" font-size="10">↗ Open Tab</text>
+    </g>
+
+    <!-- Result Card 2 -->
+    <g transform="translate(20, 290)">
+      <rect width="490" height="115" rx="10" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(255,255,255,0.06)"/>
+      <circle cx="25" cy="22" r="6" fill="#10b981"/>
+      <text x="40" y="26" fill="#10b981" font-family="'Outfit', sans-serif" font-weight="600" font-size="11">Wikipedia • en.wikipedia.org</text>
+      <text x="20" y="52" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="bold" font-size="15">Quantum Supremacy &amp; Scalability Milestones</text>
+      <text x="20" y="74" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="12">Detailed theoretical foundations and hardware implementations across...</text>
+      <rect x="20" y="86" width="105" height="20" rx="4" fill="rgba(14, 165, 233, 0.25)" stroke="#0ea5e9"/>
+      <text x="30" y="100" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="600" font-size="10">🔍 View In-App</text>
+      <rect x="135" y="86" width="80" height="20" rx="4" fill="rgba(255,255,255,0.08)"/>
+      <text x="145" y="100" fill="#cbd5e1" font-family="'Outfit', sans-serif" font-size="10">↗ Open Tab</text>
+    </g>
+  </g>
+
+  <!-- RIGHT: In-App Browser Viewport Panel -->
+  <g transform="translate(590, 230)">
+    <rect width="570" height="430" rx="14" fill="#0f172a" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1.5"/>
+    
+    <!-- Browser Top Bar -->
+    <rect width="570" height="40" rx="14" fill="#1e293b"/>
+    <circle cx="22" cy="20" r="5" fill="#ef4444"/>
+    <circle cx="37" cy="20" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="20" r="5" fill="#10b981"/>
+    
+    <!-- In-App Address Bar -->
+    <rect x="75" y="7" width="410" height="26" rx="6" fill="#0b1329" stroke="rgba(255,255,255,0.1)"/>
+    <text x="88" y="24" fill="#10b981" font-family="'Outfit', sans-serif" font-size="10">🔒</text>
+    <text x="105" y="24" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="11">https://www.google.com/search?q=Quantum+Computing</text>
+    
+    <text x="500" y="24" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="13">⤢ ⟳</text>
+
+    <!-- Simulated In-App Web Viewport Content -->
+    <rect x="10" y="48" width="550" height="370" rx="8" fill="#ffffff"/>
+    
+    <!-- Google Logo & Mock Page in White Viewport -->
+    <text x="40" y="90" fill="#4285F4" font-family="'Outfit', sans-serif" font-weight="bold" font-size="24">G<tspan fill="#EA4335">o</tspan><tspan fill="#FBBC05">o</tspan><tspan fill="#4285F4">g</tspan><tspan fill="#34A853">l</tspan><tspan fill="#EA4335">e</tspan></text>
+    
+    <!-- Search Bar inside Google -->
+    <rect x="140" y="72" width="370" height="28" rx="14" fill="#f1f3f4" stroke="#dfe1e5"/>
+    <text x="155" y="90" fill="#202124" font-family="sans-serif" font-size="11">Quantum computing breakthroughs 2026</text>
+    
+    <!-- Simulated Google Result Item 1 -->
+    <text x="40" y="130" fill="#202124" font-family="sans-serif" font-size="11">https://quantum.google.com</text>
+    <text x="40" y="150" fill="#1a0dab" font-family="sans-serif" font-weight="bold" font-size="15">Google Quantum AI Lab - Major Milestones &amp; Architecture</text>
+    <text x="40" y="170" fill="#4d5156" font-family="sans-serif" font-size="12">Explore our breakthroughs in error correction, Willow processors, and practical</text>
+    <text x="40" y="186" fill="#4d5156" font-family="sans-serif" font-size="12">quantum applications built to solve intractable computational problems.</text>
+    
+    <!-- Simulated Google Result Item 2 -->
+    <text x="40" y="225" fill="#202124" font-family="sans-serif" font-size="11">https://www.nature.com › articles › quantum-2026</text>
+    <text x="40" y="245" fill="#1a0dab" font-family="sans-serif" font-weight="bold" font-size="15">Scalable Quantum Computing Hardware: Nature Review</text>
+    <text x="40" y="265" fill="#4d5156" font-family="sans-serif" font-size="12">A review of modern superconducting, trapped ion, and photonic platforms</text>
+    <text x="40" y="281" fill="#4d5156" font-family="sans-serif" font-size="12">demonstrating verifiable quantum advantage in real-world benchmarks.</text>
+
+    <!-- Simulated Knowledge Panel Card -->
+    <rect x="40" y="310" width="470" height="85" rx="8" fill="#f8f9fa" stroke="#dadce0"/>
+    <text x="55" y="332" fill="#202124" font-family="sans-serif" font-weight="bold" font-size="13">Quantum Computing Overview</text>
+    <text x="55" y="352" fill="#5f6368" font-family="sans-serif" font-size="11">Field: Computational Physics • Primary Units: Qubits (Superposition &amp; Entanglement)</text>
+    <text x="55" y="372" fill="#1a73e8" font-family="sans-serif" font-weight="bold" font-size="11">Direct in-app browsing active without switching tabs</text>
+  </g>
+</svg>

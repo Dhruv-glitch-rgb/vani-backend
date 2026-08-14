@@ -8,7 +8,8 @@ try:
     # Adjust PyAutoGUI settings for safety
     pyautogui.FAILSAFE = False  # Disabled to prevent corner lock crashes
     pyautogui.PAUSE = 0.5      # Add pause between automation steps
-except Exception:
+except Exception as e:
+    print(f"PyAutoGUI Import Failed: {e}")
     pyautogui = None
 
 from logger import log_status as logger_log

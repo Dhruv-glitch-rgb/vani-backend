@@ -77,22 +77,13 @@ Respond ONLY with valid JSON. No markdown.
             })
 
             # 3. Request LLM
-            req = urllib.request.Request(
-                url="https://openrouter.ai/api/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json"
-                },
-                data=json.dumps({
-                    "model": "google/gemini-flash-1.5-8b", # Upgrade to pro for production
-                    "messages": messages
-                }).encode('utf-8')
-            )
-            
+            import llm_router
             try:
-                with urllib.request.urlopen(req, timeout=30) as response:
-                    v_data = json.loads(response.read().decode('utf-8'))
-                    response_text = v_data['choices'][0]['message']['content'].strip()
+                response_text = llm_router.call_llm_with_fallback(
+                    messages,
+                    models=llm_router.VISION_FREE_MODELS,
+                    timeout_per_model=15
+                )
             except Exception as e:
                 log_status(f"LLM API failed: {e}")
                 break

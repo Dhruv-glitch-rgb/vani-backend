@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450" width="1200" height="450">
+  <defs>
+    <linearGradient id="bannerBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="50%" stop-color="#0b1329"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#c084fc"/>
+    </linearGradient>
+    <linearGradient id="btnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <filter id="bannerGlow">
+      <feGaussianBlur stdDeviation="10" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="450" fill="url(#bannerBg)"/>
+  
+  <!-- Cyber Radar Rings Background -->
+  <circle cx="950" cy="225" r="180" fill="none" stroke="rgba(6, 182, 212, 0.15)" stroke-width="1.5" stroke-dasharray="6,6"/>
+  <circle cx="950" cy="225" r="120" fill="none" stroke="rgba(59, 130, 246, 0.2)" stroke-width="1.5"/>
+  <circle cx="950" cy="225" r="60" fill="none" stroke="rgba(147, 51, 234, 0.25)" stroke-width="1.5"/>
+  <line x1="950" y1="20" x2="950" y2="430" stroke="rgba(56, 189, 248, 0.1)"/>
+  <line x1="750" y1="225" x2="1150" y2="225" stroke="rgba(56, 189, 248, 0.1)"/>
+
+  <!-- Left Content -->
+  <g transform="translate(80, 80)">
+    <rect x="0" y="0" width="170" height="28" rx="14" fill="rgba(6, 182, 212, 0.2)" stroke="#06b6d4" stroke-width="1"/>
+    <text x="14" y="19" fill="#06b6d4" font-family="'Outfit', sans-serif" font-weight="bold" font-size="12">🌐 ZERO-TAB SEARCH</text>
+    
+    <text x="0" y="75" fill="url(#textGrad)" font-family="'Outfit', sans-serif" font-weight="800" font-size="44">Saras.WebSearch</text>
+    <text x="0" y="115" fill="#f8fafc" font-family="'Outfit', sans-serif" font-weight="600" font-size="22">Google The Web Directly Inside V.A.N.I-xAI</text>
+    
+    <text x="0" y="155" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="16">No more context switching or opening messy browser tabs.</text>
+    <text x="0" y="180" fill="#94a3b8" font-family="'Outfit', sans-serif" font-size="16">Google, research, synthesize with AI, and view web pages inside one unified hub.</text>
+
+    <!-- Search Engine Badges -->
+    <g transform="translate(0, 215)">
+      <rect x="0" y="0" width="90" height="34" rx="8" fill="rgba(30, 41, 59, 0.8)" stroke="rgba(255,255,255,0.1)"/>
+      <text x="14" y="22" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="bold" font-size="13">Google</text>
+      
+      <rect x="100" y="0" width="115" height="34" rx="8" fill="rgba(30, 41, 59, 0.8)" stroke="rgba(255,255,255,0.1)"/>
+      <text x="112" y="22" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="bold" font-size="13">DuckDuckGo</text>
+      
+      <rect x="225" y="0" width="95" height="34" rx="8" fill="rgba(30, 41, 59, 0.8)" stroke="rgba(255,255,255,0.1)"/>
+      <text x="238" y="22" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="bold" font-size="13">Wikipedia</text>
+      
+      <rect x="330" y="0" width="105" height="34" rx="8" fill="rgba(6, 182, 212, 0.2)" stroke="#06b6d4"/>
+      <text x="342" y="22" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="bold" font-size="13">✨ AI Overview</text>
+    </g>
+
+    <!-- CTA Button -->
+    <g transform="translate(0, 275)" filter="url(#bannerGlow)">
+      <rect x="0" y="0" width="200" height="46" rx="23" fill="url(#btnGrad)"/>
+      <text x="32" y="29" fill="#ffffff" font-family="'Outfit', sans-serif" font-weight="bold" font-size="16">Launch WebSearch ➔</text>
+    </g>
+  </g>
+
+  <!-- Right Floating Mockup Visual -->
+  <g transform="translate(760, 80)">
+    <rect width="360" height="260" rx="16" fill="rgba(15, 23, 42, 0.9)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.5"/>
+    <rect x="15" y="15" width="330" height="36" rx="18" fill="#1e293b" stroke="#38bdf8"/>
+    <text x="30" y="38" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="bold" font-size="13">G</text>
+    <text x="50" y="38" fill="#f8fafc" font-family="'Outfit', sans-serif" font-size="12">Google Search in-app...</text>
+    
+    <rect x="15" y="65" width="330" height="85" rx="10" fill="rgba(6, 182, 212, 0.1)" stroke="rgba(6, 182, 212, 0.3)"/>
+    <text x="25" y="85" fill="#06b6d4" font-family="'Outfit', sans-serif" font-weight="bold" font-size="11">✨ INSTANT AI ANSWER</text>
+    <text x="25" y="105" fill="#e2e8f0" font-family="'Outfit', sans-serif" font-size="11">Direct web grounded answer without</text>
+    <text x="25" y="125" fill="#e2e8f0" font-family="'Outfit', sans-serif" font-size="11">switching apps or opening tabs.</text>
+    
+    <rect x="15" y="160" width="330" height="80" rx="10" fill="#ffffff"/>
+    <text x="25" y="185" fill="#1a0dab" font-family="sans-serif" font-weight="bold" font-size="13">In-App Live Browser View</text>
+    <text x="25" y="205" fill="#4d5156" font-family="sans-serif" font-size="11">Interactive web pages render seamlessly inside console.</text>
+    <rect x="25" y="215" width="85" height="18" rx="4" fill="#e8f0fe"/>
+    <text x="32" y="228" fill="#1a73e8" font-family="sans-serif" font-weight="bold" font-size="9">Read Inside App</text>
+  </g>
+</svg>
