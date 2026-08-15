@@ -543,6 +543,33 @@
             color: var(--text-main);
             margin-bottom: 10px;
         }
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            background-color: var(--msg-received);
+            border-radius: 18px;
+            width: fit-content;
+            margin-bottom: 10px;
+            margin-left: 30px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-sidebar-muted);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -618,6 +645,12 @@
 
                 <div class="messages-container" id="messages-container">
                     <!-- Messages will be injected here -->
+                </div>
+
+                <div id="typing-indicator" class="typing-indicator" style="display: none;">
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
                 </div>
 
                 <div class="chat-input-area">

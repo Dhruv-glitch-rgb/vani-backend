@@ -15,6 +15,9 @@ const messagesContainer = document.getElementById('messages-container');
 const messageInput = document.getElementById('message-input');
 const sendMsgBtn = document.getElementById('send-msg-btn');
 const searchInput = document.getElementById('contact-search');
+const typingIndicator = document.getElementById('typing-indicator');
+let typingUnsubscribe = null;
+let typingTimeout = null;
 
 // 1. Auth State
 auth.onAuthStateChanged(user => {
@@ -163,6 +166,25 @@ function loadMessages(chatId, partnerInitials) {
     if (messagesUnsubscribe) {
         messagesUnsubscribe(); // Unsubscribe previous chat
     }
+    if (typingUnsubscribe) {
+        typingUnsubscribe();
+    }
+    
+    // Listen for typing status
+    typingUnsubscribe = db.collection('chats').doc(chatId).onSnapshot(doc => {
+        if (doc.exists) {
+            const data = doc.data();
+            const typingObj = data.typing || {};
+            // Check if ANY participant other than current user is typing
+            const isPartnerTyping = Object.keys(typingObj).some(uid => uid !== currentUser.uid && typingObj[uid] === true);
+            if (isPartnerTyping) {
+                typingIndicator.style.display = 'flex';
+                scrollToBottom();
+            } else {
+                typingIndicator.style.display = 'none';
+            }
+        }
+    });
     
     messagesContainer.innerHTML = '';
     
@@ -294,3 +316,24 @@ function escapeHtml(unsafe) {
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;");
 }
+
+
+// Typing Indicator Logic
+messageInput.addEventListener('input', () => {
+    if (!currentChatId || !currentUser) return;
+    
+    // Set typing to true
+    db.collection('chats').doc(currentChatId).set({
+        typing: { [currentUser.uid]: true }
+    }, { merge: true });
+    
+    // Clear previous timeout
+    if (typingTimeout) clearTimeout(typingTimeout);
+    
+    // Set timeout to false after 2s of no typing
+    typingTimeout = setTimeout(() => {
+        db.collection('chats').doc(currentChatId).set({
+            typing: { [currentUser.uid]: false }
+        }, { merge: true });
+    }, 2000);
+});
