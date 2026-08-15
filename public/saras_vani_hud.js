@@ -62,11 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return out.join(' ') || '< 1m';
     };
 
+    let BACKEND_URL = localStorage.getItem('vani_backend_url');
+    if (!BACKEND_URL) {
+        BACKEND_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? '' 
+            : 'https://vani-backend-52w1.onrender.com';
+    }
+
     async function fetchStats() {
         try {
-            // Note: Since this will be running on the same origin (Flask serves it)
-            // We can use relative path
-            const res = await fetch('/api/system-stats');
+            const res = await fetch(`${BACKEND_URL}/api/system-stats`);
             
             if(!res.ok) throw new Error('API Error');
             
