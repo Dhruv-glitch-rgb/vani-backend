@@ -13,9 +13,9 @@ def log_router(msg):
 
 # Fastest free text/reasoning models
 FAST_FREE_MODELS = [
-    "openrouter/free",
-    "google/gemma-4-31b-it:free",
+    "google/gemma-4-26b-a4b-it:free",
     "nvidia/nemotron-3.5-lightning:free",
+    "openrouter/free",
     "liquid/lfm-2.5-2.6b:free"
 ]
 
