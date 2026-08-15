@@ -25,7 +25,15 @@ auth.onAuthStateChanged(user => {
         currentUser = user;
         const nameBase = (user.displayName || user.email.split('@')[0]);
         myNameEl.textContent = nameBase;
-        myAvatarInitials.textContent = nameBase.charAt(0).toUpperCase();
+        
+        // Fetch my profile pic
+        db.collection('users').doc(user.uid).get().then(doc => {
+            if(doc.exists && doc.data().profilePicUrl) {
+                myAvatarInitials.innerHTML = `<img src="${doc.data().profilePicUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            } else {
+                myAvatarInitials.textContent = nameBase.charAt(0).toUpperCase();
+            }
+        });
         
         // Update user status
         updateUserPresence(true);
@@ -88,6 +96,7 @@ function renderContactItem(contactId, contact) {
     }
     
     const initials = (contact.name || contact.email.split('@')[0]).substring(0, 2).toUpperCase();
+    const picHtml = contact.profilePicUrl ? `<img src="${contact.profilePicUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` : initials;
     const isOnline = false; // We could listen to their user doc for real status, keeping simple for now.
     
     // Format time
@@ -103,8 +112,8 @@ function renderContactItem(contactId, contact) {
     }
     
     item.innerHTML = `
-        <div class="contact-avatar">
-            ${initials}
+        <div class="contact-avatar" onclick="viewContactProfile('${contactId}')" style="cursor: pointer; z-index: 10;">
+            ${picHtml}
             <div class="contact-status-dot ${isOnline ? 'online' : ''}"></div>
         </div>
         <div class="contact-info">
@@ -116,12 +125,13 @@ function renderContactItem(contactId, contact) {
         </div>
     `;
     
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (e) => {
+        if(e.target.closest('.contact-avatar')) return; // Avoid opening chat if clicking avatar to view profile
         // Remove active class from all
         document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
         item.classList.add('active');
         
-        openChat(contact.chatId, contact.name || contact.email.split('@')[0], initials);
+        openChat(contact.chatId, contact.name || contact.email.split('@')[0], initials, picHtml, contactId);
     });
     
     contactListEl.appendChild(item);
@@ -145,7 +155,7 @@ function filterContacts() {
 }
 
 // 4. Open Chat
-function openChat(chatId, partnerName, partnerInitials) {
+function openChat(chatId, partnerName, partnerInitials, picHtml, partnerUid) {
     currentChatId = chatId;
     
     emptyChatState.style.display = 'none';
@@ -153,16 +163,16 @@ function openChat(chatId, partnerName, partnerInitials) {
     
     chatPartnerNameEl.textContent = partnerName;
     chatPartnerAvatarsEl.innerHTML = `
-        <div class="avatar" style="background-color: var(--msg-sent); color: white;">
-            ${partnerInitials}
+        <div class="avatar" style="background-color: var(--msg-sent); color: white; cursor: pointer;" onclick="viewContactProfile('${partnerUid}')">
+            ${picHtml || partnerInitials}
         </div>
     `;
     
-    loadMessages(chatId, partnerInitials);
+    loadMessages(chatId, partnerInitials, picHtml);
 }
 
 // 5. Load Messages
-function loadMessages(chatId, partnerInitials) {
+function loadMessages(chatId, partnerInitials, picHtml) {
     if (messagesUnsubscribe) {
         messagesUnsubscribe(); // Unsubscribe previous chat
     }
@@ -194,14 +204,14 @@ function loadMessages(chatId, partnerInitials) {
             snapshot.docChanges().forEach(change => {
                 if (change.type === 'added') {
                     const msg = change.doc.data();
-                    renderMessage(msg, partnerInitials);
+                    renderMessage(msg, partnerInitials, picHtml);
                 }
             });
             scrollToBottom();
         });
 }
 
-function renderMessage(msg, partnerInitials) {
+function renderMessage(msg, partnerInitials, picHtml) {
     const isSentByMe = msg.senderId === currentUser.uid;
     const row = document.createElement('div');
     row.className = `message-row ${isSentByMe ? 'sent' : 'received'}`;
@@ -212,7 +222,7 @@ function renderMessage(msg, partnerInitials) {
     }
     
     const avatarHtml = isSentByMe ? '' : `
-        <div class="message-avatar">${partnerInitials}</div>
+        <div class="message-avatar">${picHtml || partnerInitials}</div>
     `;
     
     row.innerHTML = `
@@ -337,3 +347,52 @@ messageInput.addEventListener('input', () => {
         }, { merge: true });
     }, 2000);
 });
+
+
+// --- VIEW PROFILE MODAL LOGIC ---
+async function viewContactProfile(uid) {
+    if (!uid) return;
+    const modal = document.getElementById('profile-modal');
+    const nameEl = document.getElementById('pm-name');
+    const idEl = document.getElementById('pm-id');
+    const phoneEl = document.getElementById('pm-phone');
+    const instaEl = document.getElementById('pm-insta');
+    const picEl = document.getElementById('pm-pic');
+    
+    // Default/Loading state
+    nameEl.textContent = "Loading...";
+    idEl.textContent = "---";
+    phoneEl.innerHTML = "";
+    instaEl.innerHTML = "";
+    picEl.src = "vani_icon.png";
+    
+    modal.classList.add('active');
+    
+    try {
+        const doc = await db.collection('users').doc(uid).get();
+        if (doc.exists) {
+            const data = doc.data();
+            nameEl.textContent = data.name || data.email.split('@')[0];
+            idEl.innerHTML = `<i class="fa-solid fa-id-badge"></i> ${data.vaniId || 'Unknown'}`;
+            
+            if(data.contactNumber) {
+                phoneEl.innerHTML = `<i class="fa-solid fa-phone"></i> ${data.contactNumber}`;
+            }
+            if(data.instagram) {
+                instaEl.innerHTML = `<a href="https://instagram.com/${data.instagram.replace('@','')}" target="_blank" style="color:var(--accent); text-decoration:none;"><i class="fa-brands fa-instagram"></i> ${data.instagram}</a>`;
+            }
+            if(data.profilePicUrl) {
+                picEl.src = data.profilePicUrl;
+            } else {
+                picEl.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(data.name || 'User')}`;
+            }
+        }
+    } catch (e) {
+        console.error("Error fetching profile", e);
+        nameEl.textContent = "User not found";
+    }
+}
+
+function closeProfileModal() {
+    document.getElementById('profile-modal').classList.remove('active');
+}

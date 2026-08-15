@@ -239,6 +239,13 @@
             </div>
         </div>
 
+                <div class="input-group">
+            <label>Profile Picture URL (Optional)</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-image"></i>
+                <input type="url" id="user-pic" placeholder="https://example.com/photo.jpg (or leave blank for auto-avatar)">
+            </div>
+        </div>
         <div class="input-group">
             <label>Instagram Username</label>
             <div class="input-wrapper">
@@ -277,6 +284,7 @@
         const emailInput = document.getElementById('user-email');
         const phoneInput = document.getElementById('user-phone');
         const instaInput = document.getElementById('user-insta');
+        const picInput = document.getElementById('user-pic');
         const vaniIdInput = document.getElementById('user-vani-id');
         const btnContinue = document.getElementById('btn-continue');
         const btnText = document.getElementById('btn-text');
@@ -305,6 +313,7 @@
 
                         if (data.contactNumber) phoneInput.value = data.contactNumber;
                         if (data.instagram) instaInput.value = data.instagram;
+                        if (data.profilePicUrl && !data.profilePicUrl.includes('dicebear')) picInput.value = data.profilePicUrl;
                         
                         if (data.contactNumber && data.instagram && !window.location.search.includes('edit=true')) {
                             window.location.href = '/pin-vaniXai.html';
@@ -345,12 +354,29 @@
             btnSpinner.style.display = 'block';
 
             try {
+                const userName = currentUser.displayName || currentUser.email.split('@')[0];
+                let picUrl = picInput ? picInput.value.trim() : '';
+                if (!picUrl) {
+                    picUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userName)}`;
+                }
+
+                // Generate search keywords for substring matching
+                const searchStr = `${userName} ${vaniIdInput.value} ${phone} ${insta} ${currentUser.email}`.toLowerCase();
+                const searchKeywords = searchStr.split(/[\s_.-]+/).filter(Boolean);
+                // Also add full strings for exact substring match simulation if possible, but keywords are best
+                searchKeywords.push(phone);
+                searchKeywords.push(insta.toLowerCase());
+                searchKeywords.push(vaniIdInput.value.toLowerCase());
+                searchKeywords.push(userName.toLowerCase());
+
                 await db.collection('users').doc(currentUser.uid).set({
                     email: currentUser.email,
-                    name: currentUser.displayName || currentUser.email.split('@')[0],
+                    name: userName,
                     vaniId: vaniIdInput.value,
                     contactNumber: phone,
                     instagram: insta,
+                    profilePicUrl: picUrl,
+                    searchKeywords: searchKeywords,
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 

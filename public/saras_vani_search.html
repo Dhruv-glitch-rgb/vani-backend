@@ -197,6 +197,175 @@
             100% { opacity: 1; }
         }
 
+        
+        /* Tabs */
+        .tabs-container {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--blip-color);
+            color: white;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Global Search View */
+        .global-search-container {
+            position: absolute;
+            top: 100px;
+            width: 90%;
+            max-width: 800px;
+            height: calc(100vh - 150px);
+            display: none;
+            flex-direction: column;
+            z-index: 50;
+        }
+
+        .global-search-container.active {
+            display: flex;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .search-input-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--blip-color);
+            font-size: 1.2rem;
+        }
+
+        .global-search-input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 30px;
+            color: white;
+            font-family: 'Outfit';
+            font-size: 1.1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .global-search-input:focus {
+            border-color: var(--blip-color);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+            background: rgba(0,0,0,0.5);
+        }
+
+        .search-results {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-right: 10px;
+        }
+
+        .search-results::-webkit-scrollbar {
+            width: 6px;
+        }
+        .search-results::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.3);
+            border-radius: 10px;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: 0.3s;
+        }
+
+        .user-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--blip-color);
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .user-id {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .user-meta {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            display: flex;
+            gap: 15px;
+        }
+
+        .user-meta i {
+            color: var(--blip-color);
+        }
+
+        .btn-connect {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn-connect:hover {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            transform: scale(1.05);
+        }
+
         /* Modals */
         .modal-overlay {
             position: fixed;
@@ -307,6 +476,26 @@
         <a href="./index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Console</a>
 
         <div class="title"><i class="fa-solid fa-satellite-dish"></i> Saras_VANI.Search</div>
+    </div>
+
+    
+    <div class="tabs-container">
+        <button class="tab-btn active" id="tab-radar" onclick="switchTab('radar')"><i class="fa-solid fa-satellite-dish"></i> Local Radar</button>
+        <button class="tab-btn" id="tab-global" onclick="switchTab('global')"><i class="fa-solid fa-globe"></i> Global Directory</button>
+    </div>
+
+    <!-- Global Search -->
+    <div class="global-search-container" id="global-search-container">
+        <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" class="global-search-input" placeholder="Search by Name, VANI ID, Phone, or Instagram...">
+        </div>
+        <div class="search-results" id="search-results">
+            <div style="text-align: center; color: #64748b; margin-top: 50px;">
+                <i class="fa-solid fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i><br>
+                Search the global network to find contacts.
+            </div>
+        </div>
     </div>
 
     <!-- The Radar -->

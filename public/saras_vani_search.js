@@ -270,3 +270,165 @@ async function handleSuccessfulPairing(pairedEmail) {
         }, 1500);
     }, 1500);
 }
+
+
+// --- GLOBAL SEARCH LOGIC ---
+const radarContainer = document.getElementById('radar-container');
+const globalSearchContainer = document.getElementById('global-search-container');
+const tabRadar = document.getElementById('tab-radar');
+const tabGlobal = document.getElementById('tab-global');
+const globalSearchInput = document.getElementById('global-search-input');
+const searchResultsContainer = document.getElementById('search-results');
+const statusTextEl = document.getElementById('status-text');
+
+let allUsersCache = [];
+let usersFetched = false;
+
+function switchTab(tab) {
+    if (tab === 'radar') {
+        tabRadar.classList.add('active');
+        tabGlobal.classList.remove('active');
+        radarContainer.style.display = 'block';
+        globalSearchContainer.style.display = 'none';
+        statusTextEl.style.display = 'block';
+        if (publicIp) startRadar();
+    } else {
+        tabGlobal.classList.add('active');
+        tabRadar.classList.remove('active');
+        radarContainer.style.display = 'none';
+        globalSearchContainer.style.display = 'flex';
+        statusTextEl.style.display = 'none';
+        if (searchUnsubscribe) searchUnsubscribe(); // Stop radar
+        
+        if (!usersFetched) fetchAllUsers();
+    }
+}
+
+async function fetchAllUsers() {
+    try {
+        const snapshot = await db.collection('users').get();
+        allUsersCache = [];
+        snapshot.forEach(doc => {
+            if (doc.id !== currentUser.uid) {
+                allUsersCache.push({ id: doc.id, ...doc.data() });
+            }
+        });
+        usersFetched = true;
+    } catch (e) {
+        console.error("Error fetching users for global search", e);
+    }
+}
+
+globalSearchInput.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase().trim();
+    if (!term) {
+        searchResultsContainer.innerHTML = `
+            <div style="text-align: center; color: #64748b; margin-top: 50px;">
+                <i class="fa-solid fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i><br>
+                Search the global network to find contacts.
+            </div>`;
+        return;
+    }
+    
+    // Fuzzy search across multiple fields
+    const results = allUsersCache.filter(u => {
+        const name = (u.name || '').toLowerCase();
+        const vaniId = (u.vaniId || '').toLowerCase();
+        const phone = (u.contactNumber || '').toLowerCase();
+        const insta = (u.instagram || '').toLowerCase();
+        
+        return name.includes(term) || vaniId.includes(term) || phone.includes(term) || insta.includes(term);
+    });
+    
+    renderSearchResults(results);
+});
+
+function renderSearchResults(results) {
+    searchResultsContainer.innerHTML = '';
+    
+    if (results.length === 0) {
+        searchResultsContainer.innerHTML = `
+            <div style="text-align: center; color: #64748b; margin-top: 50px;">
+                <i class="fa-solid fa-user-slash" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i><br>
+                No users found matching that criteria.
+            </div>`;
+        return;
+    }
+    
+    results.forEach(u => {
+        const pic = u.profilePicUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.name)}`;
+        const instaLink = u.instagram ? `<a href="https://instagram.com/${u.instagram.replace('@','')}" target="_blank" style="color:var(--blip-color); text-decoration:none;"><i class="fa-brands fa-instagram"></i> ${u.instagram}</a>` : '';
+        
+        const card = document.createElement('div');
+        card.className = 'user-card';
+        card.innerHTML = `
+            <img src="${pic}" class="user-avatar" alt="Avatar">
+            <div class="user-info">
+                <div class="user-name">${u.name}</div>
+                <div class="user-id"><i class="fa-solid fa-id-badge"></i> ${u.vaniId || 'Unknown ID'}</div>
+                <div class="user-meta">
+                    ${instaLink}
+                    ${u.contactNumber ? `<span><i class="fa-solid fa-phone"></i> ${u.contactNumber}</span>` : ''}
+                </div>
+            </div>
+            <button class="btn-connect" onclick="globalConnect('${u.id}', '${u.email}', '${u.name}', '${pic}')">
+                <i class="fa-solid fa-plus"></i> Connect
+            </button>
+        `;
+        searchResultsContainer.appendChild(card);
+    });
+}
+
+async function globalConnect(targetUid, targetEmail, targetName, targetPic) {
+    try {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const chatId = [currentUser.uid, targetUid].sort().join('_'); // Consistent chatId
+        
+        // Check if chat already exists
+        const chatDoc = await db.collection('chats').doc(chatId).get();
+        if (!chatDoc.exists) {
+            await db.collection('chats').doc(chatId).set({
+                participants: [currentUser.uid, targetUid],
+                createdAt: timestamp,
+                updatedAt: timestamp,
+                lastMessage: 'Chat started'
+            });
+        }
+        
+        // Add to our contacts
+        await db.collection('users').doc(currentUser.uid).collection('contacts').doc(chatId).set({
+            chatId: chatId,
+            email: targetEmail,
+            name: targetName,
+            profilePicUrl: targetPic,
+            updatedAt: timestamp,
+            lastMessage: 'Chat started'
+        }, {merge: true});
+        
+        // Add us to their contacts
+        const myDoc = await db.collection('users').doc(currentUser.uid).get();
+        const myData = myDoc.data();
+        const myPic = myData.profilePicUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(myData.name)}`;
+        
+        await db.collection('users').doc(targetUid).collection('contacts').doc(chatId).set({
+            chatId: chatId,
+            email: currentUser.email,
+            name: myData.name,
+            profilePicUrl: myPic,
+            updatedAt: timestamp,
+            lastMessage: 'Chat started'
+        }, {merge: true}).catch(e => console.log("Target write failed due to rules"));
+        
+        statusTextEl.textContent = "Connection Added!";
+        statusTextEl.style.color = "#4ade80";
+        statusTextEl.style.display = 'block';
+        
+        setTimeout(() => {
+            window.location.href = '/saras_vani_chat.html';
+        }, 1500);
+        
+    } catch (e) {
+        console.error("Error connecting", e);
+        alert("Could not connect to user.");
+    }
+}
