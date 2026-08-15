@@ -773,21 +773,34 @@ window.addEventListener('DOMContentLoaded', () => {
     addTerminalLog("[SYSTEM] V.A.N.I-xAI interface loaded.");
 });
 
-
 // Quick Mute Toggle
 const quickMuteBtn = document.getElementById('quick-mute-btn');
 if (quickMuteBtn) {
     const updateMuteIcon = () => {
         const isMuted = localStorage.getItem('vani_auto_speak') === 'false';
-        quickMuteBtn.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark" style="color: #ef4444;"></i>' : '<i class="fa-solid fa-volume-high" style="color: #10b981;"></i>';
+        if (isMuted) {
+            quickMuteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark" style="color: #ef4444;"></i>';
+            quickMuteBtn.classList.add('muted');
+            quickMuteBtn.classList.remove('unmuted');
+        } else {
+            quickMuteBtn.innerHTML = '<i class="fa-solid fa-volume-high" style="color: #10b981;"></i>';
+            quickMuteBtn.classList.add('unmuted');
+            quickMuteBtn.classList.remove('muted');
+        }
     };
     updateMuteIcon();
-    quickMuteBtn.addEventListener('click', () => {
+    quickMuteBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         const isMuted = localStorage.getItem('vani_auto_speak') === 'false';
         localStorage.setItem('vani_auto_speak', isMuted ? 'true' : 'false');
         updateMuteIcon();
+        
+        // Add a little pop animation class temporarily
+        quickMuteBtn.style.transform = 'scale(1.2) rotate(' + (isMuted ? '10deg' : '-10deg') + ')';
+        setTimeout(() => { quickMuteBtn.style.transform = ''; }, 200);
+
         if (!isMuted) {
-            window.speechSynthesis.cancel(); // Stop current speech if muting
+            window.speechSynthesis.cancel();
         }
     });
 }
