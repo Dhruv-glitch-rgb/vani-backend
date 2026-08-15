@@ -13,16 +13,16 @@ def log_router(msg):
 
 # Fastest free text/reasoning models
 FAST_FREE_MODELS = [
-    "meta-llama/llama-3.1-8b-instruct:free",
-    "google/gemma-2-9b-it:free",
-    "openrouter/auto",
-    "openrouter/free"
+    "openrouter/free",
+    "google/gemma-4-31b-it:free",
+    "nvidia/nemotron-3.5-lightning:free",
+    "liquid/lfm-2.5-2.6b:free"
 ]
 
 # Free models that support Vision
 VISION_FREE_MODELS = [
-    "meta-llama/llama-3.2-11b-vision-instruct:free",
-    "openrouter/free"
+    "openrouter/free",
+    "google/lyria-3-clip-preview"
 ]
 
 def call_llm_with_fallback(messages, models=None, timeout_per_model=5, require_json=False):
