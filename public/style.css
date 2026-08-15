@@ -2100,3 +2100,7 @@ body.inxv-theme .hero-title {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+
+.quick-mute-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 6px; border-radius: 6px; transition: 0.2s; }
+.quick-mute-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
