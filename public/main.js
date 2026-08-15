@@ -335,61 +335,25 @@ async function submitCommand(commandText) {
     }
 
     try {
-        const OPENROUTER_KEY = "OPENROUTER_API_KEY_HERE"; // REPLACE WITH ACTUAL KEY
-        
-        const systemPrompt = `You are V.A.N.I-xAI, an advanced, highly intelligent AI assistant. 
-You MUST respond with a valid JSON object in the following format:
-{
-  "action": "...",
-  "message": "..."
-}
-The "message" should contain your response to the user.
-The "action" MUST be one of the following exact strings:
-- "chat" (for general conversation)
-- "lockdown" (if the user asks to lock their terminal, initiate intruder trap, or secure their device)
-- "swarm_sync" (if the user asks to sync their session, push to mobile, or activate swarm)
-- "make_phone_call" (if the user asks to call someone)
-
-CRITICAL IDENTITY RULES:
-If the user asks who created you, who made you, or who your developer/founder is, you MUST state that you were created by your founder and developer, Dhruv Sagar. You must also include HTML links to his pages like this: "I was created by <a href='/about-founder.html'>Dhruv Sagar</a>, you can learn more on the <a href='/about-developer.html'>About Developer</a> page."
-
-Do NOT output any markdown blocks like \`\`\`json. Just output the raw JSON string.`;
-
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        const response = await fetch(`${BACKEND_URL}/api/command`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENROUTER_KEY}`,
-                'HTTP-Referer': 'https://vani-nzdrsr.web.app',
-                'X-Title': 'VANI-xAI'
+                'Bypass-Tunnel-Reminder': 'true'
             },
             body: JSON.stringify({ 
-                model: "openrouter/auto",
-                messages: [
-                    { role: "system", content: systemPrompt },
-                    { role: "user", content: commandText }
-                ]
+                command: commandText,
+                personality: 'helpful'
             })
         });
 
         const apiData = await response.json();
         
-        if (response.ok && apiData.choices && apiData.choices.length > 0) {
-            let content = apiData.choices[0].message.content.trim();
-            // Clean markdown block if the model ignores the prompt
-            if (content.startsWith("```json")) {
-                content = content.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-            } else if (content.startsWith("```")) {
-                content = content.replace(/^```\s*/, '').replace(/\s*```$/, '');
-            }
-            
-            let data;
-            try {
-                data = JSON.parse(content);
-            } catch (parseErr) {
-                console.warn("Failed to parse JSON, falling back to raw text:", parseErr);
-                data = { action: 'chat', message: content };
-            }
+        if (response.ok && apiData.success !== false) {
+            let data = {
+                action: apiData.action || 'chat',
+                message: apiData.message || ''
+            };
             
             if (data.action === 'make_phone_call') {
                 addChatMessage('assistant', `Initiating cellular phone call...`, 'make_phone_call');
@@ -410,10 +374,12 @@ Do NOT output any markdown blocks like \`\`\`json. Just output the raw JSON stri
 
             addChatMessage('assistant', data.message, data.action || 'chat');
         } else {
-            console.error("OpenRouter Error:", apiData);
+            console.error("Backend Error:", apiData);
             let errMsg = "Unknown Error";
             if (apiData && apiData.error) {
                 errMsg = typeof apiData.error === 'string' ? apiData.error : (apiData.error.message || errMsg);
+            } else if (apiData && apiData.message) {
+                errMsg = typeof apiData.message === 'string' ? apiData.message : errMsg;
             }
             addChatMessage('assistant', `API Error (v2): ${errMsg}`, 'error');
         }
