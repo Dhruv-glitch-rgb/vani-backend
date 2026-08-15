@@ -303,47 +303,54 @@ async function submitCommand(commandText) {
         return;
     }
 
-    if (lowerCmd.startsWith("open ") || lowerCmd.startsWith("go to ") || lowerCmd.includes("whatsapp")) {
-        // Check Advanced Tier requirement for OS/App control
-        if (userTier === 'Free' || userTier === 'Starter' || userTier === 'Pro') {
-            addChatMessage('assistant', 'Local App, OS control, and WhatsApp Automation require the Advanced Tier or higher. Please upgrade to unlock this feature.', 'error');
+    // Direct Web Navigation Helper
+    if (lowerCmd.startsWith("open ") || lowerCmd.startsWith("go to ")) {
+        let target = lowerCmd.replace(/^go\s+to\s+/i, "").replace(/^open\s+/i, "").trim();
+        const webSites = {
+            'youtube': 'https://www.youtube.com',
+            'google': 'https://www.google.com',
+            'github': 'https://www.github.com',
+            'twitter': 'https://www.x.com',
+            'x': 'https://www.x.com',
+            'instagram': 'https://www.instagram.com',
+            'facebook': 'https://www.facebook.com',
+            'reddit': 'https://www.reddit.com',
+            'spotify': 'https://open.spotify.com',
+            'chatgpt': 'https://chat.openai.com',
+            'wikipedia': 'https://www.wikipedia.org',
+            'calculator': 'https://www.google.com/search?q=calculator'
+        };
+
+        if (webSites[target]) {
+            addChatMessage('assistant', `Opening <a href="${webSites[target]}" target="_blank" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">${target}</a> in a new tab...`);
+            window.open(webSites[target], '_blank');
             return;
-        }
-
-        let parts = lowerCmd.replace("go to ", "").replace("open ", "").trim().split(" ");
-        let potentialUrl = parts[parts.length - 1];
-        
-        // Prevent intercepting known desktop apps so they go to the Python backend
-        const desktopApps = ['notepad', 'calculator', 'cmd', 'terminal', 'explorer', 'settings', 'chrome', 'edge', 'spotify', 'code', 'vscode'];
-        
-        if (potentialUrl.includes(".") && potentialUrl.length > 3 && !potentialUrl.endsWith(".")) {
-            // Keep as is, it's a domain
-        } else if (parts.length === 1 && !desktopApps.includes(potentialUrl)) {
-            potentialUrl = `https://www.${potentialUrl}.com`;
-        } else {
-            potentialUrl = ""; // It's an app, let backend handle it
-        }
-
-        if (potentialUrl) {
-            if (!potentialUrl.startsWith("http")) {
-                potentialUrl = "https://" + potentialUrl;
-            }
-            addChatMessage('bot', `Opening ${potentialUrl} in your browser...`);
-            window.open(potentialUrl, '_blank');
-            return; // Do not send to backend
+        } else if (target.includes('.') && !target.includes(' ')) {
+            let url = target.startsWith('http') ? target : `https://${target}`;
+            addChatMessage('assistant', `Opening <a href="${url}" target="_blank" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">${url}</a> in a new tab...`);
+            window.open(url, '_blank');
+            return;
         }
     }
 
     try {
+        const customApiKey = localStorage.getItem('antigravity_openrouter_key') || localStorage.getItem('vani_api_key') || '';
+        const headers = { 
+            'Content-Type': 'application/json',
+            'Bypass-Tunnel-Reminder': 'true'
+        };
+        if (customApiKey) {
+            headers['X-OpenRouter-Key'] = customApiKey;
+            headers['Authorization'] = `Bearer ${customApiKey}`;
+        }
+
         const response = await fetch(`${BACKEND_URL}/api/command`, {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Bypass-Tunnel-Reminder': 'true'
-            },
+            headers: headers,
             body: JSON.stringify({ 
                 command: commandText,
-                personality: localStorage.getItem('vani_personality') || 'helpful'
+                personality: localStorage.getItem('vani_personality') || 'helpful',
+                apiKey: customApiKey
             })
         });
 
@@ -356,8 +363,7 @@ async function submitCommand(commandText) {
             };
             
             if (data.action === 'make_phone_call') {
-                addChatMessage('assistant', `Initiating cellular phone call...`, 'make_phone_call');
-                // Basic fallback for serverless
+                addChatMessage('assistant', `Initiating phone call...`, 'make_phone_call');
                 window.location.href = `tel:9999999999`;
                 return;
             }
@@ -372,21 +378,23 @@ async function submitCommand(commandText) {
                 return;
             }
 
+            if (data.action === 'saras_web_search') {
+                openSarasWebSearchModal(commandText.replace(/^(search|google|saras search)\s+/i, ''));
+            }
+
             addChatMessage('assistant', data.message, data.action || 'chat');
         } else {
             console.error("Backend Error:", apiData);
-            let errMsg = "Unknown Error";
-            if (apiData && apiData.error) {
-                errMsg = typeof apiData.error === 'string' ? apiData.error : (apiData.error.message || errMsg);
-            } else if (apiData && apiData.message) {
-                errMsg = typeof apiData.message === 'string' ? apiData.message : errMsg;
-            }
-            addChatMessage('assistant', `API Error (v2): ${errMsg}`, 'error');
+            // Fallback to client response engine if backend returned error
+            const fallback = getClientFallbackResponse(commandText);
+            addChatMessage('assistant', fallback.message, fallback.action);
         }
     } catch (err) {
-        console.error("Command send error:", err);
-        addChatMessage('assistant', `Execution error: ${err.message}`);
-        addTerminalLog(`[API ERROR] Failed to parse/connect: ${err}`, 'error');
+        console.warn("Backend unavailable, using Web Intelligence Engine:", err);
+        // Instant Client-Side Intelligent Fallback when backend is offline
+        const fallback = getClientFallbackResponse(commandText);
+        addChatMessage('assistant', fallback.message, fallback.action);
+        addTerminalLog(`[WEB AI] Answered query locally: "${commandText}"`, 'success');
     }
 }
 
@@ -725,8 +733,9 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     // Restore API key if saved
-    const savedKey = localStorage.getItem('antigravity_openrouter_key');
-    if (savedKey) {
+    const apiKeyInput = document.getElementById('api-key-input') || document.getElementById('apiKeyInput') || document.getElementById('api-key');
+    const savedKey = localStorage.getItem('antigravity_openrouter_key') || localStorage.getItem('vani_api_key');
+    if (apiKeyInput && savedKey) {
         apiKeyInput.value = savedKey;
     }
 
@@ -803,4 +812,99 @@ if (quickMuteBtn) {
             window.speechSynthesis.cancel();
         }
     });
+}
+
+// ----------------------------------------------------
+// INTELLIGENT CLIENT-SIDE WEB RESPONSE ENGINE
+// ----------------------------------------------------
+function getClientFallbackResponse(rawText) {
+    const text = (rawText || '').trim();
+    const lower = text.toLowerCase();
+
+    // 1. Founder / Developer Info
+    if (lower.includes('founder') || lower.includes('creator') || lower.includes('developer') || lower.includes('who made') || lower.includes('who created') || lower.includes('who built')) {
+        return {
+            action: 'chat',
+            message: `I was created and envisioned by <strong>Dhruv Sagar</strong>. Learn more about the vision on our <a href="/about-founder" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">About Founder</a> and <a href="/about-developer" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">About Developer</a> pages.`
+        };
+    }
+
+    // 2. Identity / Name
+    if (lower.includes('who are you') || lower.includes('your name') || lower.includes('what is vani') || lower.includes('what are you')) {
+        return {
+            action: 'chat',
+            message: `I am <strong>V.A.N.I-xAI</strong> (Vāṇī Adhyātmik Navīn Intellect) &mdash; your intelligent web assistant. <em>Don't Assume, Verify.</em> How may I assist you today?`
+        };
+    }
+
+    // 3. Greetings
+    if (/^(hi|hello|hey|namaste|greetings|hola|good morning|good evening|good afternoon)(\s+vani|\s+there|\s+assistant)?$/i.test(lower) || lower === 'hi' || lower === 'hello') {
+        return {
+            action: 'chat',
+            message: `Namaste! I am V.A.N.I-xAI. How can I assist your workflow today? Try asking me to search the web, calculate formulas, check the time, or explore Saras tools.`
+        };
+    }
+
+    // 4. Help / Capabilities
+    if (lower.includes('help') || lower.includes('what can you do') || lower.includes('features') || lower.includes('commands')) {
+        return {
+            action: 'chat',
+            message: `Here are some of the things I can do on the web:<br>
+            &bull; <strong>Saras.WebSearch:</strong> In-app zero-tab web search (e.g. <code>search quantum computing</code>)<br>
+            &bull; <strong>Math & Reasoning:</strong> Instant calculations (e.g. <code>calculate 25 * 48</code>)<br>
+            &bull; <strong>Website Shortcuts:</strong> Direct navigation (e.g. <code>open youtube</code>, <code>open github</code>)<br>
+            &bull; <strong>Voice Synthesis:</strong> Click the microphone or toggle voice speech<br>
+            &bull; <strong>Security & Swarm:</strong> Multi-device synchronization and lockdown defense`
+        };
+    }
+
+    // 5. Math / Calculation
+    const mathMatch = lower.match(/^(?:calculate|compute|what is|solve)\s+([0-9\+\-\*\/\^\(\)\.\s\%]+)$/i) || lower.match(/^([0-9\+\-\*\/\^\(\)\.\s]+)$/);
+    if (mathMatch) {
+        try {
+            const expr = mathMatch[1].replace(/[^0-9\+\-\*\/\(\)\.]/g, '');
+            if (expr && expr.length > 0) {
+                // Safe evaluation with Function constructor limited to numbers and math operators
+                const result = Function(`'use strict'; return (${expr})`)();
+                return {
+                    action: 'chat',
+                    message: `Calculation: <code>${expr}</code> = <strong>${result}</strong>`
+                };
+            }
+        } catch (e) {
+            // Ignore parse errors
+        }
+    }
+
+    // 6. Time and Date
+    if (lower.includes('time') && (lower.includes('what') || lower.includes('current') || lower.includes('now'))) {
+        const now = new Date();
+        return {
+            action: 'chat',
+            message: `The current time is <strong>${now.toLocaleTimeString()}</strong>.`
+        };
+    }
+    if (lower.includes('date') && (lower.includes('what') || lower.includes('today') || lower.includes('current'))) {
+        const now = new Date();
+        return {
+            action: 'chat',
+            message: `Today's date is <strong>${now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>.`
+        };
+    }
+
+    // 7. Web Search intent
+    if (lower.startsWith('search ') || lower.startsWith('google ') || lower.startsWith('find ')) {
+        const q = text.replace(/^(search|google|find)\s+(for\s+)?/i, '').trim();
+        openSarasWebSearchModal(q);
+        return {
+            action: 'saras_web_search',
+            message: `Launching <strong>Saras.WebSearch</strong> for "<strong>${q}</strong>"...`
+        };
+    }
+
+    // 8. General conversational fallback
+    return {
+        action: 'chat',
+        message: `I received your command: "<em>${text}</em>". You can search the web by typing <code>search ${text}</code>, or open any tool from the top menu.`
+    };
 }

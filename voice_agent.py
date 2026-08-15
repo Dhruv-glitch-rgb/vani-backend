@@ -64,27 +64,18 @@ class VoiceAgent:
         self.speak("Yes, I am listening.")
         
     def speak(self, text):
+        log_status(f"Speech [Synthesizing for client]: {text[:80]}...")
         if edge_tts is None:
-            log_status(f"Speech [Muted]: {text}")
             return
             
         def _speak():
             try:
-                # Use a realistic voice (en-GB-RyanNeural for a JARVIS-like accent)
                 voice = "en-GB-RyanNeural"
                 communicate = edge_tts.Communicate(text, voice)
-                
                 temp_file = os.path.join(os.path.dirname(__file__), "temp_speech.mp3")
                 asyncio.run(communicate.save(temp_file))
-                
-                # Play audio invisibly on Windows using PowerShell
-                import subprocess
-                cmd = f"(New-Object Media.SoundPlayer '{temp_file}').PlaySync()"
-                # Note: SoundPlayer only supports WAV natively, so for MP3 we use startfile or a media player.
-                # For simplicity, startfile works (opens default media player).
-                os.startfile(temp_file)
             except Exception as e:
-                log_status(f"TTS Error: {e}")
+                log_status(f"TTS Synthesis Error: {e}")
                 
         threading.Thread(target=_speak, daemon=True).start()
 

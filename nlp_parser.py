@@ -19,33 +19,154 @@ MOBILE_APP_PACKAGES = {
     'settings': 'com.android.settings'
 }
 
+def query_knowledge_engine(query):
+    """Fetch live factual snippet from Wikipedia/Knowledge index for queries."""
+    try:
+        import urllib.parse
+        cleaned = re.sub(r'^(what\s+is|who\s+is|who\s+was|tell\s+me\s+about|explain|describe|define|where\s+is|what\s+are)\s+', '', query.strip(), flags=re.IGNORECASE)
+        cleaned = re.sub(r'[?!.]+$', '', cleaned).strip()
+        if not cleaned or len(cleaned) < 2:
+            return None
+        wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(cleaned)}&format=json&origin=*"
+        req = urllib.request.Request(wiki_url, headers={'User-Agent': 'VANI-xAI/1.0'})
+        with urllib.request.urlopen(req, timeout=3) as res:
+            data = json.loads(res.read().decode('utf-8'))
+            results = data.get('query', {}).get('search', [])
+            if results:
+                top = results[0]
+                title = top.get('title')
+                snippet = top.get('snippet', '').replace('<span class="searchmatch">', '').replace('</span>', '').replace('&quot;', '"').replace('&#039;', "'")
+                page_url = f"https://en.wikipedia.org/wiki/{urllib.parse.quote(title.replace(' ', '_'))}"
+                return f"<strong>{title}</strong>: {snippet}... (<a href='{page_url}' target='_blank' style='color:#06b6d4; font-weight:600;'>Read full article</a>)"
+    except Exception:
+        pass
+    return None
+
 def parse_with_rules(text):
     """
-    Fallback regex/rules-based parser when Gemini API is not configured.
+    Fallback regex/rules-based parser and intelligent local web reasoning engine.
     Returns a dictionary of action and parameters.
     """
     text_lower = text.lower().strip()
 
-    # Advanced Jarvis-level shortcuts
-    # 0.1 Lock Workstation
-    if any(k in text_lower for k in ['lock workstation', 'lock windows', 'lock my pc', 'lock pc']):
-        return {'action': 'lock_windows'}
+    # 1. Creator / Founder / Developer Queries
+    if any(k in text_lower for k in ['founder', 'creator', 'developer', 'who created', 'who made', 'who built', 'who is dhruv', 'dhruv sagar']):
+        return {
+            'action': 'chat',
+            'message': 'I was created and envisioned by <strong>Dhruv Sagar</strong>. Explore the full story on our <a href="/about-founder" target="_blank" style="color:#06b6d4; font-weight:600;">About Founder</a> and <a href="/about-developer" target="_blank" style="color:#06b6d4; font-weight:600;">About Developer</a> pages.'
+        }
 
-    # 0.2 Screenshot
-    if any(k in text_lower for k in ['mobile screenshot', 'screenshot of mobile', 'screenshot on mobile', 'screenshot of phone']):
-        return {'action': 'take_mobile_screenshot'}
-    elif any(k in text_lower for k in ['screenshot', 'capture screen', 'take a screen']):
-        return {'action': 'take_screenshot'}
+    # 2. Identity / Name
+    if any(k in text_lower for k in ['who are you', 'what is your name', 'your name', 'what is vani', 'what is vani-xai', 'what are you']):
+        return {
+            'action': 'chat',
+            'message': 'I am <strong>V.A.N.I-xAI</strong> (Vāṇī Adhyātmik Navīn Intellect) &mdash; your intelligent web AI assistant. <em>Don\'t Assume, Verify.</em> How may I assist you today?'
+        }
 
-    # 0.3 System Volume
-    if any(k in text_lower for k in ['volume up', 'increase volume', 'volume increase']):
-        return {'action': 'set_volume', 'volume_action': 'up'}
-    elif any(k in text_lower for k in ['volume down', 'decrease volume', 'volume decrease']):
-        return {'action': 'set_volume', 'volume_action': 'down'}
-    elif any(k in text_lower for k in ['mute volume', 'unmute volume', 'mute system', 'mute pc', 'mute', 'unmute']):
-        return {'action': 'set_volume', 'volume_action': 'mute'}
+    # 3. Greetings & Well-being
+    if re.search(r'\b(how are you|kaise ho|kya haal|how do you do)\b', text_lower):
+        return {
+            'action': 'chat',
+            'message': 'I am operating at peak efficiency! Ready to assist your web browsing, calculations, and tasks. How can I help you today?'
+        }
 
-    # 0.4 Open URL / Website
+    if re.match(r'^(hi|hello|hey|namaste|greetings|hola|good\s+morning|good\s+evening|good\s+afternoon)(\s+vani|\s+there|\s+assistant)?$', text_lower) or text_lower in ['hi', 'hello', 'hey']:
+        return {
+            'action': 'chat',
+            'message': 'Namaste! I am V.A.N.I-xAI. How can I assist your workflow today? Try asking me to search the web, calculate formulas, or explore Saras tools.'
+        }
+
+    # 3.5 Jokes / Fun
+    if 'joke' in text_lower:
+        return {
+            'action': 'chat',
+            'message': 'Why do programmers prefer dark mode? Because light attracts bugs! :)'
+        }
+
+    # 4. Capabilities & Help
+    if any(k in text_lower for k in ['help', 'what can you do', 'features', 'capabilities', 'guide', 'menu']):
+        return {
+            'action': 'chat',
+            'message': 'Here are some things I can do for you on the web:<br>'
+                       '&bull; <strong>Saras.WebSearch:</strong> In-app zero-tab web search (e.g. <code>search quantum computing</code>)<br>'
+                       '&bull; <strong>Instant Math & Logic:</strong> Evaluate formulas (e.g. <code>calculate 25 * 48</code>)<br>'
+                       '&bull; <strong>Website Navigation:</strong> Open any link (e.g. <code>open youtube</code>, <code>open github</code>)<br>'
+                       '&bull; <strong>Voice Synthesis:</strong> Hands-free voice speech and recognition<br>'
+                       '&bull; <strong>Swarm & Security:</strong> Multi-device synchronization and lockdown defense'
+        }
+
+    # 5. Math / Calculation
+    math_match = re.search(r'^(?:calculate|compute|what\s+is|solve)\s+([0-9\+\-\*\/\^\(\)\.\s\%]+)$', text_lower)
+    if not math_match:
+        math_match = re.search(r'^([0-9\+\-\*\/\^\(\)\.\s]{3,})$', text_lower)
+    if math_match:
+        try:
+            expr = math_match.group(1).replace('^', '**').strip()
+            if re.match(r'^[0-9\+\-\*\/\(\)\.\s]+$', expr):
+                result = eval(expr, {"__builtins__": None}, {})
+                return {
+                    'action': 'chat',
+                    'message': f"Calculation: <code>{expr}</code> = <strong>{result}</strong>"
+                }
+        except Exception:
+            pass
+
+    # 6. Current Time and Date
+    if 'time' in text_lower and any(k in text_lower for k in ['what', 'current', 'now', 'tell me']):
+        import datetime
+        now_str = datetime.datetime.now().strftime("%I:%M:%S %p")
+        return {
+            'action': 'chat',
+            'message': f"The current time is <strong>{now_str}</strong>."
+        }
+    if 'date' in text_lower and any(k in text_lower for k in ['what', 'today', 'current', 'tell me']):
+        import datetime
+        date_str = datetime.datetime.now().strftime("%A, %B %d, %Y")
+        return {
+            'action': 'chat',
+            'message': f"Today's date is <strong>{date_str}</strong>."
+        }
+
+    # 6.5 System Storage & RAM Queries
+    if any(k in text_lower for k in ['storage', 'disk space', 'hard drive', 'free space', 'memory left', 'ram usage', 'system storage']):
+        try:
+            import psutil
+            partitions = psutil.disk_partitions(all=False)
+            storage_rows = []
+            for p in partitions:
+                try:
+                    usage = psutil.disk_usage(p.mountpoint)
+                    total_gb = usage.total / (1024**3)
+                    free_gb = usage.free / (1024**3)
+                    used_gb = usage.used / (1024**3)
+                    storage_rows.append(
+                        f"&bull; <strong>Drive {p.device}</strong>: <strong>{free_gb:.2f} GB free</strong> of {total_gb:.2f} GB ({usage.percent}% used)"
+                    )
+                except Exception:
+                    pass
+            mem = psutil.virtual_memory()
+            mem_free_gb = mem.available / (1024**3)
+            mem_total_gb = mem.total / (1024**3)
+            res_text = "<br>".join(storage_rows)
+            res_text += f"<br>&bull; <strong>RAM:</strong> <strong>{mem_free_gb:.2f} GB available</strong> of {mem_total_gb:.2f} GB ({mem.percent}% used)"
+            return {
+                'action': 'chat',
+                'message': f"<strong>Current Laptop Storage & Resource Status:</strong><br>{res_text}"
+            }
+        except Exception:
+            pass
+
+    # 7. Saras Web Search / Google Search Queries
+    search_match = re.search(r'^(?:search(?:\s+web|\s+google)?\s+(?:for\s+)?|google\s+|saras\s+search\s+)(.+)$', text_lower)
+    if search_match:
+        query_val = search_match.group(1).strip()
+        return {
+            'action': 'saras_web_search',
+            'query': query_val,
+            'message': f"Launching <strong>Saras.WebSearch</strong> for '<strong>{query_val}</strong>'..."
+        }
+
+    # 8. Open URL / Website
     url_match = re.search(r'(?:open\s+(?:website|link|url)\s+|go\s+to\s+)([a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}\S*)', text_lower)
     if url_match:
         return {'action': 'open_url', 'url': url_match.group(1)}
@@ -53,176 +174,40 @@ def parse_with_rules(text):
         parts = text_lower.replace('go to ', '').replace('open ', '').strip().split(' ')
         potential_url = parts[-1]
         
-        # If it has a dot, treat as URL
         if '.' in potential_url and len(potential_url) > 3 and not potential_url.endswith('.'):
             return {'action': 'open_url', 'url': potential_url}
-        # If it's a known website or a single word, treat as URL
         elif len(parts) == 1 and potential_url not in ['notepad', 'calculator', 'cmd', 'terminal', 'explorer', 'settings']:
             return {'action': 'open_url', 'url': f"https://www.{potential_url}.com"}
-    
-    # 1. WhatsApp Call
-    # Match voice/video whatsapp calls. E.g. "whatsapp video call to 12345", "whatsapp call 12345"
-    whatsapp_call_match = re.search(r'whatsapp\s+(video|voice)?\s*call\s+(?:to\s+)?(\+?[\d\s\-]+)', text_lower)
-    if whatsapp_call_match:
-        call_type = whatsapp_call_match.group(1) if whatsapp_call_match.group(1) else 'voice'
-        phone_number = whatsapp_call_match.group(2).strip()
-        target = 'desktop' if 'desktop' in text_lower else ('mobile' if 'mobile' in text_lower else None)
+
+    # 9. Knowledge & Factual Queries (Wikipedia / Knowledge Engine)
+    if any(text_lower.startswith(p) for p in ['what is', 'who is', 'who was', 'tell me about', 'explain', 'describe', 'define', 'where is', 'what are']):
+        knowledge_ans = query_knowledge_engine(text)
+        if knowledge_ans:
+            return {
+                'action': 'chat',
+                'message': knowledge_ans
+            }
+
+    # General Knowledge Query Fallback
+    knowledge_ans = query_knowledge_engine(text)
+    if knowledge_ans:
         return {
-            'action': 'make_whatsapp_call',
-            'phone_number': phone_number,
-            'call_type': call_type,
-            'target': target
-        }
-        
-    # 2. WhatsApp Message
-    # Match: "send whatsapp message to 12345 saying hello", "whatsapp message to 12345: hello", "whatsapp 12345 saying hello"
-    whatsapp_msg_match = re.search(
-        r'(?:send\s+)?whatsapp(?:\s+message)?\s+(?:to\s+)?(\+?[\d\s\-]+)\s+(?:saying|with|text)?\s*[:"\']?(.*?)["\']?$', 
-        text_lower
-    )
-    if whatsapp_msg_match:
-        phone_number = whatsapp_msg_match.group(1).strip()
-        message_text = whatsapp_msg_match.group(2).strip()
-        # Clean up any leading/trailing quote characters
-        message_text = re.sub(r'^[:"\']+|[:"\']+$', '', message_text).strip()
-        # Retrieve case-sensitive original message text from original user input if needed
-        # but let's do a simple extract from original string to preserve casing
-        start_idx = text.lower().find(message_text.lower())
-        if start_idx != -1:
-            message_text = text[start_idx:start_idx + len(message_text)]
-            
-        target = 'desktop' if 'desktop' in text_lower else ('mobile' if 'mobile' in text_lower else None)
-        return {
-            'action': 'send_whatsapp_message',
-            'phone_number': phone_number,
-            'message_text': message_text,
-            'target': target
+            'action': 'chat',
+            'message': knowledge_ans
         }
 
-    # 2.5 Cross-Device WhatsApp Paste
-    clipboard_wa_match = re.search(
-        r'(?:whatsapp|send)\s+(?:pc\s+)?(?:clipboard|link|text|screen)\s+(?:to\s+)?(\+?[\d\s\-]+)', 
-        text_lower
-    )
-    if clipboard_wa_match:
-        phone_number = clipboard_wa_match.group(1).strip()
-        return {
-            'action': 'cross_device_whatsapp_paste',
-            'phone_number': phone_number
-        }
-        
-    # 2.6 Semantic Search
-    semantic_match = re.search(r'(?:find|search|where is).*(?:document|file|presentation|text).*(?:about|where i talked about|mentioning|related to)\s+(.*)', text_lower)
-    if semantic_match:
-        return {
-            'action': 'semantic_search',
-            'query': semantic_match.group(1).strip()
-        }
-    
-    index_match = re.search(r'(?:build|create|start)\s+(?:semantic\s+)?index', text_lower)
-    if index_match:
-        return {'action': 'build_semantic_index'}
-
-    # 3. Cellular Phone Call
-    # Match: "call dhruv", "phone call to 12345", "dial dhruv sagar"
-    phone_call_match = re.search(r'\b(?:call|phone\s+call\s+to|dial)\s+(.+)$', text_lower)
-    if phone_call_match:
-        target = phone_call_match.group(1).strip()
-        # Remove extra words if any
-        target = re.sub(r'\b(on\s+desktop|on\s+mobile|now)\b', '', target).strip()
-        return {
-            'action': 'make_phone_call',
-            'contact_name_or_number': target
-        }
-
-    # 4. Open Mobile App
-    # Match: "open chrome on mobile", "open mobile app youtube"
-    open_mobile_match = re.search(r'open\s+(?:mobile\s+app\s+)?(\w+)(?:\s+on\s+mobile)?', text_lower)
-    if open_mobile_match and ('on mobile' in text_lower or 'mobile app' in text_lower):
-        app_name = open_mobile_match.group(1)
-        package = MOBILE_APP_PACKAGES.get(app_name, app_name)
-        return {
-            'action': 'open_mobile_app',
-            'package_name': package
-        }
-
-    # 5. Close Mobile App
-    # Match: "close chrome on mobile", "close mobile app youtube"
-    close_mobile_match = re.search(r'close\s+(?:mobile\s+app\s+)?(\w+)(?:\s+on\s+mobile)?', text_lower)
-    if close_mobile_match and ('on mobile' in text_lower or 'mobile app' in text_lower):
-        app_name = close_mobile_match.group(1)
-        package = MOBILE_APP_PACKAGES.get(app_name, app_name)
-        return {
-            'action': 'close_mobile_app',
-            'package_name': package
-        }
-
-    # 6. Desktop Automation actions
-    # "type hello world", "press enter", "hotkey ctrl+c"
-    if text_lower.startswith('type '):
-        val = text[5:] # preserve case
-        return {
-            'action': 'use_desktop_app',
-            'desktop_action': 'type',
-            'value': val
-        }
-    elif text_lower.startswith('press '):
-        key = text_lower[6:]
-        return {
-            'action': 'use_desktop_app',
-            'desktop_action': 'press',
-            'value': key
-        }
-    elif text_lower.startswith('hotkey ') or text_lower.startswith('press hotkey '):
-        val = text_lower.replace('press hotkey ', '').replace('hotkey ', '')
-        return {
-            'action': 'use_desktop_app',
-            'desktop_action': 'hotkey',
-            'value': val
-        }
-    elif text_lower.startswith('click') or text_lower.startswith('click at '):
-        val = text_lower.replace('click at ', '').replace('click', '').strip()
-        return {
-            'action': 'use_desktop_app',
-            'desktop_action': 'click',
-            'value': val if val else None
-        }
-    elif text_lower.startswith('double click') or text_lower.startswith('double click at '):
-        val = text_lower.replace('double click at ', '').replace('double click', '').strip()
-        return {
-            'action': 'use_desktop_app',
-            'desktop_action': 'double_click',
-            'value': val if val else None
-        }
-    elif text_lower.startswith('wait ') or text_lower.startswith('sleep '):
-        val = text_lower.split()[-1]
-        return {
-            'action': 'use_desktop_app',
-            'desktop_action': 'wait',
-            'value': val
-        }
-
-    # 7. Open Desktop App
-    # Match: "open chrome", "open notepad", "launch calculator"
-    open_desktop_match = re.search(r'\b(?:open|launch)\s+([\w\s]+)', text_lower)
-    if open_desktop_match:
-        app_name = open_desktop_match.group(1).strip()
-        return {
-            'action': 'open_desktop_app',
-            'app_name': app_name
-        }
-
-    # Unknown
+    # Conversational Fallback
     return {
-        'action': 'unknown',
-        'message': f"I couldn't parse the command '{text}'. Please try a supported command format."
+        'action': 'chat',
+        'message': f"I received: '<em>{text}</em>'. You can search the web with Saras.WebSearch by saying <code>search {text}</code> or ask a question."
     }
 
-def parse_command(text, personality='helpful'):
+def parse_command(text, personality='helpful', api_key=None):
     """
     Parse user prompt. Uses OpenRouter if configured, else falls back to regex rules.
     """
-    api_key = os.environ.get("OPENROUTER_API_KEY", "")
+    if not api_key:
+        api_key = os.environ.get("OPENROUTER_API_KEY", "")
 
     personality_rule = "- Adopt a friendly, helpful, and clear assistant persona."
     if personality == 'jarvis':
@@ -414,7 +399,8 @@ JSON:
         content = llm_router.call_llm_with_fallback(
             messages,
             models=llm_router.FAST_FREE_MODELS,
-            timeout_per_model=4
+            timeout_per_model=4,
+            custom_api_key=api_key
         )
         
         # Clean markdown formatting if model output includes ```json ... ```
@@ -433,17 +419,6 @@ JSON:
 
     except Exception as e:
         error_msg = str(e)
-        print(f"[NLP_PARSER] LLM Router error: {error_msg}. Falling back to rules.", flush=True)
-        fallback = parse_with_rules(text)
-        if fallback.get('action') == 'unknown':
-            if "rate-limited" in error_msg.lower() or "429" in error_msg:
-                return {
-                    'action': 'unknown',
-                    'message': "The AI models are currently rate-limited. Please try again shortly or use exact command phrases (like 'take screenshot')."
-                }
-            return {
-                'action': 'unknown',
-                'message': f"AI Provider Error. Please use an exact command phrase."
-            }
-        return fallback
+        print(f"[NLP_PARSER] LLM Router error: {error_msg}. Falling back to web reasoning rules.", flush=True)
+        return parse_with_rules(text)
 

@@ -136,6 +136,9 @@ def use_desktop_app(action, value=None):
     Supported actions: 'type', 'press', 'hotkey', 'click', 'double_click', 'wait'
     """
     log_status(f"Executing desktop automation: action={action}, value={value}")
+    if pyautogui is None:
+        return "Desktop automation interface not available in current web environment."
+        
     try:
         # Move mouse slightly if currently in a screen corner to prevent PyAutoGUI fail-safe exception
         mx, my = pyautogui.position()
@@ -266,9 +269,14 @@ def send_desktop_whatsapp_message(phone_number, message_text):
 def take_desktop_screenshot():
     """Capture a full screenshot of the desktop, save it to the static folder, and return its URL."""
     log_status("Taking desktop screenshot...")
+    if pyautogui is None:
+        return {
+            'success': False,
+            'message': "Screenshot capture is handled client-side in the browser."
+        }
     try:
         # Ensure static/screenshots directory exists
-        screenshots_dir = os.path.join(os.path.dirname(__file__), 'static', 'screenshots')
+        screenshots_dir = os.path.join(os.path.dirname(__file__), 'public', 'screenshots')
         os.makedirs(screenshots_dir, exist_ok=True)
         
         filename = f"screenshot_{int(time.time())}.png"
@@ -278,7 +286,7 @@ def take_desktop_screenshot():
         screenshot = pyautogui.screenshot()
         screenshot.save(filepath)
         
-        url = f"/static/screenshots/{filename}"
+        url = f"/screenshots/{filename}"
         log_status(f"Screenshot saved successfully: {url}")
         return {
             'success': True,
@@ -329,6 +337,8 @@ def lock_windows():
 def set_volume(action):
     """Adjust volume using keyboard key events."""
     log_status(f"Adjusting volume: {action}")
+    if pyautogui is None:
+        return f"Volume command received: {action}."
     try:
         if action == 'mute':
             pyautogui.press('volumemute')

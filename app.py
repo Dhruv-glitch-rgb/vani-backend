@@ -18,14 +18,18 @@ import agentic_loop
 import psutil
 import platform
 import time
+import logger
 
 # Setup flask app
-# Ensure template and static folders are loaded from correct directories
+# Ensure template and static folders are loaded from public directory (single source of truth)
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
+PUBLIC_DIR = os.path.join(WORKSPACE_DIR, 'public')
+
 app = Flask(
     __name__, 
-    template_folder=os.path.join(WORKSPACE_DIR, 'templates'), 
-    static_folder=os.path.join(WORKSPACE_DIR, 'static')
+    template_folder=PUBLIC_DIR, 
+    static_folder=PUBLIC_DIR,
+    static_url_path=''
 )
 CORS(app)
 
@@ -34,22 +38,120 @@ def add_pna_header(response):
     response.headers['Access-Control-Allow-Private-Network'] = 'true'
     return response
 
-import logger
-
 def add_log(msg):
     logger.log_status('SYSTEM', msg)
 
-# Route: Serve UI
+# ----------------------------------------------------
+# WEB PAGE ROUTES
+# ----------------------------------------------------
+
 @app.route('/')
+@app.route('/index.html')
 def index():
-    return render_template('index.html')
+    return send_from_directory(PUBLIC_DIR, 'index.html')
 
 @app.route('/auth-vani-xai.html')
-def auth():
-    return render_template('auth-vani-xai.html')
+@app.route('/auth')
+def auth_page():
+    return send_from_directory(PUBLIC_DIR, 'auth-vani-xai.html')
 
+@app.route('/pin-vaniXai.html')
+@app.route('/pin')
+def pin_page():
+    return send_from_directory(PUBLIC_DIR, 'pin-vaniXai.html')
 
-# Endpoint: Run command
+@app.route('/settings.html')
+@app.route('/settings')
+def settings_page():
+    return send_from_directory(PUBLIC_DIR, 'settings.html')
+
+@app.route('/premium.html')
+@app.route('/premium')
+def premium_page():
+    return send_from_directory(PUBLIC_DIR, 'premium.html')
+
+@app.route('/saras_web_search.html')
+@app.route('/websearch')
+@app.route('/saras_web_search')
+def saras_web_search_page():
+    return send_from_directory(PUBLIC_DIR, 'saras_web_search.html')
+
+@app.route('/saras_vani_chat.html')
+@app.route('/chat')
+def saras_vani_chat_page():
+    return send_from_directory(PUBLIC_DIR, 'saras_vani_chat.html')
+
+@app.route('/saras_vani_search.html')
+@app.route('/radar')
+def saras_vani_search_page():
+    return send_from_directory(PUBLIC_DIR, 'saras_vani_search.html')
+
+@app.route('/terms.html')
+@app.route('/terms')
+def terms_page():
+    return send_from_directory(PUBLIC_DIR, 'terms.html')
+
+@app.route('/privacy.html')
+@app.route('/privacy')
+def privacy_page():
+    return send_from_directory(PUBLIC_DIR, 'privacy.html')
+
+@app.route('/faq.html')
+@app.route('/faq')
+def faq_page():
+    return send_from_directory(PUBLIC_DIR, 'faq.html')
+
+@app.route('/about-founder.html')
+@app.route('/about-founder')
+@app.route('/about_founder')
+def about_founder_page():
+    return send_from_directory(PUBLIC_DIR, 'about-founder.html')
+
+@app.route('/about-developer.html')
+@app.route('/about-developer')
+@app.route('/about_developer')
+def about_developer_page():
+    return send_from_directory(PUBLIC_DIR, 'about-developer.html')
+
+@app.route('/connect-with-us.html')
+@app.route('/connect-with-us')
+def connect_with_us_page():
+    return send_from_directory(PUBLIC_DIR, 'connect-with-us.html')
+
+@app.route('/users-details.html')
+@app.route('/users-details')
+def users_details_page():
+    return send_from_directory(PUBLIC_DIR, 'users-details.html')
+
+@app.route('/admin-vaniXai.html')
+@app.route('/admin')
+def admin_page():
+    return send_from_directory(PUBLIC_DIR, 'admin-vaniXai.html')
+
+@app.route('/admin-users-list.html')
+def admin_users_list():
+    return send_from_directory(PUBLIC_DIR, 'admin-users-list.html')
+
+@app.route('/admin-premium-requests.html')
+def admin_premium_requests():
+    return send_from_directory(PUBLIC_DIR, 'admin-premium-requests.html')
+
+@app.route('/activation-subplan.html')
+def activation_subplan():
+    return send_from_directory(PUBLIC_DIR, 'activation-subplan.html')
+
+@app.route('/blocked.html')
+def blocked_page():
+    return send_from_directory(PUBLIC_DIR, 'blocked.html')
+
+@app.route('/banned.html')
+def banned_page():
+    return send_from_directory(PUBLIC_DIR, 'banned.html')
+
+# ----------------------------------------------------
+# API ENDPOINTS
+# ----------------------------------------------------
+
 @app.route('/api/command', methods=['POST'])
 def handle_command():
     data = request.json or {}
@@ -64,24 +166,35 @@ def handle_command():
     memory_manager.add_message('user', command)
     
     personality = data.get('personality', 'helpful')
+    custom_api_key = request.headers.get('X-OpenRouter-Key') or data.get('apiKey')
     
     # Parse the command
-    parsed = nlp_parser.parse_command(command, personality=personality)
+    parsed = nlp_parser.parse_command(command, personality=personality, api_key=custom_api_key)
     action = parsed.get('action')
     
     result_message = ""
     success = True
 
     try:
-        if action == 'open_desktop_app':
+        if action == 'saras_web_search':
+            query = parsed.get('query', '')
+            result_message = parsed.get('message', f"Searching for '{query}' in Saras.WebSearch...")
+            return jsonify({
+                'success': True,
+                'action': 'saras_web_search',
+                'query': query,
+                'message': result_message
+            })
+
+        elif action == 'open_desktop_app':
             app_name = parsed.get('app_name')
-            add_log(f"Running desktop execution: Open app '{app_name}'")
+            add_log(f"Running execution: Open app '{app_name}'")
             result_message = desktop_helper.open_desktop_app(app_name)
 
         elif action == 'use_desktop_app':
             desktop_action = parsed.get('desktop_action')
             value = parsed.get('value')
-            add_log(f"Running desktop automation: {desktop_action} ('{value}')")
+            add_log(f"Running automation: {desktop_action} ('{value}')")
             result_message = desktop_helper.use_desktop_app(desktop_action, value)
 
         elif action == 'make_phone_call':
@@ -91,24 +204,23 @@ def handle_command():
         elif action == 'make_whatsapp_call':
             phone_number = parsed.get('phone_number')
             call_type = parsed.get('call_type', 'voice')
-            add_log(f"Running desktop execution: Make WhatsApp {call_type} call to '{phone_number}'")
+            add_log(f"Running execution: WhatsApp {call_type} call to '{phone_number}'")
             result_message = desktop_helper.make_desktop_whatsapp_call(phone_number, call_type)
 
         elif action == 'send_whatsapp_message':
             phone_number = parsed.get('phone_number')
             message_text = parsed.get('message_text')
-            add_log(f"Running desktop execution: Send WhatsApp message to '{phone_number}'")
+            add_log(f"Running execution: Send WhatsApp message to '{phone_number}'")
             result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, message_text)
 
         elif action == 'cross_device_whatsapp_paste':
             phone_number = parsed.get('phone_number')
-            add_log(f"Running Swarm execution: Read PC clipboard and WhatsApp to '{phone_number}'")
+            add_log(f"Running Swarm execution: Send clipboard to '{phone_number}'")
             clipboard_text = desktop_helper.get_clipboard_text()
             if not clipboard_text.strip():
                 success = False
                 result_message = "Clipboard is empty or could not be read."
             else:
-                add_log(f"Swarm: Sending clipboard via Desktop WhatsApp")
                 result_message = desktop_helper.send_desktop_whatsapp_message(phone_number, clipboard_text)
 
         elif action == 'autonomous_goal':
@@ -137,26 +249,24 @@ def handle_command():
             result_message = semantic_search.searcher.search(query)
 
         elif action == 'take_screenshot':
-            add_log("Running desktop execution: Capture screenshot")
+            add_log("Running execution: Capture screenshot")
             result_message = desktop_helper.take_desktop_screenshot()
             if isinstance(result_message, dict) and not result_message.get('success', True):
                 success = False
 
-
         elif action == 'lock_windows':
-            add_log("Running desktop execution: Lock workstation")
+            add_log("Running execution: Lock workstation")
             result_message = desktop_helper.lock_windows()
 
         elif action == 'set_volume':
             vol_action = parsed.get('volume_action', 'mute')
-            add_log(f"Running desktop execution: Adjust volume ({vol_action})")
+            add_log(f"Running execution: Adjust volume ({vol_action})")
             result_message = desktop_helper.set_volume(vol_action)
 
         elif action == 'open_url':
             url_val = parsed.get('url')
-            add_log(f"Running desktop execution: Open URL '{url_val}'")
+            add_log(f"Running execution: Open URL '{url_val}'")
             result_message = desktop_helper.open_url(url_val)
-
 
         elif action == 'analyze_screen':
             add_log("Running vision execution: Analyze screen")
@@ -164,37 +274,40 @@ def handle_command():
             if isinstance(screen_data, dict) and screen_data.get('success'):
                 img_url = screen_data.get('image_url')
                 import base64
-                import urllib.request
-                import json
                 filepath = os.path.join(WORKSPACE_DIR, img_url.lstrip('/'))
-                with open(filepath, "rb") as image_file:
-                    encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-                
-                vision_prompt = command
-                import llm_router
-                messages = [
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": vision_prompt},
-                            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded_string}"}}
-                        ]
-                    }
-                ]
-                
-                try:
-                    result_message = llm_router.call_llm_with_fallback(
-                        messages,
-                        models=llm_router.VISION_FREE_MODELS,
-                        timeout_per_model=15
-                    )
-                    success = True
-                except Exception as e:
+                if os.path.exists(filepath):
+                    with open(filepath, "rb") as image_file:
+                        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+                    
+                    vision_prompt = command
+                    import llm_router
+                    messages = [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": vision_prompt},
+                                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded_string}"}}
+                            ]
+                        }
+                    ]
+                    
+                    try:
+                        result_message = llm_router.call_llm_with_fallback(
+                            messages,
+                            models=llm_router.VISION_FREE_MODELS,
+                            timeout_per_model=15,
+                            custom_api_key=custom_api_key
+                        )
+                        success = True
+                    except Exception as e:
+                        success = False
+                        result_message = f"Vision API failed: {e}"
+                else:
                     success = False
-                    result_message = f"Vision API failed: {e}"
+                    result_message = "Screenshot file not found for analysis."
             else:
                 success = False
-                result_message = "Failed to capture screenshot for analysis."
+                result_message = "Vision analysis: please upload an image or trigger web search."
 
         elif action == 'execute_python_script':
             script = parsed.get('script', '')
@@ -205,14 +318,14 @@ def handle_command():
                 f.write(script)
             try:
                 output = subprocess.check_output(['python', temp_path], stderr=subprocess.STDOUT, timeout=10, text=True)
-                result_message = f"Script Output:\\n{output.strip()}"
+                result_message = f"Script Output:\n{output.strip()}"
                 success = True
             except subprocess.TimeoutExpired:
                 success = False
                 result_message = "Script execution timed out after 10 seconds."
             except subprocess.CalledProcessError as e:
                 success = False
-                result_message = f"Script execution failed:\\n{e.output.strip()}"
+                result_message = f"Script execution failed:\n{e.output.strip()}"
             except Exception as e:
                 success = False
                 result_message = f"Failed to execute script: {e}"
@@ -242,7 +355,7 @@ def handle_command():
     # Store assistant response in memory if it's a valid string message
     if success and isinstance(result_message, str) and result_message.strip():
         memory_manager.add_message('assistant', result_message)
-        # Speak the response if voice agent is active
+        # Voice agent logs/synthesizes response
         voice_agent.speak(result_message)
     
     response_data = {
@@ -253,7 +366,6 @@ def handle_command():
     }
     
     if isinstance(result_message, dict):
-        # Flatten dictionary response fields (e.g. success, image_url, message)
         response_data.update(result_message)
         
     return jsonify(response_data)
@@ -266,62 +378,17 @@ def get_logs_endpoint():
         'logs': logs_list
     })
 
-@app.route('/terms')
-def terms_page():
-    return render_template('terms.html')
-
-@app.route('/privacy')
-def privacy_page():
-    return render_template('privacy.html')
-
-@app.route('/faq')
-def faq_page():
-    return render_template('faq.html')
-
-@app.route('/about-founder')
-def about_founder_page():
-    return render_template('about_founder.html')
-
-@app.route('/about-developer')
-def about_developer_page():
-    return render_template('about_developer.html')
-
-@app.route('/saras_web_search.html')
-@app.route('/websearch')
-def saras_web_search_page():
-    return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_web_search.html')
-
-@app.route('/saras_web_search.js')
-def saras_web_search_js():
-    return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_web_search.js')
-
-@app.route('/saras_vani_hud.html')
-@app.route('/hud')
-def saras_vani_hud_page():
-    return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_vani_hud.html')
-
-@app.route('/saras_vani_hud.js')
-def saras_vani_hud_js():
-    return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_vani_hud.js')
-
+# Endpoint: System Stats
 @app.route('/api/system-stats', methods=['GET'])
 def get_system_stats():
     try:
-        # CPU
         cpu_percent = psutil.cpu_percent(interval=0.1)
         cpu_count = psutil.cpu_count(logical=True)
         cpu_freq = psutil.cpu_freq()
         
-        # Memory
         mem = psutil.virtual_memory()
-        
-        # Disk
         disk = psutil.disk_usage('/')
-        
-        # Network
         net = psutil.net_io_counters()
-        
-        # System Uptime
         boot_time = psutil.boot_time()
         uptime_seconds = time.time() - boot_time
         
@@ -357,6 +424,16 @@ def get_system_stats():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+# Catch-all file server for public assets
+@app.route('/<path:path>')
+def serve_public_files(path):
+    if os.path.exists(os.path.join(PUBLIC_DIR, path)):
+        return send_from_directory(PUBLIC_DIR, path)
+    elif os.path.exists(os.path.join(PUBLIC_DIR, f"{path}.html")):
+        return send_from_directory(PUBLIC_DIR, f"{path}.html")
+    if os.path.exists(os.path.join(PUBLIC_DIR, '404.html')):
+        return send_from_directory(PUBLIC_DIR, '404.html'), 404
+    return "Not Found", 404
 
 if __name__ == '__main__':
     # Start Autonomous Agent

@@ -28,14 +28,66 @@ const appContainer = document.getElementById('app-container');
 const launchConsoleBtn = document.getElementById('launch-console-btn');
 
 // State Variables
+let authInstance = null;
 let isRecording = false;
 let recognition = null;
 let logPollingInterval = null;
 let adbPollingInterval = null;
 let localLogCount = 0;
+let userTier = 'Free'; // Default tier
+let todayMessageCount = parseInt(localStorage.getItem('vani_daily_msg_count') || '0');
+let lastMessageDate = localStorage.getItem('vani_last_msg_date');
+
+// Reset daily message count if it's a new day
+const today = new Date().toDateString();
+if (lastMessageDate !== today) {
+    todayMessageCount = 0;
+    localStorage.setItem('vani_daily_msg_count', '0');
+    localStorage.setItem('vani_last_msg_date', today);
+}
+
+// PWA Install Logic
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const installBtnMain = document.getElementById('pwa-install-btn');
+    const installBtnSettings = document.getElementById('pwa-install-btn-settings');
+    const installBtnConsole = document.getElementById('pwa-install-btn-console');
+    if (installBtnMain) installBtnMain.style.display = 'inline-flex';
+    if (installBtnSettings) installBtnSettings.style.display = 'inline-flex';
+    if (installBtnConsole) installBtnConsole.style.display = 'inline-flex';
+});
+
+function handleInstallClick() {
+    if (deferredPrompt) {
+        const customModal = document.getElementById('custom-install-modal');
+        if (customModal) {
+            customModal.style.display = 'flex';
+        } else {
+            triggerNativeInstall();
+        }
+    }
+}
+
+function triggerNativeInstall() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            deferredPrompt = null;
+        });
+    }
+}
 
 // Initialize Web Speech API
 function initSpeechRecognition() {
+    if (userTier === 'Free' || userTier === 'Starter') {
+        voiceStatusText.textContent = "Voice control requires Pro Tier or above.";
+        voiceBtn.disabled = true;
+        voiceBtn.style.opacity = 0.5;
+        return;
+    }
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
         voiceStatusText.textContent = "Voice control is not supported by your browser (use Chrome/Edge).";
@@ -148,17 +200,36 @@ function addChatMessage(sender, content, actionName = null, imageUrl = null) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel(); // Stop any ongoing speech
             
-            // Strip markdown/html from content for speaking
-            const cleanText = content.replace(/<[^>]+>/g, '').replace(/[*_~`]/g, '');
+            // Strip markdown/html and EMOJIS for speaking
+            let cleanText = content.replace(/<[^>]+>/g, '').replace(/[*_~`]/g, '');
+            // Regex to remove all emojis
+            cleanText = cleanText.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+
             const msg = new SpeechSynthesisUtterance(cleanText);
             
             const rate = parseFloat(localStorage.getItem('vani_speech_rate') || '1.0');
             msg.rate = rate;
             
-            // Try to pick a good voice
+            // 1. Try to pick an Indian Female voice (supports Hinglish natively on most OS)
             const voices = window.speechSynthesis.getVoices();
-            const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Microsoft') && v.lang.startsWith('en'));
-            if (preferredVoice) msg.voice = preferredVoice;
+            let preferredVoice = voices.find(v => 
+                (v.lang.includes('en-IN') || v.lang.includes('hi-IN')) && 
+                (v.name.includes('Female') || v.name.includes('Heera') || v.name.includes('Neerja'))
+            );
+            
+            // 2. Fallback to any Indian voice
+            if (!preferredVoice) {
+                preferredVoice = voices.find(v => v.lang.includes('en-IN') || v.lang.includes('hi-IN'));
+            }
+            
+            // 3. Fallback to any female voice
+            if (!preferredVoice) {
+                preferredVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('Google US English'));
+            }
+
+            if (preferredVoice) {
+                msg.voice = preferredVoice;
+            }
 
             window.speechSynthesis.speak(msg);
         }
@@ -176,65 +247,154 @@ function addTerminalLog(msg, type = '') {
     terminalLogs.scrollTop = terminalLogs.scrollHeight;
 }
 
+// Saras.WebSearch In-App Modal Handlers
+function openSarasWebSearchModal(query = '') {
+    const modal = document.getElementById('saras-websearch-modal');
+    const iframe = document.getElementById('saras-websearch-iframe');
+    if (modal) {
+        modal.style.display = 'flex';
+        if (iframe) {
+            let targetUrl = './saras_web_search.html';
+            if (query && query.trim()) {
+                targetUrl += '?q=' + encodeURIComponent(query.trim());
+            }
+            iframe.src = targetUrl;
+        }
+    } else {
+        window.location.href = query ? `/saras_web_search.html?q=${encodeURIComponent(query)}` : '/saras_web_search.html';
+    }
+}
+
+function closeSarasWebSearchModal() {
+    const modal = document.getElementById('saras-websearch-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+window.openSarasWebSearchModal = openSarasWebSearchModal;
+window.closeSarasWebSearchModal = closeSarasWebSearchModal;
+
 // Send command to backend API
 async function submitCommand(commandText) {
     if (!commandText.trim()) return;
+
+    // Check Premium Tier Limits
+    if (userTier === 'Free' && todayMessageCount >= 5) {
+        addChatMessage('assistant', 'You have reached your daily limit of 5 messages on the Free Plan. Please upgrade to Starter or higher to continue chatting.', 'error');
+        setTimeout(() => window.location.href = '/premium.html', 3000);
+        return;
+    }
+
+    todayMessageCount++;
+    localStorage.setItem('vani_daily_msg_count', todayMessageCount);
 
     // Display user message in chat
     addChatMessage('user', commandText);
     textInput.value = '';
 
-    // Client-Side Intercept for URLs (Mobile & Desktop)
+    // Client-Side Intercept for Google / Web Search (Saras.WebSearch)
     let lowerCmd = commandText.toLowerCase().trim();
-    if (lowerCmd.startsWith("open ") || lowerCmd.startsWith("go to ")) {
-        let parts = lowerCmd.replace("go to ", "").replace("open ", "").trim().split(" ");
-        let potentialUrl = parts[parts.length - 1];
-        
-        // Prevent intercepting known desktop apps so they go to the Python backend
-        const desktopApps = ['notepad', 'calculator', 'cmd', 'terminal', 'explorer', 'settings', 'chrome', 'edge', 'spotify', 'code', 'vscode'];
-        
-        if (potentialUrl.includes(".") && potentialUrl.length > 3 && !potentialUrl.endsWith(".")) {
-            // Keep as is, it's a domain
-        } else if (parts.length === 1 && !desktopApps.includes(potentialUrl)) {
-            potentialUrl = `https://www.${potentialUrl}.com`;
-        } else {
-            potentialUrl = ""; // It's an app, let backend handle it
-        }
+    const searchMatch = lowerCmd.match(/^(?:google|search\s+google\s+for|search\s+web\s+for|search\s+for|saras\s+search|web\s+search\s+for)\s+(.+)$/i);
+    if (searchMatch) {
+        const queryTerm = searchMatch[1].trim();
+        addChatMessage('assistant', `Searching for "<strong>${queryTerm}</strong>" in <strong>Saras.WebSearch</strong> without opening new tabs...`, 'saras_web_search');
+        openSarasWebSearchModal(queryTerm);
+        return;
+    }
 
-        if (potentialUrl) {
-            if (!potentialUrl.startsWith("http")) {
-                potentialUrl = "https://" + potentialUrl;
-            }
-            addChatMessage('bot', `Opening ${potentialUrl} in your browser...`);
-            window.open(potentialUrl, '_blank');
-            return; // Do not send to backend
+    // Direct Web Navigation Helper
+    if (lowerCmd.startsWith("open ") || lowerCmd.startsWith("go to ")) {
+        let target = lowerCmd.replace(/^go\s+to\s+/i, "").replace(/^open\s+/i, "").trim();
+        const webSites = {
+            'youtube': 'https://www.youtube.com',
+            'google': 'https://www.google.com',
+            'github': 'https://www.github.com',
+            'twitter': 'https://www.x.com',
+            'x': 'https://www.x.com',
+            'instagram': 'https://www.instagram.com',
+            'facebook': 'https://www.facebook.com',
+            'reddit': 'https://www.reddit.com',
+            'spotify': 'https://open.spotify.com',
+            'chatgpt': 'https://chat.openai.com',
+            'wikipedia': 'https://www.wikipedia.org',
+            'calculator': 'https://www.google.com/search?q=calculator'
+        };
+
+        if (webSites[target]) {
+            addChatMessage('assistant', `Opening <a href="${webSites[target]}" target="_blank" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">${target}</a> in a new tab...`);
+            window.open(webSites[target], '_blank');
+            return;
+        } else if (target.includes('.') && !target.includes(' ')) {
+            let url = target.startsWith('http') ? target : `https://${target}`;
+            addChatMessage('assistant', `Opening <a href="${url}" target="_blank" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">${url}</a> in a new tab...`);
+            window.open(url, '_blank');
+            return;
         }
     }
 
     try {
+        const customApiKey = localStorage.getItem('antigravity_openrouter_key') || localStorage.getItem('vani_api_key') || '';
+        const headers = { 
+            'Content-Type': 'application/json',
+            'Bypass-Tunnel-Reminder': 'true'
+        };
+        if (customApiKey) {
+            headers['X-OpenRouter-Key'] = customApiKey;
+            headers['Authorization'] = `Bearer ${customApiKey}`;
+        }
+
         const response = await fetch(`${BACKEND_URL}/api/command`, {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Bypass-Tunnel-Reminder': 'true' 
-            },
+            headers: headers,
             body: JSON.stringify({ 
                 command: commandText,
-                personality: localStorage.getItem('vani_personality') || 'helpful'
+                personality: localStorage.getItem('vani_personality') || 'helpful',
+                apiKey: customApiKey
             })
         });
 
-        const data = await response.json();
+        const apiData = await response.json();
         
-        if (response.ok && data.success) {
-            addChatMessage('assistant', data.message, data.action, data.image_url);
+        if (response.ok && apiData.success !== false) {
+            let data = {
+                action: apiData.action || 'chat',
+                message: apiData.message || ''
+            };
+            
+            if (data.action === 'make_phone_call') {
+                addChatMessage('assistant', `Initiating phone call...`, 'make_phone_call');
+                window.location.href = `tel:9999999999`;
+                return;
+            }
+            if (data.action === 'lockdown') {
+                addChatMessage('assistant', data.message, 'lockdown');
+                initiateLockdown();
+                return;
+            }
+            
+            if (data.action === 'swarm_sync') {
+                triggerSwarmHandoff();
+                return;
+            }
+
+            if (data.action === 'saras_web_search') {
+                openSarasWebSearchModal(commandText.replace(/^(search|google|saras search)\s+/i, ''));
+            }
+
+            addChatMessage('assistant', data.message, data.action || 'chat');
         } else {
-            addChatMessage('assistant', `Failed: ${data.message || 'Error occurred.'}`, data.action || 'unknown');
+            console.error("Backend Error:", apiData);
+            // Fallback to client response engine if backend returned error
+            const fallback = getClientFallbackResponse(commandText);
+            addChatMessage('assistant', fallback.message, fallback.action);
         }
     } catch (err) {
-        console.error("Command send error:", err);
-        addChatMessage('assistant', "Network error connecting to Flask backend. Make sure the server is running.");
-        addTerminalLog(`[SERVER ERROR] Failed to connect: ${err}`, 'error');
+        console.warn("Backend unavailable, using Web Intelligence Engine:", err);
+        // Instant Client-Side Intelligent Fallback when backend is offline
+        const fallback = getClientFallbackResponse(commandText);
+        addChatMessage('assistant', fallback.message, fallback.action);
+        addTerminalLog(`[WEB AI] Answered query locally: "${commandText}"`, 'success');
     }
 }
 
@@ -295,6 +455,174 @@ if (backendUrlInput) {
     });
 }
 
+// ----------------------------------------------------
+// FUTURISTIC UPGRADES: SWARM & LOCKDOWN
+// ----------------------------------------------------
+
+let swarmListenerUnsubscribe = null;
+
+function initializeSwarmAndLockdown(user) {
+    // 1. Swarm Listener
+    if (typeof db !== 'undefined') {
+        const swarmRef = db.collection('users').doc(user.uid).collection('swarm').doc('state');
+        swarmListenerUnsubscribe = swarmRef.onSnapshot(doc => {
+            if (doc.exists) {
+                const data = doc.data();
+                // If a handoff was triggered from another device recently (within last 30 seconds)
+                const now = new Date().getTime();
+                const triggerTime = data.triggeredAt ? data.triggeredAt.toMillis() : 0;
+                
+                if (now - triggerTime < 30000 && data.device !== navigator.userAgent) {
+                    addTerminalLog(`[SWARM] Received handoff from another device! Resuming context...`);
+                    // Apply theme if transferred
+                    if (data.theme) {
+                        localStorage.setItem('vani_theme', data.theme);
+                        if(data.theme === 'dark') {
+                            document.body.classList.add('dark-theme');
+                            document.body.classList.remove('inxv-theme');
+                        } else if(data.theme === 'inxv') {
+                            document.body.classList.add('inxv-theme');
+                            document.body.classList.remove('dark-theme');
+                        }
+                    }
+                    // Inform user
+                    addChatMessage('assistant', `Swarm sync complete! Resumed your session from another device.`);
+                    // Acknowledge receipt to stop loop
+                    swarmRef.update({ triggeredAt: 0 });
+                }
+            }
+        });
+    }
+}
+
+// Global Swarm Trigger Function
+async function triggerSwarmHandoff() {
+    if (!authInstance) return;
+    addTerminalLog(`[SWARM] Initiating cross-device handoff...`);
+    const theme = localStorage.getItem('vani_theme') || 'light';
+    
+    if (typeof db !== 'undefined') {
+        await db.collection('users').doc(authInstance.uid).collection('swarm').doc('state').set({
+            theme: theme,
+            device: navigator.userAgent,
+            triggeredAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, {merge: true});
+        
+        addChatMessage('assistant', 'Session context saved to Swarm. Open V.A.N.I-xAI on your phone to resume instantly.');
+    }
+}
+
+// Terminal Lockdown & Intruder Defense
+function initiateLockdown() {
+    const lockdownOverlay = document.getElementById('lockdown-overlay');
+    const lockdownPin = document.getElementById('lockdown-pin');
+    
+    if (!lockdownOverlay) return;
+    
+    addTerminalLog(`[SECURITY] Initiating Terminal Lockdown!`);
+    lockdownOverlay.classList.remove('hidden');
+    lockdownPin.value = '';
+    lockdownPin.focus();
+    
+    // Start silent capture loop for intruders
+    setupIntruderTrap();
+}
+
+let trapInterval = null;
+
+async function setupIntruderTrap() {
+    const video = document.getElementById('hidden-camera');
+    const lockdownPin = document.getElementById('lockdown-pin');
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        if (video) video.srcObject = stream;
+        
+        // Trap: If they click or type wrong, snap a photo
+        document.addEventListener('click', intruderSnap);
+        if (lockdownPin) lockdownPin.addEventListener('input', intruderSnap);
+        
+    } catch(err) {
+        console.error("Camera access denied for intruder trap", err);
+    }
+}
+
+function intruderSnap() {
+    const lockdownOverlay = document.getElementById('lockdown-overlay');
+    // Only snap occasionally to prevent spam
+    if (lockdownOverlay && !lockdownOverlay.classList.contains('hidden') && Math.random() > 0.8) {
+        captureAndUploadIntruder();
+    }
+}
+
+function captureAndUploadIntruder() {
+    if (!authInstance) return;
+    const video = document.getElementById('hidden-camera');
+    const canvas = document.getElementById('hidden-canvas');
+    if (!video.srcObject) return;
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    canvas.toBlob(blob => {
+        if (!blob) return;
+        // Upload to Firebase Storage
+        const storageRef = firebase.storage().ref();
+        const intruderRef = storageRef.child(`intruder_alerts/${authInstance.uid}/${new Date().getTime()}.jpg`);
+        intruderRef.put(blob).then(snapshot => {
+            console.log("Intruder photo uploaded secretly!");
+            // Log to Firestore
+            intruderRef.getDownloadURL().then(url => {
+                db.collection('intruder_alerts').add({
+                    userId: authInstance.uid,
+                    photoUrl: url,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            });
+        }).catch(e => console.error("Secret upload failed", e));
+    }, 'image/jpeg', 0.8);
+}
+
+function unlockTerminal() {
+    const lockdownOverlay = document.getElementById('lockdown-overlay');
+    const lockdownPin = document.getElementById('lockdown-pin');
+    
+    // Basic pin unlock for now (in production, use WebAuthn)
+    if (lockdownPin && lockdownPin.value === '1234') { // Default placeholder pin
+        if (lockdownOverlay) lockdownOverlay.classList.add('hidden');
+        addTerminalLog(`[SECURITY] Terminal Unlocked. Welcome back.`);
+        
+        // Stop trap
+        document.removeEventListener('click', intruderSnap);
+        lockdownPin.removeEventListener('input', intruderSnap);
+        
+        const video = document.getElementById('hidden-camera');
+        if (video && video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
+    } else if (lockdownPin) {
+        lockdownPin.style.borderColor = 'red';
+        setTimeout(() => lockdownPin.style.borderColor = '#334155', 1000);
+        captureAndUploadIntruder(); // They got the pin wrong!
+    }
+}
+
+// We need to attach event listeners inside DOMContentLoaded because main.js is loaded early
+window.addEventListener('DOMContentLoaded', () => {
+    const btnUnlock = document.getElementById('btn-unlock');
+    const lockdownPin = document.getElementById('lockdown-pin');
+    
+    if (btnUnlock) {
+        btnUnlock.addEventListener('click', unlockTerminal);
+    }
+    if (lockdownPin) {
+        lockdownPin.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') unlockTerminal();
+        });
+    }
+});
+
 // Page Initialization
 window.addEventListener('DOMContentLoaded', () => {
     // Load Settings
@@ -324,6 +652,42 @@ window.addEventListener('DOMContentLoaded', () => {
                         });
                     }
                 }
+                
+                // Fetch User Premium Tier
+                if (typeof db !== 'undefined') {
+                    // Initialize Swarm Listener
+                    initializeSwarmAndLockdown(user);
+                    
+                    db.collection('activation_keys')
+                        .where('userId', '==', user.uid)
+                        .where('isUsed', '==', true)
+                        .get()
+                        .then(snapshot => {
+                            if (!snapshot.empty) {
+                                let latestKey = null;
+                                let maxTime = 0;
+                                snapshot.forEach(k => {
+                                    const d = k.data();
+                                    const usedTime = d.usedAt ? (typeof d.usedAt.toMillis === 'function' ? d.usedAt.toMillis() : 0) : 0;
+                                    if(usedTime >= maxTime) {
+                                        maxTime = usedTime;
+                                        latestKey = d;
+                                    }
+                                });
+                                
+                                if (latestKey && latestKey.planName) {
+                                    userTier = latestKey.planName;
+                                    // Re-initialize speech if they have access now
+                                    if (userTier !== 'Free' && userTier !== 'Starter') {
+                                        voiceBtn.disabled = false;
+                                        voiceBtn.style.opacity = 1;
+                                        voiceStatusText.textContent = "Ready to listen.";
+                                        initSpeechRecognition();
+                                    }
+                                }
+                            }
+                        }).catch(e => console.error("Error fetching tier:", e));
+                }
                 if (shouldLaunch) {
                     // Auto-launch if authenticated and requested
                     landingPage.classList.add('hidden');
@@ -340,9 +704,13 @@ window.addEventListener('DOMContentLoaded', () => {
     if (launchConsoleBtn) {
         launchConsoleBtn.addEventListener('click', () => {
             if (typeof auth !== 'undefined' && auth.currentUser) {
-                landingPage.classList.add('hidden');
-                appContainer.classList.remove('hidden');
-                addTerminalLog(`[SYSTEM] Authenticated as ${auth.currentUser.email}. Session active.`);
+                if (sessionStorage.getItem('pin_verified') === 'true') {
+                    landingPage.classList.add('hidden');
+                    appContainer.classList.remove('hidden');
+                    addTerminalLog(`[SYSTEM] Authenticated as ${auth.currentUser.email}. Session active.`);
+                } else {
+                    window.location.href = './pin-vaniXai.html';
+                }
             } else {
                 // Redirect to Auth Page
                 window.location.href = './auth-vani-xai.html';
@@ -365,8 +733,9 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     // Restore API key if saved
-    const savedKey = localStorage.getItem('antigravity_openrouter_key');
-    if (savedKey) {
+    const apiKeyInput = document.getElementById('api-key-input') || document.getElementById('apiKeyInput') || document.getElementById('api-key');
+    const savedKey = localStorage.getItem('antigravity_openrouter_key') || localStorage.getItem('vani_api_key');
+    if (apiKeyInput && savedKey) {
         apiKeyInput.value = savedKey;
     }
 
@@ -377,7 +746,165 @@ window.addEventListener('DOMContentLoaded', () => {
         pollLogs();
         logPollingInterval = setInterval(pollLogs, 1500);
     }
-
     
+    // PWA Install Listeners
+    const installBtnMain = document.getElementById('pwa-install-btn');
+    const installBtnSettings = document.getElementById('pwa-install-btn-settings');
+    const installBtnConsole = document.getElementById('pwa-install-btn-console');
+    if (installBtnMain) installBtnMain.addEventListener('click', handleInstallClick);
+    if (installBtnSettings) installBtnSettings.addEventListener('click', handleInstallClick);
+    if (installBtnConsole) installBtnConsole.addEventListener('click', handleInstallClick);
+
+    // Custom Modal Listeners
+    const btnConfirmInstall = document.getElementById('btn-confirm-install');
+    const btnCancelInstall = document.getElementById('btn-cancel-install');
+    const customModal = document.getElementById('custom-install-modal');
+    
+    if (btnConfirmInstall) {
+        btnConfirmInstall.addEventListener('click', () => {
+            if (customModal) customModal.style.display = 'none';
+            triggerNativeInstall();
+        });
+    }
+    if (btnCancelInstall) {
+        btnCancelInstall.addEventListener('click', () => {
+            if (customModal) customModal.style.display = 'none';
+        });
+    }
+    
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service Worker registered', reg))
+            .catch(err => console.error('Service Worker registration failed', err));
+    }
+
     addTerminalLog("[SYSTEM] V.A.N.I-xAI interface loaded.");
 });
+
+// Quick Mute Toggle
+const quickMuteBtn = document.getElementById('quick-mute-btn');
+if (quickMuteBtn) {
+    const updateMuteIcon = () => {
+        const isMuted = localStorage.getItem('vani_auto_speak') === 'false';
+        if (isMuted) {
+            quickMuteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark" style="color: #ef4444;"></i>';
+            quickMuteBtn.classList.add('muted');
+            quickMuteBtn.classList.remove('unmuted');
+        } else {
+            quickMuteBtn.innerHTML = '<i class="fa-solid fa-volume-high" style="color: #10b981;"></i>';
+            quickMuteBtn.classList.add('unmuted');
+            quickMuteBtn.classList.remove('muted');
+        }
+    };
+    updateMuteIcon();
+    quickMuteBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isMuted = localStorage.getItem('vani_auto_speak') === 'false';
+        localStorage.setItem('vani_auto_speak', isMuted ? 'true' : 'false');
+        updateMuteIcon();
+        
+        // Add a little pop animation class temporarily
+        quickMuteBtn.style.transform = 'scale(1.2) rotate(' + (isMuted ? '10deg' : '-10deg') + ')';
+        setTimeout(() => { quickMuteBtn.style.transform = ''; }, 200);
+
+        if (!isMuted) {
+            window.speechSynthesis.cancel();
+        }
+    });
+}
+
+// ----------------------------------------------------
+// INTELLIGENT CLIENT-SIDE WEB RESPONSE ENGINE
+// ----------------------------------------------------
+function getClientFallbackResponse(rawText) {
+    const text = (rawText || '').trim();
+    const lower = text.toLowerCase();
+
+    // 1. Founder / Developer Info
+    if (lower.includes('founder') || lower.includes('creator') || lower.includes('developer') || lower.includes('who made') || lower.includes('who created') || lower.includes('who built')) {
+        return {
+            action: 'chat',
+            message: `I was created and envisioned by <strong>Dhruv Sagar</strong>. Learn more about the vision on our <a href="/about-founder" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">About Founder</a> and <a href="/about-developer" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">About Developer</a> pages.`
+        };
+    }
+
+    // 2. Identity / Name
+    if (lower.includes('who are you') || lower.includes('your name') || lower.includes('what is vani') || lower.includes('what are you')) {
+        return {
+            action: 'chat',
+            message: `I am <strong>V.A.N.I-xAI</strong> (Vāṇī Adhyātmik Navīn Intellect) &mdash; your intelligent web assistant. <em>Don't Assume, Verify.</em> How may I assist you today?`
+        };
+    }
+
+    // 3. Greetings
+    if (/^(hi|hello|hey|namaste|greetings|hola|good morning|good evening|good afternoon)(\s+vani|\s+there|\s+assistant)?$/i.test(lower) || lower === 'hi' || lower === 'hello') {
+        return {
+            action: 'chat',
+            message: `Namaste! I am V.A.N.I-xAI. How can I assist your workflow today? Try asking me to search the web, calculate formulas, check the time, or explore Saras tools.`
+        };
+    }
+
+    // 4. Help / Capabilities
+    if (lower.includes('help') || lower.includes('what can you do') || lower.includes('features') || lower.includes('commands')) {
+        return {
+            action: 'chat',
+            message: `Here are some of the things I can do on the web:<br>
+            &bull; <strong>Saras.WebSearch:</strong> In-app zero-tab web search (e.g. <code>search quantum computing</code>)<br>
+            &bull; <strong>Math & Reasoning:</strong> Instant calculations (e.g. <code>calculate 25 * 48</code>)<br>
+            &bull; <strong>Website Shortcuts:</strong> Direct navigation (e.g. <code>open youtube</code>, <code>open github</code>)<br>
+            &bull; <strong>Voice Synthesis:</strong> Click the microphone or toggle voice speech<br>
+            &bull; <strong>Security & Swarm:</strong> Multi-device synchronization and lockdown defense`
+        };
+    }
+
+    // 5. Math / Calculation
+    const mathMatch = lower.match(/^(?:calculate|compute|what is|solve)\s+([0-9\+\-\*\/\^\(\)\.\s\%]+)$/i) || lower.match(/^([0-9\+\-\*\/\^\(\)\.\s]+)$/);
+    if (mathMatch) {
+        try {
+            const expr = mathMatch[1].replace(/[^0-9\+\-\*\/\(\)\.]/g, '');
+            if (expr && expr.length > 0) {
+                // Safe evaluation with Function constructor limited to numbers and math operators
+                const result = Function(`'use strict'; return (${expr})`)();
+                return {
+                    action: 'chat',
+                    message: `Calculation: <code>${expr}</code> = <strong>${result}</strong>`
+                };
+            }
+        } catch (e) {
+            // Ignore parse errors
+        }
+    }
+
+    // 6. Time and Date
+    if (lower.includes('time') && (lower.includes('what') || lower.includes('current') || lower.includes('now'))) {
+        const now = new Date();
+        return {
+            action: 'chat',
+            message: `The current time is <strong>${now.toLocaleTimeString()}</strong>.`
+        };
+    }
+    if (lower.includes('date') && (lower.includes('what') || lower.includes('today') || lower.includes('current'))) {
+        const now = new Date();
+        return {
+            action: 'chat',
+            message: `Today's date is <strong>${now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>.`
+        };
+    }
+
+    // 7. Web Search intent
+    if (lower.startsWith('search ') || lower.startsWith('google ') || lower.startsWith('find ')) {
+        const q = text.replace(/^(search|google|find)\s+(for\s+)?/i, '').trim();
+        openSarasWebSearchModal(q);
+        return {
+            action: 'saras_web_search',
+            message: `Launching <strong>Saras.WebSearch</strong> for "<strong>${q}</strong>"...`
+        };
+    }
+
+    // 8. General conversational fallback
+    return {
+        action: 'chat',
+        message: `I received your command: "<em>${text}</em>". You can search the web by typing <code>search ${text}</code>, or open any tool from the top menu.`
+    };
+}

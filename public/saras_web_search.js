@@ -360,37 +360,39 @@
             console.warn("Wiki search fallback:", e);
         }
 
-        // 2. Fetch AI Synthesis via OpenRouter if available
-        try {
-            const OPENROUTER_KEY = "OPENROUTER_API_KEY_HERE"; // REPLACE WITH ACTUAL KEY
-            const aiRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${OPENROUTER_KEY}`,
-                    'HTTP-Referer': 'https://vani-nzdrsr.web.app',
-                    'X-Title': 'Saras.WebSearch'
-                },
-                body: JSON.stringify({
-                    model: "openrouter/auto",
-                    messages: [
-                        {
-                            role: "system",
-                            content: "You are Saras.WebSearch AI, an intelligent in-app web search summarizer. Provide a concise, clear 2-3 sentence overview answering the user's search query, including key facts or helpful links."
-                        },
-                        { role: "user", content: `Search query: ${query}` }
-                    ]
-                })
-            });
+        // 2. Fetch AI Synthesis via OpenRouter if custom key is available
+        const savedApiKey = localStorage.getItem('antigravity_openrouter_key') || localStorage.getItem('vani_api_key');
+        if (savedApiKey && savedApiKey.trim()) {
+            try {
+                const aiRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${savedApiKey.trim()}`,
+                        'HTTP-Referer': 'https://vani-nzdrsr.web.app',
+                        'X-Title': 'Saras.WebSearch'
+                    },
+                    body: JSON.stringify({
+                        model: "openrouter/free",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "You are Saras.WebSearch AI, an intelligent in-app web search summarizer. Provide a concise, clear 2-3 sentence overview answering the user's search query, including key facts or helpful links."
+                            },
+                            { role: "user", content: `Search query: ${query}` }
+                        ]
+                    })
+                });
 
-            if (aiRes.ok) {
-                const aiData = await aiRes.json();
-                if (aiData.choices && aiData.choices.length > 0) {
-                    summaryText = aiData.choices[0].message.content.trim();
+                if (aiRes.ok) {
+                    const aiData = await aiRes.json();
+                    if (aiData.choices && aiData.choices.length > 0) {
+                        summaryText = aiData.choices[0].message.content.trim();
+                    }
                 }
+            } catch (aiErr) {
+                console.warn("AI synthesis fallback:", aiErr);
             }
-        } catch (aiErr) {
-            console.warn("AI synthesis fallback:", aiErr);
         }
 
         // Update AI Overview Card
