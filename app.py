@@ -15,6 +15,9 @@ import memory_manager
 import autonomous_agent
 import voice_agent
 import agentic_loop
+import psutil
+import platform
+import time
 
 # Setup flask app
 # Ensure template and static folders are loaded from correct directories
@@ -291,6 +294,69 @@ def saras_web_search_page():
 @app.route('/saras_web_search.js')
 def saras_web_search_js():
     return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_web_search.js')
+
+@app.route('/saras_vani_hud.html')
+@app.route('/hud')
+def saras_vani_hud_page():
+    return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_vani_hud.html')
+
+@app.route('/saras_vani_hud.js')
+def saras_vani_hud_js():
+    return send_from_directory(os.path.join(WORKSPACE_DIR, 'public'), 'saras_vani_hud.js')
+
+@app.route('/api/system-stats', methods=['GET'])
+def get_system_stats():
+    try:
+        # CPU
+        cpu_percent = psutil.cpu_percent(interval=0.1)
+        cpu_count = psutil.cpu_count(logical=True)
+        cpu_freq = psutil.cpu_freq()
+        
+        # Memory
+        mem = psutil.virtual_memory()
+        
+        # Disk
+        disk = psutil.disk_usage('/')
+        
+        # Network
+        net = psutil.net_io_counters()
+        
+        # System Uptime
+        boot_time = psutil.boot_time()
+        uptime_seconds = time.time() - boot_time
+        
+        return jsonify({
+            'status': 'success',
+            'cpu': {
+                'percent': cpu_percent,
+                'cores': cpu_count,
+                'frequency': cpu_freq.current if cpu_freq else 0
+            },
+            'memory': {
+                'total': mem.total,
+                'available': mem.available,
+                'percent': mem.percent,
+                'used': mem.used
+            },
+            'disk': {
+                'total': disk.total,
+                'used': disk.used,
+                'free': disk.free,
+                'percent': disk.percent
+            },
+            'network': {
+                'bytes_sent': net.bytes_sent,
+                'bytes_recv': net.bytes_recv
+            },
+            'system': {
+                'os': platform.system(),
+                'release': platform.release(),
+                'uptime_seconds': uptime_seconds
+            }
+        })
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 if __name__ == '__main__':
     # Start Autonomous Agent

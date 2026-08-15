@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V.A.N.I@System.Info - Live System Widgets</title>
+    
+    <!-- External Dependencies -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Internal CSS -->
+    <link rel="stylesheet" href="./style.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(6, 182, 212, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08), transparent 25%);
+            color: #0f172a;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hud-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hud-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .hud-header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            margin: 0;
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #475569;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.2);
+            color: #1e293b;
+        }
+
+        .hud-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hud-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .hud-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #0ea5e9, #3b82f6);
+            opacity: 0.8;
+        }
+
+        .hud-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+        }
+
+        .hud-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .icon-cpu { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .icon-ram { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .icon-disk { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+        .icon-net { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .icon-sys { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+
+        .stat-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Progress Bar styles */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .progress-cpu { background: linear-gradient(90deg, #fca5a5, #ef4444); }
+        .progress-ram { background: linear-gradient(90deg, #6ee7b7, #10b981); }
+        .progress-disk { background: linear-gradient(90deg, #fcd34d, #f59e0b); }
+
+        /* Detail rows */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+        }
+        .detail-label { color: #64748b; font-weight: 500; }
+        .detail-val { color: #334155; font-family: 'Fira Code', monospace; font-weight: 500; }
+
+        /* Network Chart Mockup (CSS only for now) */
+        .net-rates {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .net-rate-box {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        /* Status dot */
+        .live-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #475569;
+            background: rgba(0,0,0,0.05);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        
+        .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        .error-state {
+            color: #ef4444;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hud-container">
+        <div class="hud-header">
+            <h1><i class="fa-solid fa-chart-line"></i> V.A.N.I@System.Info</h1>
+            
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="live-status" id="connection-status">
+                    <span class="dot" id="status-dot"></span> <span id="status-text">Connected to Core</span>
+                </div>
+                <a href="./index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Console</a>
+            </div>
+        </div>
+
+        <div class="hud-grid">
+            <!-- CPU Card -->
+            <div class="hud-card">
+                <div class="hud-card-header">
+                    <div class="hud-card-icon icon-cpu"><i class="fa-solid fa-microchip"></i></div>
+                    CPU Utilization
+                </div>
+                <div class="stat-value" id="cpu-percent">0%</div>
+                <div class="stat-label">Core Load</div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar progress-cpu" id="cpu-bar" style="width: 0%"></div>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div class="detail-row">
+                        <span class="detail-label">Logical Cores</span>
+                        <span class="detail-val" id="cpu-cores">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Frequency</span>
+                        <span class="detail-val" id="cpu-freq">- MHz</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Card -->
+            <div class="hud-card">
+                <div class="hud-card-header">
+                    <div class="hud-card-icon icon-ram"><i class="fa-solid fa-memory"></i></div>
+                    Memory (RAM)
+                </div>
+                <div class="stat-value" id="ram-percent">0%</div>
+                <div class="stat-label">System Memory Used</div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar progress-ram" id="ram-bar" style="width: 0%"></div>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div class="detail-row">
+                        <span class="detail-label">Total</span>
+                        <span class="detail-val" id="ram-total">- GB</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Available</span>
+                        <span class="detail-val" id="ram-avail">- GB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disk Card -->
+            <div class="hud-card">
+                <div class="hud-card-header">
+                    <div class="hud-card-icon icon-disk"><i class="fa-solid fa-hard-drive"></i></div>
+                    Storage (Primary)
+                </div>
+                <div class="stat-value" id="disk-percent">0%</div>
+                <div class="stat-label">Disk Space Used</div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar progress-disk" id="disk-bar" style="width: 0%"></div>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div class="detail-row">
+                        <span class="detail-label">Total Space</span>
+                        <span class="detail-val" id="disk-total">- GB</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Free Space</span>
+                        <span class="detail-val" id="disk-free">- GB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Card -->
+            <div class="hud-card">
+                <div class="hud-card-header">
+                    <div class="hud-card-icon icon-net"><i class="fa-solid fa-network-wired"></i></div>
+                    Network I/O
+                </div>
+                
+                <div class="net-rates">
+                    <div class="net-rate-box">
+                        <div class="stat-label" style="color: #3b82f6;"><i class="fa-solid fa-arrow-down"></i> Download</div>
+                        <div class="stat-value" style="font-size: 1.2rem; margin-top: 0.5rem;" id="net-down">-</div>
+                    </div>
+                    <div class="net-rate-box">
+                        <div class="stat-label" style="color: #8b5cf6;"><i class="fa-solid fa-arrow-up"></i> Upload</div>
+                        <div class="stat-value" style="font-size: 1.2rem; margin-top: 0.5rem;" id="net-up">-</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div class="detail-row">
+                        <span class="detail-label">Total Data Received</span>
+                        <span class="detail-val" id="net-total-recv">- GB</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Total Data Sent</span>
+                        <span class="detail-val" id="net-total-sent">- GB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Info Card -->
+            <div class="hud-card">
+                <div class="hud-card-header">
+                    <div class="hud-card-icon icon-sys"><i class="fa-solid fa-server"></i></div>
+                    System Core
+                </div>
+                
+                <div style="margin-top: 0.5rem;">
+                    <div class="detail-row" style="margin-top: 1.2rem;">
+                        <span class="detail-label">OS Environment</span>
+                        <span class="detail-val" id="sys-os">-</span>
+                    </div>
+                    <div class="detail-row" style="margin-top: 1.2rem;">
+                        <span class="detail-label">OS Release</span>
+                        <span class="detail-val" id="sys-release">-</span>
+                    </div>
+                    <div class="detail-row" style="margin-top: 1.2rem;">
+                        <span class="detail-label">System Uptime</span>
+                        <span class="detail-val" id="sys-uptime">-</span>
+                    </div>
+                    <div class="detail-row" style="margin-top: 1.2rem;">
+                        <span class="detail-label">HUD Polling Rate</span>
+                        <span class="detail-val">2.0s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script src="./saras_vani_hud.js"></script>
+</body>
+</html>
