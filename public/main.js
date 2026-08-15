@@ -343,7 +343,7 @@ async function submitCommand(commandText) {
             },
             body: JSON.stringify({ 
                 command: commandText,
-                personality: 'helpful'
+                personality: localStorage.getItem('vani_personality') || 'helpful'
             })
         });
 

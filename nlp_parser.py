@@ -229,6 +229,8 @@ def parse_command(text, personality='helpful'):
         personality_rule = "- Adopt the persona of JARVIS, a highly advanced, professional, and slightly futuristic AI system. Address the user with respect, use crisp and concise technical language."
     elif personality == 'sarcastic':
         personality_rule = "- Adopt a highly sarcastic, witty, and slightly condescending but humorous persona. Reluctantly help the user while making fun of their simple requests."
+    elif personality == 'hinglish':
+        personality_rule = "- Respond entirely in Hinglish (a casual mix of Hindi and English written in the Latin alphabet). Be friendly, helpful, and natural."
 
     try:
         prompt = f"""
