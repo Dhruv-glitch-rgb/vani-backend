@@ -12,21 +12,19 @@ def log_router(msg):
     except:
         print(f"[ROUTER] {msg}")
 
-# Fastest free text/reasoning models (prioritized by lowest latency)
+# Fastest free text/reasoning models (guaranteed active free models)
 FAST_FREE_MODELS = [
-    "liquid/lfm-2.5-2.6b:free",
+    "openrouter/free",
     "nvidia/nemotron-nano-9b-v2:free",
     "poolside/laguna-xs-2.1:free",
-    "cohere/north-mini-code:free",
-    "google/gemma-4-26b-a4b-it:free",
-    "openrouter/free"
+    "liquid/lfm-2.5-2.6b:free",
+    "cohere/north-mini-code:free"
 ]
 
 # Free models that support Vision
 VISION_FREE_MODELS = [
     "nvidia/nemotron-nano-12b-v2-vl:free",
-    "openrouter/free",
-    "google/lyria-3-clip-preview"
+    "openrouter/free"
 ]
 
 def _call_single_model(model, current_key, messages, timeout, require_json):
@@ -62,11 +60,18 @@ def _call_single_model(model, current_key, messages, timeout, require_json):
             log_router(f"Success with {model} in {elapsed:.2f}s")
             return content
     except urllib.error.HTTPError as e:
-        error_body = e.read().decode('utf-8') if hasattr(e, 'read') else str(e)
-        log_router(f"HTTP {e.code} Error on {model}: {error_body}")
-        raise Exception(f"HTTP {e.code}")
+        error_body = ""
+        try:
+            error_body = e.read().decode('utf-8')
+        except:
+            pass
+        log_router(f"HTTP Error {e.code} on {model}: {e.reason} - {error_body}")
+        raise e
     except urllib.error.URLError as e:
-        log_router(f"Timeout/Network Error on {model}: {e.reason}")
+        log_router(f"URL Error on {model}: {e.reason}")
+        raise e
+    except TimeoutError:
+        log_router(f"Timeout on {model}")
         raise Exception("Timeout")
     except Exception as e:
         log_router(f"Unexpected Error on {model}: {str(e)}")
@@ -74,7 +79,7 @@ def _call_single_model(model, current_key, messages, timeout, require_json):
 
 def _call_gemini_model(key, messages, timeout):
     log_router(f"Attempting Gemini Direct API with Key ending in ...{key[-4:] if key else ''}")
-    candidate_models = ["gemini-flash-latest", "gemini-pro-latest", "gemini-2.5-flash", "gemma-4-26b-a4b-it"]
+    candidate_models = ["gemini-flash-latest", "gemini-pro-latest"]
     
     contents = []
     system_instruction = None
@@ -115,12 +120,17 @@ def _call_gemini_model(key, messages, timeout):
                     parts = candidates[0].get("content", {}).get("parts", [])
                     if parts:
                         content = parts[0].get("text", "").strip()
-                        elapsed = time.time() - start_time
-                        log_router(f"Success with Gemini Direct API ({model_name}) in {elapsed:.2f}s")
-                        return content
+                        if content:
+                            elapsed = time.time() - start_time
+                            log_router(f"Success with Gemini Direct API ({model_name}) in {elapsed:.2f}s")
+                            return content
         except Exception as e:
             log_router(f"Gemini model {model_name} failed: {e}")
+            if any(err_code in str(e) for err_code in ["403", "401", "429"]):
+                break
             continue
+
+    raise Exception("All Gemini Direct models failed")
 
 import base64
 
