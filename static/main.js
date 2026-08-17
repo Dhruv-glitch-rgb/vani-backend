@@ -362,6 +362,15 @@ async function submitCommand(commandText) {
                 message: apiData.message || ''
             };
             
+            // Guard against stale/unintended Wikipedia encyclopedic leaks on casual conversation
+            const isConversational = /\b(tum|aap|kaisi|kaise|kya|kuch|bolo|batao|love|miss|dost|human|girl|hello|hi|hey|namaste|morning|night|dinner|khana|theek|hoon|hai|ho|aj|aaj)\b/i.test(lowerCmd);
+            const isWikiLeak = data.message.includes('wikipedia.org') || data.message.includes('Read full article') || data.message.includes('Lata Mangeshkar') || data.message.includes('List of songs');
+            if (isConversational && isWikiLeak) {
+                const fallback = getClientFallbackResponse(commandText);
+                data.message = fallback.message;
+                data.action = fallback.action;
+            }
+            
             if (data.action === 'make_phone_call') {
                 addChatMessage('assistant', `Initiating phone call...`, 'make_phone_call');
                 window.location.href = `tel:9999999999`;
