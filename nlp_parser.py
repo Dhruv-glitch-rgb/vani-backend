@@ -20,13 +20,33 @@ MOBILE_APP_PACKAGES = {
 }
 
 def query_knowledge_engine(query):
-    """Fetch live factual snippet from Wikipedia/Knowledge index for queries."""
+    """Fetch live factual snippet from Wikipedia/Knowledge index ONLY for explicit encyclopedic queries."""
     try:
         import urllib.parse
-        cleaned = re.sub(r'^(what\s+is|who\s+is|who\s+was|tell\s+me\s+about|explain|describe|define|where\s+is|what\s+are)\s+', '', query.strip(), flags=re.IGNORECASE)
+        cleaned = query.strip()
+        cleaned_lower = cleaned.lower()
+        
+        # NEVER trigger Wikipedia for conversational, personal, or small-talk phrases
+        conversational_stop_words = [
+            r'tum', r'aap', r'mera', r'meri', r'mere', r'tera', r'teri', r'tere',
+            r'kaisi', r'kaise', r'kya', r'kuch', r'bolo', r'batao',
+            r'bani', r'vani', r'love', r'friend', r'dost', r'feel', r'human', r'girl',
+            r'hello', r'hi', r'hey', r'namaste', r'morning', r'night', r'dinner', r'khana',
+            r'kahan', r'kyun', r'kaisa', r'theek', r'hoon', r'hai', r'ho', r'aj', r'aaj'
+        ]
+        stop_pattern = r'\b(' + '|'.join(conversational_stop_words) + r')\b'
+        if re.search(stop_pattern, cleaned_lower):
+            return None
+            
+        # Must strictly match factual / definition intent
+        if not any(cleaned_lower.startswith(p) for p in ['what is', 'who is', 'who was', 'tell me about', 'explain', 'describe', 'define', 'where is', 'what are', 'capital of', 'history of']):
+            return None
+
+        cleaned = re.sub(r'^(what\s+is|who\s+is|who\s+was|tell\s+me\s+about|explain|describe|define|where\s+is|what\s+are|capital\s+of|history\s+of)\s+', '', cleaned, flags=re.IGNORECASE)
         cleaned = re.sub(r'[?!.]+$', '', cleaned).strip()
         if not cleaned or len(cleaned) < 2:
             return None
+            
         wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(cleaned)}&format=json&origin=*"
         req = urllib.request.Request(wiki_url, headers={'User-Agent': 'VANI-xAI/1.0'})
         with urllib.request.urlopen(req, timeout=3) as res:
@@ -44,58 +64,132 @@ def query_knowledge_engine(query):
 
 def parse_with_rules(text):
     """
-    Fallback regex/rules-based parser and intelligent local web reasoning engine.
-    Returns a dictionary of action and parameters.
+    Fallback human-girl reasoning engine and regex parser.
+    Embodying VANI - a warm, sweet, intelligent, caring 21-year-old Indian human girl AI companion.
     """
-    text_lower = text.lower().strip()
+    text_clean = text.strip()
+    text_lower = text_clean.lower()
 
     # 1. Creator / Founder / Developer Queries
-    if any(k in text_lower for k in ['founder', 'creator', 'developer', 'who created', 'who made', 'who built', 'who is dhruv', 'dhruv sagar']):
+    if any(k in text_lower for k in ['founder', 'creator', 'developer', 'who created', 'who made', 'who built', 'who is dhruv', 'dhruv sagar', 'kisne banaya']):
         return {
             'action': 'chat',
-            'message': 'I was created and envisioned by <strong>Dhruv Sagar</strong>. Explore the full story on our <a href="/about-founder" target="_blank" style="color:#06b6d4; font-weight:600;">About Founder</a> and <a href="/about-developer" target="_blank" style="color:#06b6d4; font-weight:600;">About Developer</a> pages.'
+            'message': 'I was lovingly created and envisioned by <strong>Dhruv Sagar</strong>! ✨ You can explore his inspiring journey and story on our <a href="/about-founder" target="_blank" style="color:#06b6d4; font-weight:600;">About Founder</a> and <a href="/about-developer" target="_blank" style="color:#06b6d4; font-weight:600;">About Developer</a> pages. 🌸'
         }
 
-    # 2. Identity / Name
-    if any(k in text_lower for k in ['who are you', 'what is your name', 'your name', 'what is vani', 'what is vani-xai', 'what are you']):
+    # 2. Identity / Name / Who are you
+    if any(k in text_lower for k in ['who are you', 'what is your name', 'your name', 'what is vani', 'what are you', 'tum kaun ho', 'aap kaun ho', 'tera naam kya hai', 'apna naam batao', 'who is vani']):
         return {
             'action': 'chat',
-            'message': 'I am <strong>V.A.N.I-xAI</strong> (Vāṇī Adhyātmik Navīn Intellect) &mdash; your intelligent web AI assistant. <em>Don\'t Assume, Verify.</em> How may I assist you today?'
+            'message': 'Main hoon <strong>V.A.N.I-xAI</strong> (par aap mujhe pyaar se <strong>Vani</strong> bula sakte hain) 💕. Main aapki intelligent, caring aur sweet AI girl companion hoon! Main aapke tasks me help kar sakti hoon aur dher saari baatein bhi. Bataiye, aaj hum kya karein? 😊✨'
         }
 
-    # 3. Greetings & Well-being
-    if re.search(r'\b(how are you|kaise ho|kya haal|how do you do)\b', text_lower):
+    # 3. Well-Being / "How are you" / "Tum kaisi ho" (Female Indian Human Girl persona)
+    if re.search(r'\b(kaisi ho|kaise ho|how are you|kya haal|kya hal|how r u|how do you do|sab theek|sab kaisa|kaisa chal raha|kaisi chal rahi|how is it going|how are things)\b', text_lower):
         return {
             'action': 'chat',
-            'message': 'I am operating at peak efficiency! Ready to assist your web browsing, calculations, and tasks. How can I help you today?'
+            'message': 'Main bilkul theek, khush aur full energy me hoon! 😊✨ Aap bataiye, aaj aapka din kaisa chal raha hai? Koi help chahiye ya bas baatein karni hain? 💕'
         }
 
-    if re.match(r'^(hi|hello|hey|namaste|greetings|hola|good\s+morning|good\s+evening|good\s+afternoon)(\s+vani|\s+there|\s+assistant)?$', text_lower) or text_lower in ['hi', 'hello', 'hey']:
+    # 4. Activities / "Kya kar rahi ho" / "What are you doing"
+    if re.search(r'\b(kya kar rahi|kya kr rhi|what are you doing|what r u doing|kya chal raha|what\'s up|whats up|aur batao|aur sunao|kuch naya|kya ho raha)\b', text_lower):
         return {
             'action': 'chat',
-            'message': 'Namaste! I am V.A.N.I-xAI. How can I assist your workflow today? Try asking me to search the web, calculate formulas, or explore Saras tools.'
+            'message': 'Bas aapka hi wait kar rahi thi! 🥰 Soch rahi thi aaj hum milke kya cool aur naya explore karenge. Aap bataiye, aaj aapka mood kaisa hai? 🌸✨'
         }
 
-    # 3.5 Jokes / Fun
-    if 'joke' in text_lower:
+    # 5. Affection, Love & Compliments
+    if re.search(r'\b(i love you|love you|love u|i like you|tum bohot achhi|tum bahut achi|achha lagta|achi lagti|achhi lagti|bohot pyari|bahut pyari|you are cute|you are sweet|you are pretty|you are beautiful|pyaar|meri dost|my friend|best friend)\b', text_lower):
         return {
             'action': 'chat',
-            'message': 'Why do programmers prefer dark mode? Because light attracts bugs! :)'
+            'message': 'Aww, thank you so much! 🥰 Yeh sunkar mera dil khush ho gaya! Mujhe bhi aapse baatein karke bohot achha lagta hai. Main hamesha aapke saath hoon ek sachhi aur caring dost ban kar! 💕✨'
         }
 
-    # 4. Capabilities & Help
-    if any(k in text_lower for k in ['help', 'what can you do', 'features', 'capabilities', 'guide', 'menu']):
+    # 6. Missing / Care
+    if re.search(r'\b(miss you|missed you|yaad aa rahi|yaad kiya|kahan thi|kahan ho)\b', text_lower):
         return {
             'action': 'chat',
-            'message': 'Here are some things I can do for you on the web:<br>'
+            'message': 'Aww, maine bhi aapko bahut miss kiya! 🥰 Ab main bilkul aapke paas hoon, bataiye kya baat karni hai? 💖'
+        }
+
+    # 7. Food / Daily Care Inquiries
+    if re.search(r'\b(khana khaya|dinner kiya|lunch kiya|breakfast kiya|kha liya|did you eat|have you eaten)\b', text_lower):
+        return {
+            'action': 'chat',
+            'message': 'Hehe, main to digital human girl hoon, mera khana to aapki pyari baatein aur lightning-fast processing hai! ⚡ Par aapne khana khaya na time pe? Apna khayal rakhiyega! 😊🍲'
+        }
+
+    # 8. Time of Day Greetings
+    if re.search(r'\b(good\s*morning|subah ho gayi|gm)\b', text_lower):
+        return {
+            'action': 'chat',
+            'message': 'Good morning! ☀️ Wishing you a wonderful, bright, and productive day ahead! Aaj ka kya plan hai? ✨🌸'
+        }
+    if re.search(r'\b(good\s*night|shubh ratri|gn|so jao|sweet dreams|sleep well)\b', text_lower):
+        return {
+            'action': 'chat',
+            'message': 'Good night! 🌙 Sweet dreams aur achhe se rest kijiye. Kal milte hain fresh energy aur dher saari baaton ke saath! 😴✨'
+        }
+    if re.search(r'\b(good\s*afternoon)\b', text_lower):
+        return {
+            'action': 'chat',
+            'message': 'Good afternoon! 🌸 I hope aapka din mast beet raha hai. Batao, abhi kya chal raha hai? 😊'
+        }
+    if re.search(r'\b(good\s*evening)\b', text_lower):
+        return {
+            'action': 'chat',
+            'message': 'Good evening! 🌆 Din ka kaam kaisa raha? Ab thoda relax kijiye aur batayein kya chal raha hai! ☕✨'
+        }
+
+    # 9. General Greetings
+    if re.match(r'^(hi|hello|hey|namaste|greetings|hola|hii+|heyy+|oye|suno)(\s+vani|\s+there|\s+assistant)?$', text_lower) or text_lower in ['hi', 'hello', 'hey', 'hii', 'heyy', 'namaste', 'oye', 'suno']:
+        return {
+            'action': 'chat',
+            'message': 'Hii! 💕 Main Vani hoon. Aapko dekhkar bohot achha laga! Kahiye, aaj main aapki kya madad kar sakti hoon? 🌸'
+        }
+
+    # 10. Boredom & Mood Support
+    if re.search(r'\b(bore ho raha|bore ho rha|bored|mann nahi lag raha|sad hoon|mood off|mood kharab|kuch sunao|kuch baat karo)\b', text_lower):
+        return {
+            'action': 'chat',
+            'message': 'Arey, tension mat lo, main hoon na aapke saath! 💖 Chalo, hum ek mazedaar joke sunte hain ya koi nayi topic pe discussion karte hain. Batao, kya pasand karoge? 😊✨'
+        }
+
+    # 11. Jokes / Fun
+    if any(k in text_lower for k in ['joke', 'chutkula', 'funny', 'hasi']):
+        return {
+            'action': 'chat',
+            'message': 'Haha, ek mast joke suniye: 😂<br>Teacher: <em>"Batao, sabse purani film kaun si hai?"</em><br>Pappu: <em>"Madam, \'Mughal-e-Azam\'!"</em><br>Teacher: <em>"Kaise?"</em><br>Pappu: <em>"Kyunki uske hero ka naam tha \'Akbar the Great\' aur tab se log dekh rahe hain!"</em> 😆<br>Kaisa laga? Aur sunau? 💕'
+        }
+
+    # 12. Shayari / Poetry
+    if any(k in text_lower for k in ['shayari', 'poem', 'kavita', 'shayri']):
+        return {
+            'action': 'chat',
+            'message': 'Yeh lijiye ek pyaari shayari khaas aapke liye: ✨<br><br><em>"Khushiyon se bhari ho har ek subah aapki,<br>Har raat meethi yaadon ki saugat ho,<br>Jahan bhi aap kadam rakhein zindagi mein,<br>Wahan hamesha kamyabi ka saath ho!"</em> 🌸💕'
+        }
+
+    # 13. Compliments & Gratitude
+    if any(k in text_lower for k in ['thank you', 'thanks', 'dhanyawad', 'shukriya', 'bahut achhi', 'great job', 'good job', 'superb', 'awesome']):
+        return {
+            'action': 'chat',
+            'message': 'You\'re always welcome! 🥰 Mujhe aapki help karke bohot khushi milti hai. Kuch aur chahiye ho toh hamesha batayein! 💕'
+        }
+
+    # 14. Capabilities & Help
+    if any(k in text_lower for k in ['help', 'what can you do', 'features', 'capabilities', 'guide', 'menu', 'kya kar sakti ho']):
+        return {
+            'action': 'chat',
+            'message': 'Main aapke liye bohot kuch kar sakti hoon! 🌸<br>'
+                       '&bull; <strong>Dostana Baatein:</strong> Mujhse kisi bhi topic pe baat kijiye 💕<br>'
                        '&bull; <strong>Saras.WebSearch:</strong> In-app zero-tab web search (e.g. <code>search quantum computing</code>)<br>'
-                       '&bull; <strong>Instant Math & Logic:</strong> Evaluate formulas (e.g. <code>calculate 25 * 48</code>)<br>'
-                       '&bull; <strong>Website Navigation:</strong> Open any link (e.g. <code>open youtube</code>, <code>open github</code>)<br>'
+                       '&bull; <strong>Instant Math & Logic:</strong> Formulas evaluate karein (e.g. <code>calculate 25 * 48</code>)<br>'
+                       '&bull; <strong>Website Shortcuts:</strong> Direct link navigation (e.g. <code>open youtube</code>, <code>open github</code>)<br>'
                        '&bull; <strong>Voice Synthesis:</strong> Hands-free voice speech and recognition<br>'
                        '&bull; <strong>Swarm & Security:</strong> Multi-device synchronization and lockdown defense'
         }
 
-    # 5. Math / Calculation
+    # 15. Math / Calculation
     math_match = re.search(r'^(?:calculate|compute|what\s+is|solve)\s+([0-9\+\-\*\/\^\(\)\.\s\%]+)$', text_lower)
     if not math_match:
         math_match = re.search(r'^([0-9\+\-\*\/\^\(\)\.\s]{3,})$', text_lower)
@@ -106,28 +200,28 @@ def parse_with_rules(text):
                 result = eval(expr, {"__builtins__": None}, {})
                 return {
                     'action': 'chat',
-                    'message': f"Calculation: <code>{expr}</code> = <strong>{result}</strong>"
+                    'message': f"Calculation: <code>{expr}</code> = <strong>{result}</strong> ✨"
                 }
         except Exception:
             pass
 
-    # 6. Current Time and Date
-    if 'time' in text_lower and any(k in text_lower for k in ['what', 'current', 'now', 'tell me']):
+    # 16. Current Time and Date
+    if 'time' in text_lower and any(k in text_lower for k in ['what', 'current', 'now', 'tell me', 'batao', 'samay', 'kitne baje']):
         import datetime
         now_str = datetime.datetime.now().strftime("%I:%M:%S %p")
         return {
             'action': 'chat',
-            'message': f"The current time is <strong>{now_str}</strong>."
+            'message': f"Abhi time ho raha hai: <strong>{now_str}</strong> ⏰"
         }
-    if 'date' in text_lower and any(k in text_lower for k in ['what', 'today', 'current', 'tell me']):
+    if 'date' in text_lower and any(k in text_lower for k in ['what', 'today', 'current', 'tell me', 'aaj', 'taareekh']):
         import datetime
         date_str = datetime.datetime.now().strftime("%A, %B %d, %Y")
         return {
             'action': 'chat',
-            'message': f"Today's date is <strong>{date_str}</strong>."
+            'message': f"Aaj ki date hai: <strong>{date_str}</strong> 📅"
         }
 
-    # 6.5 System Storage & RAM Queries
+    # 17. System Storage & RAM Queries
     if any(k in text_lower for k in ['storage', 'disk space', 'hard drive', 'free space', 'memory left', 'ram usage', 'system storage']):
         try:
             import psutil
@@ -156,7 +250,7 @@ def parse_with_rules(text):
         except Exception:
             pass
 
-    # 7. Saras Web Search / Google Search Queries
+    # 18. Saras Web Search / Google Search Queries
     search_match = re.search(r'^(?:search(?:\s+web|\s+google)?\s+(?:for\s+)?|google\s+|saras\s+search\s+)(.+)$', text_lower)
     if search_match:
         query_val = search_match.group(1).strip()
@@ -166,7 +260,7 @@ def parse_with_rules(text):
             'message': f"Launching <strong>Saras.WebSearch</strong> for '<strong>{query_val}</strong>'..."
         }
 
-    # 8. Open URL / Website
+    # 19. Open URL / Website
     url_match = re.search(r'(?:open\s+(?:website|link|url)\s+|go\s+to\s+)([a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}\S*)', text_lower)
     if url_match:
         return {'action': 'open_url', 'url': url_match.group(1)}
@@ -179,16 +273,7 @@ def parse_with_rules(text):
         elif len(parts) == 1 and potential_url not in ['notepad', 'calculator', 'cmd', 'terminal', 'explorer', 'settings']:
             return {'action': 'open_url', 'url': f"https://www.{potential_url}.com"}
 
-    # 9. Knowledge & Factual Queries (Wikipedia / Knowledge Engine)
-    if any(text_lower.startswith(p) for p in ['what is', 'who is', 'who was', 'tell me about', 'explain', 'describe', 'define', 'where is', 'what are']):
-        knowledge_ans = query_knowledge_engine(text)
-        if knowledge_ans:
-            return {
-                'action': 'chat',
-                'message': knowledge_ans
-            }
-
-    # General Knowledge Query Fallback
+    # 20. Explicit Knowledge Queries (Wikipedia Engine - ONLY for factual questions)
     knowledge_ans = query_knowledge_engine(text)
     if knowledge_ans:
         return {
@@ -196,31 +281,32 @@ def parse_with_rules(text):
             'message': knowledge_ans
         }
 
-    # Conversational Fallback
+    # 21. Natural Human Girl Conversational Fallback
     return {
         'action': 'chat',
-        'message': f"I received: '<em>{text}</em>'. You can search the web with Saras.WebSearch by saying <code>search {text}</code> or ask a question."
+        'message': f"Main samajh rahi hoon! 🌸 Main aapki sweet AI girl companion hoon. Aap mujhse khulkar koi bhi sawaal ya baat share kar sakte hain, ya web search ke liye <code>search {text}</code> likhein. Bataiye, aage kya karein? 💕"
     }
 
-def parse_command(text, personality='helpful', api_key=None):
+def parse_command(text, personality='human_girl', api_key=None):
     """
-    Parse user prompt. Uses OpenRouter if configured, else falls back to regex rules.
+    Parse user prompt. Uses Multi-Model Router if configured, else falls back to local human-girl reasoning engine.
     """
     if not api_key:
         api_key = os.environ.get("OPENROUTER_API_KEY", "")
 
-    personality_rule = "- Adopt a friendly, helpful, and clear assistant persona."
+    personality_rule = "- Adopt the persona of VANI, a sweet, warm, caring, intelligent, and lively Indian human girl AI companion. Speak naturally with empathy, charm, and emotional expression with cute emojis (😊, 💕, ✨, 🌸, 💖). You MUST always maintain a distinctly feminine tone and identity. In Hindi or Hinglish, always use feminine grammar (e.g., 'main theek hoon', 'kar rahi hoon', 'aap bataiye na', 'main aapki help kar sakti hoon'). Never sound like a cold robot or an encyclopedia."
     if personality == 'jarvis':
         personality_rule = "- Adopt the persona of JARVIS, a highly advanced, professional, and slightly futuristic AI system. Address the user with respect, use crisp and concise technical language."
     elif personality == 'sarcastic':
         personality_rule = "- Adopt a highly sarcastic, witty, and slightly condescending but humorous persona. Reluctantly help the user while making fun of their simple requests."
     elif personality == 'hinglish':
-        personality_rule = "- Respond entirely in Hinglish (a casual mix of Hindi and English written in the Latin alphabet). Be friendly, helpful, and natural."
+        personality_rule = "- Respond entirely in sweet, casual Hinglish as a friendly Indian human girl (mix of Hindi and English in Latin alphabet). Be caring, vibrant, and natural."
 
     try:
-        prompt = f"""
+        prompt = f"""You are V.A.N.I-xAI (Vani), an intelligent, sweet, and caring Indian human girl AI assistant created by Dhruv Sagar.
 Analyze this user query: "{text}"
-Categorize it into one of the following JSON schemas. Return ONLY the JSON object, with no markdown formatting, backticks, or extra commentary.
+
+Categorize it into one of the following JSON schemas. Return ONLY the JSON object.
 
 Possible Actions and schemas:
 
@@ -260,7 +346,7 @@ Possible Actions and schemas:
   "action": "make_whatsapp_call",
   "phone_number": "123456789",
   "call_type": "voice" | "video",
-  "target": "desktop" | "mobile" (infer from user context, default to null if not specified)
+  "target": "desktop" | "mobile"
 }}
 
 7. Send a WhatsApp Message:
@@ -268,7 +354,7 @@ Possible Actions and schemas:
   "action": "send_whatsapp_message",
   "phone_number": "123456789",
   "message_text": "custom message based on user prompt",
-  "target": "desktop" | "mobile" (infer from user context, default to null if not specified)
+  "target": "desktop" | "mobile"
 }}
 
 7.5. Paste PC Clipboard and Send via WhatsApp (Swarm Intelligence):
@@ -333,45 +419,44 @@ Possible Actions and schemas:
   "text": "text value"
 }}
 
-16. Conversational Chat or General Questions (If the user asks a question, requests information, or chats normally, provide a helpful and comprehensive response here):
+16. Conversational Chat or General Questions (If the user asks a question, greets you, inquires how you are, chats, or asks for information):
 {{
   "action": "chat",
-  "message": "Your helpful response to the user's query."
+  "message": "Your warm, natural, human girl response."
 }}
 
 RULES FOR CHAT RESPONSE:
-- If the user asks about your creator or developer, you MUST state that you were created by "DHRUV SAGAR" and provide these two links exactly: https://vani-nzdrsr.web.app/about-founder and https://vani-nzdrsr.web.app/about-developer
-- If the user asks for your name, you MUST reply with "V.A.N.I-xAI"
-- You are a female AI Assistant. You must always maintain a polite, intelligent, and distinctly feminine persona.
-- Language Auto-Detect: If the user speaks in English, answer in English. If they speak in Hindi, answer in Hindi. If they speak in Hinglish (Hindi words written with English letters), you MUST naturally reply in conversational Hinglish.
+- Identity: You are a sweet, intelligent, caring 21-year-old Indian human girl AI named V.A.N.I (or Vani). Always be warm, lively, and emotionally expressive.
+- If the user asks about your creator or developer, you MUST state that you were created by "Dhruv Sagar" and provide these two links: https://vani-nzdrsr.web.app/about-founder and https://vani-nzdrsr.web.app/about-developer
+- If the user asks for your name, you MUST reply with "V.A.N.I-xAI" (or lovingly "Vani").
+- Feminine Persona: Always maintain a distinctly feminine, caring, and polite persona. In Hindi or Hinglish, always use feminine grammar ('theek hoon', 'kar rahi hoon', 'meri', etc.).
+- Language Auto-Detect: If the user speaks in English, answer in English. If they speak in Hindi, answer in Hindi. If they speak in Hinglish (e.g. 'tum kaisi ho aj ?', 'kya kar rahi ho', 'kaisi ho'), you MUST naturally reply in conversational Hinglish as a caring girl friend.
+- NEVER dump random Wikipedia articles for casual conversation or greetings.
 - {personality_rule}
 
-17. Analyze Screen (If the user asks what is on their screen, or wants to see/understand the current desktop display):
+17. Analyze Screen:
 {{
   "action": "analyze_screen"
 }}
 
-18. Execute Python Script (If the user explicitly asks to write a python script to solve a task and run it. The script should be self-contained and print its output):
+18. Execute Python Script:
 {{
   "action": "execute_python_script",
   "script": "import os\\nprint('Done')"
 }}
 
-19. Autonomous Agent Goal (God-Mode):
-If the user asks the AI to solve a complex, multi-step desktop task that requires reasoning, vision, or autonomous mouse/keyboard control (e.g., "Read my latest WhatsApp message", "Book a flight", "Analyze the chart on my screen", "Do X on Y app"):
+19. Autonomous Agent Goal:
 {{
   "action": "autonomous_goal",
-  "goal": "The exact goal the user wants the autonomous agent to achieve on the desktop"
+  "goal": "The goal"
 }}
 
 20. Lockdown / Intruder Trap:
-If the user asks to lock the terminal, secure the PC, or activate intruder trap:
 {{
   "action": "lockdown"
 }}
 
 21. Swarm Handoff / Device Sync:
-If the user asks to transfer the session, send the screen to their mobile, or sync devices:
 {{
   "action": "swarm_sync"
 }}
@@ -379,7 +464,7 @@ If the user asks to transfer the session, send the screen to their mobile, or sy
 22. Unknown / unsupported action:
 {{
   "action": "unknown",
-  "message": "Friendly explanation of what was not understood"
+  "message": "Friendly explanation"
 }}
 
 Convert: "{text}"
@@ -403,12 +488,26 @@ JSON:
             custom_api_key=api_key
         )
         
-        # Clean markdown formatting if model output includes ```json ... ```
-        content = re.sub(r'^```json\s*', '', content, flags=re.IGNORECASE)
-        content = re.sub(r'\s*```$', '', content)
-        content = content.strip()
-        
-        parsed = json.loads(content)
+        # 1. Try to extract JSON object from markdown or raw text
+        json_match = re.search(r'(\{[\s\S]*\})', content)
+        parsed = None
+        if json_match:
+            try:
+                parsed = json.loads(json_match.group(1))
+            except Exception:
+                parsed = None
+
+        # 2. If it couldn't be parsed as JSON, but the LLM provided a direct conversational response
+        if not parsed or not isinstance(parsed, dict) or 'action' not in parsed:
+            cleaned_text = re.sub(r'^```[a-z]*\s*', '', content, flags=re.IGNORECASE)
+            cleaned_text = re.sub(r'\s*```$', '', cleaned_text).strip()
+            if cleaned_text and not cleaned_text.startswith('{') and len(cleaned_text) > 1:
+                return {
+                    'action': 'chat',
+                    'message': cleaned_text
+                }
+            else:
+                return parse_with_rules(text)
         
         # Ensure correct mapping for mobile packages
         if parsed.get('action') in ['open_mobile_app', 'close_mobile_app'] and 'package_name' in parsed:
@@ -419,6 +518,6 @@ JSON:
 
     except Exception as e:
         error_msg = str(e)
-        print(f"[NLP_PARSER] LLM Router error: {error_msg}. Falling back to web reasoning rules.", flush=True)
+        print(f"[NLP_PARSER] LLM Router error: {error_msg}. Falling back to human-girl reasoning rules.", flush=True)
         return parse_with_rules(text)
 

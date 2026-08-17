@@ -165,7 +165,7 @@ def handle_command():
     # Store user command in memory
     memory_manager.add_message('user', command)
     
-    personality = data.get('personality', 'helpful')
+    personality = data.get('personality', 'human_girl')
     custom_api_key = request.headers.get('X-OpenRouter-Key') or data.get('apiKey')
     
     # Parse the command

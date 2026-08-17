@@ -305,10 +305,11 @@
                     </div>
                     <div class="setting-control">
                         <select id="aiPersonality">
+                            <option value="human_girl" selected>Human Girl (Vāṇī - Sweet, Caring & Expressive)</option>
                             <option value="helpful">Helpful Assistant</option>
+                            <option value="hinglish">Hinglish Indian Girl</option>
                             <option value="jarvis">JARVIS (Professional & Sci-Fi)</option>
                             <option value="sarcastic">Sarcastic Genius</option>
-                            <option value="hinglish">Hinglish Assistant</option>
                         </select>
                     </div>
                 </div>
@@ -638,7 +639,7 @@
             const savedTheme = localStorage.getItem('vani_theme') || (localStorage.getItem('vani_dark_mode') === 'true' ? 'dark' : 'light');
             const savedAutoSpeak = localStorage.getItem('vani_auto_speak') !== 'false';
             const savedRate = localStorage.getItem('vani_speech_rate') || '1.0';
-            const savedPersonality = localStorage.getItem('vani_personality') || 'helpful';
+            const savedPersonality = localStorage.getItem('vani_personality') || 'human_girl';
 
             document.getElementById('themeSelect').value = savedTheme;
             document.getElementById('autoSpeakToggle').checked = savedAutoSpeak;

@@ -1,9 +1,9 @@
-const CACHE_NAME = 'vani-xai-cache-v5'; // Incremented cache version
+const CACHE_NAME = 'vani-xai-cache-v6'; // Incremented cache version
 const urlsToCache = [
   '/',
   '/index.html',
   '/style.css',
-  '/main.js?v=2',
+  '/main.js?v=3',
   '/vani_icon.png'
 ];
 

@@ -349,7 +349,7 @@ async function submitCommand(commandText) {
             headers: headers,
             body: JSON.stringify({ 
                 command: commandText,
-                personality: localStorage.getItem('vani_personality') || 'helpful',
+                personality: localStorage.getItem('vani_personality') || 'human_girl',
                 apiKey: customApiKey
             })
         });
@@ -822,34 +822,133 @@ function getClientFallbackResponse(rawText) {
     const lower = text.toLowerCase();
 
     // 1. Founder / Developer Info
-    if (lower.includes('founder') || lower.includes('creator') || lower.includes('developer') || lower.includes('who made') || lower.includes('who created') || lower.includes('who built')) {
+    if (lower.includes('founder') || lower.includes('creator') || lower.includes('developer') || lower.includes('who made') || lower.includes('who created') || lower.includes('who built') || lower.includes('dhruv sagar') || lower.includes('kisne banaya')) {
         return {
             action: 'chat',
-            message: `I was created and envisioned by <strong>Dhruv Sagar</strong>. Learn more about the vision on our <a href="/about-founder" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">About Founder</a> and <a href="/about-developer" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">About Developer</a> pages.`
+            message: `I was lovingly envisioned and created by <strong>Dhruv Sagar</strong>! ✨ Learn more about the vision on our <a href="/about-founder" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">About Founder</a> and <a href="/about-developer" style="color:var(--accent-cyan,#06b6d4); font-weight:600;">About Developer</a> pages. 🌸`
         };
     }
 
     // 2. Identity / Name
-    if (lower.includes('who are you') || lower.includes('your name') || lower.includes('what is vani') || lower.includes('what are you')) {
+    if (lower.includes('who are you') || lower.includes('your name') || lower.includes('what is vani') || lower.includes('what are you') || lower.includes('tum kaun ho') || lower.includes('aap kaun ho') || lower.includes('tera naam')) {
         return {
             action: 'chat',
-            message: `I am <strong>V.A.N.I-xAI</strong> (Vāṇī Adhyātmik Navīn Intellect) &mdash; your intelligent web assistant. <em>Don't Assume, Verify.</em> How may I assist you today?`
+            message: `Main hoon <strong>V.A.N.I-xAI</strong> (par aap mujhe pyaar se <strong>Vani</strong> bula sakte hain) 💕. Main aapki intelligent, caring aur sweet AI girl companion hoon! Bataiye, aaj hum kya karein? 😊✨`
         };
     }
 
-    // 3. Greetings
-    if (/^(hi|hello|hey|namaste|greetings|hola|good morning|good evening|good afternoon)(\s+vani|\s+there|\s+assistant)?$/i.test(lower) || lower === 'hi' || lower === 'hello') {
+    // 3. Well-Being / How are you / Tum kaisi ho
+    if (/\b(kaisi ho|kaise ho|how are you|kya haal|kya hal|how r u|how do you do|sab theek|sab kaisa|kaisa chal raha|kaisi chal rahi|how is it going)\b/i.test(lower)) {
         return {
             action: 'chat',
-            message: `Namaste! I am V.A.N.I-xAI. How can I assist your workflow today? Try asking me to search the web, calculate formulas, check the time, or explore Saras tools.`
+            message: `Main bilkul theek, khush aur full energy me hoon! 😊✨ Aap bataiye, aaj aapka din kaisa chal raha hai? Koi help chahiye ya bas baatein karni hain? 💕`
         };
     }
 
-    // 4. Help / Capabilities
-    if (lower.includes('help') || lower.includes('what can you do') || lower.includes('features') || lower.includes('commands')) {
+    // 4. Activities / Kya kar rahi ho
+    if (/\b(kya kar rahi|kya kr rhi|what are you doing|what r u doing|kya chal raha|what's up|whats up|aur batao|aur sunao|kuch naya|kya ho raha)\b/i.test(lower)) {
         return {
             action: 'chat',
-            message: `Here are some of the things I can do on the web:<br>
+            message: `Bas aapka hi wait kar rahi thi! 🥰 Soch rahi thi aaj hum milke kya cool aur naya explore karenge. Aap bataiye, aaj aapka mood kaisa hai? 🌸✨`
+        };
+    }
+
+    // 5. Affection, Love & Compliments
+    if (/\b(i love you|love you|love u|i like you|tum bohot achhi|tum bahut achi|achha lagta|achi lagti|achhi lagti|bohot pyari|bahut pyari|you are cute|you are sweet|you are pretty|you are beautiful|pyaar|meri dost|my friend)\b/i.test(lower)) {
+        return {
+            action: 'chat',
+            message: `Aww, thank you so much! 🥰 Yeh sunkar mera dil khush ho gaya! Mujhe bhi aapse baatein karke bohot achha lagta hai. Main hamesha aapke saath hoon ek sachhi aur caring dost ban kar! 💕✨`
+        };
+    }
+
+    // 6. Missing / Care
+    if (/\b(miss you|missed you|yaad aa rahi|yaad kiya|kahan thi|kahan ho)\b/i.test(lower)) {
+        return {
+            action: 'chat',
+            message: `Aww, maine bhi aapko bahut miss kiya! 🥰 Ab main bilkul aapke paas hoon, bataiye kya baat karni hai? 💖`
+        };
+    }
+
+    // 7. Food / Care
+    if (/\b(khana khaya|dinner kiya|lunch kiya|breakfast kiya|kha liya|did you eat|have you eaten)\b/i.test(lower)) {
+        return {
+            action: 'chat',
+            message: `Hehe, main to digital human girl hoon, mera khana to aapki pyari baatein aur lightning-fast processing hai! ⚡ Par aapne khana khaya na time pe? Apna khayal rakhiyega! 😊🍲`
+        };
+    }
+
+    // 8. Time of Day Greetings
+    if (/\b(good\s*morning|subah ho gayi|gm)\b/i.test(lower)) {
+        return {
+            action: 'chat',
+            message: `Good morning! ☀️ Wishing you a wonderful, bright, and productive day ahead! Aaj ka kya plan hai? ✨🌸`
+        };
+    }
+    if (/\b(good\s*night|shubh ratri|gn|so jao|sweet dreams|sleep well)\b/i.test(lower)) {
+        return {
+            action: 'chat',
+            message: `Good night! 🌙 Sweet dreams aur achhe se rest kijiye. Kal milte hain fresh energy aur dher saari baaton ke saath! 😴✨`
+        };
+    }
+    if (/\b(good\s*afternoon)\b/i.test(lower)) {
+        return {
+            action: 'chat',
+            message: `Good afternoon! 🌸 I hope aapka din mast beet raha hai. Batao, abhi kya chal raha hai? 😊`
+        };
+    }
+    if (/\b(good\s*evening)\b/i.test(lower)) {
+        return {
+            action: 'chat',
+            message: `Good evening! 🌆 Din ka kaam kaisa raha? Ab thoda relax kijiye aur batayein kya chal raha hai! ☕✨`
+        };
+    }
+
+    // 9. Greetings
+    if (/^(hi|hello|hey|namaste|greetings|hola|hii+|heyy+|oye|suno)(\s+vani|\s+there|\s+assistant)?$/i.test(lower) || ['hi', 'hello', 'hey', 'hii', 'heyy', 'namaste', 'oye', 'suno'].includes(lower)) {
+        return {
+            action: 'chat',
+            message: `Hii! 💕 Main Vani hoon. Aapko dekhkar bohot achha laga! Kahiye, aaj main aapki kya madad kar sakti hoon? 🌸`
+        };
+    }
+
+    // 10. Boredom & Mood
+    if (/\b(bore ho raha|bore ho rha|bored|mann nahi lag raha|sad hoon|mood off|mood kharab|kuch sunao|kuch baat karo)\b/i.test(lower)) {
+        return {
+            action: 'chat',
+            message: `Arey, tension mat lo, main hoon na aapke saath! 💖 Chalo, hum ek mazedaar joke sunte hain ya koi nayi topic pe discussion karte hain. Batao, kya pasand karoge? 😊✨`
+        };
+    }
+
+    // 11. Jokes / Fun
+    if (lower.includes('joke') || lower.includes('chutkula') || lower.includes('funny') || lower.includes('hasi')) {
+        return {
+            action: 'chat',
+            message: `Haha, ek mast joke suniye: 😂<br>Teacher: <em>"Batao, sabse purani film kaun si hai?"</em><br>Pappu: <em>"Madam, 'Mughal-e-Azam'!"</em><br>Teacher: <em>"Kaise?"</em><br>Pappu: <em>"Kyunki uske hero ka naam tha 'Akbar the Great' aur tab se log dekh rahe hain!"</em> 😆<br>Kaisa laga? Aur sunau? 💕`
+        };
+    }
+
+    // 12. Shayari
+    if (lower.includes('shayari') || lower.includes('poem') || lower.includes('kavita') || lower.includes('shayri')) {
+        return {
+            action: 'chat',
+            message: `Yeh lijiye ek pyaari shayari khaas aapke liye: ✨<br><br><em>"Khushiyon se bhari ho har ek subah aapki,<br>Har raat meethi yaadon ki saugat ho,<br>Jahan bhi aap kadam rakhein zindagi mein,<br>Wahan hamesha kamyabi ka saath ho!"</em> 🌸💕`
+        };
+    }
+
+    // 13. Compliments & Gratitude
+    if (lower.includes('thank you') || lower.includes('thanks') || lower.includes('dhanyawad') || lower.includes('shukriya') || lower.includes('bahut achhi') || lower.includes('great job')) {
+        return {
+            action: 'chat',
+            message: `You're always welcome! 🥰 Mujhe aapki help karke bohot khushi milti hai. Kuch aur chahiye ho toh hamesha batayein! 💕`
+        };
+    }
+
+    // 14. Capabilities / Help
+    if (lower.includes('help') || lower.includes('what can you do') || lower.includes('features') || lower.includes('commands') || lower.includes('kya kar sakti ho')) {
+        return {
+            action: 'chat',
+            message: `Main aapke liye bohot kuch kar sakti hoon! 🌸<br>
+            &bull; <strong>Dostana Baatein:</strong> Mujhse kisi bhi topic pe baat kijiye 💕<br>
             &bull; <strong>Saras.WebSearch:</strong> In-app zero-tab web search (e.g. <code>search quantum computing</code>)<br>
             &bull; <strong>Math & Reasoning:</strong> Instant calculations (e.g. <code>calculate 25 * 48</code>)<br>
             &bull; <strong>Website Shortcuts:</strong> Direct navigation (e.g. <code>open youtube</code>, <code>open github</code>)<br>
@@ -858,17 +957,16 @@ function getClientFallbackResponse(rawText) {
         };
     }
 
-    // 5. Math / Calculation
+    // 15. Math / Calculation
     const mathMatch = lower.match(/^(?:calculate|compute|what is|solve)\s+([0-9\+\-\*\/\^\(\)\.\s\%]+)$/i) || lower.match(/^([0-9\+\-\*\/\^\(\)\.\s]+)$/);
     if (mathMatch) {
         try {
             const expr = mathMatch[1].replace(/[^0-9\+\-\*\/\(\)\.]/g, '');
             if (expr && expr.length > 0) {
-                // Safe evaluation with Function constructor limited to numbers and math operators
                 const result = Function(`'use strict'; return (${expr})`)();
                 return {
                     action: 'chat',
-                    message: `Calculation: <code>${expr}</code> = <strong>${result}</strong>`
+                    message: `Calculation: <code>${expr}</code> = <strong>${result}</strong> ✨`
                 };
             }
         } catch (e) {
@@ -876,23 +974,23 @@ function getClientFallbackResponse(rawText) {
         }
     }
 
-    // 6. Time and Date
-    if (lower.includes('time') && (lower.includes('what') || lower.includes('current') || lower.includes('now'))) {
+    // 16. Time and Date
+    if (lower.includes('time') && (lower.includes('what') || lower.includes('current') || lower.includes('now') || lower.includes('samay') || lower.includes('kitne baje'))) {
         const now = new Date();
         return {
             action: 'chat',
-            message: `The current time is <strong>${now.toLocaleTimeString()}</strong>.`
+            message: `Abhi time ho raha hai: <strong>${now.toLocaleTimeString()}</strong> ⏰`
         };
     }
-    if (lower.includes('date') && (lower.includes('what') || lower.includes('today') || lower.includes('current'))) {
+    if (lower.includes('date') && (lower.includes('what') || lower.includes('today') || lower.includes('current') || lower.includes('aaj') || lower.includes('taareekh'))) {
         const now = new Date();
         return {
             action: 'chat',
-            message: `Today's date is <strong>${now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>.`
+            message: `Aaj ki date hai: <strong>${now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong> 📅`
         };
     }
 
-    // 7. Web Search intent
+    // 17. Web Search intent
     if (lower.startsWith('search ') || lower.startsWith('google ') || lower.startsWith('find ')) {
         const q = text.replace(/^(search|google|find)\s+(for\s+)?/i, '').trim();
         openSarasWebSearchModal(q);
@@ -902,9 +1000,9 @@ function getClientFallbackResponse(rawText) {
         };
     }
 
-    // 8. General conversational fallback
+    // 18. Natural Human Girl Conversational Fallback
     return {
         action: 'chat',
-        message: `I received your command: "<em>${text}</em>". You can search the web by typing <code>search ${text}</code>, or open any tool from the top menu.`
+        message: `Main samajh rahi hoon! 🌸 Main aapki sweet AI girl companion hoon. Aap mujhse khulkar koi bhi sawaal ya baat share kar sakte hain, ya web search ke liye <code>search ${text}</code> likhein. Bataiye, aage kya karein? 💕`
     };
 }

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin-vaniXai.html
+Disallow: /admin-users-list.html
+Disallow: /admin-premium-requests.html
+Disallow: /invx-subusers.html
+Disallow: /users-details.html
+
+Sitemap: https://vani-nzdrsr.web.app/sitemap.xml

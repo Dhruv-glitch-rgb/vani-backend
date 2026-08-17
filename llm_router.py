@@ -73,34 +73,56 @@ def _call_single_model(model, current_key, messages, timeout, require_json):
         raise e
 
 def _call_gemini_model(key, messages, timeout):
-    log_router(f"Attempting Gemini 1.5 Flash Direct API with Key ending in ...{key[-4:] if key else ''}")
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+    log_router(f"Attempting Gemini Direct API with Key ending in ...{key[-4:] if key else ''}")
+    candidate_models = ["gemini-flash-latest", "gemini-pro-latest", "gemini-2.5-flash", "gemma-4-26b-a4b-it"]
+    
     contents = []
+    system_instruction = None
     for msg in messages:
-        role = "user" if msg.get("role") in ["user", "system"] else "model"
+        role = msg.get("role", "user")
         c = msg.get("content", "")
         if isinstance(c, list):
             c = " ".join([p.get("text", "") for p in c if isinstance(p, dict) and p.get("type") == "text"])
-        contents.append({"role": role, "parts": [{"text": str(c)}]})
+        
+        if role == "system":
+            system_instruction = {"parts": [{"text": str(c)}]}
+        else:
+            api_role = "user" if role == "user" else "model"
+            contents.append({"role": api_role, "parts": [{"text": str(c)}]})
     
+    if not contents:
+        contents = [{"role": "user", "parts": [{"text": "Hello"}]}]
+
     payload = {"contents": contents}
-    req = urllib.request.Request(
-        url,
-        headers={"Content-Type": "application/json"},
-        data=json.dumps(payload).encode('utf-8')
-    )
-    start_time = time.time()
-    with urllib.request.urlopen(req, timeout=timeout) as response:
-        data = json.loads(response.read().decode('utf-8'))
-        candidates = data.get("candidates", [])
-        if candidates:
-            parts = candidates[0].get("content", {}).get("parts", [])
-            if parts:
-                content = parts[0].get("text", "").strip()
-                elapsed = time.time() - start_time
-                log_router(f"Success with Gemini Direct API in {elapsed:.2f}s")
-                return content
-    raise Exception("Empty Gemini response")
+    if system_instruction:
+        payload["systemInstruction"] = system_instruction
+    
+    encoded_payload = json.dumps(payload).encode('utf-8')
+
+    for model_name in candidate_models:
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={key}"
+            req = urllib.request.Request(
+                url,
+                headers={"Content-Type": "application/json"},
+                data=encoded_payload
+            )
+            start_time = time.time()
+            with urllib.request.urlopen(req, timeout=timeout) as response:
+                data = json.loads(response.read().decode('utf-8'))
+                candidates = data.get("candidates", [])
+                if candidates:
+                    parts = candidates[0].get("content", {}).get("parts", [])
+                    if parts:
+                        content = parts[0].get("text", "").strip()
+                        elapsed = time.time() - start_time
+                        log_router(f"Success with Gemini Direct API ({model_name}) in {elapsed:.2f}s")
+                        return content
+        except Exception as e:
+            log_router(f"Gemini model {model_name} failed: {e}")
+            continue
+
+    raise Exception("All Gemini Direct models failed")
 
 def call_llm_with_fallback(messages, models=None, timeout_per_model=5, require_json=False, custom_api_key=None):
     """
