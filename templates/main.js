@@ -344,62 +344,70 @@ async function submitCommand(commandText) {
             headers['Authorization'] = `Bearer ${customApiKey}`;
         }
 
-        const response = await fetch(`${BACKEND_URL}/api/command`, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({ 
-                command: commandText,
-                personality: localStorage.getItem('vani_personality') || 'human_girl',
-                apiKey: customApiKey
-            })
+        // Fast parallel execution: Race backend with direct browser AI engine
+        const backendPromise = new Promise(async (resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error("Backend timeout")), 3000);
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/command`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({ 
+                        command: commandText,
+                        personality: localStorage.getItem('vani_personality') || 'human_girl',
+                        apiKey: customApiKey
+                    })
+                });
+                clearTimeout(timer);
+                if (!response.ok) return reject(new Error("HTTP error"));
+                const apiData = await response.json();
+                if (apiData && apiData.message && !apiData.message.includes("I received: '<em>") && !apiData.message.includes("Main samajh rahi hoon")) {
+                    return resolve(apiData);
+                }
+                reject(new Error("Generic or empty response"));
+            } catch (e) {
+                clearTimeout(timer);
+                reject(e);
+            }
         });
 
-        const apiData = await response.json();
-        
-        if (response.ok && apiData.success !== false) {
-            let data = {
-                action: apiData.action || 'chat',
-                message: apiData.message || ''
-            };
+        const clientPromise = getClientDynamicAIResponse(commandText);
 
-            // If backend returned generic fallback text or empty message on conversation, use direct AI engine
-            const isGenericLeak = data.message.includes("I received: '<em>") || data.message.includes("Main samajh rahi hoon") || !data.message;
-            if (isGenericLeak && data.action === 'chat') {
-                const directAI = await getClientDynamicAIResponse(commandText);
-                data = directAI;
-            }
-            
-            if (data.action === 'make_phone_call') {
-                addChatMessage('assistant', `Initiating phone call...`, 'make_phone_call');
-                window.location.href = `tel:9999999999`;
-                return;
-            }
-            if (data.action === 'lockdown') {
-                addChatMessage('assistant', data.message, 'lockdown');
-                initiateLockdown();
-                return;
-            }
-            
-            if (data.action === 'swarm_sync') {
-                triggerSwarmHandoff();
-                return;
-            }
-
-            if (data.action === 'saras_web_search') {
-                openSarasWebSearchModal(apiData.query || commandText.replace(/^(search|google|saras search)\s+/i, ''));
-            }
-
-            addChatMessage('assistant', data.message, data.action || 'chat');
-        } else {
-            console.error("Backend Error:", apiData);
-            const dynamicAI = await getClientDynamicAIResponse(commandText);
-            addChatMessage('assistant', dynamicAI.message, dynamicAI.action || 'chat');
+        let data = null;
+        try {
+            data = await Promise.any([backendPromise, clientPromise]);
+        } catch (raceErr) {
+            data = await clientPromise;
         }
+
+        if (!data || !data.message) {
+            data = getClientFallbackResponse(commandText);
+        }
+
+        if (data.action === 'make_phone_call') {
+            addChatMessage('assistant', `Initiating phone call...`, 'make_phone_call');
+            window.location.href = `tel:9999999999`;
+            return;
+        }
+        if (data.action === 'lockdown') {
+            addChatMessage('assistant', data.message, 'lockdown');
+            initiateLockdown();
+            return;
+        }
+        
+        if (data.action === 'swarm_sync') {
+            triggerSwarmHandoff();
+            return;
+        }
+
+        if (data.action === 'saras_web_search') {
+            openSarasWebSearchModal(data.query || commandText.replace(/^(search|google|saras search)\s+/i, ''));
+        }
+
+        addChatMessage('assistant', data.message, data.action || 'chat');
     } catch (err) {
-        console.warn("Backend unavailable, using Web Intelligence Engine:", err);
-        const dynamicAI = await getClientDynamicAIResponse(commandText);
-        addChatMessage('assistant', dynamicAI.message, dynamicAI.action || 'chat');
-        addTerminalLog(`[WEB AI] Answered query locally: "${commandText}"`, 'success');
+        console.warn("Processing error:", err);
+        const fallback = getClientFallbackResponse(commandText);
+        addChatMessage('assistant', fallback.message, fallback.action || 'chat');
     }
 }
 

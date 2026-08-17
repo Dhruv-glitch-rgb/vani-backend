@@ -12,13 +12,11 @@ def log_router(msg):
     except:
         print(f"[ROUTER] {msg}")
 
-# Fastest free text/reasoning models (guaranteed active free models)
+# Fastest free text/reasoning models (curated for lowest latency)
 FAST_FREE_MODELS = [
     "openrouter/free",
     "nvidia/nemotron-nano-9b-v2:free",
-    "poolside/laguna-xs-2.1:free",
-    "liquid/lfm-2.5-2.6b:free",
-    "cohere/north-mini-code:free"
+    "poolside/laguna-xs-2.1:free"
 ]
 
 # Free models that support Vision
@@ -39,7 +37,8 @@ def _call_single_model(model, current_key, messages, timeout, require_json):
 
     payload = {
         "model": model,
-        "messages": messages
+        "messages": messages,
+        "max_tokens": 450
     }
     
     if require_json:
@@ -79,7 +78,7 @@ def _call_single_model(model, current_key, messages, timeout, require_json):
 
 def _call_gemini_model(key, messages, timeout):
     log_router(f"Attempting Gemini Direct API with Key ending in ...{key[-4:] if key else ''}")
-    candidate_models = ["gemini-flash-latest", "gemini-pro-latest"]
+    candidate_models = ["gemini-flash-latest"]
     
     contents = []
     system_instruction = None
@@ -126,16 +125,13 @@ def _call_gemini_model(key, messages, timeout):
                             return content
         except Exception as e:
             log_router(f"Gemini model {model_name} failed: {e}")
-            if any(err_code in str(e) for err_code in ["403", "401", "429"]):
-                break
-            continue
+            break
 
     raise Exception("All Gemini Direct models failed")
 
 import base64
 
 # Built-in Default Key Pool (ensures zero-downtime reasoning even if env vars are missing on cloud deploys)
-DEFAULT_GEMINI_KEY = base64.b64decode("QUl6YVN5QmNJdy1GMDAwODZfc2VDYm4yU3dlOHRsWnRqTDZmdmtB").decode('utf-8')
 DEFAULT_OPENROUTER_KEYS = [
     base64.b64decode("c2stb3ItdjEtMjA5MTNiYzQwZjQ0YzA3OWUxMTg0MThiYzM0YTkxZWRjM2FhMTFkNzYwNTk1MTcyMTg3MmQ5N2MzNmU2MWVkYg==").decode('utf-8'),
     base64.b64decode("c2stb3ItdjEtNTRlZDA0MDFhMDc5YmM4ZWVjYzFkNzQ3ZWU5NzNlMWI5OTU4NWM1ZmI4NzU1OWRkMzAyOWNlMTRhMzA3MGMwNg==").decode('utf-8'),
@@ -144,18 +140,17 @@ DEFAULT_OPENROUTER_KEYS = [
     base64.b64decode("c2stb3ItdjEtOTI4NjkzNjVlOTIyY2FkZDA4Y2U3NzNkNzdhM2EyZTM2NDQyZDc5Zjg2YzgxY2ZkZDVkYzFhYTQxMDlkODA4Nw==").decode('utf-8')
 ]
 
-def call_llm_with_fallback(messages, models=None, timeout_per_model=12, require_json=False, custom_api_key=None):
+def call_llm_with_fallback(messages, models=None, timeout_per_model=6, require_json=False, custom_api_key=None):
     """
     Concurrent Multi-Model Router.
     Fires requests to all models at the same time and returns the first successful response to maximize speed.
     """
-    # 1. Check if Gemini Key is available
-    gemini_key = custom_api_key if (custom_api_key and custom_api_key.startswith("AIza")) else (os.environ.get("GEMINI_API_KEY", "") or os.environ.get("GOOGLE_API_KEY", "") or DEFAULT_GEMINI_KEY)
-    if gemini_key and gemini_key.strip() and gemini_key != "your_gemini_api_key_here":
+    # 1. Check if explicit custom Gemini Key is provided
+    if custom_api_key and custom_api_key.startswith("AIza"):
         try:
-            return _call_gemini_model(gemini_key.strip(), messages, timeout_per_model)
+            return _call_gemini_model(custom_api_key.strip(), messages, timeout_per_model)
         except Exception as ge:
-            log_router(f"Gemini direct call failed: {ge}. Continuing with OpenRouter pool...")
+            log_router(f"Custom Gemini call failed: {ge}. Continuing with OpenRouter pool...")
 
     # 2. OpenRouter Key Pool
     if custom_api_key and custom_api_key.strip() and not custom_api_key.startswith("AIza"):
