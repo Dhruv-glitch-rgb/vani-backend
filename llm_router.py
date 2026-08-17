@@ -167,8 +167,9 @@ def call_llm_with_fallback(messages, models=None, timeout_per_model=12, require_
     if models is None:
         models = FAST_FREE_MODELS
         
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=len(models))
     futures = {}
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(models)) as executor:
+    try:
         for i, item in enumerate(models):
             if isinstance(item, tuple):
                 model_name, dedicated_key = item
@@ -188,10 +189,19 @@ def call_llm_with_fallback(messages, models=None, timeout_per_model=12, require_
             model_name = futures[future]
             try:
                 result = future.result()
+                try:
+                    executor.shutdown(wait=False, cancel_futures=True)
+                except:
+                    pass
                 return result
             except Exception as e:
                 last_error = str(e)
                 
-    log_router(f"All models failed. Last error: {last_error}")
-    raise Exception(f"All models in fallback sequence failed. Last error: {last_error}")
+        log_router(f"All models failed. Last error: {last_error}")
+        raise Exception(f"All models in fallback sequence failed. Last error: {last_error}")
+    finally:
+        try:
+            executor.shutdown(wait=False, cancel_futures=True)
+        except Exception:
+            pass
 
