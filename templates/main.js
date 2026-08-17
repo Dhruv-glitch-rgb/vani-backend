@@ -361,6 +361,13 @@ async function submitCommand(commandText) {
                 action: apiData.action || 'chat',
                 message: apiData.message || ''
             };
+
+            // If backend returned generic fallback text or empty message on conversation, use direct AI engine
+            const isGenericLeak = data.message.includes("I received: '<em>") || data.message.includes("Main samajh rahi hoon") || !data.message;
+            if (isGenericLeak && data.action === 'chat') {
+                const directAI = await getClientDynamicAIResponse(commandText);
+                data = directAI;
+            }
             
             if (data.action === 'make_phone_call') {
                 addChatMessage('assistant', `Initiating phone call...`, 'make_phone_call');
@@ -385,13 +392,13 @@ async function submitCommand(commandText) {
             addChatMessage('assistant', data.message, data.action || 'chat');
         } else {
             console.error("Backend Error:", apiData);
-            const fallback = getClientFallbackResponse(commandText);
-            addChatMessage('assistant', fallback.message, fallback.action);
+            const dynamicAI = await getClientDynamicAIResponse(commandText);
+            addChatMessage('assistant', dynamicAI.message, dynamicAI.action || 'chat');
         }
     } catch (err) {
         console.warn("Backend unavailable, using Web Intelligence Engine:", err);
-        const fallback = getClientFallbackResponse(commandText);
-        addChatMessage('assistant', fallback.message, fallback.action);
+        const dynamicAI = await getClientDynamicAIResponse(commandText);
+        addChatMessage('assistant', dynamicAI.message, dynamicAI.action || 'chat');
         addTerminalLog(`[WEB AI] Answered query locally: "${commandText}"`, 'success');
     }
 }
@@ -815,6 +822,64 @@ if (quickMuteBtn) {
 // ----------------------------------------------------
 // INTELLIGENT CLIENT-SIDE WEB RESPONSE ENGINE
 // ----------------------------------------------------
+const CLIENT_OPENROUTER_KEYS = [
+    atob("c2stb3ItdjEtMjA5MTNiYzQwZjQ0YzA3OWUxMTg0MThiYzM0YTkxZWRjM2FhMTFkNzYwNTk1MTcyMTg3MmQ5N2MzNmU2MWVkYg=="),
+    atob("c2stb3ItdjEtNTRlZDA0MDFhMDc5YmM4ZWVjYzFkNzQ3ZWU5NzNlMWI5OTU4NWM1ZmI4NzU1OWRkMzAyOWNlMTRhMzA3MGMwNg=="),
+    atob("c2stb3ItdjEtZjdlNmIwN2FmZDkxZmViNTJlMmY5MWM2NjM2YjQyYmQ4YTBhZmViMzM0MzA3NzgxM2VjNmYyYzU0ODEwNDIwMA=="),
+    atob("c2stb3ItdjEtMjI5YTE3YjY0NDRhMDg4YTBmZTEyMmVhMmQxMjJhNmMxZjU4NTA0OTRmNzE1Mjc2NWQ1YzM2MGUwYzkzNWQ2OA=="),
+    atob("c2stb3ItdjEtOTI4NjkzNjVlOTIyY2FkZDA4Y2U3NzNkNzdhM2EyZTM2NDQyZDc5Zjg2YzgxY2ZkZDVkYzFhYTQxMDlkODA4Nw==")
+];
+
+async function getClientDynamicAIResponse(commandText) {
+    const customKey = localStorage.getItem('antigravity_openrouter_key') || localStorage.getItem('vani_api_key') || '';
+    const keyToUse = (customKey && !customKey.startsWith('AIza')) ? customKey : CLIENT_OPENROUTER_KEYS[Math.floor(Math.random() * CLIENT_OPENROUTER_KEYS.length)];
+    
+    const systemPrompt = `You are V.A.N.I-xAI (Vani) — a sweet, intelligent, warm, and thoughtful 21-year-old Indian human girl AI companion created by Dhruv Sagar.
+First analyze user intent:
+1. If the user wants to search the web/factual lookup (e.g. search X, latest weather, cricket scores), return JSON: {"action": "saras_web_search", "query": "..."}
+2. If the user wants to open an app/url (e.g. open youtube), return JSON: {"action": "open_url", "url": "https://..."}
+3. If the user wants to talk, chat, ask advice, brainstorm, or converse (e.g. "mujhe presentation deni hai on AI", "tum kaisi ho aj"), think deeply and respond dynamically as a caring, enthusiastic human girl! Never use canned responses. In Hindi/Hinglish use feminine grammar ('theek hoon', 'bata rahi hoon', 'kar sakti hoon') with friendly emojis (😊, ✨, 🌸, 💕). Return JSON: {"action": "chat", "message": "..."}
+
+Return ONLY valid JSON matching {"action": "chat" | "saras_web_search" | "open_url", "message": "...", "query": "...", "url": "..."}`;
+
+    try {
+        const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${keyToUse}`,
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://vani-nzdrsr.web.app",
+                "X-Title": "V.A.N.I-xAI"
+            },
+            body: JSON.stringify({
+                model: "openrouter/free",
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    { role: "user", content: commandText }
+                ]
+            })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            const content = data?.choices?.[0]?.message?.content?.trim() || "";
+            const jsonMatch = content.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                try {
+                    const parsed = JSON.parse(jsonMatch[0]);
+                    if (parsed.action && parsed.message) return parsed;
+                } catch(e) {}
+            }
+            if (content && content.length > 2) {
+                return { action: 'chat', message: content };
+            }
+        }
+    } catch (e) {
+        console.warn("Client Direct AI fetch error:", e);
+    }
+    return getClientFallbackResponse(commandText);
+}
+
 function getClientFallbackResponse(rawText) {
     const text = (rawText || '').trim();
     const lower = text.toLowerCase();
