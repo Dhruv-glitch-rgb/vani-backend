@@ -291,22 +291,114 @@
                 </div>
             </div>
 
-            <!-- AI Personality -->
-            <div class="settings-section">
-                <h2><i class="fa-solid fa-brain"></i> AI Logic</h2>
+            <!-- Local LLM Engine -->
+            <div class="settings-section" style="background: rgba(14, 165, 233, 0.03); border: 1px solid rgba(14, 165, 233, 0.15); border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="margin-bottom: 0; color: #0284c7;">
+                        <i class="fa-solid fa-microchip"></i> Local LLM & Offline Intelligence
+                    </h2>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span id="localLlmStatusBadge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-secondary); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            <span class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; display: inline-block;"></span> Probing Local Engine...
+                        </span>
+                        <button id="btnScanLocalLlm" class="nav-cta-btn animate-hover-scale" style="font-size: 0.75rem; padding: 5px 12px; background: rgba(255,255,255,0.1); border: 1px solid var(--panel-border); cursor: pointer;" title="Refresh local engine scan">
+                            <i class="fa-solid fa-arrows-rotate"></i> Scan
+                        </button>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 18px;">
+                    Run V.A.N.I-xAI directly on your computer with <strong>Ollama</strong> or any OpenAI-compatible local AI server. Enjoy 100% private, offline reasoning with zero cloud delay.
+                </p>
+
+                <!-- Enable Toggle -->
                 <div class="setting-item">
                     <div class="setting-info">
-                        <h4>AI Personality</h4>
-                        <p>Choose the tone the AI uses to respond.</p>
+                        <h4>Enable Local LLM Engine</h4>
+                        <p>Route AI reasoning through your locally installed LLM on this device.</p>
                     </div>
                     <div class="setting-control">
-                        <select id="aiPersonality">
-                            <option value="human_girl" selected>Human Girl (Vāṇī - Sweet, Caring & Expressive)</option>
-                            <option value="helpful">Helpful Assistant</option>
-                            <option value="hinglish">Hinglish Indian Girl</option>
-                            <option value="jarvis">JARVIS (Professional & Sci-Fi)</option>
-                            <option value="sarcastic">Sarcastic Genius</option>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="localLlmToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Execution Mode -->
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h4>Execution Mode</h4>
+                        <p>Choose routing priority between local machine and cloud.</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="localLlmMode" style="width: 220px;">
+                            <option value="local_first" selected>Local First (Fast Device AI + Cloud Fallback)</option>
+                            <option value="local_only">Local Only (100% Air-Gapped &amp; Private)</option>
+                            <option value="cloud_first">Cloud First (Cloud Primary + Local Backup)</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- Local Server URL -->
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h4>Local Server URL</h4>
+                        <p>Default: <code>http://127.0.0.1:11434</code> (Ollama) or <code>http://127.0.0.1:1234/v1</code> (LM Studio).</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" id="localLlmUrl" value="http://127.0.0.1:11434" placeholder="http://127.0.0.1:11434" style="width: 220px; font-family: monospace; font-size: 0.85rem;">
+                    </div>
+                </div>
+
+                <!-- Active Model Selector -->
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h4>Active Local Model</h4>
+                        <p>Select which local model V.A.N.I should use for thinking &amp; chatting.</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="localLlmModelSelect" style="width: 220px;">
+                            <option value="">-- No Local Models Detected --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Quick Model Library / Downloader -->
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(14, 165, 233, 0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h4 style="font-size: 0.95rem; color: var(--text-primary); margin: 0;">
+                            <i class="fa-solid fa-cloud-arrow-down"></i> Quick Model Library (1-Click Install via Ollama)
+                        </h4>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">
+                        Don't have a model yet? Click below to download a fast, lightweight model directly into your local Ollama engine:
+                    </p>
+
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                        <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="llama3.2:latest" style="font-size: 0.8rem; padding: 6px 12px; background: rgba(14, 165, 233, 0.1); border: 1px solid #0284c7; color: #0284c7;">
+                            <i class="fa-solid fa-download"></i> <strong>llama3.2</strong> (2.0 GB - Recommended)
+                        </button>
+                        <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="deepseek-r1:1.5b" style="font-size: 0.8rem; padding: 6px 12px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981;">
+                            <i class="fa-solid fa-brain"></i> <strong>deepseek-r1:1.5b</strong> (1.1 GB - Fast Reasoning)
+                        </button>
+                        <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="qwen2.5:3b" style="font-size: 0.8rem; padding: 6px 12px; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #a855f7;">
+                            <i class="fa-solid fa-language"></i> <strong>qwen2.5:3b</strong> (1.9 GB - Multilingual)
+                        </button>
+                        <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="phi3:mini" style="font-size: 0.8rem; padding: 6px 12px; background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; color: #f59e0b;">
+                            <i class="fa-solid fa-bolt"></i> <strong>phi3:mini</strong> (2.2 GB - Microsoft Compact)
+                        </button>
+                    </div>
+
+                    <!-- Live Pull Progress Bar -->
+                    <div id="pullProgressBox" style="display: none; background: rgba(0,0,0,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(14, 165, 233, 0.3);">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+                            <span id="pullStatusLabel" style="color: var(--text-primary); font-weight: 600;"><i class="fa-solid fa-spinner fa-spin"></i> Downloading model...</span>
+                            <span id="pullPercentLabel" style="color: #0284c7; font-weight: bold;">0%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden;">
+                            <div id="pullProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #0ea5e9, #10b981); transition: width 0.3s ease;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -627,6 +719,163 @@
                 btn.innerHTML = ogText;
             }
         });
+        // Local LLM Functions
+        let pullPollInterval = null;
+
+        async function scanLocalLlm(urlOverride = null) {
+            const badge = document.getElementById('localLlmStatusBadge');
+            const selectEl = document.getElementById('localLlmModelSelect');
+            const urlInput = document.getElementById('localLlmUrl');
+            
+            badge.innerHTML = `<span class="dot" style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;"></span> Scanning...`;
+            badge.style.color = "#f59e0b";
+            badge.style.background = "rgba(245, 158, 11, 0.1)";
+
+            const targetUrl = urlOverride || urlInput.value.trim() || 'http://127.0.0.1:11434';
+            try {
+                const res = await fetch(`/api/local-llm/status?url=${encodeURIComponent(targetUrl)}`);
+                if (!res.ok) throw new Error("Status check failed");
+                const data = await res.json();
+                
+                if (data.online) {
+                    const providerName = data.provider === 'ollama' ? 'Ollama' : 'OpenAI-Compatible Local';
+                    badge.innerHTML = `<span class="dot" style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;"></span> ${providerName} Online`;
+                    badge.style.color = "#10b981";
+                    badge.style.background = "rgba(16, 185, 129, 0.15)";
+                    
+                    // Populate models
+                    selectEl.innerHTML = '';
+                    if (data.models && data.models.length > 0) {
+                        data.models.forEach(m => {
+                            const opt = document.createElement('option');
+                            opt.value = m;
+                            opt.textContent = m;
+                            if (m === data.active_model) opt.selected = true;
+                            selectEl.appendChild(opt);
+                        });
+                    } else {
+                        const opt = document.createElement('option');
+                        opt.value = '';
+                        opt.textContent = '⚠️ Connected (No models pulled yet)';
+                        selectEl.appendChild(opt);
+                    }
+
+                    if (data.active_model && data.models && data.models.includes(data.active_model)) {
+                        selectEl.value = data.active_model;
+                    }
+                    if (data.mode) {
+                        document.getElementById('localLlmMode').value = data.mode;
+                    }
+                    if (data.enabled !== undefined) {
+                        document.getElementById('localLlmToggle').checked = data.enabled;
+                    }
+                } else {
+                    badge.innerHTML = `<span class="dot" style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;"></span> Offline / Unreachable`;
+                    badge.style.color = "#ef4444";
+                    badge.style.background = "rgba(239, 68, 68, 0.15)";
+                    selectEl.innerHTML = '<option value="">-- Local Engine Offline --</option>';
+                }
+
+                // Check if pull is in progress
+                if (data.pull_status && data.pull_status.is_pulling) {
+                    startPullPolling();
+                }
+
+            } catch (err) {
+                badge.innerHTML = `<span class="dot" style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;"></span> Offline`;
+                badge.style.color = "#ef4444";
+                badge.style.background = "rgba(239, 68, 68, 0.15)";
+                selectEl.innerHTML = '<option value="">-- Cannot Connect to Backend --</option>';
+            }
+        }
+
+        async function triggerModelPull(modelName) {
+            const url = document.getElementById('localLlmUrl').value.trim();
+            const box = document.getElementById('pullProgressBox');
+            const label = document.getElementById('pullStatusLabel');
+            const percentLabel = document.getElementById('pullPercentLabel');
+            const bar = document.getElementById('pullProgressBar');
+
+            box.style.display = 'block';
+            label.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Initializing download of <strong>${modelName}</strong>...`;
+            percentLabel.textContent = '0%';
+            bar.style.width = '0%';
+
+            try {
+                const res = await fetch('/api/local-llm/pull', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: modelName, url: url })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    startPullPolling();
+                } else {
+                    alert("Could not start download: " + (data.error || "Unknown error"));
+                    box.style.display = 'none';
+                }
+            } catch (e) {
+                alert("Failed to contact backend to pull model: " + e.message);
+                box.style.display = 'none';
+            }
+        }
+
+        function startPullPolling() {
+            if (pullPollInterval) clearInterval(pullPollInterval);
+            const box = document.getElementById('pullProgressBox');
+            const label = document.getElementById('pullStatusLabel');
+            const percentLabel = document.getElementById('pullPercentLabel');
+            const bar = document.getElementById('pullProgressBar');
+            box.style.display = 'block';
+
+            pullPollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('/api/local-llm/pull-status');
+                    if (!res.ok) return;
+                    const status = await res.json();
+
+                    if (status.is_pulling) {
+                        const pct = status.percent || 0;
+                        bar.style.width = `${pct}%`;
+                        percentLabel.textContent = `${pct}%`;
+                        label.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${status.status || 'Downloading'} (<strong>${status.model}</strong>)...`;
+                    } else {
+                        clearInterval(pullPollInterval);
+                        pullPollInterval = null;
+                        if (status.status === 'success') {
+                            bar.style.width = '100%';
+                            percentLabel.textContent = '100%';
+                            label.innerHTML = `<i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Successfully installed and activated <strong>${status.model}</strong>!`;
+                            scanLocalLlm();
+                        } else if (status.status === 'failed') {
+                            label.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i> Download failed: ${status.error || 'Unknown error'}`;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error polling pull status:", e);
+                }
+            }, 1200);
+        }
+
+        // Attach Quick Pull Buttons
+        document.querySelectorAll('.btn-pull-model').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const model = btn.getAttribute('data-model');
+                if (confirm(`Do you want to download model '${model}' to your local Ollama engine?`)) {
+                    triggerModelPull(model);
+                }
+            });
+        });
+
+        document.getElementById('btnScanLocalLlm').addEventListener('click', () => {
+            scanLocalLlm();
+        });
+
+        document.getElementById('localLlmUrl').addEventListener('change', () => {
+            scanLocalLlm();
+        });
+
         // Load Settings
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('vani_theme') || (localStorage.getItem('vani_dark_mode') === 'true' ? 'dark' : 'light');
@@ -645,13 +894,16 @@
             } else if (savedTheme === 'inxv') {
                 document.body.classList.add('inxv-theme');
             }
+
+            // Probe and configure Local LLM
+            scanLocalLlm();
         });
 
         document.getElementById('speechRateSlider').addEventListener('input', (e) => {
             document.getElementById('speechRateVal').textContent = e.target.value + 'x';
         });
 
-        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+        document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
             const selectedTheme = document.getElementById('themeSelect').value;
             const autoSpeak = document.getElementById('autoSpeakToggle').checked;
             const rate = document.getElementById('speechRateSlider').value;
@@ -662,9 +914,35 @@
             localStorage.setItem('vani_speech_rate', rate);
             localStorage.setItem('vani_personality', personality);
 
+            // Save Local LLM Configuration to Backend
+            const localEnabled = document.getElementById('localLlmToggle').checked;
+            const localMode = document.getElementById('localLlmMode').value;
+            const localUrl = document.getElementById('localLlmUrl').value.trim();
+            const localModel = document.getElementById('localLlmModelSelect').value;
+
+            localStorage.setItem('vani_local_llm_enabled', localEnabled);
+            localStorage.setItem('vani_local_llm_mode', localMode);
+            localStorage.setItem('vani_local_llm_url', localUrl);
+            localStorage.setItem('vani_local_llm_model', localModel);
+
+            try {
+                await fetch('/api/local-llm/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        enabled: localEnabled,
+                        mode: localMode,
+                        url: localUrl,
+                        model: localModel
+                    })
+                });
+            } catch (e) {
+                console.warn("Could not persist local LLM config to backend:", e);
+            }
+
             const btn = document.getElementById('saveSettingsBtn');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Saved!';
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Preferences Saved!';
 
             document.body.classList.remove('dark-theme', 'inxv-theme');
             if (selectedTheme === 'dark') {

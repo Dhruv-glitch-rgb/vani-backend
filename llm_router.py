@@ -4,6 +4,7 @@ import urllib.request
 import urllib.error
 import time
 import concurrent.futures
+import threading
 
 def log_router(msg):
     try:
@@ -24,6 +25,249 @@ VISION_FREE_MODELS = [
     "nvidia/nemotron-nano-12b-v2-vl:free",
     "openrouter/free"
 ]
+
+# Local LLM Config Path
+CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'local_llm_config.json')
+
+DEFAULT_LOCAL_CONFIG = {
+    "enabled": True,
+    "url": os.environ.get("LOCAL_LLM_URL", "http://127.0.0.1:11434"),
+    "model": os.environ.get("LOCAL_LLM_MODEL", ""),
+    "mode": os.environ.get("LOCAL_LLM_MODE", "local_first"),  # "local_first", "local_only", "cloud_first"
+    "provider": "auto",  # "ollama", "openai_compatible", "auto"
+    "timeout": 30
+}
+
+def get_local_config():
+    """Load local LLM configuration with defaults."""
+    if os.path.exists(CONFIG_PATH):
+        try:
+            with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                config = DEFAULT_LOCAL_CONFIG.copy()
+                config.update(data)
+                return config
+        except Exception as e:
+            log_router(f"Error loading local_llm_config.json: {e}")
+    return DEFAULT_LOCAL_CONFIG.copy()
+
+def save_local_config(new_config):
+    """Save local LLM configuration."""
+    current = get_local_config()
+    current.update(new_config)
+    try:
+        with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
+            json.dump(current, f, indent=2)
+        return True, current
+    except Exception as e:
+        log_router(f"Error saving local_llm_config.json: {e}")
+        return False, str(e)
+
+# Global status tracker for model pull operations
+PULL_STATUS = {
+    "is_pulling": False,
+    "model": "",
+    "status": "idle",
+    "completed": 0,
+    "total": 0,
+    "percent": 0,
+    "error": None
+}
+
+def get_local_llm_status(local_url=None):
+    """
+    Check if local LLM server (Ollama or LM Studio/vLLM) is running and discover installed models.
+    """
+    cfg = get_local_config()
+    url = (local_url or cfg.get("url", "http://127.0.0.1:11434")).rstrip('/')
+    
+    result = {
+        "online": False,
+        "provider": "unknown",
+        "url": url,
+        "models": [],
+        "active_model": cfg.get("model", ""),
+        "mode": cfg.get("mode", "local_first"),
+        "enabled": cfg.get("enabled", True),
+        "pull_status": PULL_STATUS
+    }
+
+    # 1. Try Ollama Native API (/api/tags)
+    try:
+        req = urllib.request.Request(f"{url}/api/tags", headers={"User-Agent": "VANI-xAI"})
+        with urllib.request.urlopen(req, timeout=3) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            raw_models = data.get("models", [])
+            model_names = [m.get("name") for m in raw_models if m.get("name")]
+            result["online"] = True
+            result["provider"] = "ollama"
+            result["models"] = model_names
+            result["details"] = raw_models
+            
+            # If active_model is empty, select the first available model
+            if not result["active_model"] and model_names:
+                result["active_model"] = model_names[0]
+            return result
+    except Exception:
+        pass
+
+    # 2. Try OpenAI-Compatible /v1/models (LM Studio, LocalAI, vLLM)
+    try:
+        v1_url = url if url.endswith("/v1") else f"{url}/v1"
+        req = urllib.request.Request(f"{v1_url}/models", headers={"User-Agent": "VANI-xAI"})
+        with urllib.request.urlopen(req, timeout=3) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            raw_models = data.get("data", [])
+            model_names = [m.get("id") for m in raw_models if m.get("id")]
+            result["online"] = True
+            result["provider"] = "openai_compatible"
+            result["models"] = model_names
+            result["details"] = raw_models
+            
+            if not result["active_model"] and model_names:
+                result["active_model"] = model_names[0]
+            return result
+    except Exception:
+        pass
+
+    return result
+
+def _pull_worker(model_name, url):
+    """Background worker that streams model pull progress from Ollama."""
+    global PULL_STATUS
+    PULL_STATUS["is_pulling"] = True
+    PULL_STATUS["model"] = model_name
+    PULL_STATUS["status"] = "starting"
+    PULL_STATUS["completed"] = 0
+    PULL_STATUS["total"] = 0
+    PULL_STATUS["percent"] = 0
+    PULL_STATUS["error"] = None
+
+    try:
+        pull_url = f"{url.rstrip('/')}/api/pull"
+        payload = json.dumps({"name": model_name, "stream": True}).encode('utf-8')
+        req = urllib.request.Request(pull_url, data=payload, headers={"Content-Type": "application/json"})
+        
+        with urllib.request.urlopen(req, timeout=1200) as response:
+            for line in response:
+                if not line:
+                    continue
+                try:
+                    event = json.loads(line.decode('utf-8'))
+                    status_text = event.get("status", "")
+                    PULL_STATUS["status"] = status_text
+                    total = event.get("total", 0)
+                    completed = event.get("completed", 0)
+                    if total > 0:
+                        PULL_STATUS["total"] = total
+                        PULL_STATUS["completed"] = completed
+                        PULL_STATUS["percent"] = round((completed / total) * 100, 1)
+                except Exception:
+                    pass
+        
+        PULL_STATUS["status"] = "success"
+        PULL_STATUS["percent"] = 100
+        # Automatically set as active model
+        cfg = get_local_config()
+        cfg["model"] = model_name
+        save_local_config(cfg)
+        log_router(f"Successfully pulled and activated local model '{model_name}'")
+    except Exception as e:
+        log_router(f"Error pulling model '{model_name}': {e}")
+        PULL_STATUS["status"] = "failed"
+        PULL_STATUS["error"] = str(e)
+    finally:
+        PULL_STATUS["is_pulling"] = False
+
+def start_model_pull(model_name, local_url=None):
+    """Start pulling a model asynchronously in the background."""
+    global PULL_STATUS
+    if PULL_STATUS["is_pulling"]:
+        return False, "Another model pull is already in progress."
+    
+    cfg = get_local_config()
+    url = (local_url or cfg.get("url", "http://127.0.0.1:11434")).rstrip('/')
+    
+    t = threading.Thread(target=_pull_worker, args=(model_name.strip(), url), daemon=True)
+    t.start()
+    return True, f"Started download for model '{model_name}'."
+
+def _call_local_llm(messages, timeout=30, require_json=False, model=None, local_url=None):
+    """
+    Send prompt to local LLM (Ollama or OpenAI-compatible server).
+    Supports format='json' / JSON mode, timeout, and custom models.
+    """
+    cfg = get_local_config()
+    url = (local_url or cfg.get("url", "http://127.0.0.1:11434")).rstrip('/')
+    active_model = model or cfg.get("model", "")
+    
+    # If no model specified, query status to pick the first available one
+    if not active_model:
+        status = get_local_llm_status(url)
+        if status.get("models"):
+            active_model = status["models"][0]
+        else:
+            raise Exception("No models found on local LLM server. Please pull a model first (e.g. llama3.2).")
+            
+    log_router(f"Calling Local LLM at {url} with model: '{active_model}'")
+    start_time = time.time()
+
+    # 1. Try Ollama native /api/chat
+    try:
+        ollama_payload = {
+            "model": active_model,
+            "messages": messages,
+            "stream": False,
+            "options": {
+                "temperature": 0.7,
+                "num_predict": 600
+            }
+        }
+        if require_json:
+            ollama_payload["format"] = "json"
+
+        req = urllib.request.Request(
+            f"{url}/api/chat",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(ollama_payload).encode('utf-8')
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            content = data.get("message", {}).get("content", "").strip()
+            elapsed = time.time() - start_time
+            log_router(f"Success with Local Ollama ({active_model}) in {elapsed:.2f}s")
+            return content
+    except urllib.error.HTTPError as e:
+        # If 404, maybe it's not Ollama or it's an OpenAI compatible server
+        if e.code != 404:
+            raise e
+    except Exception as e:
+        # If connection refused or timeout, let it fall through or raise
+        if "404" not in str(e):
+            raise e
+
+    # 2. Try OpenAI-compatible /v1/chat/completions (LM Studio, LocalAI, vLLM)
+    v1_url = url if url.endswith("/v1") else f"{url}/v1"
+    openai_payload = {
+        "model": active_model,
+        "messages": messages,
+        "max_tokens": 600,
+        "temperature": 0.7
+    }
+    if require_json:
+        openai_payload["response_format"] = {"type": "json_object"}
+
+    req = urllib.request.Request(
+        f"{v1_url}/chat/completions",
+        headers={"Content-Type": "application/json"},
+        data=json.dumps(openai_payload).encode('utf-8')
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as response:
+        data = json.loads(response.read().decode('utf-8'))
+        content = data['choices'][0]['message']['content'].strip()
+        elapsed = time.time() - start_time
+        log_router(f"Success with Local OpenAI API ({active_model}) in {elapsed:.2f}s")
+        return content
 
 def _call_single_model(model, current_key, messages, timeout, require_json):
     log_router(f"Attempting model: {model} with Key ending in ...{current_key[-4:] if current_key else ''}")
@@ -140,19 +384,38 @@ DEFAULT_OPENROUTER_KEYS = [
     base64.b64decode("c2stb3ItdjEtOTI4NjkzNjVlOTIyY2FkZDA4Y2U3NzNkNzdhM2EyZTM2NDQyZDc5Zjg2YzgxY2ZkZDVkYzFhYTQxMDlkODA4Nw==").decode('utf-8')
 ]
 
-def call_llm_with_fallback(messages, models=None, timeout_per_model=6, require_json=False, custom_api_key=None):
+def call_llm_with_fallback(messages, models=None, timeout_per_model=6, require_json=False, custom_api_key=None, force_local=False, preferred_local_model=None):
     """
-    Concurrent Multi-Model Router.
-    Fires requests to all models at the same time and returns the first successful response to maximize speed.
+    Intelligent Hybrid LLM Router with Local LLM First-Class Integration.
+    Supports Local First (Ollama/LM Studio), Local Only (Private), and Cloud Fallback Key Pool.
     """
-    # 1. Check if explicit custom Gemini Key is provided
+    local_cfg = get_local_config()
+    is_local_enabled = local_cfg.get("enabled", True)
+    local_mode = local_cfg.get("mode", "local_first")
+    
+    # 1. LOCAL LLM ROUTING (Local First or Local Only)
+    if (is_local_enabled and local_mode in ["local_first", "local_only"]) or force_local:
+        try:
+            return _call_local_llm(
+                messages=messages,
+                timeout=local_cfg.get("timeout", 30),
+                require_json=require_json,
+                model=preferred_local_model or local_cfg.get("model")
+            )
+        except Exception as local_err:
+            log_router(f"Local LLM attempt failed: {local_err}")
+            if local_mode == "local_only" and not custom_api_key:
+                raise Exception(f"Local LLM failed in 'Local Only' mode: {local_err}. Please ensure your local model is running.")
+            log_router("Proceeding to Cloud Fallback Pool...")
+
+    # 2. Check if explicit custom Gemini Key is provided
     if custom_api_key and custom_api_key.startswith("AIza"):
         try:
             return _call_gemini_model(custom_api_key.strip(), messages, timeout_per_model)
         except Exception as ge:
             log_router(f"Custom Gemini call failed: {ge}. Continuing with OpenRouter pool...")
 
-    # 2. OpenRouter Key Pool
+    # 3. OpenRouter Key Pool
     if custom_api_key and custom_api_key.strip() and not custom_api_key.startswith("AIza"):
         fallback_api_keys = [custom_api_key.strip()]
     else:
@@ -192,6 +455,19 @@ def call_llm_with_fallback(messages, models=None, timeout_per_model=6, require_j
             except Exception as e:
                 last_error = str(e)
                 
+        # 4. If Cloud Failed and mode was Cloud First, try Local as last resort
+        if is_local_enabled and local_mode == "cloud_first":
+            try:
+                log_router("Cloud pool exhausted, attempting Local LLM fallback...")
+                return _call_local_llm(
+                    messages=messages,
+                    timeout=local_cfg.get("timeout", 30),
+                    require_json=require_json,
+                    model=preferred_local_model or local_cfg.get("model")
+                )
+            except Exception as le:
+                log_router(f"Local LLM fallback also failed: {le}")
+
         log_router(f"All models failed. Last error: {last_error}")
         raise Exception(f"All models in fallback sequence failed. Last error: {last_error}")
     finally:
@@ -199,4 +475,5 @@ def call_llm_with_fallback(messages, models=None, timeout_per_model=6, require_j
             executor.shutdown(wait=False, cancel_futures=True)
         except Exception:
             pass
+
 

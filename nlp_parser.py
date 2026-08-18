@@ -146,9 +146,9 @@ def parse_with_rules(text):
         'message': f"I received: '<em>{text}</em>'. How can I help you today? Feel free to ask me to search the web or chat with me! 💕"
     }
 
-def parse_command(text, personality='human_girl', api_key=None):
+def parse_command(text, personality='human_girl', api_key=None, force_local=False, preferred_local_model=None):
     """
-    Parse user prompt using dynamic LLM reasoning.
+    Parse user prompt using dynamic LLM reasoning (Local LLM or Cloud Fallback).
     The AI intelligently thinks whether the user is asking to search something or wants to have a natural human conversation.
     """
     if not api_key:
@@ -220,7 +220,9 @@ JSON:"""
             messages,
             models=llm_router.FAST_FREE_MODELS,
             timeout_per_model=12,
-            custom_api_key=api_key
+            custom_api_key=api_key,
+            force_local=force_local,
+            preferred_local_model=preferred_local_model
         )
         
         # 1. Try to extract JSON object from markdown or raw text

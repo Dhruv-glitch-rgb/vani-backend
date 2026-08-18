@@ -167,9 +167,17 @@ def handle_command():
     
     personality = data.get('personality', 'human_girl')
     custom_api_key = request.headers.get('X-OpenRouter-Key') or data.get('apiKey')
+    force_local = data.get('forceLocal', False) or request.headers.get('X-Force-Local') == 'true'
+    preferred_local_model = data.get('localModel') or request.headers.get('X-Local-Model')
     
-    # Parse the command
-    parsed = nlp_parser.parse_command(command, personality=personality, api_key=custom_api_key)
+    # Parse the command (with local LLM support)
+    parsed = nlp_parser.parse_command(
+        command, 
+        personality=personality, 
+        api_key=custom_api_key,
+        force_local=force_local,
+        preferred_local_model=preferred_local_model
+    )
     action = parsed.get('action')
     
     result_message = ""
@@ -423,6 +431,49 @@ def get_system_stats():
         })
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# ----------------------------------------------------
+# LOCAL LLM API ENDPOINTS
+# ----------------------------------------------------
+
+@app.route('/api/local-llm/status', methods=['GET'])
+def get_local_llm_status_endpoint():
+    import llm_router
+    url = request.args.get('url')
+    status = llm_router.get_local_llm_status(local_url=url)
+    return jsonify(status)
+
+@app.route('/api/local-llm/config', methods=['GET', 'POST'])
+def handle_local_llm_config():
+    import llm_router
+    if request.method == 'POST':
+        data = request.json or {}
+        success, res = llm_router.save_local_config(data)
+        if success:
+            return jsonify({'success': True, 'config': res})
+        return jsonify({'success': False, 'error': str(res)}), 400
+    else:
+        config = llm_router.get_local_config()
+        return jsonify({'success': True, 'config': config})
+
+@app.route('/api/local-llm/pull', methods=['POST'])
+def pull_local_model_endpoint():
+    import llm_router
+    data = request.json or {}
+    model_name = data.get('model', '').strip()
+    url = data.get('url')
+    if not model_name:
+        return jsonify({'success': False, 'error': 'No model name specified.'}), 400
+    
+    success, msg = llm_router.start_model_pull(model_name, local_url=url)
+    if success:
+        return jsonify({'success': True, 'message': msg})
+    return jsonify({'success': False, 'error': msg}), 409
+
+@app.route('/api/local-llm/pull-status', methods=['GET'])
+def get_pull_status_endpoint():
+    import llm_router
+    return jsonify(llm_router.PULL_STATUS)
 
 # Catch-all file server for public assets
 @app.route('/<path:path>')

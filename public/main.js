@@ -317,6 +317,10 @@ async function submitCommand(commandText) {
 
     try {
         const customApiKey = localStorage.getItem('antigravity_openrouter_key') || localStorage.getItem('vani_api_key') || '';
+        const localMode = localStorage.getItem('vani_local_llm_mode') || 'local_first';
+        const localModel = localStorage.getItem('vani_local_llm_model') || '';
+        const localEnabled = localStorage.getItem('vani_local_llm_enabled') !== 'false';
+
         const headers = { 
             'Content-Type': 'application/json',
             'Bypass-Tunnel-Reminder': 'true'
@@ -325,10 +329,17 @@ async function submitCommand(commandText) {
             headers['X-OpenRouter-Key'] = customApiKey;
             headers['Authorization'] = `Bearer ${customApiKey}`;
         }
+        if (localMode === 'local_only') {
+            headers['X-Force-Local'] = 'true';
+        }
+        if (localModel) {
+            headers['X-Local-Model'] = localModel;
+        }
 
-        // Fast parallel execution: Race backend with direct browser AI engine
+        // Parallel execution: Race backend (Local/Cloud router) with client fallback
+        const backendTimeoutMs = localEnabled ? 20000 : 8000;
         const backendPromise = new Promise(async (resolve, reject) => {
-            const timer = setTimeout(() => reject(new Error("Backend timeout")), 3000);
+            const timer = setTimeout(() => reject(new Error("Backend timeout")), backendTimeoutMs);
             try {
                 const response = await fetch(`${BACKEND_URL}/api/command`, {
                     method: 'POST',
@@ -336,7 +347,9 @@ async function submitCommand(commandText) {
                     body: JSON.stringify({ 
                         command: commandText,
                         personality: localStorage.getItem('vani_personality') || 'human_girl',
-                        apiKey: customApiKey
+                        apiKey: customApiKey,
+                        forceLocal: localMode === 'local_only',
+                        localModel: localModel
                     })
                 });
                 clearTimeout(timer);
@@ -352,13 +365,15 @@ async function submitCommand(commandText) {
             }
         });
 
-        const clientPromise = getClientDynamicAIResponse(commandText);
+        const clientPromise = (localMode === 'local_only') 
+            ? new Promise((_, reject) => setTimeout(() => reject(new Error("Local Only Mode active")), backendTimeoutMs + 1000))
+            : getClientDynamicAIResponse(commandText);
 
         let data = null;
         try {
             data = await Promise.any([backendPromise, clientPromise]);
         } catch (raceErr) {
-            data = await clientPromise;
+            data = await backendPromise.catch(() => getClientFallbackResponse(commandText));
         }
 
         if (!data || !data.message) {
@@ -745,8 +760,40 @@ window.addEventListener('DOMContentLoaded', () => {
             .catch(err => console.error('Service Worker registration failed', err));
     }
 
+    // Check Local LLM Status for Console Badge
+    checkLocalLlmStatusOnConsole();
+
     addTerminalLog("[SYSTEM] V.A.N.I-xAI interface loaded.");
 });
+
+async function checkLocalLlmStatusOnConsole() {
+    const badgeText = document.getElementById('console-local-llm-text');
+    const badgeEl = document.getElementById('console-local-llm-badge');
+    if (!badgeText || !badgeEl) return;
+
+    try {
+        const res = await fetch('/api/local-llm/status');
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        if (data.online) {
+            const modelDisplay = data.active_model ? data.active_model.split(':')[0] : (data.models && data.models.length > 0 ? data.models[0].split(':')[0] : 'Online');
+            badgeText.textContent = `Local: ${modelDisplay}`;
+            badgeEl.style.background = 'rgba(16, 185, 129, 0.15)';
+            badgeEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+            badgeEl.style.color = '#10b981';
+            badgeEl.title = `Local AI active (${data.active_model || 'Ollama'}). Click to configure in Settings.`;
+        } else {
+            badgeText.textContent = 'Cloud AI';
+            badgeEl.style.background = 'rgba(148, 163, 184, 0.15)';
+            badgeEl.style.borderColor = 'rgba(148, 163, 184, 0.3)';
+            badgeEl.style.color = 'var(--text-secondary)';
+            badgeEl.title = 'Local LLM offline. Cloud key pool active. Click to configure in Settings.';
+        }
+    } catch (e) {
+        // Silent fallback
+    }
+}
 
 // Quick Mute Toggle
 const quickMuteBtn = document.getElementById('quick-mute-btn');
