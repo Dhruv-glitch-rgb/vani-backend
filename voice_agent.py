@@ -70,7 +70,9 @@ class VoiceAgent:
             
         def _speak():
             try:
-                voice = "en-GB-RyanNeural"
+                # Authentic Indian Female Neural Voices:
+                # "hi-IN-SwaraNeural" for Hindi/Hinglish or "en-IN-NeerjaNeural" for Indian English
+                voice = "hi-IN-SwaraNeural"
                 communicate = edge_tts.Communicate(text, voice)
                 temp_file = os.path.join(os.path.dirname(__file__), "temp_speech.mp3")
                 asyncio.run(communicate.save(temp_file))

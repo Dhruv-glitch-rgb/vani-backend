@@ -184,46 +184,84 @@ function addChatMessage(sender, content, actionName = null, imageUrl = null) {
         console.error("Error saving chat:", e);
     }
 
-    // Auto-Speak Logic for Bot/Assistant
+    // Auto-Speak Logic for Bot/Assistant with Authentic Indian Girl Voice
     if (sender !== 'user' && localStorage.getItem('vani_auto_speak') !== 'false') {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Stop any ongoing speech
-            
-            // Strip markdown/html and EMOJIS for speaking
-            let cleanText = content.replace(/<[^>]+>/g, '').replace(/[*_~`]/g, '');
-            // Regex to remove all emojis
-            cleanText = cleanText.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
-
-            const msg = new SpeechSynthesisUtterance(cleanText);
-            
-            const rate = parseFloat(localStorage.getItem('vani_speech_rate') || '1.0');
-            msg.rate = rate;
-            
-            // 1. Try to pick an Indian Female voice (supports Hinglish natively on most OS)
-            const voices = window.speechSynthesis.getVoices();
-            let preferredVoice = voices.find(v => 
-                (v.lang.includes('en-IN') || v.lang.includes('hi-IN')) && 
-                (v.name.includes('Female') || v.name.includes('Heera') || v.name.includes('Neerja'))
-            );
-            
-            // 2. Fallback to any Indian voice
-            if (!preferredVoice) {
-                preferredVoice = voices.find(v => v.lang.includes('en-IN') || v.lang.includes('hi-IN'));
-            }
-            
-            // 3. Fallback to any female voice
-            if (!preferredVoice) {
-                preferredVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('Google US English'));
-            }
-
-            if (preferredVoice) {
-                msg.voice = preferredVoice;
-            }
-
-            window.speechSynthesis.speak(msg);
-        }
+        speakAsIndianGirl(content);
     }
 }
+
+// Global helper for playing speech with authentic Indian female voice
+function speakAsIndianGirl(content) {
+    if (!('speechSynthesis' in window)) return;
+    
+    window.speechSynthesis.cancel(); // Stop any ongoing speech
+    
+    // Strip markdown/html, links, and emojis for natural speech
+    let cleanText = (content || '')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/https?:\/\/\S+/gi, '')
+        .replace(/[*_~`#]/g, '')
+        .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+        .trim();
+
+    if (!cleanText) return;
+
+    const msg = new SpeechSynthesisUtterance(cleanText);
+    
+    const rate = parseFloat(localStorage.getItem('vani_speech_rate') || '1.0');
+    const pitch = parseFloat(localStorage.getItem('vani_voice_pitch') || '1.15'); // 1.15 gives a sweet, youthful feminine Indian girl pitch
+    const preferredVoiceType = localStorage.getItem('vani_voice_accent') || 'vani_sweet';
+
+    msg.rate = rate;
+    msg.pitch = pitch;
+
+    const voices = window.speechSynthesis.getVoices();
+    let selectedVoice = null;
+
+    // 1. Check if user selected a specific voice type
+    if (preferredVoiceType === 'swara') {
+        selectedVoice = voices.find(v => (v.name.toLowerCase().includes('swara') || v.lang.includes('hi-IN') || v.lang.includes('hi_IN')));
+    } else if (preferredVoiceType === 'neerja') {
+        selectedVoice = voices.find(v => v.name.toLowerCase().includes('neerja'));
+    } else if (preferredVoiceType === 'heera') {
+        selectedVoice = voices.find(v => v.name.toLowerCase().includes('heera'));
+    }
+
+    // 2. High-priority matching for top Natural Indian Female Voices
+    if (!selectedVoice) {
+        // Look for Swara, Neerja, Heera, Google Hindi, Google Indian English
+        selectedVoice = voices.find(v => 
+            (v.lang.includes('hi-IN') || v.lang.includes('hi_IN') || v.lang.includes('en-IN') || v.lang.includes('en_IN')) &&
+            (v.name.toLowerCase().includes('swara') || v.name.toLowerCase().includes('neerja') || v.name.toLowerCase().includes('heera') || v.name.toLowerCase().includes('ananya') || v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('hindi'))
+        );
+    }
+
+    // 3. Fallback to any Hindi voice (produces authentic Indian girl accent on Hinglish & Hindi)
+    if (!selectedVoice) {
+        selectedVoice = voices.find(v => v.lang.includes('hi-IN') || v.lang.includes('hi_IN') || v.lang.startsWith('hi'));
+    }
+
+    // 4. Fallback to any Indian English voice
+    if (!selectedVoice) {
+        selectedVoice = voices.find(v => v.lang.includes('en-IN') || v.lang.includes('en_IN'));
+    }
+
+    // 5. Fallback to any warm female voice
+    if (!selectedVoice) {
+        selectedVoice = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('natural'));
+    }
+
+    if (selectedVoice) {
+        msg.voice = selectedVoice;
+        msg.lang = selectedVoice.lang || 'hi-IN';
+    } else {
+        msg.lang = 'hi-IN';
+    }
+
+    window.speechSynthesis.speak(msg);
+}
+
+window.speakAsIndianGirl = speakAsIndianGirl;
 
 // Add Custom Line to Terminal Logs Window
 function addTerminalLog(msg, type = '') {

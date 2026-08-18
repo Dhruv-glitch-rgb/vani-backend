@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="a2k3hsJ7OMGBcqvaocR8ke0mnvEWpDVxs5WkqQogH04" />
-    <title>Settings - V.A.N.I-xAI</title>
+    <title>Settings - VANI-xAI</title>
+    <meta name="robots" content="noindex, nofollow">
     <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
     <!-- Fonts -->
     <link
@@ -266,11 +266,12 @@
 
             <!-- Voice & Speech -->
             <div class="settings-section">
-                <h2><i class="fa-solid fa-microphone-lines"></i> Voice & Speech</h2>
+                <h2><i class="fa-solid fa-microphone-lines"></i> Voice & Speech (Indian Girl Voice)</h2>
+                
                 <div class="setting-item">
                     <div class="setting-info">
                         <h4>Auto-Speak Responses</h4>
-                        <p>The AI will automatically read its responses aloud.</p>
+                        <p>Vāṇī will automatically read its responses aloud with a natural Indian girl voice.</p>
                     </div>
                     <div class="setting-control">
                         <label class="toggle-switch">
@@ -279,15 +280,48 @@
                         </label>
                     </div>
                 </div>
+
                 <div class="setting-item">
                     <div class="setting-info">
-                        <h4>Speech Rate</h4>
-                        <p>How fast the AI speaks.</p>
+                        <h4>Indian Voice Style</h4>
+                        <p>Choose your preferred Indian feminine tone &amp; accent.</p>
+                    </div>
+                    <div class="setting-control">
+                        <select id="voiceAccentSelect" style="width: 220px;">
+                            <option value="vani_sweet" selected>🌸 Vāṇī Sweet (Hindi &amp; Hinglish Natural)</option>
+                            <option value="swara">✨ Swara (Expressive Hindi Girl)</option>
+                            <option value="neerja">💎 Neerja (Indian English Girl)</option>
+                            <option value="heera">🎙️ Heera (Indian Classic Female)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h4>Voice Sweetness / Pitch</h4>
+                        <p>Adjust the vocal pitch (higher pitch = sweeter feminine tone).</p>
+                    </div>
+                    <div class="setting-control" style="display:flex; align-items:center; gap: 10px;">
+                        <input type="range" id="voicePitchSlider" min="0.8" max="1.5" step="0.05" value="1.15">
+                        <span id="voicePitchVal" style="min-width: 45px; font-weight: 600; color: var(--accent-indigo);">1.15x</span>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h4>Speech Speed / Rate</h4>
+                        <p>How fast Vāṇī speaks.</p>
                     </div>
                     <div class="setting-control" style="display:flex; align-items:center; gap: 10px;">
                         <input type="range" id="speechRateSlider" min="0.5" max="2" step="0.1" value="1.0">
-                        <span id="speechRateVal">1.0x</span>
+                        <span id="speechRateVal" style="min-width: 45px; font-weight: 600; color: var(--accent-indigo);">1.0x</span>
                     </div>
+                </div>
+
+                <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                    <button class="nav-cta-btn animate-hover-scale" id="btnTestVoice" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; border: none; font-size: 0.85rem; padding: 8px 16px; border-radius: 8px; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);">
+                        <i class="fa-solid fa-play"></i> Test Indian Girl Voice
+                    </button>
                 </div>
             </div>
 
@@ -881,12 +915,17 @@
             const savedTheme = localStorage.getItem('vani_theme') || (localStorage.getItem('vani_dark_mode') === 'true' ? 'dark' : 'light');
             const savedAutoSpeak = localStorage.getItem('vani_auto_speak') !== 'false';
             const savedRate = localStorage.getItem('vani_speech_rate') || '1.0';
+            const savedPitch = localStorage.getItem('vani_voice_pitch') || '1.15';
+            const savedAccent = localStorage.getItem('vani_voice_accent') || 'vani_sweet';
             const savedPersonality = localStorage.getItem('vani_personality') || 'human_girl';
 
             document.getElementById('themeSelect').value = savedTheme;
             document.getElementById('autoSpeakToggle').checked = savedAutoSpeak;
             document.getElementById('speechRateSlider').value = savedRate;
             document.getElementById('speechRateVal').textContent = savedRate + 'x';
+            document.getElementById('voicePitchSlider').value = savedPitch;
+            document.getElementById('voicePitchVal').textContent = savedPitch + 'x';
+            document.getElementById('voiceAccentSelect').value = savedAccent;
             document.getElementById('aiPersonality').value = savedPersonality;
 
             if (savedTheme === 'dark') {
@@ -903,15 +942,46 @@
             document.getElementById('speechRateVal').textContent = e.target.value + 'x';
         });
 
+        document.getElementById('voicePitchSlider').addEventListener('input', (e) => {
+            document.getElementById('voicePitchVal').textContent = e.target.value + 'x';
+        });
+
+        // Test Indian Girl Voice Button
+        document.getElementById('btnTestVoice').addEventListener('click', (e) => {
+            e.preventDefault();
+            const accent = document.getElementById('voiceAccentSelect').value;
+            const rate = document.getElementById('speechRateSlider').value;
+            const pitch = document.getElementById('voicePitchSlider').value;
+            
+            localStorage.setItem('vani_voice_accent', accent);
+            localStorage.setItem('vani_speech_rate', rate);
+            localStorage.setItem('vani_voice_pitch', pitch);
+
+            const testPhrase = "Namaste! Main Vāṇī hoon, aapki AI dost. Main aapki kya madad kar sakti hoon?";
+            if (typeof speakAsIndianGirl === 'function') {
+                speakAsIndianGirl(testPhrase);
+            } else {
+                const msg = new SpeechSynthesisUtterance(testPhrase);
+                msg.rate = parseFloat(rate);
+                msg.pitch = parseFloat(pitch);
+                msg.lang = 'hi-IN';
+                window.speechSynthesis.speak(msg);
+            }
+        });
+
         document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
             const selectedTheme = document.getElementById('themeSelect').value;
             const autoSpeak = document.getElementById('autoSpeakToggle').checked;
             const rate = document.getElementById('speechRateSlider').value;
+            const pitch = document.getElementById('voicePitchSlider').value;
+            const accent = document.getElementById('voiceAccentSelect').value;
             const personality = document.getElementById('aiPersonality').value;
 
             localStorage.setItem('vani_theme', selectedTheme);
             localStorage.setItem('vani_auto_speak', autoSpeak);
             localStorage.setItem('vani_speech_rate', rate);
+            localStorage.setItem('vani_voice_pitch', pitch);
+            localStorage.setItem('vani_voice_accent', accent);
             localStorage.setItem('vani_personality', personality);
 
             // Save Local LLM Configuration to Backend
