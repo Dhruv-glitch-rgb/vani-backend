@@ -263,7 +263,7 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch (e) { console.error("Log error", e); }
-            window.location.href = '/pin-vaniXai.html';
+            window.location.href = '/?launch=true';
         }
 
         // Email Auth
@@ -307,7 +307,7 @@
         // Redirect if already logged in (Don't log this to avoid spam on refresh)
         auth.onAuthStateChanged(user => {
             if (user && !loading.style.display.includes('flex')) {
-                window.location.href = '/pin-vaniXai.html';
+                window.location.href = '/?launch=true';
             }
         });
     </script>

@@ -308,6 +308,7 @@
 
                     if (currentStep >= totalSteps) {
                         clearInterval(interval);
+                        sessionStorage.setItem('pin_verified', 'true');
                         setTimeout(() => {
                             window.location.href = '/?launch=true';
                         }, 500);

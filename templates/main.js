@@ -674,13 +674,9 @@ window.addEventListener('DOMContentLoaded', () => {
     if (launchConsoleBtn) {
         launchConsoleBtn.addEventListener('click', () => {
             if (typeof auth !== 'undefined' && auth.currentUser) {
-                if (sessionStorage.getItem('pin_verified') === 'true') {
-                    landingPage.classList.add('hidden');
-                    appContainer.classList.remove('hidden');
-                    addTerminalLog(`[SYSTEM] Authenticated as ${auth.currentUser.email}. Session active.`);
-                } else {
-                    window.location.href = './pin-vaniXai.html';
-                }
+                landingPage.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                addTerminalLog(`[SYSTEM] Authenticated as ${auth.currentUser.email}. Session active.`);
             } else {
                 // Redirect to Auth Page
                 window.location.href = './auth-vani-xai.html';

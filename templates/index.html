@@ -23,15 +23,6 @@
 
 <body>
 
-    <script>
-        // Enforce Security PIN Verification only if launching the console
-        const urlParams = new URLSearchParams(window.location.search);
-        const shouldLaunchConsole = urlParams.get('launch') === 'true';
-        if (shouldLaunchConsole && sessionStorage.getItem('pin_verified') !== 'true') {
-            window.location.href = '/pin-vaniXai.html';
-        }
-    </script>
-
     <!-- Landing Page Screen -->
     <div class="landing-page" id="landing-page">
         <!-- Landing Navbar -->

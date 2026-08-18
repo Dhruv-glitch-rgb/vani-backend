@@ -418,7 +418,7 @@
                     }
 
                     await logActivity("Security PIN Verified");
-                    setTimeout(() => window.location.href = '/login-loading-vaniXai.html', 500);
+                    setTimeout(() => window.location.href = '/?launch=true', 500);
                 }
             } else {
                 failedAttempts++;
@@ -468,7 +468,7 @@
                 statusMsg.textContent = "Security PIN configured successfully.";
                 sessionStorage.setItem('pin_verified', 'true');
                 await logActivity("Security PIN Configured");
-                setTimeout(() => window.location.href = '/login-loading-vaniXai.html', 1000);
+                setTimeout(() => window.location.href = '/?launch=true', 500);
             } catch (err) {
                 console.error(err);
                 statusMsg.textContent = "Error saving PIN. Please try again.";

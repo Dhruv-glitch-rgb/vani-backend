@@ -307,7 +307,7 @@
                         if (data.instagram) instaInput.value = data.instagram;
                         
                         if (data.contactNumber && data.instagram && !window.location.search.includes('edit=true')) {
-                            window.location.href = '/pin-vaniXai.html';
+                            window.location.href = '/?launch=true';
                         }
                     }
 
@@ -354,8 +354,8 @@
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
-                // Successfully saved, proceed to PIN
-                window.location.href = '/pin-vaniXai.html';
+                // Successfully saved, proceed to console
+                window.location.href = '/?launch=true';
             } catch (error) {
                 console.error("Error saving details:", error);
                 errorMsg.innerText = "Error saving details. Please try again.";
