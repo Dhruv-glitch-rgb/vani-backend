@@ -13,11 +13,13 @@ def log_router(msg):
     except:
         print(f"[ROUTER] {msg}")
 
-# Fastest free text/reasoning models (curated for lowest latency)
+# Fastest free text/reasoning models (curated for lowest latency and zero cost)
 FAST_FREE_MODELS = [
-    "openrouter/free",
-    "nvidia/nemotron-nano-9b-v2:free",
-    "poolside/laguna-xs-2.1:free"
+    "meta-llama/llama-3.3-70b-instruct:free",
+    "google/gemma-2-9b-it:free",
+    "qwen/qwen-2.5-7b-instruct:free",
+    "mistralai/mistral-7b-instruct:free",
+    "openrouter/free"
 ]
 
 # Free models that support Vision
@@ -371,7 +373,30 @@ def _call_gemini_model(key, messages, timeout):
             log_router(f"Gemini model {model_name} failed: {e}")
             break
 
-    raise Exception("All Gemini Direct models failed")
+def _call_groq_model(key, messages, timeout, require_json=False):
+    log_router(f"Attempting Groq Direct API with Key ending in ...{key[-4:] if key else ''}")
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": messages,
+        "max_tokens": 600,
+        "temperature": 0.7
+    }
+    if require_json:
+        payload["response_format"] = {"type": "json_object"}
+        
+    req = urllib.request.Request(url, headers=headers, data=json.dumps(payload).encode('utf-8'))
+    start_time = time.time()
+    with urllib.request.urlopen(req, timeout=timeout) as response:
+        data = json.loads(response.read().decode('utf-8'))
+        content = data['choices'][0]['message']['content'].strip()
+        elapsed = time.time() - start_time
+        log_router(f"Success with Groq Direct API in {elapsed:.2f}s")
+        return content
 
 import base64
 
@@ -387,7 +412,7 @@ DEFAULT_OPENROUTER_KEYS = [
 def call_llm_with_fallback(messages, models=None, timeout_per_model=6, require_json=False, custom_api_key=None, force_local=False, preferred_local_model=None):
     """
     Intelligent Hybrid LLM Router with Local LLM First-Class Integration.
-    Supports Local First (Ollama/LM Studio), Local Only (Private), and Cloud Fallback Key Pool.
+    Supports Local First (Ollama/LM Studio), Local Only (Private), Groq, Gemini, and Cloud Fallback Key Pool.
     """
     local_cfg = get_local_config()
     is_local_enabled = local_cfg.get("enabled", True)
@@ -408,7 +433,14 @@ def call_llm_with_fallback(messages, models=None, timeout_per_model=6, require_j
                 raise Exception(f"Local LLM failed in 'Local Only' mode: {local_err}. Please ensure your local model is running.")
             log_router("Proceeding to Cloud Fallback Pool...")
 
-    # 2. Check if explicit custom Gemini Key is provided
+    # 2. Check if explicit Groq Key is provided
+    if custom_api_key and custom_api_key.startswith("gsk_"):
+        try:
+            return _call_groq_model(custom_api_key.strip(), messages, timeout_per_model, require_json)
+        except Exception as groq_err:
+            log_router(f"Custom Groq call failed: {groq_err}. Continuing with OpenRouter pool...")
+
+    # 3. Check if explicit custom Gemini Key is provided
     if custom_api_key and custom_api_key.startswith("AIza"):
         try:
             return _call_gemini_model(custom_api_key.strip(), messages, timeout_per_model)
