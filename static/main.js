@@ -34,17 +34,9 @@ let recognition = null;
 let logPollingInterval = null;
 let adbPollingInterval = null;
 let localLogCount = 0;
-let userTier = 'Free'; // Default tier
-let todayMessageCount = parseInt(localStorage.getItem('vani_daily_msg_count') || '0');
+let userTier = 'Unlimited Free'; // Default tier: Unlimited Free for all users
+let todayMessageCount = 0;
 let lastMessageDate = localStorage.getItem('vani_last_msg_date');
-
-// Reset daily message count if it's a new day
-const today = new Date().toDateString();
-if (lastMessageDate !== today) {
-    todayMessageCount = 0;
-    localStorage.setItem('vani_daily_msg_count', '0');
-    localStorage.setItem('vani_last_msg_date', today);
-}
 
 // PWA Install Logic
 let deferredPrompt;
@@ -81,13 +73,6 @@ function triggerNativeInstall() {
 
 // Initialize Web Speech API
 function initSpeechRecognition() {
-    if (userTier === 'Free' || userTier === 'Starter') {
-        voiceStatusText.textContent = "Voice control requires Pro Tier or above.";
-        voiceBtn.disabled = true;
-        voiceBtn.style.opacity = 0.5;
-        return;
-    }
-
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
         voiceStatusText.textContent = "Voice control is not supported by your browser (use Chrome/Edge).";
@@ -95,6 +80,10 @@ function initSpeechRecognition() {
         voiceBtn.style.opacity = 0.5;
         return;
     }
+
+    voiceBtn.disabled = false;
+    voiceBtn.style.opacity = 1;
+    voiceStatusText.textContent = "Click microphone to speak.";
 
     recognition = new SpeechRecognition();
     recognition.continuous = false;
@@ -278,13 +267,6 @@ window.closeSarasWebSearchModal = closeSarasWebSearchModal;
 // Send command to backend API
 async function submitCommand(commandText) {
     if (!commandText.trim()) return;
-
-    // Check Premium Tier Limits
-    if (userTier === 'Free' && todayMessageCount >= 5) {
-        addChatMessage('assistant', 'You have reached your daily limit of 5 messages on the Free Plan. Please upgrade to Starter or higher to continue chatting.', 'error');
-        setTimeout(() => window.location.href = '/premium.html', 3000);
-        return;
-    }
 
     todayMessageCount++;
     localStorage.setItem('vani_daily_msg_count', todayMessageCount);
@@ -670,36 +652,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (typeof db !== 'undefined') {
                     // Initialize Swarm Listener
                     initializeSwarmAndLockdown(user);
-                    
-                    db.collection('activation_keys')
-                        .where('userId', '==', user.uid)
-                        .where('isUsed', '==', true)
-                        .get()
-                        .then(snapshot => {
-                            if (!snapshot.empty) {
-                                let latestKey = null;
-                                let maxTime = 0;
-                                snapshot.forEach(k => {
-                                    const d = k.data();
-                                    const usedTime = d.usedAt ? (typeof d.usedAt.toMillis === 'function' ? d.usedAt.toMillis() : 0) : 0;
-                                    if(usedTime >= maxTime) {
-                                        maxTime = usedTime;
-                                        latestKey = d;
-                                    }
-                                });
-                                
-                                if (latestKey && latestKey.planName) {
-                                    userTier = latestKey.planName;
-                                    // Re-initialize speech if they have access now
-                                    if (userTier !== 'Free' && userTier !== 'Starter') {
-                                        voiceBtn.disabled = false;
-                                        voiceBtn.style.opacity = 1;
-                                        voiceStatusText.textContent = "Ready to listen.";
-                                        initSpeechRecognition();
-                                    }
-                                }
-                            }
-                        }).catch(e => console.error("Error fetching tier:", e));
+                    userTier = 'Unlimited Free';
+                    voiceBtn.disabled = false;
+                    voiceBtn.style.opacity = 1;
+                    voiceStatusText.textContent = "Click microphone to speak.";
+                    initSpeechRecognition();
                 }
                 if (shouldLaunch) {
                     // Auto-launch if authenticated and requested

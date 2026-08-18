@@ -3,22 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Plans - V.A.N.I-xAI</title>
+    <title>100% Free &amp; Unlimited Access - VANI-xAI (Vāṇī Adhyātmik Navīn Intellect)</title>
+    
+    <!-- SEO & Fast Search Reachability Meta Tags -->
+    <meta name="description" content="VANI-xAI provides 100% free and unlimited AI capabilities: unlimited queries, high-speed Saras WebSearch, real-time voice agent, autonomous agents, and Swarm synchronization.">
+    <meta name="keywords" content="vani-xai free unlimited, vani ai access, VANI-xAI, Vani Adhyatmik Navin Intellect, free ai assistant">
+    <meta name="author" content="Dhruv Sagar - V.A.N.I-xAI">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://vani-nzdrsr.web.app/premium.html">
     <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="VANI-xAI - 100% Free &amp; Unlimited Access">
+    <meta property="og:description" content="All AI capabilities, real-time voice agent, Saras WebSearch, and multi-device Swarm are completely free for everyone.">
+    <meta property="og:url" content="https://vani-nzdrsr.web.app/premium.html">
+    <meta property="og:image" content="https://vani-nzdrsr.web.app/vani_logo.jpg">
+
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #020617;
-            --surface-color: rgba(30, 41, 59, 0.5);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --surface-color: rgba(15, 23, 42, 0.75);
+            --border-color: rgba(255, 255, 255, 0.12);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --accent-primary: #38bdf8;
             --accent-indigo: #6366f1;
             --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-cyan: #06b6d4;
             --saffron: #ea580c;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -28,6 +49,8 @@
             background-size: cover;
             color: var(--text-primary);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Navbar */
@@ -36,8 +59,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 40px;
-            background: rgba(2, 6, 23, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
@@ -55,7 +78,8 @@
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            border: 2px solid var(--accent-primary);
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
         }
 
         .logo-container h1 {
@@ -70,345 +94,264 @@
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            align-items: center;
         }
 
-        .nav-links button {
-            background: rgba(255, 255, 255, 0.05);
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 8px 16px;
+            padding: 9px 18px;
             border-radius: 20px;
             cursor: pointer;
             font-family: 'Outfit';
             font-size: 0.9rem;
+            font-weight: 500;
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
-        .nav-links button:hover {
-            background: rgba(255,255,255,0.1);
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .nav-btn.primary:hover {
+            opacity: 0.95;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+            transform: translateY(-2px);
         }
 
         /* Main Container */
         .premium-container {
-            max-width: 1200px;
-            margin: 40px auto;
+            max-width: 1100px;
+            margin: 30px auto 60px auto;
             padding: 0 20px;
             text-align: center;
+            flex: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: 20px;
+            color: #34d399;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
         .premium-header h2 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #f59e0b, #ea580c, #ef4444);
+            font-size: 3.2rem;
+            margin: 0 0 15px 0;
+            background: linear-gradient(135deg, #34d399, #38bdf8, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .premium-header p {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             color: var(--text-secondary);
-            margin-bottom: 40px;
+            max-width: 700px;
+            margin: 0 auto 35px auto;
+            line-height: 1.6;
         }
 
-        /* Pricing Grid */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
-        }
-
-        .pricing-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+        /* Active Plan Banner Card */
+        .active-plan-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 45px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.15);
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            text-align: left;
         }
 
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-primary);
-            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
+        .plan-info-left h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .pricing-card.best-value {
-            border-color: var(--saffron);
-            transform: scale(1.05);
-            background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+        .plan-info-left p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.5;
         }
 
-        .pricing-card.best-value:hover {
-            transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 10px 30px rgba(234, 88, 12, 0.2);
-        }
-
-        .badge {
-            position: absolute;
-            top: 15px;
-            right: -30px;
-            background: var(--saffron);
-            color: #fff;
-            padding: 5px 30px;
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--accent-green);
+            color: #34d399;
+            border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 700;
-            transform: rotate(45deg);
             text-transform: uppercase;
         }
 
-        .plan-name {
-            font-size: 1.5rem;
+        .plan-cta-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-launch-large {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 1.05rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn-launch-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+            color: #fff;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 26px;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h4 {
+            font-size: 1.25rem;
+            margin: 0 0 8px 0;
             color: var(--text-primary);
         }
 
-        .plan-price {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 5px;
-        }
-
-        .plan-price span {
-            font-size: 1rem;
+        .feature-card p {
+            margin: 0;
             color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        .plan-duration {
-            font-size: 1.1rem;
-            color: var(--accent-primary);
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .plan-features {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 25px 0;
-            text-align: left;
-            flex-grow: 1;
-        }
-
-        .plan-features li {
-            margin-bottom: 12px;
             font-size: 0.95rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            line-height: 1.5;
         }
 
-        .plan-features li i {
-            color: var(--accent-primary);
-        }
-
-        .btn-upgrade {
-            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
-            color: #fff;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-family: 'Outfit';
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-        }
-
-        .btn-upgrade:hover {
-            opacity: 0.9;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
-        }
-
-        .pricing-card.best-value .btn-upgrade {
-            background: linear-gradient(135deg, #f59e0b, #ea580c);
-        }
-
-        /* Verification Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 500px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-close {
+        .tag-unlimited {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: none;
-            border: none;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 25px 20px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(2, 6, 23, 0.8);
             color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .modal-close:hover {
-            color: var(--error-color);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #fff;
-        }
-
-        .qr-container {
-            text-align: center;
-            margin-bottom: 25px;
-            background: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            display: inline-block;
-            width: fit-content;
-            margin: 0 auto 25px auto;
-            display: block;
-        }
-
-        .qr-container img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .upi-id-box {
-            text-align: center;
-            background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            font-family: monospace;
-            font-size: 1.1rem;
-            color: var(--accent-primary);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
             font-size: 0.9rem;
-            color: var(--text-secondary);
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 10px 15px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            color: #fff;
-            font-family: 'Outfit';
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-        }
-
-        .file-input-wrapper {
-            background: rgba(0,0,0,0.3);
-            border: 1px dashed rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .file-input-wrapper:hover {
-            border-color: var(--accent-primary);
-        }
-        .file-input-wrapper input[type="file"] {
-            display: none;
-        }
-
-        .btn-submit {
-            background: var(--accent-primary);
-            color: #000;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            width: 100%;
-            font-weight: 700;
-            font-family: 'Outfit';
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        #upload-status {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 0.9rem;
+        footer a {
             color: var(--accent-primary);
-            display: none;
+            text-decoration: none;
         }
 
-        .btn-activate-main {
-            background: linear-gradient(135deg, var(--accent-primary), #2563eb);
-            color: #fff;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-family: 'Outfit';
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
-        }
-
-        .btn-activate-main:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
+        footer a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
-            .pricing-card.best-value {
-                transform: scale(1);
+            nav {
+                padding: 15px 20px;
             }
-            .pricing-card.best-value:hover {
-                transform: scale(1) translateY(-5px);
+            .premium-header h2 {
+                font-size: 2.2rem;
+            }
+            .active-plan-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .plan-cta-right {
+                width: 100%;
+            }
+            .btn-launch-large {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -420,221 +363,102 @@
             <img src="/vani_icon.png" alt="V.A.N.I-xAI">
             <h1>V.A.N.I-xAI</h1>
         </div>
-        <div class="nav-links" style="display: flex; gap: 15px;">
-            <button class="btn-activate-main" onclick="window.location.href='/activation-subplan.html'" style="padding: 10px 20px; font-size: 0.9rem; margin-top: 0;">
-                <i class="fa-solid fa-key"></i> Activate V.A.N.I-xAI
-            </button>
-            <button onclick="window.location.href='/settings.html'"><i class="fa-solid fa-gear"></i> Settings</button>
+        <div class="nav-links">
+            <a href="/index.html?launch=true" class="nav-btn primary">
+                <i class="fa-solid fa-terminal"></i> Launch Console
+            </a>
+            <a href="/settings.html" class="nav-btn">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
         </div>
     </nav>
 
     <div class="premium-container">
+        <div class="hero-badge">
+            <i class="fa-solid fa-infinity"></i> All Features Unlocked For Everyone
+        </div>
+
         <div class="premium-header">
-            <h2>Upgrade to Premium</h2>
-            <p>Unlock unrestricted access, faster responses, and ultimate AI capabilities.</p>
+            <h2>100% Free &amp; Unlimited Access</h2>
+            <p>Every feature in V.A.N.I-xAI is available with zero cost, zero subscriptions, and no daily query limits.</p>
         </div>
 
-        <div class="pricing-grid">
-            <!-- Starter -->
-            <div class="pricing-card">
-                <div class="plan-name">Starter</div>
-                <div class="plan-price">₹99<span>/mo</span></div>
-                <div class="plan-duration">1 Month Access</div>
-                <ul class="plan-features">
-                    <li><i class="fa-solid fa-check"></i> Unlimited Queries</li>
-                    <li><i class="fa-solid fa-check"></i> Fast Response Time</li>
-                    <li><i class="fa-solid fa-check"></i> Priority Support</li>
-                </ul>
-                <button class="btn-upgrade" onclick="openModal('Starter', 99, 1)">Upgrade Now</button>
+        <!-- Active Plan Banner -->
+        <div class="active-plan-card">
+            <div class="plan-info-left">
+                <div class="status-pill"><i class="fa-solid fa-check-circle"></i> Active Lifetime Plan</div>
+                <h3 style="margin-top: 12px;">Unlimited Free Access <span style="font-size: 1.1rem; color: #34d399; font-weight: normal;">(Forever)</span></h3>
+                <p>You have full access to high-speed AI processing, real-time voice recognition, Saras.WebSearch, and Swarm synchronization without any paywalls.</p>
             </div>
-
-            <!-- Pro -->
-            <div class="pricing-card">
-                <div class="plan-name">Pro</div>
-                <div class="plan-price">₹179</div>
-                <div class="plan-duration">2 Months Access</div>
-                <ul class="plan-features">
-                    <li><i class="fa-solid fa-check"></i> Everything in Starter</li>
-                    <li><i class="fa-solid fa-check"></i> Early Access Features</li>
-                    <li><i class="fa-solid fa-check"></i> Advanced Reasoning</li>
-                </ul>
-                <button class="btn-upgrade" onclick="openModal('Pro', 179, 2)">Upgrade Now</button>
-            </div>
-
-            <!-- Advanced -->
-            <div class="pricing-card">
-                <div class="plan-name">Advanced</div>
-                <div class="plan-price">₹349</div>
-                <div class="plan-duration">4 Months Access</div>
-                <ul class="plan-features">
-                    <li><i class="fa-solid fa-check"></i> Everything in Pro</li>
-                    <li><i class="fa-solid fa-check"></i> Extended Context Memory</li>
-                    <li><i class="fa-solid fa-check"></i> VIP Discord Role</li>
-                </ul>
-                <button class="btn-upgrade" onclick="openModal('Advanced', 349, 4)">Upgrade Now</button>
-            </div>
-
-            <!-- Master -->
-            <div class="pricing-card best-value">
-                <div class="badge">Best Value</div>
-                <div class="plan-name" style="color: var(--saffron);">Master</div>
-                <div class="plan-price">₹499</div>
-                <div class="plan-duration">6 Months Access</div>
-                <ul class="plan-features">
-                    <li><i class="fa-solid fa-star" style="color: var(--saffron);"></i> Highest Priority Queue</li>
-                    <li><i class="fa-solid fa-check"></i> All Premium Features</li>
-                    <li><i class="fa-solid fa-check"></i> Beta Tester Access</li>
-                    <li><i class="fa-solid fa-check"></i> Dedicated Support Line</li>
-                </ul>
-                <button class="btn-upgrade" onclick="openModal('Master', 499, 6)">Get Best Value</button>
+            <div class="plan-cta-right">
+                <a href="/index.html?launch=true" class="btn-launch-large">
+                    <i class="fa-solid fa-bolt"></i> Open Workspace Console
+                </a>
             </div>
         </div>
-    </div>
 
-    <!-- Verification Modal -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="modal-title">Manual UPI Payment</h3>
-            
-            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">Scan the QR code below to pay <strong id="modal-amount" style="color:#fff;">₹0</strong> for the <strong id="modal-plan" style="color:var(--accent-primary);">Plan</strong>.</p>
-
-            <div class="qr-container">
-                <img src="/upi_qr.jpg" alt="UPI QR Code" onerror="this.src='/upi_qr.png'">
+        <!-- Features Showcase -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="tag-unlimited">Unlimited</span>
+                <div class="feature-icon" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <h4>Unlimited AI Commands</h4>
+                <p>Chat freely with Jarvis-level AI intent recognition, reasoning, and system automation without daily caps.</p>
             </div>
 
-            <div class="upi-id-box">
-                official.vani.xai76@okicici
+            <div class="feature-card">
+                <span class="tag-unlimited">Unlocked</span>
+                <div class="feature-icon" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <h4>Real-Time Voice Agent</h4>
+                <p>Natural speech recognition and audio speech synthesis for hands-free voice operations on any browser.</p>
             </div>
 
-            <p style="text-align: center; color: var(--saffron); font-size: 0.85rem; margin-bottom: 20px;">
-                <i class="fa-solid fa-circle-info"></i> After payment, fill out this form. <strong>You MUST email your payment screenshot to official.vani.xai76@gmail.com</strong> with your Transaction ID.
-            </p>
-
-            <form id="verificationForm">
-                <div class="form-group">
-                    <label>Transaction ID / UTR Number *</label>
-                    <input type="text" id="txnId" required placeholder="e.g. 123456789012">
+            <div class="feature-card">
+                <span class="tag-unlimited">Full Access</span>
+                <div class="feature-icon" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
+                    <i class="fa-solid fa-globe"></i>
                 </div>
+                <h4>Zero-Tab Saras.WebSearch</h4>
+                <p>Execute live Google and web searches embedded directly inside your workspace without opening external tabs.</p>
+            </div>
 
-                <div class="form-group">
-                    <label>Your Full Name *</label>
-                    <input type="text" id="payName" required placeholder="Name on account">
+            <div class="feature-card">
+                <span class="tag-unlimited">Synced</span>
+                <div class="feature-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                    <i class="fa-solid fa-network-wired"></i>
                 </div>
+                <h4>Swarm Device Synchronization</h4>
+                <p>Seamless cross-device clipboard sync, remote pairing, radar search, and instant mobile handoff.</p>
+            </div>
 
-                <div class="form-group">
-                    <label>Contact Number *</label>
-                    <input type="text" id="payPhone" required placeholder="Phone number">
+            <div class="feature-card">
+                <span class="tag-unlimited">Active</span>
+                <div class="feature-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                    <i class="fa-solid fa-eye"></i>
                 </div>
+                <h4>Vision &amp; Screen Analysis</h4>
+                <p>Analyze screenshots and desktop content with smart computer vision models in real time.</p>
+            </div>
 
-
-
-                <div id="upload-status">Uploading... Please wait.</div>
-                
-                <button type="submit" class="btn-submit" id="btnSubmit">Submit for Verification</button>
-            </form>
+            <div class="feature-card">
+                <span class="tag-unlimited">Private</span>
+                <div class="feature-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h4>Sandboxed Security &amp; PIN</h4>
+                <p>Fast PIN authentication, local sandboxed memory, and secure Google OAuth session protection.</p>
+            </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    <footer>
+        <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All features are free and unlocked for all users.</p>
+        <p style="margin-top: 5px;"><a href="/">Home</a> &bull; <a href="/settings.html">Settings</a> &bull; <a href="/faq">FAQs</a> &bull; <a href="/terms">Terms</a> &bull; <a href="/privacy">Privacy</a></p>
+    </footer>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
-            authDomain: "vani-nzdrsr.firebaseapp.com",
-            projectId: "vani-nzdrsr",
-            storageBucket: "vani-nzdrsr.firebasestorage.app",
-            messagingSenderId: "908306821780",
-            appId: "1:908306821780:web:02e878153145968d113a81"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        let currentUser = null;
-        let selectedPlan = null;
-        let selectedMonths = 0;
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                // Prefill user details if possible
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if(doc.exists) {
-                        const data = doc.data();
-                        document.getElementById('payName').value = data.name || '';
-                        document.getElementById('payPhone').value = data.contactNumber || '';
-                    }
-                });
-            } else {
-                window.location.href = '/auth-vani-xai.html';
-            }
-        });
-
-        // Modal Logic
-        const modal = document.getElementById('paymentModal');
-        const form = document.getElementById('verificationForm');
-        
-        function openModal(planName, price, months) {
-            selectedPlan = planName;
-            selectedMonths = months;
-            document.getElementById('modal-plan').innerText = planName;
-            document.getElementById('modal-amount').innerText = '₹' + price;
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-            form.reset();
-        }
-
-        // Form Submission
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if(!currentUser) return;
-
-            const btnSubmit = document.getElementById('btnSubmit');
-            const statusDiv = document.getElementById('upload-status');
-
-            btnSubmit.disabled = true;
-            btnSubmit.style.opacity = '0.5';
-            statusDiv.style.display = 'block';
-            statusDiv.innerText = 'Submitting request...';
-
-            try {
-                // Save Request to Firestore without screenshot
-                await db.collection('premium_requests').add({
-                    userId: currentUser.uid,
-                    userEmail: currentUser.email,
-                    userName: document.getElementById('payName').value,
-                    contactNumber: document.getElementById('payPhone').value,
-                    planName: selectedPlan,
-                    monthsRequested: selectedMonths,
-                    transactionId: document.getElementById('txnId').value,
-                    screenshotUrl: 'email', // placeholder
-                    status: 'pending',
-                    submittedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert("Request submitted! Please EMAIL your payment screenshot to official.vani.xai76@gmail.com to get approved within 24 hours.");
-                closeModal();
-                
-            } catch(error) {
-                console.error("Error submitting request:", error);
-                alert("An error occurred: " + error.message);
-            } finally {
-                btnSubmit.disabled = false;
-                btnSubmit.style.opacity = '1';
-                statusDiv.style.display = 'none';
-            }
-        });
-
-    </script>
 </body>
 </html>

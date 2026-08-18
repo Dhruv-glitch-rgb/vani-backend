@@ -50,9 +50,9 @@
                     <i class="fa-solid fa-download"></i> Install App
                 </button>
                 <button class="nav-cta-btn animate-hover-scale"
-                    style="background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; border: none; margin-right: 10px;"
+                    style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white; border: none; margin-right: 10px;"
                     onclick="window.location.href='/premium.html'">
-                    <i class="fa-solid fa-crown"></i> Premium
+                    <i class="fa-solid fa-infinity"></i> Free Unlimited
                 </button>
                 <button class="nav-cta-btn animate-hover-scale"
                     onclick="document.getElementById('launch-console-btn').click()">
@@ -290,10 +290,10 @@
                                 </div>
                             </a>
                             <a href="./premium.html" class="menu-dropdown-item">
-                                <div class="menu-item-icon" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;"><i class="fa-solid fa-crown"></i></div>
+                                <div class="menu-item-icon" style="background: rgba(16, 185, 129, 0.2); color: #10b981;"><i class="fa-solid fa-infinity"></i></div>
                                 <div class="menu-item-text">
-                                    <div class="menu-item-title">Premium Plans</div>
-                                    <div class="menu-item-desc">Unlock Full Capabilities</div>
+                                    <div class="menu-item-title">Free Unlimited Access</div>
+                                    <div class="menu-item-desc">All Features 100% Free</div>
                                 </div>
                             </a>
                             <div class="menu-dropdown-divider"></div>
@@ -471,54 +471,23 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // 7-Day Trial and Subscription Lockout Logic
+        // Auto-generate V.A.N.I-xAI ID if missing (All users enjoy Unlimited Free Access)
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                // Admin bypass
-                if (user.email === 'official.vani.xai76@gmail.com') return;
-
                 try {
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     if (userDoc.exists) {
                         const data = userDoc.data();
-                        const now = new Date();
-                        let isLockedOut = false;
-
                         // 1. Auto-generate V.A.N.I-xAI ID if missing
                         if (!data.vaniId) {
                             const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
                             const randomDigits = Math.floor(1000 + Math.random() * 9000);
                             const newVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
-                            await db.collection('users').doc(user.uid).update({ vaniId: newVaniId });
-                        }
-
-                        if (data.isPremium) {
-                            // Check Premium Expiry
-                            if (data.premiumExpiry && data.premiumExpiry.toDate() < now) {
-                                isLockedOut = true;
-                                // Automatically downgrade to free
-                                await db.collection('users').doc(user.uid).update({ isPremium: false });
-                            }
-                        } else {
-                            // Check 7-Day Free Trial
-                            const createdAt = data.createdAt ? data.createdAt.toDate() : new Date(user.metadata.creationTime);
-                            const daysSinceCreation = (now - createdAt) / (1000 * 60 * 60 * 24);
-
-                            if (daysSinceCreation > 7) {
-                                isLockedOut = true;
-                            }
-                        }
-
-                        if (isLockedOut) {
-                            // Redirect to premium page if trying to use the app
-                            if (window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname.includes('pin-vaniXai')) {
-                                alert("Your V.A.N.I-xAI Premium Subscription or 7-Day Free Trial has expired!\n\nPlease upgrade to continue using the application.");
-                                window.location.href = '/premium.html';
-                            }
+                            await db.collection('users').doc(user.uid).update({ vaniId: newVaniId, isPremium: true });
                         }
                     }
                 } catch (e) {
-                    console.error("Error checking subscription status:", e);
+                    console.error("Error verifying user profile:", e);
                 }
             }
         });
