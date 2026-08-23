@@ -1,0 +1,74 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/mcp-server-manifest.json",
+  "name": "vani-xai",
+  "version": "1.0.0",
+  "description": "VANI-xAI Model Context Protocol (MCP) server providing web search, desktop automation, telemetry, and local AI tools for Claude, ChatGPT, and AI agents.",
+  "transport": {
+    "type": "http",
+    "url": "https://vani-nzdrsr.web.app/api/command"
+  },
+  "tools": [
+    {
+      "name": "saras_web_search",
+      "description": "Perform live zero-tab web searches and extract AI-synthesized answers with citation sources.",
+      "inputSchema": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query to look up on the web."
+          }
+        }
+      }
+    },
+    {
+      "name": "execute_command",
+      "description": "Execute natural language desktop or AI agent commands on VANI-xAI.",
+      "inputSchema": {
+        "type": "object",
+        "required": ["command"],
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Natural language command to execute."
+          },
+          "personality": {
+            "type": "string",
+            "description": "Assistant personality preset (e.g. human_girl).",
+            "default": "human_girl"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_system_stats",
+      "description": "Get real-time CPU, RAM, disk, network, and uptime metrics.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_system_logs",
+      "description": "Retrieve recent system and agent execution logs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_local_llm_status",
+      "description": "Check status and list available local models in Ollama / LM Studio.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Optional local endpoint URL."
+          }
+        }
+      }
+    }
+  ]
+}

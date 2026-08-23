@@ -31,7 +31,7 @@
     <meta name="twitter:description" content="Advanced AI Assistant with Saras.WebSearch, Voice Synthesis, and Intelligent Automation. Don't Assume, Verify.">
     <meta name="twitter:image" content="https://vani-nzdrsr.web.app/vani_logo.jpg">
 
-    <!-- Structured Data (JSON-LD) for Google Search Entity Recognition -->
+    <!-- Structured Data (JSON-LD) for Google Search & AI Entity Recognition -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -50,7 +50,7 @@
             "Vani Adhyatmik Navin Intellect",
             "vani-nzdrsr"
           ],
-          "description": "VANI-xAI is an advanced AI assistant platform featuring Saras Web Search, voice synthesis, and desktop automation.",
+          "description": "VANI-xAI is an advanced AI assistant platform featuring zero-tab Saras Web Search, real-time voice synthesis, and desktop automation.",
           "potentialAction": {
             "@type": "SearchAction",
             "target": "https://vani-nzdrsr.web.app/saras_web_search.html?q={search_term_string}",
@@ -60,31 +60,76 @@
         {
           "@type": "SoftwareApplication",
           "@id": "https://vani-nzdrsr.web.app/#application",
-          "name": "VANI-xAI",
+          "name": "VANI-xAI (Vāṇī Adhyātmik Navīn Intellect)",
           "alternateName": "V.A.N.I-xAI",
+          "url": "https://vani-nzdrsr.web.app/",
           "operatingSystem": "Web, Windows, Android",
           "applicationCategory": "UtilitiesApplication, ArtificialIntelligence",
           "offers": {
             "@type": "Offer",
             "price": "0",
-            "priceCurrency": "INR"
+            "priceCurrency": "INR",
+            "availability": "https://schema.org/InStock",
+            "url": "https://vani-nzdrsr.web.app/premium.html"
           },
-          "description": "Next-generation AI Assistant and Saras.WebSearch engine. Don't Assume, Verify.",
+          "description": "Next-generation AI Assistant and zero-tab Saras.WebSearch engine. Don't Assume, Verify.",
           "author": {
             "@type": "Person",
-            "name": "Dhruv Sagar"
-          }
+            "name": "Dhruv Sagar",
+            "url": "https://vani-nzdrsr.web.app/about"
+          },
+          "sameAs": [
+            "https://vani-xin.blogspot.com/",
+            "https://github.com/Dhruv-glitch-rgb",
+            "https://x.com/vani_xai",
+            "https://huggingface.co/vani-xai",
+            "https://www.linkedin.com/in/dhruvsagar"
+          ]
         },
         {
           "@type": "Organization",
           "@id": "https://vani-nzdrsr.web.app/#organization",
           "name": "VANI-xAI",
+          "alternateName": "Vāṇī Adhyātmik Navīn Intellect",
           "url": "https://vani-nzdrsr.web.app/",
           "logo": "https://vani-nzdrsr.web.app/vani_icon.png",
           "founder": {
             "@type": "Person",
-            "name": "Dhruv Sagar"
-          }
+            "name": "Dhruv Sagar",
+            "jobTitle": "Founder & Lead Architect",
+            "url": "https://vani-nzdrsr.web.app/about"
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+91-9555778474",
+              "contactType": "customer support",
+              "email": "support@vani-nzdrsr.web.app",
+              "availableLanguage": ["English", "Hindi"]
+            },
+            {
+              "@type": "ContactPoint",
+              "telephone": "+91-9555778474",
+              "contactType": "technical support",
+              "email": "developer@vani-nzdrsr.web.app",
+              "availableLanguage": ["English", "Hindi"]
+            }
+          ],
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "New Delhi",
+            "addressLocality": "New Delhi",
+            "addressRegion": "Delhi",
+            "postalCode": "110001",
+            "addressCountry": "IN"
+          },
+          "sameAs": [
+            "https://vani-xin.blogspot.com/",
+            "https://github.com/Dhruv-glitch-rgb",
+            "https://x.com/vani_xai",
+            "https://huggingface.co/vani-xai",
+            "https://www.linkedin.com/in/dhruvsagar"
+          ]
         }
       ]
     }
@@ -100,12 +145,59 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="./style.css">
 
+    <!-- Machine-Readable AI & Agent Discovery Links -->
+    <link rel="alternate" type="text/markdown" href="/index.md" title="VANI-xAI Markdown Documentation">
+    <link rel="describedby" type="application/json" href="/openapi.json" title="OpenAPI 3.1.0 Specification">
+    <link rel="index" type="text/plain" href="/llms.txt" title="LLMs.txt Discovery Index">
+
     <!-- PWA Manifest & Theme Color -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#059669">
 </head>
 
 <body>
+    <!-- Server-Side & NoScript Fallback for AI Agents & Search Crawlers -->
+    <noscript>
+        <div style="background: #0f172a; color: #f8fafc; padding: 40px 20px; font-family: sans-serif; max-width: 900px; margin: 0 auto; line-height: 1.6;">
+            <h1 style="color: #10b981; font-size: 2rem;">V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</h1>
+            <p style="font-size: 1.1rem; color: #06b6d4; font-weight: bold;">Tagline: Don't Assume, Verify.</p>
+            <p>VANI-xAI is an advanced web-native and desktop artificial intelligence assistant platform. It provides high-performance voice synthesis, autonomous reasoning agent loops, zero-tab web search (Saras.WebSearch), multi-device radar device pairing, and desktop OS automation capabilities.</p>
+            
+            <h2 style="color: #38bdf8; margin-top: 24px;">Core Capabilities & Features</h2>
+            <ul>
+                <li><strong>Saras.WebSearch</strong>: Instant zero-tab web search engine with real-time AI summarization and link citation.</li>
+                <li><strong>Saras_VANI.Chat</strong>: Multi-device real-time AI chat rooms with persistent session memory.</li>
+                <li><strong>Saras_VANI.Search (Radar)</strong>: Real-time discovery radar to pair nearby workstations and mobile devices.</li>
+                <li><strong>Desktop Automation & Swarm Sync</strong>: Workstation controls, automated agent goals, and Swarm synchronization.</li>
+                <li><strong>Desktop & Voice Control</strong>: Hands-free voice recognition, screenshot capture, vision analysis, volume adjustment, and script execution.</li>
+                <li><strong>Local LLM Privacy Mode</strong>: Full offline compatibility with Ollama, LMStudio, and local neural network models.</li>
+            </ul>
+
+            <h2 style="color: #38bdf8; margin-top: 24px;">Machine-Readable Indexes & APIs</h2>
+            <ul>
+                <li><a href="/docs" style="color: #34d399;">Developer & API Documentation (/docs)</a></li>
+                <li><a href="/openapi.json" style="color: #34d399;">OpenAPI 3.1.0 Specification (JSON)</a></li>
+                <li><a href="/openapi.yaml" style="color: #34d399;">OpenAPI 3.1.0 Specification (YAML)</a></li>
+                <li><a href="/.well-known/mcp.json" style="color: #34d399;">Model Context Protocol (MCP) Manifest</a></li>
+                <li><a href="/llms.txt" style="color: #34d399;">LLMs.txt Discovery Index</a></li>
+                <li><a href="/llms-full.txt" style="color: #34d399;">Complete LLM Technical Documentation</a></li>
+                <li><a href="/sitemap.xml" style="color: #34d399;">XML Sitemap</a></li>
+            </ul>
+
+            <h2 style="color: #38bdf8; margin-top: 24px;">Platform Navigation & Trust Pages</h2>
+            <p>
+                <a href="/about" style="color: #38bdf8; margin-right: 15px;">About Us</a>
+                <a href="/contact" style="color: #38bdf8; margin-right: 15px;">Contact Support</a>
+                <a href="/docs" style="color: #38bdf8; margin-right: 15px;">API Docs</a>
+                <a href="/saras_web_search.html" style="color: #38bdf8; margin-right: 15px;">Saras.WebSearch</a>
+                <a href="/saras_vani_chat.html" style="color: #38bdf8; margin-right: 15px;">Saras Chat</a>
+                <a href="/premium.html" style="color: #38bdf8; margin-right: 15px;">Free Unlimited Plan</a>
+                <a href="/faq" style="color: #38bdf8; margin-right: 15px;">FAQ</a>
+                <a href="/terms" style="color: #38bdf8; margin-right: 15px;">Terms of Service</a>
+                <a href="/privacy" style="color: #38bdf8;">Privacy Policy</a>
+            </p>
+        </div>
+    </noscript>
 
     <!-- Landing Page Screen -->
     <div class="landing-page" id="landing-page">
@@ -123,6 +215,11 @@
                 <button id="pwa-install-btn" class="nav-cta-btn animate-hover-scale"
                     style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; margin-right: 10px; display: none;">
                     <i class="fa-solid fa-download"></i> Install App
+                </button>
+                <button class="nav-cta-btn animate-hover-scale"
+                    style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: white; margin-right: 10px;"
+                    onclick="window.location.href='/docs'">
+                    <i class="fa-solid fa-code"></i> API Docs
                 </button>
                 <button class="nav-cta-btn animate-hover-scale"
                     style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white; border: none; margin-right: 10px;"
@@ -283,18 +380,55 @@
             </div>
         </section>
 
+        <!-- Agent & Developer Integration Section -->
+        <section class="landing-section gray-bg slide-up-fade" id="agent-docs-section">
+            <div class="section-header">
+                <div class="section-tag">AI &amp; Developer APIs</div>
+                <h2>Agentic Readiness &amp; Machine-Readable APIs</h2>
+                <p>V.A.N.I-xAI natively supports automated AI agent discovery, OpenAPI 3.1.0 specifications, and content negotiation.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card animate-hover-card">
+                    <div class="icon-box blue animate-pulse"><i class="fa-solid fa-code"></i></div>
+                    <div class="feature-info">
+                        <h3>OpenAPI 3.1.0 Specification</h3>
+                        <p>Complete REST endpoints documented for automated tooling and AI agents. Available at <a href="/openapi.json" style="color: #38bdf8; font-weight: 600;">/openapi.json</a> and <a href="/openapi.yaml" style="color: #38bdf8; font-weight: 600;">/openapi.yaml</a>.</p>
+                    </div>
+                </div>
+                <div class="feature-card animate-hover-card">
+                    <div class="icon-box green animate-pulse"><i class="fa-solid fa-file-lines"></i></div>
+                    <div class="feature-info">
+                        <h3>LLMs.txt &amp; Markdown Protocol</h3>
+                        <p>Optimized for LLM crawlers with standardized <a href="/llms.txt" style="color: #10b981; font-weight: 600;">/llms.txt</a> and full Markdown content negotiation via <code>Accept: text/markdown</code>.</p>
+                    </div>
+                </div>
+                <div class="feature-card animate-hover-card">
+                    <div class="icon-box purple animate-pulse"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="feature-info">
+                        <h3>Structured JSON Error Handling</h3>
+                        <p>RFC-compliant structured JSON errors with explicit error codes, resolution hints, and error diagnostics for automated client recovery.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <footer class="landing-footer slide-up-fade">
             <div class="footer-links">
+                <a href="/about">About Us</a> &bull;
+                <a href="/contact">Contact</a> &bull;
+                <a href="/docs">Developer Docs</a> &bull;
                 <a href="/saras_web_search.html">Saras.WebSearch</a> &bull;
                 <a href="/saras_vani_chat.html">Saras Chat</a> &bull;
                 <a href="/premium.html">Free Unlimited Plan</a> &bull;
+                <a href="/openapi.json">OpenAPI Spec</a> &bull;
+                <a href="/.well-known/mcp.json">MCP Manifest</a> &bull;
+                <a href="/llms.txt">LLMs Index</a> &bull;
                 <a href="/faq">FAQs</a> &bull;
                 <a href="/privacy">Privacy Policy</a> &bull;
                 <a href="/terms">Terms &amp; Conditions</a> &bull;
                 <a href="/about-founder">About Founder</a> &bull;
                 <a href="/about-developer">About Developer</a> &bull;
-                <a href="https://vani-xin.blogspot.com/" target="_blank" rel="noopener noreferrer">V.A.N.I-xAI Blog</a> &bull;
-                <a href="/connect-with-us">Connect With Us</a>
+                <a href="https://vani-xin.blogspot.com/" target="_blank" rel="noopener noreferrer">V.A.N.I-xAI Blog</a>
             </div>
             <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved.</p>
             <p style="margin-top: 5px; font-style: italic; font-weight: 500; color: var(--accent-cyan, #06b6d4);">Don't Assume, Verify.</p>

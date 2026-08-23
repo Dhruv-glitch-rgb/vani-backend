@@ -1,0 +1,899 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "VANI-xAI (V\u0101\u1e47\u012b Adhy\u0101tmik Nav\u012bn Intellect) API",
+    "summary": "REST and Agentic Interface for VANI-xAI multi-modal assistant ecosystem",
+    "description": "VANI-xAI is an advanced web-native and desktop AI assistant offering zero-tab search intelligence (Saras.WebSearch), voice synthesis, local/cloud LLM routing, and automated desktop OS control. Don't Assume, Verify.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Dhruv Sagar - VANI-xAI",
+      "url": "https://vani-nzdrsr.web.app/about",
+      "email": "support@vani-nzdrsr.web.app"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://vani-nzdrsr.web.app",
+      "description": "Production Web App Server"
+    },
+    {
+      "url": "http://127.0.0.1:5000",
+      "description": "Local Development & Desktop Automation Server"
+    }
+  ],
+  "paths": {
+    "/api/command": {
+      "post": {
+        "summary": "Execute natural language or desktop command",
+        "description": "Parses a text or voice transcript instruction and performs corresponding actions such as web search, desktop application control, script execution, vision screen analysis, or conversational chat.",
+        "operationId": "executeCommand",
+        "parameters": [
+          {
+            "name": "X-OpenRouter-Key",
+            "in": "header",
+            "required": false,
+            "description": "Optional custom OpenRouter API key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Force-Local",
+            "in": "header",
+            "required": false,
+            "description": "Set to 'true' to force using local LLM inference",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "X-Local-Model",
+            "in": "header",
+            "required": false,
+            "description": "Specify target local model name (e.g. llama3:latest)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandRequest"
+              },
+              "examples": {
+                "webSearch": {
+                  "summary": "Trigger Saras WebSearch",
+                  "value": {
+                    "command": "search latest news on AI agents"
+                  }
+                },
+                "desktopApp": {
+                  "summary": "Open desktop application",
+                  "value": {
+                    "command": "open notepad on desktop"
+                  }
+                },
+                "screenshot": {
+                  "summary": "Capture screenshot and analyze",
+                  "value": {
+                    "command": "take screenshot"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Command processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommandResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid command request payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server execution failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/logs": {
+      "get": {
+        "summary": "Fetch system and agent execution logs",
+        "description": "Retrieves the recent execution history, status updates, and diagnostic messages logged by the VANI-xAI server.",
+        "operationId": "getLogs",
+        "responses": {
+          "200": {
+            "description": "Log entries retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogsResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of log entries to retrieve",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ]
+      }
+    },
+    "/api/system-stats": {
+      "get": {
+        "summary": "Retrieve real-time hardware and OS metrics",
+        "description": "Returns current CPU utilization, RAM usage, storage breakdown, network I/O, and platform uptime.",
+        "operationId": "getSystemStats",
+        "responses": {
+          "200": {
+            "description": "System telemetry metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemStatsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error gathering system statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "refresh",
+            "in": "query",
+            "required": false,
+            "description": "Force real-time hardware telemetry refresh",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ]
+      }
+    },
+    "/api/local-llm/status": {
+      "get": {
+        "summary": "Check local LLM engine status and model inventory",
+        "description": "Verifies connection to local inference servers (Ollama, LM Studio) and lists locally available models.",
+        "operationId": "getLocalLLMStatus",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "description": "Custom local LLM endpoint URL (defaults to configured URL)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Local LLM engine status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalLLMStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/local-llm/config": {
+      "get": {
+        "summary": "Get local LLM routing configuration",
+        "description": "Retrieves the current local inference endpoint, default model, and timeout settings.",
+        "operationId": "getLocalLLMConfig",
+        "responses": {
+          "200": {
+            "description": "Current local configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalLLMConfigResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Response format (json or text)",
+            "schema": {
+              "type": "string",
+              "default": "json",
+              "enum": [
+                "json",
+                "text"
+              ]
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Update local LLM routing configuration",
+        "description": "Saves new default endpoint URL, default model name, or connection preferences for local LLM routing.",
+        "operationId": "saveLocalLLMConfig",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalLLMConfig"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Configuration saved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalLLMConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid configuration parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Response format (json or text)",
+            "schema": {
+              "type": "string",
+              "default": "json",
+              "enum": [
+                "json",
+                "text"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/api/local-llm/pull": {
+      "post": {
+        "summary": "Pull a local model",
+        "description": "Triggers an asynchronous download/pull of an Ollama or LM Studio model to local storage.",
+        "operationId": "pullLocalModel",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PullModelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Model pull initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PullModelResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid model name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Model pull conflict or already in progress",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Desired output format",
+            "schema": {
+              "type": "string",
+              "default": "json"
+            }
+          }
+        ]
+      }
+    },
+    "/api/local-llm/pull-status": {
+      "get": {
+        "summary": "Check progress of active model pull",
+        "description": "Returns current download percentage, status message, and completion state of the active model pull.",
+        "operationId": "getPullStatus",
+        "responses": {
+          "200": {
+            "description": "Current pull progress",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PullStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "detailed",
+            "in": "query",
+            "required": false,
+            "description": "Include detailed model list and memory consumption",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ]
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "summary": "OpenAPI 3.1.0 Specification (JSON)",
+        "description": "Serves this OpenAPI document in JSON format for automated discovery and tool integration.",
+        "operationId": "getOpenApiJson",
+        "responses": {
+          "200": {
+            "description": "OpenAPI 3.1.0 JSON Document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Desired output format",
+            "schema": {
+              "type": "string",
+              "default": "json"
+            }
+          }
+        ]
+      }
+    },
+    "/openapi.yaml": {
+      "get": {
+        "summary": "OpenAPI 3.1.0 Specification (YAML)",
+        "description": "Serves this OpenAPI document in YAML format.",
+        "operationId": "getOpenApiYaml",
+        "responses": {
+          "200": {
+            "description": "OpenAPI 3.1.0 YAML Document",
+            "content": {
+              "text/yaml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Desired output format",
+            "schema": {
+              "type": "string",
+              "default": "json"
+            }
+          }
+        ]
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "LLMs.txt Standard Index",
+        "description": "Concise Markdown guide conforming to the llmstxt.org specification.",
+        "operationId": "getLlmsTxt",
+        "responses": {
+          "200": {
+            "description": "LLMs.txt plain text document",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Desired output format",
+            "schema": {
+              "type": "string",
+              "default": "json"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CommandRequest": {
+        "type": "object",
+        "required": [
+          "command"
+        ],
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Natural language command or prompt to execute",
+            "example": "take screenshot"
+          },
+          "personality": {
+            "type": "string",
+            "description": "Assistant personality preset",
+            "default": "human_girl",
+            "example": "human_girl"
+          },
+          "apiKey": {
+            "type": "string",
+            "description": "Optional custom OpenRouter API Key"
+          },
+          "forceLocal": {
+            "type": "boolean",
+            "description": "Force local LLM routing instead of cloud",
+            "default": false
+          },
+          "localModel": {
+            "type": "string",
+            "description": "Target local model name (e.g. llama3:latest, qwen2.5:7b)"
+          }
+        }
+      },
+      "CommandResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "action",
+          "message"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the action was completed successfully",
+            "example": true
+          },
+          "action": {
+            "type": "string",
+            "description": "The classified action identifier",
+            "example": "take_screenshot"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human/voice feedback message describing execution results",
+            "example": "Screenshot captured successfully."
+          },
+          "parsed": {
+            "type": "object",
+            "description": "Parsed NLP intent and extracted arguments"
+          },
+          "image_url": {
+            "type": "string",
+            "description": "Relative URL to captured image if action produces visuals"
+          }
+        }
+      },
+      "LogsResponse": {
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogEntry"
+            }
+          }
+        }
+      },
+      "LogEntry": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "example": "2026-08-23 16:15:00"
+          },
+          "tag": {
+            "type": "string",
+            "example": "SYSTEM"
+          },
+          "message": {
+            "type": "string",
+            "example": "V.A.N.I-xAI initialized."
+          }
+        }
+      },
+      "SystemStatsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "cpu": {
+            "$ref": "#/components/schemas/CpuStats"
+          },
+          "memory": {
+            "$ref": "#/components/schemas/MemoryStats"
+          },
+          "disk": {
+            "$ref": "#/components/schemas/DiskStats"
+          },
+          "network": {
+            "$ref": "#/components/schemas/NetworkStats"
+          },
+          "system": {
+            "$ref": "#/components/schemas/SystemInfo"
+          }
+        }
+      },
+      "CpuStats": {
+        "type": "object",
+        "properties": {
+          "percent": {
+            "type": "number",
+            "example": 14.2
+          },
+          "cores": {
+            "type": "integer",
+            "example": 8
+          },
+          "frequency": {
+            "type": "number",
+            "example": 3200
+          }
+        }
+      },
+      "MemoryStats": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "example": 17179869184
+          },
+          "available": {
+            "type": "integer",
+            "example": 8589934592
+          },
+          "percent": {
+            "type": "number",
+            "example": 50.0
+          },
+          "used": {
+            "type": "integer",
+            "example": 8589934592
+          }
+        }
+      },
+      "DiskStats": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "example": 512110190592
+          },
+          "used": {
+            "type": "integer",
+            "example": 256055095296
+          },
+          "free": {
+            "type": "integer",
+            "example": 256055095296
+          },
+          "percent": {
+            "type": "number",
+            "example": 50.0
+          }
+        }
+      },
+      "NetworkStats": {
+        "type": "object",
+        "properties": {
+          "bytes_sent": {
+            "type": "integer",
+            "example": 1048576
+          },
+          "bytes_recv": {
+            "type": "integer",
+            "example": 2097152
+          }
+        }
+      },
+      "SystemInfo": {
+        "type": "object",
+        "properties": {
+          "os": {
+            "type": "string",
+            "example": "Windows"
+          },
+          "release": {
+            "type": "string",
+            "example": "11"
+          },
+          "uptime_seconds": {
+            "type": "number",
+            "example": 3600
+          }
+        }
+      },
+      "LocalLLMStatusResponse": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "example": true
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "llama3:latest",
+              "mistral:latest"
+            ]
+          },
+          "current_model": {
+            "type": "string",
+            "example": "llama3:latest"
+          },
+          "endpoint": {
+            "type": "string",
+            "example": "http://127.0.0.1:11434"
+          }
+        }
+      },
+      "LocalLLMConfig": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "example": "http://127.0.0.1:11434"
+          },
+          "default_model": {
+            "type": "string",
+            "example": "llama3:latest"
+          },
+          "timeout": {
+            "type": "integer",
+            "example": 30
+          }
+        }
+      },
+      "LocalLLMConfigResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "config": {
+            "$ref": "#/components/schemas/LocalLLMConfig"
+          }
+        }
+      },
+      "PullModelRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "example": "qwen2.5:7b"
+          },
+          "url": {
+            "type": "string",
+            "example": "http://127.0.0.1:11434"
+          }
+        }
+      },
+      "PullModelResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Started pulling model 'qwen2.5:7b'"
+          }
+        }
+      },
+      "PullStatusResponse": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "example": "qwen2.5:7b"
+          },
+          "status": {
+            "type": "string",
+            "example": "pulling"
+          },
+          "progress": {
+            "type": "number",
+            "example": 45.0
+          },
+          "completed": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "status",
+              "resolution"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Standardized uppercase error code identifier",
+                "example": "BAD_REQUEST"
+              },
+              "message": {
+                "type": "string",
+                "description": "Readable explanation of what caused the error",
+                "example": "No command provided"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code",
+                "example": 400
+              },
+              "resolution": {
+                "type": "string",
+                "description": "Guidance on how to resolve the issue",
+                "example": "Provide a valid JSON body with a non-empty 'command' string field."
+              },
+              "docs_url": {
+                "type": "string",
+                "description": "Reference link to API or schema documentation",
+                "example": "https://vani-nzdrsr.web.app/openapi.json"
+              },
+              "sitemap_url": {
+                "type": "string",
+                "description": "URL to site index for recovery",
+                "example": "https://vani-nzdrsr.web.app/sitemap.xml"
+              }
+            }
+          }
+        }
+      }
+    },
+    "headers": {
+      "X-RateLimit-Limit": {
+        "description": "Maximum requests allowed per window (e.g. 1000/hour)",
+        "schema": {
+          "type": "integer",
+          "example": 1000
+        }
+      },
+      "X-RateLimit-Remaining": {
+        "description": "Remaining requests allowed in current window",
+        "schema": {
+          "type": "integer",
+          "example": 995
+        }
+      },
+      "X-RateLimit-Reset": {
+        "description": "Unix epoch timestamp when rate limit resets",
+        "schema": {
+          "type": "integer",
+          "example": 1787500000
+        }
+      }
+    }
+  }
+}

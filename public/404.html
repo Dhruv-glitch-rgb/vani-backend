@@ -1,98 +1,246 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Page Not Found</title>
+    <title>404 Not Found | VANI-xAI</title>
+    <meta name="robots" content="noindex, follow">
+    <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+    
+    <!-- Machine-Readable AI Discovery Links -->
+    <link rel="alternate" type="text/markdown" href="/index.md" title="VANI-xAI Markdown Documentation">
+    <link rel="describedby" type="application/json" href="/openapi.json" title="OpenAPI 3.1.0 Specification">
+    <link rel="index" type="text/plain" href="/llms.txt" title="LLMs.txt Discovery Index">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px 16px; border-radius: 3px; }
-      #message h3 { color: #888; font-weight: normal; font-size: 16px; margin: 16px 0 12px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.85);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --accent-green: #10b981;
+            --accent-cyan: #06b6d4;
+            --accent-indigo: #6366f1;
+            --accent-orange: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 760px;
+            width: 100%;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 36px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .header-logo img {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+        }
+
+        .badge-404 {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .agent-recovery-box {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .agent-recovery-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .markdown-raw {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            background: #020617;
+            padding: 14px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .markdown-raw a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        .markdown-raw a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
     </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>404</h2>
-      <h1>Page Not Found</h1>
-      <p>The specified file was not found on this website. Please check the URL for mistakes and try again.</p>
-      <h3>Why am I seeing this?</h3>
-      <p>This page was generated by the Firebase Command-Line Interface. To modify it, edit the <code>404.html</code> file in your project's configured <code>public</code> directory.</p>
-    </div>
-  
-<!-- Dark Mode Toggle Snippet -->
-<style>
-  .dark-mode-toggle-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: var(--accent-indigo, #FF9933);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s, transform 0.2s;
-  }
-  .dark-mode-toggle-btn:hover {
-    transform: scale(1.1);
-  }
-  /* Dark mode overrides */
-  body.dark-mode {
-    --bg-main: #0f172a;
-    --panel-bg: rgba(30, 41, 59, 0.85);
-    --panel-border: rgba(255, 255, 255, 0.1);
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #64748b;
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-  }
-</style>
-<button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
-  <span id="darkModeIcon">🌙</span>
-</button>
-<script>
-  (function() {
-    const toggleBtn = document.getElementById('darkModeToggle');
-    const body = document.body;
-    const icon = document.getElementById('darkModeIcon');
-    
-    // Check local storage for theme preference
-    if (localStorage.getItem('theme') === 'dark') {
-      body.classList.add('dark-mode');
-      icon.textContent = '☀️';
-    }
-    
-    toggleBtn.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      if (body.classList.contains('dark-mode')) {
-        localStorage.setItem('theme', 'dark');
-        icon.textContent = '☀️';
-      } else {
-        localStorage.setItem('theme', 'light');
-        icon.textContent = '🌙';
-      }
-    });
-  })();
-</script>
+</head>
+<body>
+    <main class="container" id="main-content">
+        <div class="header-logo">
+            <img src="/vani_icon.png" alt="VANI-xAI Logo">
+            <div>
+                <strong style="font-size: 1.1rem; color: var(--text-primary);">VANI-xAI</strong>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Vāṇī Adhyātmik Navīn Intellect</div>
+            </div>
+        </div>
 
+        <span class="badge-404"><i class="fa-solid fa-triangle-exclamation"></i> HTTP 404 - Not Found</span>
+        <h1>Resource Not Found</h1>
+        <p class="desc">
+            The endpoint or resource you requested does not exist on this server. Use the navigation links below or parse the agent recovery block to locate active routes, machine-readable specifications, or the full site index.
+        </p>
+
+        <div class="actions">
+            <a href="/" class="btn btn-primary"><i class="fa-solid fa-house"></i> Return Home</a>
+            <a href="/saras_web_search.html" class="btn btn-secondary"><i class="fa-solid fa-globe"></i> Saras.WebSearch</a>
+            <a href="/saras_vani_chat.html" class="btn btn-secondary"><i class="fa-solid fa-comments"></i> Saras Chat</a>
+            <a href="/openapi.json" class="btn btn-secondary"><i class="fa-solid fa-code"></i> OpenAPI Spec</a>
+            <a href="/llms.txt" class="btn btn-secondary"><i class="fa-solid fa-robot"></i> LLMs.txt</a>
+        </div>
+
+        <!-- AI Agent & Crawler Recovery Section -->
+        <section class="agent-recovery-box" aria-label="AI Agent Recovery Index">
+            <div class="agent-recovery-header">
+                <i class="fa-solid fa-robot"></i> Agent &amp; LLM Recovery Index (Markdown)
+            </div>
+            <pre class="markdown-raw"><code># 404 Not Found — Resource Recovery
+
+The requested URL does not match any route on VANI-xAI.
+
+## Where to Look Next:
+- **XML Sitemap**: [https://vani-nzdrsr.web.app/sitemap.xml](/sitemap.xml)
+- **LLMs Discovery Index**: [https://vani-nzdrsr.web.app/llms.txt](/llms.txt)
+- **Full LLM Docs**: [https://vani-nzdrsr.web.app/llms-full.txt](/llms-full.txt)
+- **OpenAPI 3.1.0 Spec (JSON)**: [https://vani-nzdrsr.web.app/openapi.json](/openapi.json)
+- **OpenAPI 3.1.0 Spec (YAML)**: [https://vani-nzdrsr.web.app/openapi.yaml](/openapi.yaml)
+- **Model Context Protocol (MCP)**: [https://vani-nzdrsr.web.app/.well-known/mcp.json](/.well-known/mcp.json)
+- **Developer Documentation**: [https://vani-nzdrsr.web.app/docs](/docs)
+- **Homepage & Console**: [https://vani-nzdrsr.web.app/](/)
+- **About VANI-xAI**: [https://vani-nzdrsr.web.app/about](/about)
+- **Contact Support**: [https://vani-nzdrsr.web.app/contact](/contact)
+- **Saras.WebSearch**: [https://vani-nzdrsr.web.app/saras_web_search.html](/saras_web_search.html)
+- **Saras Chat**: [https://vani-nzdrsr.web.app/saras_vani_chat.html](/saras_vani_chat.html)
+- **Radar Device Search**: [https://vani-nzdrsr.web.app/saras_vani_search.html](/saras_vani_search.html)
+- **Frequently Asked Questions**: [https://vani-nzdrsr.web.app/faq](/faq)</code></pre>
+        </section>
+    </main>
+
+    <footer>
+        VANI-xAI &copy; 2026 &bull; Don't Assume, Verify. &bull; Made in India
+    </footer>
 </body>
 </html>

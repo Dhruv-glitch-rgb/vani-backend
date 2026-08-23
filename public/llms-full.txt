@@ -1,0 +1,199 @@
+# VANI-xAI (Vāṇī Adhyātmik Navīn Intellect) — Complete LLM & Agent Documentation
+
+> Platform Motto: "Don't Assume, Verify."  
+> Official Deployment: https://vani-nzdrsr.web.app/  
+> Local Backend: http://127.0.0.1:5000/  
+
+---
+
+## 1. Overview & Mission
+
+VANI-xAI (Vāṇī Adhyātmik Navīn Intellect) is a comprehensive web-native and desktop AI ecosystem engineered to blend autonomous LLM reasoning, live voice synthesis, zero-tab search intelligence (Saras.WebSearch), cross-device radar discovery, and OS-level desktop automation into a unified platform.
+
+The system is designed to provide high-performance AI capabilities with zero paywalls, privacy-first local LLM integration (Ollama, LM Studio), and autonomous agent loops that execute multi-step goals.
+
+---
+
+## 2. Core Architectural Subsystems
+
+### 2.1 Saras.WebSearch
+A zero-tab in-browser search engine that fetches live web data, summarizes findings using LLMs, and presents cited answers directly within the workspace interface without opening external browser tabs.
+
+### 2.2 Saras_VANI.Chat & Saras_VANI.Search
+- **Saras_VANI.Chat**: Real-time multi-device chat rooms connected via Firebase Realtime Database and WebRTC channels.
+- **Saras_VANI.Search**: Local network radar scanning and device pairing interface for discovering nearby VANI nodes and sharing data across workstations and mobile devices.
+
+### 2.3 Desktop & OS Automation (Desktop Helper)
+When connected to the local Python backend (`app.py`), VANI-xAI can execute native OS operations:
+- Opening desktop applications (Notepad, Chrome, VSCode, Calculator, etc.)
+- Controlling audio volume (mute, unmute, set percentage)
+- Capturing screenshots and sending them to vision models for real-time screen analysis
+- Executing sandboxed Python scripts with timeout safeguards
+- Locking the workstation
+- Sending WhatsApp messages and initiating WhatsApp calls
+
+### 2.4 Autonomous Agent Loop (`autonomous_agent.py` & `agentic_loop.py`)
+An autonomous reasoning engine that breaks down high-level user goals into structured sub-tasks, executes them iteratively, records progress in a persistent memory database (`vani_memory.db`), and reports status.
+
+### 2.5 Local LLM Orchestration (`llm_router.py`)
+Supports seamless routing between cloud LLMs (via OpenRouter) and locally hosted models (Ollama, LM Studio, vLLM). Users can pull models dynamically via `/api/local-llm/pull` and switch models without restarting the service.
+
+---
+
+## 3. Machine-Readable API Reference
+
+All API requests and responses use JSON formatting. In the event of an error, structured JSON error responses with error codes, HTTP status codes, resolution instructions, and documentation links are returned.
+
+### 3.1 Command Execution
+- **Endpoint**: `POST /api/command`
+- **Headers**: `Content-Type: application/json`, `X-OpenRouter-Key` (optional), `X-Force-Local` (optional), `X-Local-Model` (optional)
+- **Request Body**:
+  ```json
+  {
+    "command": "take screenshot and analyze screen",
+    "personality": "human_girl",
+    "apiKey": "optional-custom-key",
+    "forceLocal": false,
+    "localModel": "llama3:latest"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "action": "analyze_screen",
+    "message": "Screen contains visual elements...",
+    "parsed": {
+      "action": "analyze_screen"
+    }
+  }
+  ```
+
+### 3.2 System Logs
+- **Endpoint**: `GET /api/logs`
+- **Response**:
+  ```json
+  {
+    "logs": [
+      {
+        "timestamp": "2026-08-23 16:15:00",
+        "tag": "SYSTEM",
+        "message": "V.A.N.I-xAI initialized successfully."
+      }
+    ]
+  }
+  ```
+
+### 3.3 System Telemetry & Hardware Stats
+- **Endpoint**: `GET /api/system-stats`
+- **Response**:
+  ```json
+  {
+    "status": "success",
+    "cpu": {
+      "percent": 12.5,
+      "cores": 8,
+      "frequency": 3200
+    },
+    "memory": {
+      "total": 17179869184,
+      "available": 8589934592,
+      "percent": 50.0,
+      "used": 8589934592
+    },
+    "disk": {
+      "total": 512110190592,
+      "used": 256055095296,
+      "free": 256055095296,
+      "percent": 50.0
+    },
+    "network": {
+      "bytes_sent": 1048576,
+      "bytes_recv": 2097152
+    },
+    "system": {
+      "os": "Windows",
+      "release": "11",
+      "uptime_seconds": 3600
+    }
+  }
+  ```
+
+### 3.4 Local LLM Status
+- **Endpoint**: `GET /api/local-llm/status`
+- **Query Parameters**: `url` (optional local endpoint URL, default `http://127.0.0.1:11434`)
+- **Response**:
+  ```json
+  {
+    "available": true,
+    "models": ["llama3:latest", "mistral:latest", "qwen2.5-coder:7b"],
+    "current_model": "llama3:latest",
+    "endpoint": "http://127.0.0.1:11434"
+  }
+  ```
+
+### 3.5 Local LLM Configuration
+- **Endpoint**: `GET /api/local-llm/config` / `POST /api/local-llm/config`
+- **Request Body (POST)**:
+  ```json
+  {
+    "endpoint": "http://127.0.0.1:11434",
+    "default_model": "llama3:latest",
+    "timeout": 30
+  }
+  ```
+
+### 3.6 Pull Local Model
+- **Endpoint**: `POST /api/local-llm/pull`
+- **Request Body**:
+  ```json
+  {
+    "model": "qwen2.5:7b",
+    "url": "http://127.0.0.1:11434"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Started pulling model 'qwen2.5:7b' in background."
+  }
+  ```
+
+### 3.7 Model Pull Status
+- **Endpoint**: `GET /api/local-llm/pull-status`
+- **Response**:
+  ```json
+  {
+    "model": "qwen2.5:7b",
+    "status": "pulling",
+    "progress": 45.0,
+    "completed": false,
+    "error": null
+  }
+  ```
+
+---
+
+## 4. Error Handling Protocol
+
+All API endpoints adhere to structured JSON error responses:
+```json
+{
+  "error": {
+    "code": "ERROR_CODE_STRING",
+    "message": "Human and agent readable error description",
+    "status": 400,
+    "resolution": "Actionable instructions on how to remedy the error",
+    "docs_url": "https://vani-nzdrsr.web.app/openapi.json"
+  }
+}
+```
+
+---
+
+## 5. Content Negotiation & AI Agent Protocols
+
+- **Content Negotiation**: All documentation and site endpoints support `Accept: text/markdown`. When requested, the server returns the clean Markdown variant with `Content-Type: text/markdown; charset=utf-8` and `Vary: Accept, Accept-Encoding`.
+- **404 Recovery**: Non-existent endpoints return HTTP 404 status codes accompanied by structured Markdown recovery indexes directing agents to `/sitemap.xml`, `/llms.txt`, and `/openapi.json`.
+- **OpenAPI 3.1.0 Spec**: Hosted at `https://vani-nzdrsr.web.app/openapi.json` and `https://vani-nzdrsr.web.app/openapi.yaml`.
