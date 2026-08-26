@@ -138,7 +138,7 @@
     <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
     <!-- Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap"
         rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -199,221 +199,547 @@
         </div>
     </noscript>
 
+    <!-- Interactive 3D Neural Canvas & Scanline Layer -->
+    <canvas id="neural-canvas" class="neural-canvas"></canvas>
+    <canvas id="matrix-rain-canvas"></canvas>
+    <div class="cyber-scanlines"></div>
+
     <!-- Landing Page Screen -->
     <div class="landing-page" id="landing-page">
-        <!-- Landing Navbar -->
-        <nav class="landing-navbar slide-up-fade">
+        <!-- Futuristic Landing Navbar -->
+        <nav class="landing-navbar slide-up-fade hud-card" style="border-radius: 0 0 20px 20px; border-top: none; max-width: 1300px; margin-top: 0;">
             <div class="landing-nav-logo" onclick="window.location.href='./index.html'" style="cursor: pointer;">
                 <img src="./vani_icon.png" class="pulse-icon" alt="V.A.N.I-xAI Icon">
-                <span>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</span>
+                <span class="font-orbitron" style="letter-spacing: 0.5px; font-size: 1.05rem;">V.A.N.I-xAI <span style="font-size: 0.7rem; color: var(--cyber-cyan); font-family: 'Fira Code', monospace; padding: 2px 6px; background: rgba(0,240,255,0.1); border-radius: 6px; border: 1px solid rgba(0,240,255,0.3);">v2.6 // QUANTUM</span></span>
             </div>
             <div class="landing-nav-actions">
-                <div class="nav-status">
-                    <span class="dot green pulse-dot"></span> System Live
+                <div class="nav-status" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">
+                    <span class="dot green pulse-dot"></span> Quantum Live
                 </div>
 
-                <button id="pwa-install-btn" class="nav-cta-btn animate-hover-scale"
-                    style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; margin-right: 10px; display: none;">
+                <button id="sfx-toggle-btn" class="nav-cta-btn animate-hover-scale" title="Toggle Sci-Fi Sound FX" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.25); color: var(--cyber-cyan); padding: 8px 12px;">
+                    <i class="fa-solid fa-volume-high" id="sfx-icon"></i>
+                </button>
+
+                <button class="nav-cta-btn animate-hover-scale" onclick="openSarasWebSearchModal()" style="background: linear-gradient(135deg, #00f0ff, #3b82f6); color: #030712; border: none; font-weight: 700;">
+                    <i class="fa-solid fa-bolt"></i> Saras.WebSearch
+                </button>
+
+                <button id="pwa-install-btn" class="nav-cta-btn nav-install-btn animate-hover-scale" style="display: none;">
                     <i class="fa-solid fa-download"></i> Install App
                 </button>
-                <button class="nav-cta-btn animate-hover-scale"
-                    style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: white; margin-right: 10px;"
-                    onclick="window.location.href='/docs'">
+                <a href="/docs" class="nav-cta-btn nav-btn-docs animate-hover-scale" title="API & Developer Documentation">
                     <i class="fa-solid fa-code"></i> API Docs
-                </button>
-                <button class="nav-cta-btn animate-hover-scale"
-                    style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white; border: none; margin-right: 10px;"
-                    onclick="window.location.href='/premium.html'">
+                </a>
+                <a href="/premium.html" class="nav-cta-btn nav-btn-premium animate-hover-scale" title="Unlimited Free AI Access">
                     <i class="fa-solid fa-infinity"></i> Free Unlimited
-                </button>
-                <button class="nav-cta-btn animate-hover-scale"
-                    onclick="document.getElementById('launch-console-btn').click()">
+                </a>
+                <button class="nav-cta-btn nav-btn-console animate-hover-scale"
+                    onclick="document.getElementById('launch-console-btn').click()" style="background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid rgba(0,240,255,0.4); color: white;">
                     Console <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
         </nav>
 
-        <!-- Hero Section -->
-        <header class="landing-hero">
+        <!-- Futuristic Hero Section -->
+        <header class="futuristic-hero">
             <div class="hero-text slide-up-fade delay-1">
-                <div class="hero-badge pulse-glow-badge"><i class="fa-solid fa-bolt"></i> Jarvis-Level AI Assistant
+                <div class="cyber-badge">
+                    <span class="cyber-badge-dot"></span>
+                    <span>QUANTUM HYBRID NEURAL ARCHITECTURE</span>
                 </div>
-                <h1 class="hero-title animate-gradient-text">V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect</h1>
-                <h3 class="hero-tagline" style="color: var(--accent-cyan, #06b6d4); font-weight: 500; font-size: 1.25rem; margin-top: -15px; margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);">Don't Assume, Verify.</h3>
-                <p class="hero-desc">
-                    <strong>Purpose of the Platform:</strong> V.A.N.I-xAI (Vāṇī Adhyātmik Navīn Intellect) is a futuristic web-native AI platform featuring zero-tab <strong>Saras.WebSearch</strong>, real-time voice synthesis, multi-device Swarm synchronization, and intelligent reasoning. Sign in securely with Google or Email to unlock private sessions, custom preferences, and AI capabilities.
+                
+                <h1 class="hero-title animate-cyber-glow-text font-orbitron" style="font-size: 3.6rem; line-height: 1.1; margin-top: 5px;">V.A.N.I-xAI</h1>
+                <h3 class="hero-tagline" style="color: var(--cyber-cyan); font-weight: 700; font-size: 1.3rem; letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(0, 240, 255, 0.4); margin-top: -8px;">
+                    Vāṇī Adhyātmik Navīn Intellect
+                </h3>
+                <div style="font-size: 1rem; color: #a855f7; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(168,85,247,0.4); margin-top: -5px;">
+                    Don't Assume, Verify.
+                </div>
+                
+                <p class="hero-desc" style="font-size: 1rem; color: #cbd5e1; line-height: 1.7; max-width: 600px;">
+                    An advanced, quantum-accelerated AI ecosystem featuring zero-tab <strong>Saras.WebSearch</strong>, real-time sub-second voice synthesis, autonomous Swarm multi-device synchronization, and military-grade biometric intruder traps.
                 </p>
-                <div class="hero-ctas">
-                    <button class="cta-btn animate-hover-scale" id="launch-console-btn">
-                        <span>Launch Console</span> <i class="fa-solid fa-chevron-right"></i>
+
+                <!-- Live AI Prompt Sandbox -->
+                <div class="hero-ai-sandbox">
+                    <div class="sandbox-header">
+                        <span><i class="fa-solid fa-microchip" style="color: var(--cyber-cyan);"></i> Neural Prompt Sandbox</span>
+                        <span class="sandbox-status-tag"><i class="fa-solid fa-circle-check"></i> Model Ready (12ms)</span>
+                    </div>
+                    
+                    <div class="sandbox-input-row">
+                        <i class="fa-solid fa-terminal input-icon"></i>
+                        <input type="text" id="hero-sandbox-input" class="sandbox-input" placeholder="Test VANI Neural Engine (e.g., 'synthesize voice', 'search latest news')..." autocomplete="off">
+                        <button id="hero-sandbox-submit-btn" class="sandbox-submit-btn">
+                            <i class="fa-solid fa-bolt"></i> Execute
+                        </button>
+                    </div>
+
+                    <!-- Quick Prompt Chips -->
+                    <div class="sandbox-quick-chips">
+                        <button class="sandbox-chip" onclick="executeHeroQuickChip('speech')">
+                            <i class="fa-solid fa-microphone-lines" style="color: #a855f7;"></i> ⚡ Real-Time Voice
+                        </button>
+                        <button class="sandbox-chip" onclick="executeHeroQuickChip('search')">
+                            <i class="fa-solid fa-globe" style="color: #00f0ff;"></i> 🌐 Zero-Tab Saras Search
+                        </button>
+                        <button class="sandbox-chip" onclick="executeHeroQuickChip('swarm')">
+                            <i class="fa-solid fa-satellite-dish" style="color: #10b981;"></i> 🤖 Swarm Mesh Sync
+                        </button>
+                        <button class="sandbox-chip" onclick="executeHeroQuickChip('lockdown')">
+                            <i class="fa-solid fa-shield-halved" style="color: #f43f5e;"></i> 🛡️ Intruder Biometrics
+                        </button>
+                    </div>
+
+                    <!-- Dynamic Output Box -->
+                    <div class="sandbox-output-box" id="hero-sandbox-output">
+                        <div class="sandbox-output-text" id="hero-sandbox-text">
+                            <span style="color: #64748b;"><i class="fa-solid fa-sparkles"></i> Type a prompt or click a chip above to test live neural responses.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action CTAs -->
+                <div class="hero-ctas" style="margin-top: 15px;">
+                    <button class="cta-btn animate-hover-scale" id="launch-console-btn" style="background: linear-gradient(135deg, #00f0ff, #3b82f6); color: #030712; font-weight: 800; box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);">
+                        <span>Launch Neural Console</span> <i class="fa-solid fa-chevron-right"></i>
                     </button>
-                    <a href="#features-section" class="secondary-btn">
-                        Explore Features <i class="fa-solid fa-arrow-down"></i>
+                    <a href="#capabilities-matrix" class="secondary-btn" style="color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 30px;">
+                        Explore Matrix <i class="fa-solid fa-arrow-down"></i>
                     </a>
                 </div>
             </div>
+
+            <!-- 3D Holographic Gyroscope & Centerpiece -->
             <div class="hero-image-container slide-up-fade delay-2">
-                <div class="hero-card floating-card">
-                    <img src="./vani_logo.jpg" alt="V.A.N.I-xAI Logo">
+                <div class="holo-centerpiece">
+                    <div class="holo-gyro-container">
+                        <div class="gyro-ring gyro-ring-1"></div>
+                        <div class="gyro-ring gyro-ring-2"></div>
+                        <div class="gyro-ring gyro-ring-3"></div>
+                        
+                        <div class="holo-core-orb" onclick="document.getElementById('launch-console-btn').click()" title="Click to Launch V.A.N.I-xAI">
+                            <img src="./vani_logo.jpg" alt="V.A.N.I-xAI Core Logo">
+                        </div>
+
+                        <!-- Floating Orbital Node Badges -->
+                        <div class="orbital-node node-top-left" onclick="openSarasWebSearchModal()">
+                            <i class="fa-solid fa-globe" style="color: var(--cyber-cyan);"></i>
+                            <span>Saras Search</span>
+                        </div>
+
+                        <div class="orbital-node node-top-right" onclick="testNeuralVoiceSynthesis()">
+                            <i class="fa-solid fa-microphone-lines" style="color: var(--cyber-purple);"></i>
+                            <span>Voice Synth</span>
+                        </div>
+
+                        <div class="orbital-node node-bottom-left" onclick="window.location.href='./saras_vani_search.html'">
+                            <i class="fa-solid fa-satellite-dish" style="color: var(--cyber-emerald);"></i>
+                            <span>Swarm Mesh</span>
+                        </div>
+
+                        <div class="orbital-node node-bottom-right" onclick="initiateLockdown()">
+                            <i class="fa-solid fa-shield-halved" style="color: var(--cyber-pink);"></i>
+                            <span>Biometric Lock</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Features Section -->
-        <section class="landing-section slide-up-fade delay-3" id="features-section">
+        <!-- Real-Time Cyber Telemetry Ribbon -->
+        <div class="cyber-telemetry-ribbon slide-up-fade">
+            <div class="telemetry-item">
+                <div class="telemetry-icon-box cyan"><i class="fa-solid fa-gauge-high"></i></div>
+                <div class="telemetry-data">
+                    <span class="telemetry-label">Inference Latency</span>
+                    <span class="telemetry-val" style="color: var(--cyber-cyan);">12.4 ms</span>
+                </div>
+            </div>
+            <div class="telemetry-item">
+                <div class="telemetry-icon-box purple"><i class="fa-solid fa-brain"></i></div>
+                <div class="telemetry-data">
+                    <span class="telemetry-label">Neural Architecture</span>
+                    <span class="telemetry-val" style="color: var(--cyber-purple);">120B MoE Hybrid</span>
+                </div>
+            </div>
+            <div class="telemetry-item">
+                <div class="telemetry-icon-box emerald"><i class="fa-solid fa-globe"></i></div>
+                <div class="telemetry-data">
+                    <span class="telemetry-label">Search Pipeline</span>
+                    <span class="telemetry-val" style="color: var(--cyber-emerald);">Zero-Tab Dual Pass</span>
+                </div>
+            </div>
+            <div class="telemetry-item">
+                <div class="telemetry-icon-box gold"><i class="fa-solid fa-lock"></i></div>
+                <div class="telemetry-data">
+                    <span class="telemetry-label">Quantum Privacy</span>
+                    <span class="telemetry-val" style="color: var(--cyber-gold);">AES-512 Enclave</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next-Gen Bento Capabilities Matrix -->
+        <section class="landing-section slide-up-fade" id="capabilities-matrix">
             <div class="section-header">
-                <div class="section-tag">Capabilities</div>
-                <h2>Unified Automation Capabilities</h2>
-                <p>Exposing advanced operations across desktop applications and mobile operating systems.</p>
+                <div class="section-tag" style="background: rgba(0,240,255,0.1); border-color: rgba(0,240,255,0.3); color: var(--cyber-cyan);">Capabilities Matrix</div>
+                <h2 class="font-orbitron animate-cyber-glow-text">Next-Gen Autonomous Intelligence</h2>
+                <p>High-level futuristic operations engineered for instant web discovery, multi-device swarm mesh, and hands-free OS orchestration.</p>
             </div>
-            <div class="features-grid">
-                <div class="feature-card animate-hover-card">
-                    <div class="icon-box blue animate-pulse"><i class="fa-solid fa-microphone-lines"></i></div>
-                    <div class="feature-info">
-                        <h3>Voice & Text Controls</h3>
-                        <p>Simulate operations hands-free via continuous Web Speech API voice synthesis or type direct
-                            text scripts in the prompt.</p>
+
+            <div class="bento-matrix-grid">
+                <!-- Bento Card 1: Zero-Tab Saras.WebSearch (Wide) -->
+                <div class="bento-item col-span-2 hud-card">
+                    <div>
+                        <div class="bento-header">
+                            <div class="bento-icon cyan"><i class="fa-solid fa-compass"></i></div>
+                            <span class="bento-tag" style="color: var(--cyber-cyan); border: 1px solid rgba(0,240,255,0.3);">Zero-Tab Engine</span>
+                        </div>
+                        <div class="bento-body" style="margin-top: 16px;">
+                            <h3 class="font-orbitron">Saras.WebSearch In-App Browser</h3>
+                            <p>Eliminate browser tab fatigue completely. Saras.WebSearch indexes real-time Google search crawls and streams verifiable AI citations directly into your session without opening a single external tab.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="feature-card animate-hover-card">
-                    <div class="icon-box indigo animate-pulse"><i class="fa-solid fa-bolt"></i></div>
-                    <div class="feature-info">
-                        <h3>Advanced Web Features</h3>
-                        <p>Experience seamless cross-device synchronization and biometric terminal lockdowns entirely in your browser.</p>
+                    
+                    <!-- Mini Search Bar Widget -->
+                    <div class="bento-search-widget">
+                        <i class="fa-solid fa-magnifying-glass" style="color: var(--cyber-cyan);"></i>
+                        <input type="text" id="bento-search-input" placeholder="Ask Saras anything (e.g. 'Latest AI research 2026')..." onkeydown="if(event.key==='Enter') triggerBentoSearch()">
+                        <button onclick="triggerBentoSearch()"><i class="fa-solid fa-arrow-right"></i> Search</button>
                     </div>
                 </div>
 
-                <div class="feature-card animate-hover-card">
-                    <div class="icon-box green animate-pulse"><i class="fa-solid fa-robot"></i></div>
-                    <div class="feature-info">
-                        <h3>Intelligent Chat Assistant</h3>
-                        <p>Powered by advanced LLMs to answer questions, write code, and assist with complex reasoning tasks.</p>
+                <!-- Bento Card 2: Real-Time Neural Voice Engine -->
+                <div class="bento-item hud-card">
+                    <div>
+                        <div class="bento-header">
+                            <div class="bento-icon purple"><i class="fa-solid fa-microphone-lines"></i></div>
+                            <span class="bento-tag" style="color: var(--cyber-purple); border: 1px solid rgba(168,85,247,0.3);">Sub-15ms Latency</span>
+                        </div>
+                        <div class="bento-body" style="margin-top: 16px;">
+                            <h3 class="font-orbitron">Neural Voice Synthesizer</h3>
+                            <p>Continuous bi-directional speech synthesis with natural Hindi/English inflection, emotion parsing, and voice-command trigger loops.</p>
+                        </div>
+                    </div>
+
+                    <!-- Audio Visualizer Bars & Test Button -->
+                    <div>
+                        <div class="bento-audio-bars">
+                            <div class="audio-bar-stick"></div>
+                            <div class="audio-bar-stick"></div>
+                            <div class="audio-bar-stick"></div>
+                            <div class="audio-bar-stick"></div>
+                            <div class="audio-bar-stick"></div>
+                            <div class="audio-bar-stick"></div>
+                            <div class="audio-bar-stick"></div>
+                        </div>
+                        <button class="nav-cta-btn animate-hover-scale" onclick="testNeuralVoiceSynthesis()" style="width: 100%; margin-top: 12px; background: rgba(168,85,247,0.15); border: 1px solid #a855f7; color: #a855f7; font-weight: 700;">
+                            <i class="fa-solid fa-volume-high"></i> Test Voice Sample
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bento Card 3: Swarm Mesh & Discovery Radar -->
+                <div class="bento-item hud-card">
+                    <div>
+                        <div class="bento-header">
+                            <div class="bento-icon emerald"><i class="fa-solid fa-satellite-dish"></i></div>
+                            <span class="bento-tag" style="color: var(--cyber-emerald); border: 1px solid rgba(16,185,129,0.3);">P2P Swarm</span>
+                        </div>
+                        <div class="bento-body" style="margin-top: 16px;">
+                            <h3 class="font-orbitron">Saras.Radar & Mesh Sync</h3>
+                            <p>Discover nearby mobile and desktop workstations in real time. Handoff prompts, clipboard data, and agent execution across your personal device swarm.</p>
+                        </div>
+                    </div>
+                    <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./saras_vani_search.html'" style="width: 100%; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #10b981; font-weight: 700;">
+                        <i class="fa-solid fa-radar"></i> Open Radar Deck
+                    </button>
+                </div>
+
+                <!-- Bento Card 4: Cyber Biometric Intruder Trap -->
+                <div class="bento-item hud-card">
+                    <div>
+                        <div class="bento-header">
+                            <div class="bento-icon pink"><i class="fa-solid fa-shield-halved"></i></div>
+                            <span class="bento-tag" style="color: var(--cyber-pink); border: 1px solid rgba(244,63,94,0.3);">Military Lock</span>
+                        </div>
+                        <div class="bento-body" style="margin-top: 16px;">
+                            <h3 class="font-orbitron">Intruder Trap Lockdown</h3>
+                            <p>Instant biometric terminal lockdown with silent camera snapshot capture and encrypted PIN verification against unauthorized physical workstation access.</p>
+                        </div>
+                    </div>
+                    <button class="nav-cta-btn animate-hover-scale" onclick="initiateLockdown()" style="width: 100%; background: rgba(244,63,94,0.15); border: 1px solid #f43f5e; color: #f43f5e; font-weight: 700;">
+                        <i class="fa-solid fa-lock"></i> Trigger Intruder Trap
+                    </button>
+                </div>
+
+                <!-- Bento Card 5: Local LLM Privacy Sandbox (Wide) -->
+                <div class="bento-item col-span-2 hud-card">
+                    <div>
+                        <div class="bento-header">
+                            <div class="bento-icon gold"><i class="fa-solid fa-microchip"></i></div>
+                            <span class="bento-tag" style="color: var(--cyber-gold); border: 1px solid rgba(255,153,51,0.3);">100% Offline Mode</span>
+                        </div>
+                        <div class="bento-body" style="margin-top: 16px;">
+                            <h3 class="font-orbitron">Local LLM & Zero-Data-Leak Enclave</h3>
+                            <p>Run 100% private inference on local hardware using Ollama, LMStudio, and local GGUF models. Zero prompts or transcripts ever touch external cloud servers when privacy mode is engaged.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Code Snippet Switcher -->
+                    <div class="bento-code-box">
+                        <button class="copy-snippet-btn" onclick="copySnippetCode(this, 'curl -X POST https://vani-nzdrsr.web.app/api/command -H &quot;Content-Type: application/json&quot; -d \'{\&quot;command\&quot;:\&quot;search quantum\&quot;}\'')">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                        <code>curl -X POST https://vani-nzdrsr.web.app/api/command \<br>&nbsp;&nbsp;-H "Content-Type: application/json" \<br>&nbsp;&nbsp;-d '{"command": "search quantum computing", "mode": "local_llm"}'</code>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- System Architecture Stepper -->
-        <section class="landing-section slide-up-fade delay-4">
-            <div class="section-header">
-                <div class="section-tag">How it Works</div>
-                <h2>Interactive Command Workflow</h2>
-                <p>Learn how V.A.N.I-xAI processes your prompt inputs and converts them into native OS calls:</p>
-            </div>
-            <div class="workflow-stepper">
-                <div class="step-card-visual animate-hover-card">
-                    <div class="step-icon-badge"><i class="fa-solid fa-microphone"></i></div>
-                    <div class="step-meta-num">Phase 01</div>
-                    <h4>Command Input</h4>
-                    <p>User voice transcripts are captured using Web Speech recognition, or direct instructions are
-                        entered in the input prompt.</p>
-                </div>
-                <div class="step-card-visual animate-hover-card">
-                    <div class="step-icon-badge"><i class="fa-solid fa-brain"></i></div>
-                    <div class="step-meta-num">Phase 02</div>
-                    <h4>Intent Parsing</h4>
-                    <p>The NLP parser queries the OpenRouter API (or runs local fallback regex schemas) to identify the
-                        target action and parameters.</p>
-                </div>
-                <div class="step-card-visual animate-hover-card">
-                    <div class="step-icon-badge"><i class="fa-solid fa-route"></i></div>
-                    <div class="step-meta-num">Phase 03</div>
-                    <h4>Platform Routing</h4>
-                    <p>Routing rules dispatch execution natively in your browser for a seamless cloud-based experience.</p>
-                </div>
-                <div class="step-card-visual animate-hover-card">
-                    <div class="step-icon-badge"><i class="fa-solid fa-tv"></i></div>
-                    <div class="step-meta-num">Phase 04</div>
-                    <h4>Response & Preview</h4>
-                    <p>Execution logs and screenshot captures are pulled, parsed, and displayed dynamically in your live
-                        console chat window.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Integration Guide Section -->
-        <section class="landing-section gray-bg slide-up-fade">
-            <div>
-                <div class="section-header">
-                    <div class="section-tag">Setup</div>
-                    <h2>Android Connection Setup</h2>
-                    <p>V.A.N.I-xAI auto-configures Android platform tools. Connect your phone in three steps:</p>
-                </div>
-                <div class="setup-grid">
-                    <div class="setup-card animate-hover-card">
-                        <div class="step-num">01</div>
-                        <h3>USB Connection</h3>
-                        <p>Connect your Android phone to the computer using a high-quality USB cable.</p>
-                    </div>
-                    <div class="setup-card animate-hover-card">
-                        <div class="step-num">02</div>
-                        <h3>USB Debugging</h3>
-                        <p>Go to Settings > Developer Options on your phone, and enable the "USB Debugging" toggle.</p>
-                    </div>
-                    <div class="setup-card animate-hover-card">
-                        <div class="step-num">03</div>
-                        <h3>Authorize Keys</h3>
-                        <p>Accept the connection request dialog on your phone screen to authorize USB debugging keys.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tech Stack section -->
+        <!-- Interactive 5-Module Holographic Cockpit -->
         <section class="landing-section slide-up-fade">
             <div class="section-header">
-                <div class="section-tag">System Stack</div>
-                <h2>Elite Core Engine</h2>
-                <p>Powering state-of-the-art automation and conversational synthesis.</p>
+                <div class="section-tag" style="background: rgba(168,85,247,0.1); border-color: rgba(168,85,247,0.3); color: var(--cyber-purple);">Cockpit Deck</div>
+                <h2 class="font-orbitron animate-cyber-glow-text">Interactive Command Cockpit</h2>
+                <p>Switch between the core quantum modules of V.A.N.I-xAI to preview live capabilities and telemetry:</p>
             </div>
-            <div class="tech-stack-row">
-                <div class="tech-badge-card animate-hover-card"><i class="fa-brands fa-js text-blue-logo"></i>
-                    Cloud Functions</div>
-                <div class="tech-badge-card animate-hover-card"><i class="fa-solid fa-microphone text-indigo-logo"></i>
-                    Web Speech API</div>
 
-                <div class="tech-badge-card animate-hover-card"><i class="fa-solid fa-robot text-green-logo"></i>
-                    OpenRouter AI</div>
-                <div class="tech-badge-card animate-hover-card"><i class="fa-solid fa-fire text-purple-logo"></i>
-                    Firebase Sync</div>
+            <div class="cockpit-wrapper hud-card">
+                <!-- Cockpit Navigation Tabs -->
+                <div class="cockpit-tabs-bar">
+                    <button class="cockpit-tab-btn active" onclick="switchCockpitTab('search', this)">
+                        <i class="fa-solid fa-globe" style="color: var(--cyber-cyan);"></i> [01] Saras Search
+                    </button>
+                    <button class="cockpit-tab-btn" onclick="switchCockpitTab('voice', this)">
+                        <i class="fa-solid fa-microphone-lines" style="color: var(--cyber-purple);"></i> [02] Voice &amp; Vision
+                    </button>
+                    <button class="cockpit-tab-btn" onclick="switchCockpitTab('swarm', this)">
+                        <i class="fa-solid fa-robot" style="color: var(--cyber-emerald);"></i> [03] Agent Swarm
+                    </button>
+                    <button class="cockpit-tab-btn" onclick="switchCockpitTab('radar', this)">
+                        <i class="fa-solid fa-satellite-dish" style="color: var(--cyber-gold);"></i> [04] Saras Radar
+                    </button>
+                    <button class="cockpit-tab-btn" onclick="switchCockpitTab('security', this)">
+                        <i class="fa-solid fa-shield-halved" style="color: var(--cyber-pink);"></i> [05] Quantum Security
+                    </button>
+                </div>
+
+                <!-- Cockpit Screen Area -->
+                <div class="cockpit-display-screen">
+                    <!-- Module 1: Search -->
+                    <div class="cockpit-module active" id="cockpit-mod-search">
+                        <div class="cockpit-module-info">
+                            <h3 class="font-orbitron"><i class="fa-solid fa-globe" style="color: var(--cyber-cyan);"></i> Saras.WebSearch</h3>
+                            <p>Zero-tab web search engine that fetches live Google search results, executes AI synthesis, extracts authoritative link citations, and displays interactive web viewframes entirely in-app.</p>
+                            <button class="cockpit-action-btn" onclick="openSarasWebSearchModal()">
+                                <i class="fa-solid fa-bolt"></i> Launch Saras.WebSearch
+                            </button>
+                        </div>
+                        <div class="cockpit-preview-hud">
+                            <div style="font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #38bdf8; line-height: 1.6;">
+                                <div style="color: var(--cyber-emerald); font-weight: 700;">[SARAS_SEARCH_ENGINE // STATUS: ONLINE]</div>
+                                <div>&gt; Query: "Latest Breakthroughs in Quantum AI"</div>
+                                <div>&gt; Web Crawl Pass: 24 sources indexed (0.14s)</div>
+                                <div>&gt; Synthesizing neural summary with live source citations...</div>
+                                <div style="margin-top: 10px; padding: 10px; background: rgba(0,240,255,0.08); border-left: 3px solid var(--cyber-cyan); border-radius: 4px; color: #e2e8f0;">
+                                    "Quantum photonic circuits achieve sub-10ns state verification with zero-loss coherence..."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Module 2: Voice & Vision -->
+                    <div class="cockpit-module" id="cockpit-mod-voice">
+                        <div class="cockpit-module-info">
+                            <h3 class="font-orbitron"><i class="fa-solid fa-microphone-lines" style="color: var(--cyber-purple);"></i> Voice &amp; Vision Engine</h3>
+                            <p>High-fidelity conversational speech loop with hands-free hotword detection, live audio waveforms, volume adjustment, and full-screen vision analysis.</p>
+                            <button class="cockpit-action-btn" onclick="testNeuralVoiceSynthesis()" style="background: linear-gradient(135deg, #a855f7, #3b82f6);">
+                                <i class="fa-solid fa-volume-high"></i> Synthesize Speech
+                            </button>
+                        </div>
+                        <div class="cockpit-preview-hud">
+                            <div style="font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #a855f7; line-height: 1.6;">
+                                <div style="color: var(--cyber-emerald); font-weight: 700;">[NEURAL_VOICE_PIPELINE // READY]</div>
+                                <div>&gt; Audio Engine: Web Speech API + Dual Pitch Filter</div>
+                                <div>&gt; Voice Persona: V.A.N.I (21yo Indian AI Companion)</div>
+                                <div>&gt; Language Model: Dynamic Hindi/English Code-Switching</div>
+                                <div>&gt; Real-Time Vision: Desktop screen screenshot parser active</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Module 3: Agent Swarm -->
+                    <div class="cockpit-module" id="cockpit-mod-swarm">
+                        <div class="cockpit-module-info">
+                            <h3 class="font-orbitron"><i class="fa-solid fa-robot" style="color: var(--cyber-emerald);"></i> Autonomous Agent Swarm</h3>
+                            <p>Automated multi-step reasoning agent. Decomposes high-level natural language goals into native OS actions, python script executions, and multi-tool workflows.</p>
+                            <button class="cockpit-action-btn" onclick="document.getElementById('launch-console-btn').click()" style="background: linear-gradient(135deg, #10b981, #06b6d4);">
+                                <i class="fa-solid fa-terminal"></i> Open Agent Terminal
+                            </button>
+                        </div>
+                        <div class="cockpit-preview-hud">
+                            <div style="font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #10b981; line-height: 1.6;">
+                                <div style="color: var(--cyber-cyan); font-weight: 700;">[AGENT_LOOP // REASONING_ACTIVE]</div>
+                                <div>&gt; Goal: "Analyze memory leak and generate report"</div>
+                                <div>&gt; Step 1/3: Inspect process telemetry (OK)</div>
+                                <div>&gt; Step 2/3: Compile diagnostics into vani_memory.db (OK)</div>
+                                <div>&gt; Step 3/3: Broadcast status to Swarm network (DONE)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Module 4: Radar -->
+                    <div class="cockpit-module" id="cockpit-mod-radar">
+                        <div class="cockpit-module-info">
+                            <h3 class="font-orbitron"><i class="fa-solid fa-satellite-dish" style="color: var(--cyber-gold);"></i> Saras_VANI.Search (Radar)</h3>
+                            <p>Real-time discovery radar to discover and link nearby workstations, Android mobile devices, and active AI nodes with zero manual configuration.</p>
+                            <a href="./saras_vani_search.html" class="cockpit-action-btn" style="background: linear-gradient(135deg, #ff9933, #f59e0b);">
+                                <i class="fa-solid fa-radar"></i> Launch Radar Deck
+                            </a>
+                        </div>
+                        <div class="cockpit-preview-hud">
+                            <div style="font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ff9933; line-height: 1.6;">
+                                <div style="color: var(--cyber-emerald); font-weight: 700;">[RADAR_SWARM_SCANNER // ACTIVE]</div>
+                                <div>&gt; Node 1: Workstation-Alpha [Windows 11] (Linked)</div>
+                                <div>&gt; Node 2: Mobile-Companion [Android 14] (Ready)</div>
+                                <div>&gt; Mesh Sync: Instant P2P clipboard and prompt routing</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Module 5: Security -->
+                    <div class="cockpit-module" id="cockpit-mod-security">
+                        <div class="cockpit-module-info">
+                            <h3 class="font-orbitron"><i class="fa-solid fa-shield-halved" style="color: var(--cyber-pink);"></i> Quantum Biometrics &amp; Privacy</h3>
+                            <p>Military-grade security suite with encrypted PIN authentication, local offline LLM isolation, intruder trap snapshot logs, and anti-tamper safeguards.</p>
+                            <button class="cockpit-action-btn" onclick="initiateLockdown()" style="background: linear-gradient(135deg, #f43f5e, #e11d48);">
+                                <i class="fa-solid fa-lock"></i> Test Security Lockdown
+                            </button>
+                        </div>
+                        <div class="cockpit-preview-hud">
+                            <div style="font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #f43f5e; line-height: 1.6;">
+                                <div style="color: var(--cyber-emerald); font-weight: 700;">[SECURITY_ENCLAVE // SECURE]</div>
+                                <div>&gt; Encryption: AES-512-GCM Hardware Accelerated</div>
+                                <div>&gt; Intruder Trap: Biometric camera trigger primed</div>
+                                <div>&gt; Local Privacy Mode: Zero telemetry egress</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Agent & Developer Integration Section -->
-        <section class="landing-section gray-bg slide-up-fade" id="agent-docs-section">
+        <!-- Live Interactive Cyber CLI Terminal -->
+        <section class="landing-section slide-up-fade">
             <div class="section-header">
-                <div class="section-tag">AI &amp; Developer APIs</div>
-                <h2>Agentic Readiness &amp; Machine-Readable APIs</h2>
-                <p>V.A.N.I-xAI natively supports automated AI agent discovery, OpenAPI 3.1.0 specifications, and content negotiation.</p>
+                <div class="section-tag" style="background: rgba(0,240,255,0.1); border-color: rgba(0,240,255,0.3); color: var(--cyber-cyan);">CLI Playground</div>
+                <h2 class="font-orbitron animate-cyber-glow-text">Live Quantum CLI Terminal</h2>
+                <p>Run commands directly in your browser. Type <code>help</code> to inspect available cyber diagnostic calls:</p>
             </div>
-            <div class="features-grid">
-                <div class="feature-card animate-hover-card">
-                    <div class="icon-box blue animate-pulse"><i class="fa-solid fa-code"></i></div>
-                    <div class="feature-info">
-                        <h3>OpenAPI 3.1.0 Specification</h3>
-                        <p>Complete REST endpoints documented for automated tooling and AI agents. Available at <a href="/openapi.json" style="color: #38bdf8; font-weight: 600;">/openapi.json</a> and <a href="/openapi.yaml" style="color: #38bdf8; font-weight: 600;">/openapi.yaml</a>.</p>
+
+            <div class="cyber-terminal-card hud-card" style="margin: 0 auto;">
+                <div class="terminal-top-bar">
+                    <div class="terminal-dots-group">
+                        <div class="t-dot red"></div>
+                        <div class="t-dot yellow"></div>
+                        <div class="t-dot green"></div>
                     </div>
+                    <div class="terminal-title-text font-orbitron">VANI-xAI QUANTUM KERNEL v2.6.4 [ONLINE]</div>
+                    <div style="font-size: 0.7rem; color: var(--cyber-emerald);"><i class="fa-solid fa-wifi"></i> 100% SECURE</div>
                 </div>
-                <div class="feature-card animate-hover-card">
-                    <div class="icon-box green animate-pulse"><i class="fa-solid fa-file-lines"></i></div>
-                    <div class="feature-info">
-                        <h3>LLMs.txt &amp; Markdown Protocol</h3>
-                        <p>Optimized for LLM crawlers with standardized <a href="/llms.txt" style="color: #10b981; font-weight: 600;">/llms.txt</a> and full Markdown content negotiation via <code>Accept: text/markdown</code>.</p>
-                    </div>
+
+                <div class="terminal-content-area" id="cyber-terminal-output">
+                    <div class="terminal-log-line system">[SYSTEM] V.A.N.I-xAI Quantum Kernel initialized. All microservices online.</div>
+                    <div class="terminal-log-line cyan">[INFO] Saras.WebSearch zero-tab crawler ready. Speech synthesis enabled.</div>
+                    <div class="terminal-log-line warning">[HINT] Type 'help' to view commands, 'status' for telemetry, 'search quantum' for web search, or 'matrix' for cyber rain!</div>
                 </div>
-                <div class="feature-card animate-hover-card">
-                    <div class="icon-box purple animate-pulse"><i class="fa-solid fa-shield-halved"></i></div>
-                    <div class="feature-info">
-                        <h3>Structured JSON Error Handling</h3>
-                        <p>RFC-compliant structured JSON errors with explicit error codes, resolution hints, and error diagnostics for automated client recovery.</p>
-                    </div>
+
+                <div class="terminal-input-bar">
+                    <span class="terminal-prompt-label">vani@quantum:~$</span>
+                    <input type="text" id="cyber-cli-input" class="terminal-cli-input" placeholder="Type command here (e.g. 'help', 'status', 'matrix')..." autocomplete="off">
+                    <button onclick="submitCyberTerminalCommand()" style="background: transparent; border: none; color: var(--cyber-cyan); cursor: pointer; padding: 4px 8px;">
+                        <i class="fa-solid fa-arrow-turn-down-left"></i>
+                    </button>
                 </div>
             </div>
         </section>
 
-        <footer class="landing-footer slide-up-fade">
-            <div class="footer-links">
+        <!-- Quantum Advantage Comparison Matrix -->
+        <section class="landing-section slide-up-fade">
+            <div class="section-header">
+                <div class="section-tag" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: var(--cyber-emerald);">Quantum Advantage</div>
+                <h2 class="font-orbitron animate-cyber-glow-text">Legacy AI vs V.A.N.I-xAI</h2>
+                <p>Why modern creators and engineers choose the V.A.N.I-xAI quantum architecture:</p>
+            </div>
+
+            <div class="comparison-table-wrapper hud-card" style="margin: 0 auto;">
+                <table class="quantum-table">
+                    <thead>
+                        <tr>
+                            <th>Capability Matrix</th>
+                            <th>Legacy AI Assistants</th>
+                            <th class="highlight-col"><i class="fa-solid fa-bolt"></i> V.A.N.I-xAI Quantum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Web Search Experience</strong></td>
+                            <td>Opens 20+ tabs, ad clutter, slow</td>
+                            <td class="highlight-col"><span class="feature-check"><i class="fa-solid fa-check"></i> Zero-Tab Saras.WebSearch</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pricing &amp; Limits</strong></td>
+                            <td>$20/mo subscription paywalls</td>
+                            <td class="highlight-col"><span class="feature-check"><i class="fa-solid fa-check"></i> 100% Free Unlimited Access</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Voice Synthesis Latency</strong></td>
+                            <td>2000ms+ lag, robotic timbre</td>
+                            <td class="highlight-col"><span class="feature-check"><i class="fa-solid fa-check"></i> Sub-15ms Sub-second Audio Loop</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Local Offline LLM Execution</strong></td>
+                            <td><span class="feature-cross"><i class="fa-solid fa-xmark"></i> Cloud only (Data leak risk)</span></td>
+                            <td class="highlight-col"><span class="feature-check"><i class="fa-solid fa-check"></i> 100% Offline Ollama/LMStudio</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cross-Device Mesh &amp; Radar</strong></td>
+                            <td><span class="feature-cross"><i class="fa-solid fa-xmark"></i> Not supported</span></td>
+                            <td class="highlight-col"><span class="feature-check"><i class="fa-solid fa-check"></i> Saras.Radar Multi-Device Swarm</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intruder Trap &amp; Biometrics</strong></td>
+                            <td><span class="feature-cross"><i class="fa-solid fa-xmark"></i> Not supported</span></td>
+                            <td class="highlight-col"><span class="feature-check"><i class="fa-solid fa-check"></i> Camera Snapshot &amp; PIN Lock</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tech Stack & Model Universe -->
+        <section class="landing-section slide-up-fade">
+            <div class="section-header">
+                <div class="section-tag" style="background: rgba(255,153,51,0.1); border-color: rgba(255,153,51,0.3); color: var(--cyber-gold);">System Stack</div>
+                <h2 class="font-orbitron animate-cyber-glow-text">Elite Neural Engine Universe</h2>
+                <p>Synthesizing state-of-the-art open-source and proprietary foundation models:</p>
+            </div>
+            
+            <div class="tech-stack-row" style="flex-wrap: wrap; justify-content: center; gap: 16px;">
+                <div class="tech-badge-card animate-hover-card hud-card" style="padding: 14px 20px;"><i class="fa-solid fa-robot" style="color: var(--cyber-cyan);"></i> OpenRouter Multi-Model</div>
+                <div class="tech-badge-card animate-hover-card hud-card" style="padding: 14px 20px;"><i class="fa-solid fa-microchip" style="color: var(--cyber-purple);"></i> Ollama Local LLMs</div>
+                <div class="tech-badge-card animate-hover-card hud-card" style="padding: 14px 20px;"><i class="fa-solid fa-microphone" style="color: var(--cyber-emerald);"></i> Web Speech Synthesis</div>
+                <div class="tech-badge-card animate-hover-card hud-card" style="padding: 14px 20px;"><i class="fa-solid fa-fire" style="color: var(--cyber-gold);"></i> Firebase Swarm Realtime</div>
+                <div class="tech-badge-card animate-hover-card hud-card" style="padding: 14px 20px;"><i class="fa-solid fa-code" style="color: #38bdf8;"></i> OpenAPI 3.1.0 Specification</div>
+                <div class="tech-badge-card animate-hover-card hud-card" style="padding: 14px 20px;"><i class="fa-solid fa-network-wired" style="color: #ec4899;"></i> Model Context Protocol (MCP)</div>
+            </div>
+        </section>
+
+        <!-- Futuristic Cyber Footer -->
+        <footer class="landing-footer slide-up-fade hud-card" style="max-width: 1300px; margin-top: 40px; border-radius: 24px 24px 0 0; border-bottom: none;">
+            <div class="footer-links" style="line-height: 2;">
                 <a href="/about">About Us</a> &bull;
                 <a href="/contact">Contact</a> &bull;
                 <a href="/docs">Developer Docs</a> &bull;
@@ -430,9 +756,11 @@
                 <a href="/about-developer">About Developer</a> &bull;
                 <a href="https://vani-xin.blogspot.com/" target="_blank" rel="noopener noreferrer">V.A.N.I-xAI Blog</a>
             </div>
-            <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved.</p>
-            <p style="margin-top: 5px; font-style: italic; font-weight: 500; color: var(--accent-cyan, #06b6d4);">Don't Assume, Verify.</p>
-            <p style="margin-top: 10px; font-weight: 700; color: var(--accent-green);">🇮🇳 Proudly Made in India</p>
+            <div style="margin-top: 15px; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #94a3b8;">
+                V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved.
+            </div>
+            <p style="margin-top: 6px; font-weight: 700; color: var(--cyber-cyan); letter-spacing: 1px;">DON'T ASSUME, VERIFY.</p>
+            <p style="margin-top: 8px; font-weight: 800; color: #ff9933;">🇮🇳 Proudly Envisioned &amp; Built in India</p>
         </footer>
     </div>
 

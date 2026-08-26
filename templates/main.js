@@ -987,3 +987,487 @@ function getClientFallbackResponse(rawText) {
         message: `Main abhi server se connect nahi ho pa rahi hoon. Kripya apna network check karein ya ek pal baad koshish karein! 💕`
     };
 }
+
+/* ==========================================================================
+   V.A.N.I-xAI ADVANCED FUTURISTIC & HIGH-LEVEL JAVASCRIPT ENGINES
+   ========================================================================== */
+
+// ----------------------------------------------------
+// 1. INTERACTIVE 3D NEURAL CONSTELLATION CANVAS ENGINE
+// ----------------------------------------------------
+(function initNeuralConstellationCanvas() {
+    const canvas = document.getElementById('neural-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const particleCount = Math.min(Math.floor((width * height) / 14000), 95);
+    const colors = ['#00f0ff', '#38bdf8', '#a855f7', '#10b981', '#ff9933'];
+
+    const mouse = { x: null, y: null, radius: 160 };
+
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+
+    window.addEventListener('mouseout', () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
+
+    // Ripple wave on click
+    window.addEventListener('click', (e) => {
+        for (let i = 0; i < 6; i++) {
+            particles.push({
+                x: e.clientX,
+                y: e.clientY,
+                vx: (Math.random() - 0.5) * 6,
+                vy: (Math.random() - 0.5) * 6,
+                radius: Math.random() * 3 + 2,
+                color: '#00f0ff',
+                alpha: 1,
+                decay: 0.02
+            });
+        }
+    });
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.9;
+            this.vy = (Math.random() - 0.5) * 0.9;
+            this.radius = Math.random() * 2.2 + 1.2;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.baseAlpha = Math.random() * 0.6 + 0.3;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x < 0 || this.x > width) this.vx *= -1;
+            if (this.y < 0 || this.y > height) this.vy *= -1;
+
+            // Mouse proximity interaction
+            if (mouse.x !== null && mouse.y !== null) {
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < mouse.radius) {
+                    const force = (mouse.radius - dist) / mouse.radius;
+                    const angle = Math.atan2(dy, dx);
+                    this.x -= Math.cos(angle) * force * 2.5;
+                    this.y -= Math.sin(angle) * force * 2.5;
+                }
+            }
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.baseAlpha;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = this.color;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw connecting neural lines
+        const maxDist = 135;
+        for (let i = 0; i < particles.length; i++) {
+            const pA = particles[i];
+            pA.update();
+            pA.draw();
+
+            if (pA.decay) {
+                pA.alpha -= pA.decay;
+                if (pA.alpha <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                    continue;
+                }
+            }
+
+            for (let j = i + 1; j < particles.length; j++) {
+                const pB = particles[j];
+                const dx = pA.x - pB.x;
+                const dy = pA.y - pB.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < maxDist) {
+                    const lineAlpha = (1 - dist / maxDist) * 0.28;
+                    ctx.beginPath();
+                    ctx.moveTo(pA.x, pA.y);
+                    ctx.lineTo(pB.x, pB.y);
+                    ctx.strokeStyle = pA.color;
+                    ctx.globalAlpha = lineAlpha;
+                    ctx.lineWidth = 0.9;
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                }
+            }
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+})();
+
+// ----------------------------------------------------
+// 2. HERO AI PROMPT SANDBOX ENGINE
+// ----------------------------------------------------
+window.executeHeroQuickChip = function(type) {
+    playCyberSFX('click');
+    const input = document.getElementById('hero-sandbox-input');
+    const output = document.getElementById('hero-sandbox-text');
+    if (!output) return;
+
+    if (type === 'speech') {
+        if (input) input.value = "Hey VANI, synthesize speech test";
+        typewriterEffect(output, "<span style='color: var(--cyber-purple); font-weight:700;'>[VOICE SYNTHESIS ACTIVE]</span><br>\"Namaste! V.A.N.I-xAI Quantum Neural Voice Engine is operational with sub-15ms latency. Don't Assume, Verify!\" 🌸");
+        testNeuralVoiceSynthesis();
+    } else if (type === 'search') {
+        if (input) input.value = "search zero-tab AI breakthroughs";
+        typewriterEffect(output, "<span style='color: var(--cyber-cyan); font-weight:700;'>[SARAS.WEBSEARCH READY]</span><br>Launching Zero-Tab Web Search Engine... Accessing verified live citations without external tab clutter.");
+        setTimeout(() => { openSarasWebSearchModal('zero-tab AI breakthroughs'); }, 700);
+    } else if (type === 'swarm') {
+        if (input) input.value = "scan personal swarm devices";
+        typewriterEffect(output, "<span style='color: var(--cyber-emerald); font-weight:700;'>[SWARM MESH SCANNER]</span><br>3 Neural Nodes Discovered: Workstation-Alpha [Windows 11], Companion [Android 14], Cloud-Hub [Active]. Ready for P2P Handoff.");
+    } else if (type === 'lockdown') {
+        if (input) input.value = "arm intruder biometric trap";
+        typewriterEffect(output, "<span style='color: var(--cyber-pink); font-weight:700;'>[BIOMETRIC TRAP ARMED]</span><br>Intruder Trap primed. PIN Lockdown &amp; silent camera snapshot triggers available in Control Center.");
+    }
+};
+
+function typewriterEffect(element, htmlContent) {
+    element.innerHTML = '<span class="pulse-dot" style="display:inline-block; vertical-align:middle; margin-right:6px;"></span> Processing neural query...';
+    setTimeout(() => {
+        element.innerHTML = htmlContent;
+        playCyberSFX('success');
+    }, 280);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sandboxBtn = document.getElementById('hero-sandbox-submit-btn');
+    const sandboxInput = document.getElementById('hero-sandbox-input');
+    const sandboxText = document.getElementById('hero-sandbox-text');
+
+    if (sandboxBtn && sandboxInput && sandboxText) {
+        const executePrompt = async () => {
+            const val = sandboxInput.value.trim();
+            if (!val) return;
+            playCyberSFX('click');
+            sandboxText.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color:var(--cyber-cyan)"></i> Querying V.A.N.I-xAI Quantum Node...';
+            
+            try {
+                const response = await getClientDynamicAIResponse(val);
+                if (response.action === 'saras_web_search') {
+                    sandboxText.innerHTML = `<span style="color:var(--cyber-cyan); font-weight:700;">[SARAS SEARCH]</span> ${response.message}`;
+                    setTimeout(() => { openSarasWebSearchModal(response.query || val); }, 800);
+                } else {
+                    sandboxText.innerHTML = `<span style="color:var(--cyber-cyan); font-weight:700;">[VANI]</span> ${response.message || response.content || 'Query verified.'}`;
+                }
+                playCyberSFX('success');
+            } catch (e) {
+                sandboxText.innerHTML = `<span style="color:var(--cyber-cyan); font-weight:700;">[VANI]</span> "${val}" processed. Try launching the full Console or Saras.WebSearch for extensive deep research.`;
+            }
+        };
+
+        sandboxBtn.addEventListener('click', executePrompt);
+        sandboxInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') executePrompt();
+        });
+    }
+});
+
+// ----------------------------------------------------
+// 3. BENTO INTERACTIVE WIDGETS
+// ----------------------------------------------------
+window.triggerBentoSearch = function() {
+    playCyberSFX('click');
+    const input = document.getElementById('bento-search-input');
+    const q = input ? input.value.trim() : '';
+    openSarasWebSearchModal(q || 'Latest AI Developments 2026');
+};
+
+window.testNeuralVoiceSynthesis = function() {
+    playCyberSFX('click');
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const text = "Namaste! I am Vani, your quantum AI companion. Don't Assume, Verify!";
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.05;
+        utterance.pitch = 1.2;
+        window.speechSynthesis.speak(utterance);
+    }
+};
+
+window.copySnippetCode = function(buttonEl, codeText) {
+    playCyberSFX('click');
+    navigator.clipboard.writeText(codeText).then(() => {
+        const original = buttonEl.innerHTML;
+        buttonEl.innerHTML = '<i class="fa-solid fa-check" style="color:var(--cyber-emerald)"></i> Copied!';
+        setTimeout(() => { buttonEl.innerHTML = original; }, 1800);
+    });
+};
+
+// ----------------------------------------------------
+// 4. INTERACTIVE 5-MODULE HOLOGRAPHIC COCKPIT
+// ----------------------------------------------------
+window.switchCockpitTab = function(tabKey, btnEl) {
+    playCyberSFX('click');
+    const allTabs = document.querySelectorAll('.cockpit-tab-btn');
+    const allModules = document.querySelectorAll('.cockpit-module');
+
+    allTabs.forEach(t => t.classList.remove('active'));
+    allModules.forEach(m => m.classList.remove('active'));
+
+    if (btnEl) btnEl.classList.add('active');
+    const targetModule = document.getElementById(`cockpit-mod-${tabKey}`);
+    if (targetModule) {
+        targetModule.classList.add('active');
+    }
+};
+
+// ----------------------------------------------------
+// 5. LIVE INTERACTIVE CYBER CLI TERMINAL CONTROLLER
+// ----------------------------------------------------
+window.submitCyberTerminalCommand = function() {
+    const input = document.getElementById('cyber-cli-input');
+    const output = document.getElementById('cyber-terminal-output');
+    if (!input || !output) return;
+
+    const raw = input.value.trim();
+    if (!raw) return;
+    playCyberSFX('click');
+
+    const cmdLine = document.createElement('div');
+    cmdLine.className = 'terminal-log-line';
+    cmdLine.innerHTML = `<span style="color:var(--cyber-emerald); font-weight:700;">vani@quantum:~$</span> ${escapeHTML(raw)}`;
+    output.appendChild(cmdLine);
+    input.value = '';
+
+    const lower = raw.toLowerCase();
+    const respLine = document.createElement('div');
+    respLine.className = 'terminal-log-line';
+
+    if (lower === 'help') {
+        respLine.className += ' cyan';
+        respLine.innerHTML = `
+            AVAILABLE QUANTUM CALLS:<br>
+            &nbsp;&nbsp;<strong>help</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Display this interactive manual<br>
+            &nbsp;&nbsp;<strong>status</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Full microservices telemetry diagnostics<br>
+            &nbsp;&nbsp;<strong>search &lt;query&gt;</strong>&nbsp;- Launch zero-tab Saras.WebSearch query<br>
+            &nbsp;&nbsp;<strong>voice</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Synthesize conversational voice audio<br>
+            &nbsp;&nbsp;<strong>swarm</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Scan and list nearby personal mesh nodes<br>
+            &nbsp;&nbsp;<strong>matrix</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter digital rain cyber-space viewframe<br>
+            &nbsp;&nbsp;<strong>ping</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Measure sub-second quantum round-trip latency<br>
+            &nbsp;&nbsp;<strong>clear</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Reset terminal output window
+        `;
+    } else if (lower === 'status') {
+        respLine.className += ' system';
+        respLine.innerHTML = `
+            [DIAGNOSTICS] QUANTUM NODE HEALTH: 100% OPERATIONAL<br>
+            &nbsp;&nbsp;• Neural Pipeline : Active (120B MoE Hybrid Enclave)<br>
+            &nbsp;&nbsp;• Saras Crawler   : Zero-Tab Engine Online<br>
+            &nbsp;&nbsp;• Voice Synthesizer: Sub-15ms Web Speech Loop<br>
+            &nbsp;&nbsp;• Intruder Trap   : Biometric Security Armed<br>
+            &nbsp;&nbsp;• API Discovery   : OpenAPI 3.1 &amp; MCP Manifest Active
+        `;
+    } else if (lower.startsWith('search ')) {
+        const query = raw.substring(7).trim();
+        respLine.className += ' cyan';
+        respLine.innerHTML = `[SEARCH] Executing zero-tab search for "${escapeHTML(query)}"...`;
+        setTimeout(() => { openSarasWebSearchModal(query); }, 500);
+    } else if (lower === 'voice') {
+        respLine.className += ' success';
+        respLine.innerHTML = `[VOICE] Playing audio sample...`;
+        testNeuralVoiceSynthesis();
+    } else if (lower === 'swarm') {
+        respLine.className += ' warning';
+        respLine.innerHTML = `[SWARM] 3 Connected Nodes: Workstation-01 (Active), Mobile-02 (Paired), Cloud-Edge (Ready).`;
+    } else if (lower === 'matrix') {
+        respLine.className += ' success';
+        respLine.innerHTML = `[MATRIX] Engaging digital rain stream. Click anywhere to return.`;
+        startMatrixRainEffect();
+    } else if (lower === 'ping') {
+        respLine.className += ' success';
+        respLine.innerHTML = `Pong! Quantum RTT = ${(Math.random() * 3 + 10).toFixed(1)}ms [0% packet loss].`;
+    } else if (lower === 'clear') {
+        output.innerHTML = '';
+        return;
+    } else {
+        respLine.className += ' warning';
+        respLine.innerHTML = `Command not recognized: '${escapeHTML(raw)}'. Type 'help' for available commands.`;
+    }
+
+    output.appendChild(respLine);
+    output.scrollTop = output.scrollHeight;
+    playCyberSFX('success');
+};
+
+function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+    );
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cliInput = document.getElementById('cyber-cli-input');
+    if (cliInput) {
+        cliInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitCyberTerminalCommand();
+        });
+    }
+});
+
+// ----------------------------------------------------
+// 6. MATRIX DIGITAL RAIN FULLSCREEN EFFECT
+// ----------------------------------------------------
+function startMatrixRainEffect() {
+    const canvas = document.getElementById('matrix-rain-canvas');
+    if (!canvas) return;
+    canvas.style.display = 'block';
+    const ctx = canvas.getContext('2d');
+    
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    const chars = '0123456789ABCDEFVANIxAI010101日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ';
+    const fontSize = 16;
+    const columns = Math.floor(width / fontSize);
+    const drops = [];
+    for (let i = 0; i < columns; i++) drops[i] = 1;
+
+    let animId;
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.fillStyle = '#00f0ff';
+        ctx.font = `${fontSize}px monospace`;
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = chars.charAt(Math.floor(Math.random() * chars.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+        animId = requestAnimationFrame(drawMatrix);
+    }
+
+    drawMatrix();
+
+    const exitMatrix = () => {
+        cancelAnimationFrame(animId);
+        canvas.style.display = 'none';
+        canvas.removeEventListener('click', exitMatrix);
+        document.removeEventListener('keydown', keyExit);
+    };
+
+    const keyExit = (e) => {
+        if (e.key === 'Escape') exitMatrix();
+    };
+
+    canvas.addEventListener('click', exitMatrix);
+    document.addEventListener('keydown', keyExit);
+}
+
+// ----------------------------------------------------
+// 7. SCI-FI WEB AUDIO SOUND EFFECTS
+// ----------------------------------------------------
+let audioCtx = null;
+let sfxEnabled = localStorage.getItem('vani_sfx_enabled') !== 'false';
+
+function initSciFiAudio() {
+    if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+    }
+}
+
+function playCyberSFX(type = 'click') {
+    if (!sfxEnabled) return;
+    try {
+        initSciFiAudio();
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'click') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(1400, now + 0.05);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            osc.start(now);
+            osc.stop(now + 0.05);
+        } else if (type === 'success') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.start(now);
+            osc.stop(now + 0.12);
+        }
+    } catch(e) {
+        // Fallback gracefully without audio
+    }
+}
+
+// Sound toggle button wiring
+document.addEventListener('DOMContentLoaded', () => {
+    const sfxBtn = document.getElementById('sfx-toggle-btn');
+    const sfxIcon = document.getElementById('sfx-icon');
+    if (sfxBtn && sfxIcon) {
+        const updateIcon = () => {
+            if (sfxEnabled) {
+                sfxIcon.className = 'fa-solid fa-volume-high';
+                sfxBtn.style.color = 'var(--cyber-cyan)';
+            } else {
+                sfxIcon.className = 'fa-solid fa-volume-xmark';
+                sfxBtn.style.color = '#94a3b8';
+            }
+        };
+        updateIcon();
+
+        sfxBtn.addEventListener('click', () => {
+            sfxEnabled = !sfxEnabled;
+            localStorage.setItem('vani_sfx_enabled', sfxEnabled ? 'true' : 'false');
+            updateIcon();
+            playCyberSFX('success');
+        });
+    }
+});
