@@ -595,8 +595,32 @@
             gap: 16px;
             max-width: 920px;
             width: 100%;
-            margin: 0 auto;
             box-sizing: border-box;
+        }
+
+        /* High Contrast Assistant Response Typography */
+        .assistant-msg-name {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: var(--console-text, #0f172a) !important;
+        }
+        body.dark-mode .assistant-msg-name {
+            color: #f8fafc !important;
+        }
+
+        .assistant-msg-content {
+            font-size: 0.94rem;
+            line-height: 1.7;
+            color: var(--console-text, #1e293b) !important;
+            padding-left: 32px;
+        }
+        body.dark-mode .assistant-msg-content {
+            color: #f1f5f9 !important;
+        }
+
+        .assistant-msg-content p,
+        .assistant-msg-content span {
+            color: inherit;
         }
 
         /* Welcome Card */
