@@ -663,13 +663,15 @@ function useCommand(commandString) {
 }
 
 // Event Listeners
-sendBtn.addEventListener('click', () => submitCommand(textInput.value));
-textInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        submitCommand(textInput.value);
-    }
-});
-voiceBtn.addEventListener('click', toggleVoice);
+if (sendBtn && textInput) sendBtn.addEventListener('click', () => submitCommand(textInput.value));
+if (textInput) {
+    textInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            submitCommand(textInput.value);
+        }
+    });
+}
+if (voiceBtn) voiceBtn.addEventListener('click', toggleVoice);
 // Load Backend URL from local storage on load
 if (backendUrlInput) {
     backendUrlInput.value = localStorage.getItem('vani_backend_url') || '';
@@ -1298,28 +1300,12 @@ function getClientFallbackResponse(rawText) {
         mouse.y = null;
     });
 
-    // Ripple wave on click
-    window.addEventListener('click', (e) => {
-        for (let i = 0; i < 6; i++) {
-            particles.push({
-                x: e.clientX,
-                y: e.clientY,
-                vx: (Math.random() - 0.5) * 6,
-                vy: (Math.random() - 0.5) * 6,
-                radius: Math.random() * 3 + 2,
-                color: '#0284c7',
-                alpha: 1,
-                decay: 0.02
-            });
-        }
-    });
-
     class Particle {
-        constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.9;
-            this.vy = (Math.random() - 0.5) * 0.9;
+        constructor(startX, startY) {
+            this.x = typeof startX === 'number' ? startX : Math.random() * width;
+            this.y = typeof startY === 'number' ? startY : Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 1.5;
+            this.vy = (Math.random() - 0.5) * 1.5;
             this.radius = Math.random() * 2.2 + 1.2;
             this.color = colors[Math.floor(Math.random() * colors.length)];
             this.baseAlpha = Math.random() * 0.6 + 0.3;
@@ -1370,8 +1356,9 @@ function getClientFallbackResponse(rawText) {
         const maxDist = 135;
         for (let i = 0; i < particles.length; i++) {
             const pA = particles[i];
-            pA.update();
-            pA.draw();
+            if (!pA) continue;
+            if (typeof pA.update === 'function') pA.update();
+            if (typeof pA.draw === 'function') pA.draw();
 
             if (pA.decay) {
                 pA.alpha -= pA.decay;
@@ -1774,4 +1761,213 @@ document.addEventListener('click', (e) => {
             menu.classList.add('hidden');
         }
     }
-});
+});
+
+/* ==========================================================================
+   10. THREE.JS 3D WEBGL INDIAN SACRED MANDALA & GOLDEN LOTUS SCENE ENGINE
+   ========================================================================== */
+(function initThreeJsIndian3DScene() {
+    function startScene() {
+        const container = document.getElementById('three-mandala-container');
+        const canvas = document.getElementById('three-mandala-canvas');
+        if (!canvas || typeof THREE === 'undefined') return;
+
+        const scene = new THREE.Scene();
+        
+        let width = container ? container.clientWidth : window.innerWidth;
+        let height = container ? container.clientHeight : 500;
+        
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+        camera.position.z = 18;
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Lighting System
+        const ambientLight = new THREE.AmbientLight(0xfff0dd, 0.8);
+        scene.add(ambientLight);
+
+        const saffronLight = new THREE.PointLight(0xff9933, 2.5, 50);
+        saffronLight.position.set(10, 10, 10);
+        scene.add(saffronLight);
+
+        const peacockLight = new THREE.PointLight(0x00a896, 2.5, 50);
+        peacockLight.position.set(-10, -10, 10);
+        scene.add(peacockLight);
+
+        // Group for 3D Sacred Geometry Mandala & Lotus
+        const mandalaGroup = new THREE.Group();
+
+        // Gold Metallic Material
+        const goldMaterial = new THREE.MeshStandardMaterial({
+            color: 0xD4AF37,
+            metalness: 0.85,
+            roughness: 0.25,
+            wireframe: true,
+            emissive: 0x332200
+        });
+
+        const cyanMaterial = new THREE.MeshStandardMaterial({
+            color: 0x06B6D4,
+            metalness: 0.7,
+            roughness: 0.3,
+            wireframe: true,
+            emissive: 0x002233
+        });
+
+        // 3D Concentric Yantra Rings
+        const outerRingGeo = new THREE.TorusGeometry(6, 0.08, 16, 100);
+        const outerRing = new THREE.Mesh(outerRingGeo, goldMaterial);
+        mandalaGroup.add(outerRing);
+
+        const midRingGeo = new THREE.TorusGeometry(4.5, 0.06, 16, 64);
+        const midRing = new THREE.Mesh(midRingGeo, cyanMaterial);
+        mandalaGroup.add(midRing);
+
+        // 3D Sacred Icosahedron Core (Quantum Chakra)
+        const coreGeo = new THREE.IcosahedronGeometry(2.5, 2);
+        const coreMesh = new THREE.Mesh(coreGeo, goldMaterial);
+        mandalaGroup.add(coreMesh);
+
+        // 3D Floating Lotus Petal Nodes
+        const petalGroup = new THREE.Group();
+        const petalCount = 8;
+        for (let i = 0; i < petalCount; i++) {
+            const angle = (i / petalCount) * Math.PI * 2;
+            const petalGeo = new THREE.ConeGeometry(0.8, 2.5, 4);
+            const petalMesh = new THREE.Mesh(petalGeo, goldMaterial);
+            
+            petalMesh.position.x = Math.cos(angle) * 4.2;
+            petalMesh.position.y = Math.sin(angle) * 4.2;
+            petalMesh.rotation.z = angle - Math.PI / 2;
+            petalMesh.rotation.x = 0.5;
+            
+            petalGroup.add(petalMesh);
+        }
+        mandalaGroup.add(petalGroup);
+
+        scene.add(mandalaGroup);
+
+        // 3D Particle Galaxy Field
+        const particleCount = 180;
+        const particleGeo = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        const colorGold = new THREE.Color(0xFFB703);
+        const colorCyan = new THREE.Color(0x06B6D4);
+
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 35;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 35;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+
+            const c = Math.random() > 0.5 ? colorGold : colorCyan;
+            colors[i * 3] = c.r;
+            colors[i * 3 + 1] = c.g;
+            colors[i * 3 + 2] = c.b;
+        }
+
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMat = new THREE.PointsMaterial({
+            size: 0.18,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        const particleSystem = new THREE.Points(particleGeo, particleMat);
+        scene.add(particleSystem);
+
+        // Mouse Parallax Interaction Physics
+        const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+        window.addEventListener('mousemove', (e) => {
+            mouse.targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouse.targetY = -(e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        // Resize Handler
+        window.addEventListener('resize', () => {
+            if (!container) return;
+            width = container.clientWidth;
+            height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        });
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate 3D Mandala layers in opposite directions
+            mandalaGroup.rotation.z += 0.003;
+            petalGroup.rotation.z -= 0.005;
+            coreMesh.rotation.x += 0.008;
+            coreMesh.rotation.y += 0.006;
+            particleSystem.rotation.y += 0.001;
+
+            // Damped Mouse Interaction Lerp
+            mouse.x += (mouse.targetX - mouse.x) * 0.05;
+            mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+            mandalaGroup.rotation.y = mouse.x * 0.45;
+            mandalaGroup.rotation.x = mouse.y * 0.45;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startScene);
+    } else {
+        startScene();
+    }
+})();
+
+/* ==========================================================================
+   11. DYNAMIC 3D CARD PARALLAX TILT CONTROLLER
+   ========================================================================== */
+(function init3DCardParallax() {
+    function setupTilt() {
+        const cards = document.querySelectorAll('.hud-card, .bento-item, .comparison-table-wrapper, .cockpit-wrapper, .tech-badge-card');
+        
+        cards.forEach(card => {
+            card.classList.add('card-3d-tilt');
+            
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = -((y - centerY) / centerY) * 8; // degrees max
+                const rotateY = ((x - centerX) / centerX) * 8;
+                
+                card.style.setProperty('--rx', `${rotateX.toFixed(2)}deg`);
+                card.style.setProperty('--ry', `${rotateY.toFixed(2)}deg`);
+                card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.setProperty('--rx', '0deg');
+                card.style.setProperty('--ry', '0deg');
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupTilt);
+    } else {
+        setupTilt();
+    }
+})();
+
