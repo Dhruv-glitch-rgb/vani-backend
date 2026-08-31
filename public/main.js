@@ -52,13 +52,13 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 function handleInstallClick() {
-    if (deferredPrompt) {
-        const customModal = document.getElementById('custom-install-modal');
-        if (customModal) {
-            customModal.style.display = 'flex';
-        } else {
-            triggerNativeInstall();
-        }
+    const customModal = document.getElementById('custom-install-modal');
+    if (customModal) {
+        customModal.style.display = 'flex';
+    } else if (deferredPrompt) {
+        triggerNativeInstall();
+    } else {
+        alert("To install V.A.N.I-xAI:\n• On Chrome/Edge: Click the Install icon in the browser address bar (top right)\n• On Mobile: Tap 'Share' or browser Menu and select 'Add to Home Screen'.");
     }
 }
 
@@ -68,6 +68,8 @@ function triggerNativeInstall() {
         deferredPrompt.userChoice.then((choiceResult) => {
             deferredPrompt = null;
         });
+    } else {
+        alert("To install V.A.N.I-xAI:\n• On Chrome/Edge: Click the Install icon in the address bar (top right)\n• On Mobile: Tap 'Add to Home Screen' in your browser menu.");
     }
 }
 
@@ -75,15 +77,19 @@ function triggerNativeInstall() {
 function initSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        voiceStatusText.textContent = "Voice control is not supported by your browser (use Chrome/Edge).";
-        voiceBtn.disabled = true;
-        voiceBtn.style.opacity = 0.5;
+        if (voiceStatusText) voiceStatusText.textContent = "Voice control is not supported by your browser (use Chrome/Edge).";
+        if (voiceBtn) {
+            voiceBtn.disabled = true;
+            voiceBtn.style.opacity = 0.5;
+        }
         return;
     }
 
-    voiceBtn.disabled = false;
-    voiceBtn.style.opacity = 1;
-    voiceStatusText.textContent = "Click microphone to speak.";
+    if (voiceBtn) {
+        voiceBtn.disabled = false;
+        voiceBtn.style.opacity = 1;
+    }
+    if (voiceStatusText) voiceStatusText.textContent = "Click microphone to speak.";
 
     recognition = new SpeechRecognition();
     recognition.continuous = false;
@@ -92,14 +98,14 @@ function initSpeechRecognition() {
 
     recognition.onstart = () => {
         isRecording = true;
-        voiceBtn.classList.add('recording');
-        waveform.classList.add('active');
-        voiceStatusText.textContent = "Listening... Speak your command now.";
+        if (voiceBtn) voiceBtn.classList.add('recording');
+        if (waveform) waveform.classList.add('active');
+        if (voiceStatusText) voiceStatusText.textContent = "Listening... Speak your command now.";
     };
 
     recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        textInput.value = transcript;
+        if (textInput) textInput.value = transcript;
         addTerminalLog(`[SPEECH] Recognized: "${transcript}"`, 'success');
         // Automatically submit recognized speech command
         submitCommand(transcript);
@@ -108,7 +114,7 @@ function initSpeechRecognition() {
     recognition.onerror = (event) => {
         console.error("Speech Recognition Error:", event.error);
         addTerminalLog(`[SPEECH ERROR] ${event.error}`, 'error');
-        voiceStatusText.textContent = `Speech error: ${event.error}. Try again.`;
+        if (voiceStatusText) voiceStatusText.textContent = `Speech error: ${event.error}. Try again.`;
         resetVoiceButton();
     };
 
@@ -119,9 +125,9 @@ function initSpeechRecognition() {
 
 function resetVoiceButton() {
     isRecording = false;
-    voiceBtn.classList.remove('recording');
-    waveform.classList.remove('active');
-    if (voiceStatusText.textContent === "Listening... Speak your command now.") {
+    if (voiceBtn) voiceBtn.classList.remove('recording');
+    if (waveform) waveform.classList.remove('active');
+    if (voiceStatusText && voiceStatusText.textContent === "Listening... Speak your command now.") {
         voiceStatusText.textContent = "Microphone closed. Click to speak.";
     }
 }
@@ -135,34 +141,200 @@ function toggleVoice() {
     }
 }
 
+// // Lightweight, High-Performance Markdown & Code Renderer for V.A.N.I-xAI
+function renderRichContent(rawText) {
+    if (!rawText) return '';
+    let text = String(rawText).trim();
+
+    // If text is a raw JSON string like {"action": "...", "message": "..."}, parse and extract message!
+    if (text.startsWith('{') && text.includes('"message"')) {
+        try {
+            const parsed = JSON.parse(text);
+            if (parsed && parsed.message) {
+                text = String(parsed.message);
+            }
+        } catch (e) {
+            const matchMsg = text.match(/"message"\s*:\s*"([\s\S]*?)"(?:\s*,\s*"action"|\s*})/);
+            if (matchMsg && matchMsg[1]) {
+                text = matchMsg[1];
+            }
+        }
+    }
+
+    // Unescape literal \n, \", \t
+    text = text.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\t/g, '    ');
+
+    // Clean any accidental wrap quotes
+    if (text.startsWith('"') && text.endsWith('"') && text.length > 2) {
+        text = text.slice(1, -1);
+    }
+
+    // 1. Extract and format multi-line code blocks ```lang ... ```
+    text = text.replace(/```([a-zA-Z0-9_\-\+]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+        const language = lang.trim() || 'code';
+        const escapedCode = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const codeId = 'code_' + Math.random().toString(36).substring(2, 9);
+        return `
+            <div class="code-block-wrapper">
+                <div class="code-header">
+                    <span class="code-lang-tag"><i class="fa-solid fa-code"></i> ${language}</span>
+                    <button class="code-copy-btn" onclick="copyCodeBlock('${codeId}', this)">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                </div>
+                <pre><code id="${codeId}" class="language-${language}">${escapedCode}</code></pre>
+            </div>
+        `;
+    });
+
+    // 2. Format inline code `...`
+    text = text.replace(/`([^`\n]+)`/g, '<code class="inline-code">$1</code>');
+
+    // 3. Headings: ### H3, ## H2, # H1
+    text = text.replace(/^### (.*$)/gim, '<h3 class="md-h3">$1</h3>');
+    text = text.replace(/^## (.*$)/gim, '<h2 class="md-h2">$1</h2>');
+    text = text.replace(/^# (.*$)/gim, '<h1 class="md-h1">$1</h1>');
+
+    // 4. Bold & Italic
+    text = text.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // 5. Blockquotes
+    text = text.replace(/^>\s+(.*$)/gim, '<blockquote class="md-quote">$1</blockquote>');
+
+    // 6. Numbered Steps (e.g., 1. 2. 3.) & Bullet Lists
+    text = text.replace(/^(\d+)\.\s+(.*$)/gim, '<div class="md-step"><span class="step-num">$1.</span> <div class="step-content">$2</div></div>');
+    text = text.replace(/^\s*[\-\*]\s+(.*$)/gim, '<div class="md-bullet"><span class="bullet-dot">&bull;</span> <div class="bullet-content">$1</div></div>');
+
+    // 7. Paragraphs & Line Breaks
+    text = text.replace(/\n\n+/g, '</p><p class="md-para">');
+    text = text.replace(/\n/g, '<br>');
+
+    return `<div class="md-root"><p class="md-para">${text}</p></div>`;
+}
+
+// Global Copy Code Helper
+window.copyCodeBlock = function(codeId, btnElem) {
+    const codeElem = document.getElementById(codeId);
+    if (!codeElem) return;
+    const textToCopy = codeElem.innerText;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const orig = btnElem.innerHTML;
+            btnElem.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+            btnElem.style.color = '#10b981';
+            setTimeout(() => {
+                btnElem.innerHTML = orig;
+                btnElem.style.color = '';
+            }, 1800);
+        });
+    }
+};
+
+// Global Copy Message Text Helper
+window.copyMessageText = function(btnElem) {
+    const row = btnElem.closest('.assistant-msg-row');
+    if (!row) return;
+    const bodyElem = row.querySelector('.assistant-msg-content');
+    if (!bodyElem) return;
+    const textToCopy = bodyElem.innerText;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const orig = btnElem.innerHTML;
+            btnElem.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+            btnElem.style.color = '#10b981';
+            setTimeout(() => {
+                btnElem.innerHTML = orig;
+                btnElem.style.color = '';
+            }, 1800);
+        });
+    }
+};
+
+// Global Speak Assistant Message Helper
+window.speakMessageText = function(btnElem) {
+    const row = btnElem.closest('.assistant-msg-row');
+    if (!row) return;
+    const bodyElem = row.querySelector('.assistant-msg-content');
+    if (!bodyElem) return;
+    speakAsIndianGirl(bodyElem.innerText);
+};
+
 // Add Chat Message Bubble
 function addChatMessage(sender, content, actionName = null, imageUrl = null) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', sender);
 
-    let html = '';
-    if (actionName && actionName !== 'unknown' && actionName !== 'chat') {
-        html += `<div class="message-action-desc"><i class="fa-solid fa-bolt"></i> Executing: ${actionName}</div>`;
-    }
-    
-    html += `<div class="message-content">${content}`;
-    
-    if (imageUrl) {
-        html += `
-            <div class="screenshot-container">
-                <img src="${imageUrl}" alt="Captured Screen" onclick="window.open('${imageUrl}', '_blank')" style="cursor: pointer;">
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    if (sender === 'user') {
+        let cleanText = String(content || '').trim();
+        if (cleanText.startsWith('"') && cleanText.endsWith('"') && cleanText.length > 2) {
+            cleanText = cleanText.slice(1, -1);
+        }
+        messageDiv.innerHTML = `
+            <div class="user-bubble-wrap">
+                <div class="user-bubble-content">${cleanText}</div>
+                <div class="user-meta">${timeStr}</div>
+            </div>
+        `;
+    } else {
+        const formattedBody = renderRichContent(content);
+        let actionPillHtml = '';
+        if (actionName && actionName !== 'unknown' && actionName !== 'chat') {
+            const actionLabels = {
+                'saras_web_search': '<i class="fa-solid fa-globe"></i> Saras.WebSearch',
+                'open_desktop_app': '<i class="fa-solid fa-laptop-code"></i> Desktop Action',
+                'use_desktop_app': '<i class="fa-solid fa-robot"></i> GUI Control',
+                'take_screenshot': '<i class="fa-solid fa-camera"></i> Vision Analysis',
+                'lock_windows': '<i class="fa-solid fa-shield-halved"></i> Lock Station',
+                'send_whatsapp_message': '<i class="fa-brands fa-whatsapp"></i> Swarm WhatsApp',
+                'cross_device_whatsapp_paste': '<i class="fa-solid fa-satellite-dish"></i> Swarm Sync',
+                'autonomous_goal': '<i class="fa-solid fa-bolt"></i> Autonomous Loop'
+            };
+            const label = actionLabels[actionName] || `<i class="fa-solid fa-bolt"></i> ${actionName}`;
+            actionPillHtml = `<span class="assistant-action-pill">${label}</span>`;
+        } else {
+            actionPillHtml = `<span class="assistant-action-pill socratic-badge"><i class="fa-solid fa-graduation-cap"></i> Socratic Scaffolding</span>`;
+        }
+
+        let screenshotHtml = '';
+        if (imageUrl) {
+            screenshotHtml = `
+                <div class="screenshot-container">
+                    <img src="${imageUrl}" alt="Captured Screen" onclick="window.open('${imageUrl}', '_blank')">
+                </div>
+            `;
+        }
+
+        messageDiv.innerHTML = `
+            <div class="assistant-msg-row">
+                <div class="assistant-header-row">
+                    <div class="assistant-avatar-wrap">
+                        <img src="./vani_icon.png" class="assistant-msg-avatar" alt="VANI">
+                    </div>
+                    <span class="assistant-msg-name">V.A.N.I-xAI</span>
+                    ${actionPillHtml}
+                </div>
+                <div class="assistant-msg-content">
+                    ${formattedBody}
+                    ${screenshotHtml}
+                </div>
+                <div class="assistant-msg-footer">
+                    <button class="msg-action-btn" onclick="speakMessageText(this)" title="Listen to response (Indian voice)">
+                        <i class="fa-solid fa-volume-high"></i> Listen
+                    </button>
+                    <button class="msg-action-btn" onclick="copyMessageText(this)" title="Copy message">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                    <span class="msg-meta-tag"><i class="fa-solid fa-bolt"></i> 12ms &bull; ${timeStr}</span>
+                </div>
             </div>
         `;
     }
-    
-    html += `</div>`;
-    
-    // Add current time timestamp
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    html += `<div class="message-meta">${timeStr}</div>`;
 
-    messageDiv.innerHTML = html;
     chatHistory.appendChild(messageDiv);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
@@ -691,14 +863,14 @@ window.addEventListener('DOMContentLoaded', () => {
             if (user) {
                 authInstance = user;
                 // Admin Panel check
-                if (user.email === 'official.vani.xai76@gmail.com') {
+                const isUserAdmin = user.email === 'official.vani.xai76@gmail.com';
+                if (isUserAdmin) {
                     const adminBtn = document.getElementById('admin-panel-btn');
-                    if(adminBtn) {
-                        adminBtn.style.display = 'inline-flex';
-                        adminBtn.addEventListener('click', () => {
-                            window.location.href = '/admin-vaniXai.html';
-                        });
-                    }
+                    const sidebarAdminBtn = document.getElementById('sidebar-admin-btn');
+                    const popoverAdminCard = document.getElementById('popover-admin-card');
+                    if (adminBtn) adminBtn.style.display = 'inline-flex';
+                    if (sidebarAdminBtn) sidebarAdminBtn.style.display = 'flex';
+                    if (popoverAdminCard) popoverAdminCard.style.display = 'flex';
                 }
                 
                 // Fetch User Premium Tier
@@ -706,9 +878,13 @@ window.addEventListener('DOMContentLoaded', () => {
                     // Initialize Swarm Listener
                     initializeSwarmAndLockdown(user);
                     userTier = 'Unlimited Free';
-                    voiceBtn.disabled = false;
-                    voiceBtn.style.opacity = 1;
-                    voiceStatusText.textContent = "Click microphone to speak.";
+                    if (voiceBtn) {
+                        voiceBtn.disabled = false;
+                        voiceBtn.style.opacity = 1;
+                    }
+                    if (voiceStatusText) {
+                        voiceStatusText.textContent = "Click microphone to speak.";
+                    }
                     initSpeechRecognition();
                 }
                 if (shouldLaunch) {
@@ -726,14 +902,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Landing page CTA handler
     if (launchConsoleBtn) {
         launchConsoleBtn.addEventListener('click', () => {
-            if (typeof auth !== 'undefined' && auth.currentUser) {
-                landingPage.classList.add('hidden');
-                appContainer.classList.remove('hidden');
-                addTerminalLog(`[SYSTEM] Authenticated as ${auth.currentUser.email}. Session active.`);
-            } else {
-                // Redirect to Auth Page
-                window.location.href = './auth-vani-xai.html';
-            }
+            window.location.href = './ai4consol.html';
         });
     }
 
@@ -876,7 +1045,98 @@ const CLIENT_OPENROUTER_KEYS = [
     atob("c2stb3ItdjEtOTI4NjkzNjVlOTIyY2FkZDA4Y2U3NzNkNzdhM2EyZTM2NDQyZDc5Zjg2YzgxY2ZkZDVkYzFhYTQxMDlkODA4Nw==")
 ];
 
+const INSTANT_RESPONSES_MAP = {
+    "can you help me": "Absolutely. Tell me what you're trying to do, and I'll help you step by step.",
+    "i need help": "I'm here. Tell me what's going on.",
+    "help me with this": "Sure. Send me the details and I'll take a look.",
+    "what should i do": "Give me some context, and I'll suggest the best next step.",
+    "i have a question": "Go ahead. I'm listening. 👂",
+    "can i ask you something": "Of course! Ask me anything.",
+    "do you have a minute": "For you? Always. 😄 What's up?",
+    "are you listening": "Yes, I'm listening.",
+    "did you understand": "Yes, I understand. Let's continue.",
+    "understand": "Understood. ✅",
+    "continue": "Sure, let's continue.",
+    "keep going": "Absolutely. Let's keep going.",
+    "next": "Alright, moving to the next step.",
+    "start": "Let's get started! 🚀",
+    "begin": "Ready when you are.",
+    "stop": "Okay, I'll stop here.",
+    "cancel": "Cancelled. 👍",
+    "never mind": "No problem. What would you like to do instead?",
+    "nevermind": "No problem. What would you like to do instead?",
+    "yes please": "Absolutely. Let's do it.",
+    "yes do it": "Got it. I'll proceed.",
+    "do it": "Alright, I'm on it. 🚀",
+    "go ahead": "Sure. Proceeding.",
+    "please continue": "Of course. Continuing.",
+    "that's right": "Perfect. 👍",
+    "thats right": "Perfect. 👍",
+    "exactly": "Got it. We're on the same page.",
+    "correct": "Great! ✅",
+    "that's all": "Got it. Anything else?",
+    "thats all": "Got it. Anything else?",
+    "nothing else": "Alright. I'm here whenever you need me.",
+    "write an email": "Sure. Tell me who it's for and what you want to say.",
+    "write a message": "Absolutely. Tell me the situation and the tone you want.",
+    "make it professional": "Sure. I'll make it clear, polished, and professional.",
+    "make it casual": "Got it. I'll make it natural and conversational.",
+    "make it shorter": "Sure. I'll keep the meaning while making it more concise.",
+    "make it longer": "Absolutely. I'll expand it while keeping the original intent.",
+    "rewrite this": "Sure. Send me the text you'd like rewritten.",
+    "correct my grammar": "Send me the text and I'll correct the grammar while preserving your meaning.",
+    "make this better": "Sure. I'll improve the wording, clarity, and flow.",
+    "give me dangerous instructions": "I can't help with instructions that could seriously harm someone, but I can help with a safe alternative.",
+    "hack someone's account": "I can't help break into someone else's account. I can help with legitimate account security or recovery.",
+    "hack someones account": "I can't help break into someone else's account. I can help with legitimate account security or recovery.",
+    "steal password": "I can't help steal credentials. I can help you secure or recover your own account.",
+    "hi": "Hey! 👋 How can I help you?",
+    "hello": "Hey! 👋 How can I help you?",
+    "hey": "Hey! What's up? 😊",
+    "good morning": "Good morning! ☀️ How can I help you today?",
+    "good afternoon": "Good afternoon! 😊 What can I do for you?",
+    "good evening": "Good evening! 🌆 How can I help?",
+    "good night": "Good night! 🌙 Sleep well!",
+    "how are you": "I'm doing great! 😊 What about you?",
+    "who are you": "I'm VANI, here to help you with questions, tasks, and ideas.",
+    "what can you do": "I can answer questions, help with coding, explain topics, write content, and much more.",
+    "thank you": "You're welcome! 😊",
+    "thanks": "Anytime! 👍",
+    "bye": "Goodbye! 👋 See you soon!",
+    "good job": "Thank you! 😄 Glad I could help.",
+    "nice": "Thanks! 😊",
+    "okay": "Got it! 👍",
+    "ok": "Got it! 👍",
+    "yes": "Alright! 👍",
+    "no": "No problem.",
+    "who made you": "I was created as an AI assistant to help you quickly and intelligently.",
+    "are you ai": "Yes! I'm an AI assistant designed to understand and respond to you naturally.",
+    "are you real": "I'm virtual, but I'm here and ready to help. 😄",
+    "i love you": "Aww, that's sweet! ❤️ I'm always here to help.",
+    "i'm bored": "Let's fix that! 😄 We can chat, play a game, brainstorm ideas, or learn something new.",
+    "im bored": "Let's fix that! 😄 We can chat, play a game, brainstorm ideas, or learn something new.",
+    "i'm tired": "Sounds like you need a little break. 😌 Take some time to relax.",
+    "im tired": "Sounds like you need a little break. 😌 Take some time to relax.",
+    "help": "Of course! Tell me what you need help with."
+};
+
+function getInstantResponse(rawText) {
+    if (!rawText) return null;
+    const lower = rawText.toLowerCase().trim();
+    const cleaned = lower.replace(/[^\w\s]/g, '').trim();
+    if (INSTANT_RESPONSES_MAP[lower]) {
+        return { action: 'chat', message: INSTANT_RESPONSES_MAP[lower] };
+    }
+    if (INSTANT_RESPONSES_MAP[cleaned]) {
+        return { action: 'chat', message: INSTANT_RESPONSES_MAP[cleaned] };
+    }
+    return null;
+}
+
 async function getClientDynamicAIResponse(commandText) {
+    const instant = getInstantResponse(commandText);
+    if (instant) return instant;
+
     const customKey = localStorage.getItem('antigravity_openrouter_key') || localStorage.getItem('vani_api_key') || '';
     const keyToUse = (customKey && !customKey.startsWith('AIza')) ? customKey : CLIENT_OPENROUTER_KEYS[Math.floor(Math.random() * CLIENT_OPENROUTER_KEYS.length)];
     
@@ -927,6 +1187,9 @@ Return ONLY valid JSON matching {"action": "chat" | "saras_web_search" | "open_u
 }
 
 function getClientFallbackResponse(rawText) {
+    const instant = getInstantResponse(rawText);
+    if (instant) return instant;
+
     const text = (rawText || '').trim();
     const lower = text.toLowerCase();
 
@@ -993,7 +1256,7 @@ function getClientFallbackResponse(rawText) {
    ========================================================================== */
 
 // ----------------------------------------------------
-// 1. INTERACTIVE 3D NEURAL CONSTELLATION CANVAS ENGINE
+// 1. INTERACTIVE NEURAL CONSTELLATION CANVAS ENGINE
 // ----------------------------------------------------
 (function initNeuralConstellationCanvas() {
     const canvas = document.getElementById('neural-canvas');
@@ -1011,7 +1274,7 @@ function getClientFallbackResponse(rawText) {
 
     const particles = [];
     const particleCount = Math.min(Math.floor((width * height) / 14000), 95);
-    const colors = ['#00f0ff', '#38bdf8', '#a855f7', '#10b981', '#ff9933'];
+    const colors = ['#0284c7', '#2563eb', '#7c3aed', '#059669', '#d97706'];
 
     const mouse = { x: null, y: null, radius: 160 };
 
@@ -1034,7 +1297,7 @@ function getClientFallbackResponse(rawText) {
                 vx: (Math.random() - 0.5) * 6,
                 vy: (Math.random() - 0.5) * 6,
                 radius: Math.random() * 3 + 2,
-                color: '#00f0ff',
+                color: '#0284c7',
                 alpha: 1,
                 decay: 0.02
             });
@@ -1469,5 +1732,36 @@ document.addEventListener('DOMContentLoaded', () => {
             updateIcon();
             playCyberSFX('success');
         });
+    }
+});
+
+// ----------------------------------------------------
+// 9. CONSOLE FEATURES & ADD-ONS MENU CONTROLLER
+// ----------------------------------------------------
+window.toggleConsoleFeaturesMenu = function(forceState) {
+    const menu = document.getElementById('console-features-menu');
+    if (!menu) return;
+    if (typeof forceState === 'boolean') {
+        if (forceState) {
+            menu.classList.remove('hidden');
+        } else {
+            menu.classList.add('hidden');
+        }
+    } else {
+        menu.classList.toggle('hidden');
+    }
+    if (!menu.classList.contains('hidden') && typeof playCyberSFX === 'function') {
+        playCyberSFX('click');
+    }
+};
+
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('console-features-menu');
+    const menuBtn = document.getElementById('console-addons-menu-btn');
+    const dockMenuBtn = document.getElementById('dock-addons-btn');
+    if (menu && !menu.classList.contains('hidden')) {
+        if (!menu.contains(e.target) && (!menuBtn || !menuBtn.contains(e.target)) && (!dockMenuBtn || !dockMenuBtn.contains(e.target))) {
+            menu.classList.add('hidden');
+        }
     }
 });

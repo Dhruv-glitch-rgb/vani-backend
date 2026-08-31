@@ -14,16 +14,54 @@ const otpDisplay = document.getElementById('otp-display');
 const otpInput = document.getElementById('otp-input');
 const hostStatus = document.getElementById('host-status');
 
-// 1. Fetch Public IP
+// 1. Fetch Public IP with Multi-Tier Fallback for Android & Mobile Networks
 async function fetchIp() {
     try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        publicIp = data.ip;
-        statusText.textContent = `Scanning local airspace (IP: ${publicIp})...`;
+        // Tier 1: Local server backend IP endpoint
+        const res = await fetch('/api/get_ip').catch(() => null);
+        if (res && res.ok) {
+            const data = await res.json().catch(() => null);
+            if (data && data.ip) {
+                publicIp = data.ip;
+                statusText.textContent = `Scanning local airspace (IP: ${publicIp})...`;
+                startRadar();
+                return;
+            }
+        }
+
+        // Tier 2: Public IP API (Primary)
+        const response = await fetch('https://api.ipify.org?format=json').catch(() => null);
+        if (response && response.ok) {
+            const data = await response.json().catch(() => null);
+            if (data && data.ip) {
+                publicIp = data.ip;
+                statusText.textContent = `Scanning local airspace (IP: ${publicIp})...`;
+                startRadar();
+                return;
+            }
+        }
+
+        // Tier 3: Secondary Public IP API
+        const altResponse = await fetch('https://api64.ipify.org?format=json').catch(() => null);
+        if (altResponse && altResponse.ok) {
+            const data = await altResponse.json().catch(() => null);
+            if (data && data.ip) {
+                publicIp = data.ip;
+                statusText.textContent = `Scanning local airspace (IP: ${publicIp})...`;
+                startRadar();
+                return;
+            }
+        }
+
+        // Tier 4: Fallback for Android mobile data / offline networks
+        publicIp = 'mobile-airspace-mesh';
+        statusText.textContent = `Scanning Swarm Airspace (Mobile Mesh Mode)...`;
         startRadar();
     } catch (err) {
-        statusText.textContent = "Error: Could not determine network footprint.";
+        console.warn("[Radar] Network footprint warning:", err);
+        publicIp = 'mobile-airspace-mesh';
+        statusText.textContent = `Scanning Swarm Airspace (Mobile Mesh Mode)...`;
+        startRadar();
     }
 }
 
@@ -48,7 +86,8 @@ function startRadar() {
         email: currentUser.email,
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
         otp: null,
-        pairedWith: null
+        pairedWith: null,
+        isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     }, { merge: true });
 
     // Keep-alive heartbeat
@@ -63,50 +102,61 @@ function startRadar() {
         myRef.delete();
     });
 
-    // Listen for others on the same IP
-    searchUnsubscribe = db.collection('saras_search_pool')
-        .where('ip', '==', publicIp)
-        .onSnapshot(snapshot => {
-            snapshot.docChanges().forEach(change => {
-                const docId = change.doc.id;
-                if (docId === currentUser.uid) {
-                    // This is us, check if someone paired with us!
-                    const data = change.doc.data();
-                    if (data.pairedWith && hostModal.classList.contains('active')) {
-                        handleSuccessfulPairing(data.pairedWith);
-                        // Reset
-                        myRef.update({ pairedWith: null, otp: null });
-                    }
-                    return;
+    // Listen for others on the same IP or in the active swarm pool
+    const handleSnapshotChanges = snapshot => {
+        snapshot.docChanges().forEach(change => {
+            const docId = change.doc.id;
+            if (docId === currentUser.uid) {
+                // This is us, check if someone paired with us!
+                const data = change.doc.data();
+                if (data.pairedWith && hostModal.classList.contains('active')) {
+                    handleSuccessfulPairing(data.pairedWith);
+                    myRef.update({ pairedWith: null, otp: null });
                 }
+                return;
+            }
 
-                if (change.type === 'added' || change.type === 'modified') {
-                    // Make sure they are recently active (within last 30s)
-                    const data = change.doc.data();
-                    const lastSeen = data.lastSeen ? data.lastSeen.toDate() : new Date();
-                    const now = new Date();
-                    
-                    if (now - lastSeen < 30000) {
-                        addBlip(docId, data.email);
-                    } else {
-                        removeBlip(docId);
-                    }
-                }
+            if (change.type === 'added' || change.type === 'modified') {
+                const data = change.doc.data();
+                const lastSeen = data.lastSeen ? data.lastSeen.toDate() : new Date();
+                const now = new Date();
                 
-                if (change.type === 'removed') {
+                if (now - lastSeen < 60000) { // Active within last 60 seconds
+                    addBlip(docId, data.email || 'node');
+                } else {
                     removeBlip(docId);
                 }
-            });
+            }
+            
+            if (change.type === 'removed') {
+                removeBlip(docId);
+            }
         });
+    };
+
+    if (publicIp !== 'mobile-airspace-mesh') {
+        searchUnsubscribe = db.collection('saras_search_pool')
+            .where('ip', '==', publicIp)
+            .onSnapshot(handleSnapshotChanges, err => {
+                console.warn("[Radar] IP snapshot fallback:", err);
+                searchUnsubscribe = db.collection('saras_search_pool')
+                    .limit(20)
+                    .onSnapshot(handleSnapshotChanges);
+            });
+    } else {
+        searchUnsubscribe = db.collection('saras_search_pool')
+            .limit(20)
+            .onSnapshot(handleSnapshotChanges);
+    }
 }
 
-// 4. UI Blips
+// 4. UI Blips (Touch-Optimized for Android)
 function addBlip(id, email) {
     if (matchedUsers.has(id)) return; // Already rendered
     
     matchedUsers.set(id, email);
     
-    // Random position within the circle
+    // Random position within the radar circle
     const angle = Math.random() * Math.PI * 2;
     const distance = Math.random() * 40 + 10; // 10% to 50% radius
     
@@ -118,16 +168,20 @@ function addBlip(id, email) {
     blip.id = `blip-${id}`;
     blip.style.left = `${x}%`;
     blip.style.top = `${y}%`;
+    blip.style.touchAction = 'manipulation';
     
     const label = document.createElement('div');
     label.className = 'blip-label';
-    label.textContent = email.split('@')[0];
+    label.textContent = (email || 'user').split('@')[0];
     blip.appendChild(label);
     
-    // Click to pair
-    blip.addEventListener('click', () => {
+    // Click & Touch listeners for Android touchscreens
+    const triggerPair = (e) => {
+        if (e) e.preventDefault();
         generateHostOtp(id);
-    });
+    };
+    blip.addEventListener('click', triggerPair);
+    blip.addEventListener('touchstart', triggerPair, { passive: false });
     
     blipsContainer.appendChild(blip);
 }
@@ -172,11 +226,17 @@ async function submitOtp() {
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting...';
     
     try {
-        // Find the host in the pool with this OTP
-        const snapshot = await db.collection('saras_search_pool')
-            .where('ip', '==', publicIp)
+        // Cross-Network Matching: Search by OTP code across pool for mobile/CGNAT flexibility
+        let snapshot = await db.collection('saras_search_pool')
             .where('otp', '==', enteredOtp)
             .get();
+
+        if (snapshot.empty && publicIp && publicIp !== 'mobile-airspace-mesh') {
+            snapshot = await db.collection('saras_search_pool')
+                .where('ip', '==', publicIp)
+                .where('otp', '==', enteredOtp)
+                .get();
+        }
             
         if (snapshot.empty) {
             alert("Invalid OTP or host disconnected.");
@@ -233,7 +293,7 @@ async function submitOtp() {
         statusText.style.textShadow = "0 0 15px #4ade80";
         
         setTimeout(() => {
-            window.location.href = '/saras_vani_chat.html';
+            window.location.href = '/quantum_connect';
         }, 2000);
         
     } catch (err) {
@@ -266,7 +326,7 @@ async function handleSuccessfulPairing(pairedEmail) {
         statusText.style.color = "#4ade80";
         statusText.style.textShadow = "0 0 15px #4ade80";
         setTimeout(() => {
-            window.location.href = '/saras_vani_chat.html';
+            window.location.href = '/quantum_connect';
         }, 1500);
     }, 1500);
 }
@@ -424,7 +484,7 @@ async function globalConnect(targetUid, targetEmail, targetName, targetPic) {
         statusTextEl.style.display = 'block';
         
         setTimeout(() => {
-            window.location.href = '/saras_vani_chat.html';
+            window.location.href = '/quantum_connect';
         }, 1500);
         
     } catch (e) {

@@ -62,11 +62,112 @@ def query_knowledge_engine(query):
         pass
     return None
 
+# Instant Response Engine Mapping
+INSTANT_RESPONSES_MAP = {
+    # Help & Guidance
+    "can you help me": "Absolutely. Tell me what you're trying to do, and I'll help you step by step.",
+    "i need help": "I'm here. Tell me what's going on.",
+    "help me with this": "Sure. Send me the details and I'll take a look.",
+    "what should i do": "Give me some context, and I'll suggest the best next step.",
+    "i have a question": "Go ahead. I'm listening. 👂",
+    "can i ask you something": "Of course! Ask me anything.",
+    "do you have a minute": "For you? Always. 😄 What's up?",
+    "are you listening": "Yes, I'm listening.",
+    "did you understand": "Yes, I understand. Let's continue.",
+    "understand": "Understood. ✅",
+    "continue": "Sure, let's continue.",
+    "keep going": "Absolutely. Let's keep going.",
+    "next": "Alright, moving to the next step.",
+    "start": "Let's get started! 🚀",
+    "begin": "Ready when you are.",
+    "stop": "Okay, I'll stop here.",
+    "cancel": "Cancelled. 👍",
+    "never mind": "No problem. What would you like to do instead?",
+    "nevermind": "No problem. What would you like to do instead?",
+
+    # Confirmations & Affirmations
+    "yes please": "Absolutely. Let's do it.",
+    "yes do it": "Got it. I'll proceed.",
+    "do it": "Alright, I'm on it. 🚀",
+    "go ahead": "Sure. Proceeding.",
+    "please continue": "Of course. Continuing.",
+    "that's right": "Perfect. 👍",
+    "thats right": "Perfect. 👍",
+    "exactly": "Got it. We're on the same page.",
+    "correct": "Great! ✅",
+    "that's all": "Got it. Anything else?",
+    "thats all": "Got it. Anything else?",
+    "nothing else": "Alright. I'm here whenever you need me.",
+
+    # Writing & Editing Requests
+    "write an email": "Sure. Tell me who it's for and what you want to say.",
+    "write a message": "Absolutely. Tell me the situation and the tone you want.",
+    "make it professional": "Sure. I'll make it clear, polished, and professional.",
+    "make it casual": "Got it. I'll make it natural and conversational.",
+    "make it shorter": "Sure. I'll keep the meaning while making it more concise.",
+    "make it longer": "Absolutely. I'll expand it while keeping the original intent.",
+    "rewrite this": "Sure. Send me the text you'd like rewritten.",
+    "correct my grammar": "Send me the text and I'll correct the grammar while preserving your meaning.",
+    "make this better": "Sure. I'll improve the wording, clarity, and flow.",
+
+    # Safety & Policy Triggers
+    "give me dangerous instructions": "I can't help with instructions that could seriously harm someone, but I can help with a safe alternative.",
+    "hack someone's account": "I can't help break into someone else's account. I can help with legitimate account security or recovery.",
+    "hack someones account": "I can't help break into someone else's account. I can help with legitimate account security or recovery.",
+    "steal password": "I can't help steal credentials. I can help you secure or recover your own account.",
+
+    # Greetings & Small Talk
+    "hi": "Hey! 👋 How can I help you?",
+    "hello": "Hey! 👋 How can I help you?",
+    "hey": "Hey! What's up? 😊",
+    "good morning": "Good morning! ☀️ How can I help you today?",
+    "good afternoon": "Good afternoon! 😊 What can I do for you?",
+    "good evening": "Good evening! 🌆 How can I help?",
+    "good night": "Good night! 🌙 Sleep well!",
+    "how are you": "I'm doing great! 😊 What about you?",
+    "who are you": "I'm VANI, here to help you with questions, tasks, and ideas.",
+    "what can you do": "I can answer questions, help with coding, explain topics, write content, and much more.",
+    "thank you": "You're welcome! 😊",
+    "thanks": "Anytime! 👍",
+    "bye": "Goodbye! 👋 See you soon!",
+    "good job": "Thank you! 😄 Glad I could help.",
+    "nice": "Thanks! 😊",
+    "okay": "Got it! 👍",
+    "ok": "Got it! 👍",
+    "yes": "Alright! 👍",
+    "no": "No problem.",
+    "who made you": "I was created as an AI assistant to help you quickly and intelligently.",
+    "are you ai": "Yes! I'm an AI assistant designed to understand and respond to you naturally.",
+    "are you real": "I'm virtual, but I'm here and ready to help. 😄",
+    "i love you": "Aww, that's sweet! ❤️ I'm always here to help.",
+    "i'm bored": "Let's fix that! 😄 We can chat, play a game, brainstorm ideas, or learn something new.",
+    "im bored": "Let's fix that! 😄 We can chat, play a game, brainstorm ideas, or learn something new.",
+    "i'm tired": "Sounds like you need a little break. 😌 Take some time to relax.",
+    "im tired": "Sounds like you need a little break. 😌 Take some time to relax.",
+    "help": "Of course! Tell me what you need help with."
+}
+
+def get_instant_response(text):
+    if not text:
+        return None
+    raw_lower = text.lower().strip()
+    cleaned = re.sub(r'[^\w\s]', '', raw_lower).strip()
+    
+    if raw_lower in INSTANT_RESPONSES_MAP:
+        return {'action': 'chat', 'message': INSTANT_RESPONSES_MAP[raw_lower]}
+    if cleaned in INSTANT_RESPONSES_MAP:
+        return {'action': 'chat', 'message': INSTANT_RESPONSES_MAP[cleaned]}
+    return None
+
 def parse_with_rules(text):
     """
     Minimal offline utility parser (for explicit calculations, system URLs, and app launches).
     All conversational thinking and intent reasoning is handled dynamically by the AI.
     """
+    instant = get_instant_response(text)
+    if instant:
+        return instant
+
     text_clean = text.strip()
     text_lower = text_clean.lower()
 
@@ -151,6 +252,10 @@ def parse_command(text, personality='human_girl', api_key=None, force_local=Fals
     Parse user prompt using dynamic LLM reasoning (Local LLM or Cloud Fallback).
     The AI intelligently thinks whether the user is asking to search something or wants to have a natural human conversation.
     """
+    instant = get_instant_response(text)
+    if instant:
+        return instant
+
     if not api_key:
         api_key = os.environ.get("OPENROUTER_API_KEY", "")
 

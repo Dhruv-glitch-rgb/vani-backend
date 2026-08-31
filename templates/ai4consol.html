@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>V.A.N.I-xAI Quantum Console // Socratic & Autonomous Workspace</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./style.css?v=2026_q2">
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/png" href="./vani_icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0284c7">
+
+    <style>
+        /* Standalone AI4Consol Page Layout & Base Variables */
+        :root {
+            --console-bg: #f8fafc;
+            --console-sidebar: #ffffff;
+            --console-header: #ffffff;
+            --console-border: #e2e8f0;
+            --console-text: #0f172a;
+            --console-text-muted: #64748b;
+            --console-card-bg: #ffffff;
+        }
+
+        body.dark-mode {
+            --console-bg: #090d16;
+            --console-sidebar: #0f172a;
+            --console-header: #0f172a;
+            --console-border: rgba(255, 255, 255, 0.09);
+            --console-text: #f8fafc;
+            --console-text-muted: #94a3b8;
+            --console-card-bg: #1e293b;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--console-bg);
+            color: var(--console-text);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* App Container */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Top Header */
+        .app-header {
+            height: 52px;
+            min-height: 52px;
+            background: var(--console-header);
+            border-bottom: 1px solid var(--console-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        .header-left-cluster, .header-right-cluster {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .header-logo img {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+        }
+
+        .header-logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--console-text);
+        }
+
+        .quantum-pill {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.62rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #e0f2fe;
+            border: 1px solid #bae6fd;
+            color: #0284c7;
+            font-weight: 700;
+        }
+
+        body.dark-mode .quantum-pill {
+            background: rgba(2, 132, 199, 0.15);
+            border-color: rgba(2, 132, 199, 0.3);
+            color: #38bdf8;
+        }
+
+        .header-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            font-size: 0.72rem;
+            color: var(--console-text-muted);
+        }
+
+        body.dark-mode .header-status-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 6px #10b981;
+        }
+
+        /* Header Action Buttons */
+        .header-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .header-btn-radar {
+            background: #fef3c7;
+            border-color: #fde68a;
+            color: #d97706 !important;
+        }
+        .header-btn-radar:hover {
+            background: #fde68a;
+            transform: translateY(-1px);
+        }
+
+        .header-btn-mesh {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+            color: #059669 !important;
+        }
+        .header-btn-mesh:hover {
+            background: #d1fae5;
+            transform: translateY(-1px);
+        }
+
+        .header-btn-search {
+            background: #e0f2fe;
+            border-color: #bae6fd;
+            color: #0284c7 !important;
+        }
+        .header-btn-search:hover {
+            background: #bae6fd;
+            transform: translateY(-1px);
+        }
+
+        .header-btn-addons {
+            background: #f5f3ff;
+            border-color: #ddd6fe;
+            color: #7c3aed !important;
+        }
+        .header-btn-addons:hover {
+            background: #ede9fe;
+            transform: translateY(-1px);
+        }
+
+        .header-btn-admin {
+            background: #fff7ed;
+            border-color: #fed7aa;
+            color: #ea580c !important;
+            font-weight: 700;
+            animation: adminPulseGlow 2.5s infinite;
+        }
+        .header-btn-admin:hover {
+            background: #fed7aa;
+            transform: translateY(-1px);
+        }
+
+        @keyframes adminPulseGlow {
+            0%, 100% { box-shadow: 0 0 0 rgba(234, 88, 12, 0); }
+            50% { box-shadow: 0 0 10px rgba(234, 88, 12, 0.35); }
+        }
+
+        body.dark-mode .header-btn-radar { background: rgba(217, 119, 6, 0.15); border-color: rgba(217, 119, 6, 0.3); color: #fbbf24 !important; }
+        body.dark-mode .header-btn-mesh { background: rgba(5, 150, 105, 0.15); border-color: rgba(5, 150, 105, 0.3); color: #34d399 !important; }
+        body.dark-mode .header-btn-search { background: rgba(2, 132, 199, 0.15); border-color: rgba(2, 132, 199, 0.3); color: #38bdf8 !important; }
+        body.dark-mode .header-btn-addons { background: rgba(124, 58, 237, 0.15); border-color: rgba(124, 58, 237, 0.3); color: #c084fc !important; }
+        body.dark-mode .header-btn-admin { background: rgba(234, 88, 12, 0.18); border-color: rgba(234, 88, 12, 0.4); color: #fb923c !important; }
+
+        .header-btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: var(--console-text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .header-btn-icon:hover {
+            background: #e2e8f0;
+            color: var(--console-text);
+        }
+
+        body.dark-mode .header-btn-icon {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .header-btn-icon:hover {
+            background: rgba(255, 255, 255, 0.09);
+            color: #f8fafc;
+        }
+
+        .header-uid-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background: #fff7ed;
+            border: 1px solid #ffedd5;
+            color: #ea580c;
+            font-size: 0.72rem;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        body.dark-mode .header-uid-badge {
+            background: rgba(234, 88, 12, 0.12);
+            border-color: rgba(234, 88, 12, 0.25);
+            color: #fb923c;
+        }
+
+        /* Workspace Split Layout */
+        .app-workspace {
+            flex: 1;
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 52px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .agent-sidebar {
+            width: 270px;
+            min-width: 270px;
+            height: 100%;
+            background: var(--console-sidebar);
+            border-right: 1px solid var(--console-border);
+            display: flex;
+            flex-direction: column;
+            padding: 14px;
+            gap: 8px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 20;
+        }
+
+        .agent-sidebar.collapsed {
+            margin-left: -270px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-new-chat-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: #0284c7;
+            border: none;
+            color: #ffffff;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            margin-bottom: 6px;
+        }
+
+        .sidebar-new-chat-btn:hover {
+            background: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        .sidebar-section-title {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--console-text-muted);
+            padding: 4px 4px 2px;
+        }
+
+        /* Mode Cards */
+        .agent-modes-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .mode-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .mode-card:hover {
+            background: #f1f5f9;
+        }
+
+        body.dark-mode .mode-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .mode-card.active {
+            background: #e0f2fe;
+            border-color: #bae6fd;
+        }
+
+        body.dark-mode .mode-card.active {
+            background: rgba(2, 132, 199, 0.16);
+            border-color: rgba(2, 132, 199, 0.35);
+        }
+
+        .mode-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .mode-icon.socratic-icon { background: #f5f3ff; color: #7c3aed; }
+        .mode-icon.autonomous-icon { background: #e0f2fe; color: #0284c7; }
+        .mode-icon.swarm-icon { background: #ecfdf5; color: #059669; }
+        .mode-icon.local-icon { background: #fef3c7; color: #d97706; }
+
+        .mode-info .mode-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--console-text);
+        }
+
+        .mode-info .mode-desc {
+            font-size: 0.68rem;
+            color: var(--console-text-muted);
+        }
+
+        /* Sidebar Add-ons 2-Column Grid (PIXEL-PERFECT UI) */
+        .sidebar-addons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-addon-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: var(--console-text);
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+        }
+
+        .sidebar-addon-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(15, 23, 42, 0.05);
+        }
+
+        body.dark-mode .sidebar-addon-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+        }
+
+        body.dark-mode .sidebar-addon-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .sidebar-addon-btn.radar-addon i { color: #d97706; }
+        .sidebar-addon-btn.radar-addon:hover { border-color: #fde68a; background: #fef3c7; }
+
+        .sidebar-addon-btn.mesh-addon i { color: #059669; }
+        .sidebar-addon-btn.mesh-addon:hover { border-color: #a7f3d0; background: #ecfdf5; }
+
+        .sidebar-addon-btn.search-addon i { color: #0284c7; }
+        .sidebar-addon-btn.search-addon:hover { border-color: #bae6fd; background: #e0f2fe; }
+
+        .sidebar-addon-btn.chat-addon i { color: #7c3aed; }
+        .sidebar-addon-btn.chat-addon:hover { border-color: #ddd6fe; background: #f5f3ff; }
+
+        .sidebar-addon-btn.trap-addon i { color: #e11d48; }
+        .sidebar-addon-btn.trap-addon:hover { border-color: #fecdd3; background: #fff1f2; }
+
+        .sidebar-addon-btn.voice-addon i { color: #9333ea; }
+        .sidebar-addon-btn.voice-addon:hover { border-color: #e9d5ff; background: #faf5ff; }
+
+        .sidebar-addon-btn.settings-addon i { color: #64748b; }
+        .sidebar-addon-btn.settings-addon:hover { border-color: #cbd5e1; background: #f1f5f9; }
+
+        .sidebar-addon-btn.admin-addon i { color: #ea580c; }
+        .sidebar-addon-btn.admin-addon:hover { border-color: #fed7aa; background: #fff7ed; }
+
+        .sidebar-addon-btn.portal-addon i { color: #0284c7; }
+        .sidebar-addon-btn.portal-addon:hover { border-color: #bae6fd; background: #e0f2fe; }
+
+        .sidebar-addon-btn.home-addon i { color: #64748b; }
+        .sidebar-addon-btn.home-addon:hover { border-color: #cbd5e1; background: #f1f5f9; }
+
+        /* Prompt Explorer Chips */
+        .quick-demo-chips {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .quick-chip-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: var(--console-text-muted);
+            font-size: 0.72rem;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-chip-btn:hover {
+            background: #f1f5f9;
+            color: var(--console-text);
+            border-color: #cbd5e1;
+        }
+
+        body.dark-mode .quick-chip-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.06);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .quick-chip-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f8fafc;
+        }
+
+        /* Sidebar Footer */
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid var(--console-border);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sidebar-user-card {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        body.dark-mode .sidebar-user-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .user-avatar-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #0284c7;
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-card-name {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--console-text);
+            display: block;
+        }
+
+        .user-card-id {
+            font-size: 0.62rem;
+            color: #0284c7;
+            font-family: 'Fira Code', monospace;
+            display: block;
+        }
+
+        /* Chat Panel */
+        .chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            background: var(--console-bg);
+            position: relative;
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 20px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 920px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        /* Welcome Card */
+        .welcome-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+            margin-bottom: 12px;
+        }
+
+        body.dark-mode .welcome-card {
+            background: #1e293b;
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .welcome-bov-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+
+        .welcome-header-text h3 {
+            margin: 0 0 3px 0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--console-text);
+        }
+
+        .welcome-header-text p {
+            margin: 0;
+            font-size: 0.78rem;
+            color: var(--console-text-muted);
+        }
+
+        .welcome-badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .welcome-pill {
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--console-text);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        body.dark-mode .welcome-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+        }
+
+        /* Input Dock Container */
+        .input-dock-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 20px 16px;
+            background: linear-gradient(180deg, transparent 0%, var(--console-bg) 35%);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            z-index: 50;
+        }
+
+        .input-dock {
+            width: 100%;
+            max-width: 860px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            box-sizing: border-box;
+        }
+
+        body.dark-mode .input-dock {
+            background: #1e293b;
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .dock-btn {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: var(--console-text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .dock-btn:hover {
+            background: #e2e8f0;
+            color: var(--console-text);
+        }
+
+        body.dark-mode .dock-btn {
+            background: rgba(255, 255, 255, 0.04);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .dock-btn:hover {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ffffff;
+        }
+
+        .dock-btn.mic-btn {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        .dock-btn.mic-btn:hover { background: #fca5a5; }
+
+        .dock-btn.mic-btn.recording {
+            background: #ef4444 !important;
+            color: #ffffff !important;
+            animation: micPulse 1.2s infinite;
+        }
+
+        @keyframes micPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 14px rgba(239, 68, 68, 0.6); }
+        }
+
+        .dock-btn.send-btn {
+            background: #0284c7;
+            color: #ffffff;
+        }
+        .dock-btn.send-btn:hover { background: #0369a1; }
+
+        .input-dock input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--console-text);
+            font-size: 0.9rem;
+            font-family: inherit;
+            padding: 8px 4px;
+            outline: none;
+        }
+
+        .dock-footnote {
+            font-size: 0.68rem;
+            color: var(--console-text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Floating Console Features Popover Menu (PIXEL-PERFECT UI) */
+        .console-features-popover {
+            position: fixed;
+            top: 58px;
+            right: 16px;
+            width: 390px;
+            max-width: calc(100vw - 32px);
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 18px;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.05);
+            z-index: 99999;
+            padding: 16px;
+            box-sizing: border-box;
+            animation: popoverFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.dark-mode .console-features-popover {
+            background: #0f172a;
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .console-features-popover.hidden {
+            display: none !important;
+        }
+
+        @keyframes popoverFadeIn {
+            from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .features-popover-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 12px;
+        }
+
+        body.dark-mode .features-popover-header {
+            border-bottom-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .popover-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--console-text);
+        }
+
+        .popover-close-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: none;
+            background: #f1f5f9;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .popover-close-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        body.dark-mode .popover-close-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+        }
+
+        body.dark-mode .popover-close-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+        }
+
+        .features-popover-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .feature-popover-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .feature-popover-card:hover {
+            background: #ffffff;
+            border-color: #94a3b8;
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+        }
+
+        body.dark-mode .feature-popover-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        body.dark-mode .feature-popover-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(0, 240, 255, 0.3);
+        }
+
+        .popover-icon-box {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .popover-icon-box.gold { background: #fef3c7; color: #d97706; }
+        .popover-icon-box.emerald { background: #ecfdf5; color: #059669; }
+        .popover-icon-box.cyan { background: #e0f2fe; color: #0284c7; }
+        .popover-icon-box.purple { background: #f5f3ff; color: #7c3aed; }
+        .popover-icon-box.pink { background: #fff1f2; color: #e11d48; }
+        .popover-icon-box.orange { background: #fff7ed; color: #ea580c; }
+
+        body.dark-mode .popover-icon-box.gold { background: rgba(217, 119, 6, 0.15); color: #fbbf24; }
+        body.dark-mode .popover-icon-box.emerald { background: rgba(5, 150, 105, 0.15); color: #34d399; }
+        body.dark-mode .popover-icon-box.cyan { background: rgba(2, 132, 199, 0.15); color: #38bdf8; }
+        body.dark-mode .popover-icon-box.purple { background: rgba(124, 58, 237, 0.15); color: #c084fc; }
+        body.dark-mode .popover-icon-box.pink { background: rgba(225, 29, 72, 0.15); color: #fb7185; }
+        body.dark-mode .popover-icon-box.orange { background: rgba(234, 88, 12, 0.2); color: #fb923c; }
+
+        .popover-card-text {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .popover-card-text h4 {
+            margin: 0 0 2px 0;
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--console-text);
+        }
+
+        .popover-card-text p {
+            margin: 0;
+            font-size: 0.72rem;
+            color: var(--console-text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Workspace Console Screen -->
+    <div class="app-container" id="app-container">
+        <!-- Single Ultra-Slim Top Navbar -->
+        <header class="app-header">
+            <div class="header-left-cluster">
+                <button class="header-btn-icon" id="toggle-sidebar-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+                <a href="./index.html" class="header-logo" title="Back to Landing Page">
+                    <img src="./vani_icon.png" alt="VANI Icon">
+                    <span class="header-logo-text">V.A.N.I-xAI</span>
+                    <span class="quantum-pill">v2.6</span>
+                </a>
+                <div class="header-status-pill">
+                    <span class="status-dot"></span>
+                    <span id="current-mode-badge" style="font-weight:600;">Socratic Mentor</span>
+                </div>
+            </div>
+
+            <div class="header-right-cluster">
+                <!-- Admin Panel Button (Shown exclusively for Admin) -->
+                <button class="header-btn header-btn-admin" id="admin-panel-btn" onclick="window.location.href='./admin-vaniXai.html'" style="display: none;" title="Open Sovereign Admin Command Panel">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Admin Panel</span>
+                </button>
+
+                <button class="header-btn header-btn-radar" onclick="window.location.href='/quantum_radar'" title="Open Quantum Radar Device Discovery Deck">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <span>Radar</span>
+                </button>
+
+                <button class="header-btn header-btn-mesh" onclick="triggerSwarmHandoff()" title="Trigger Mesh Swarm Sync Across Devices">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <span>Mesh Sync</span>
+                </button>
+
+                <button class="header-btn header-btn-search" onclick="openSarasWebSearchModal()" title="Search with Saras Web Search">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>Saras Search</span>
+                </button>
+
+                <button class="header-btn header-btn-addons" id="console-addons-menu-btn" onclick="toggleConsoleFeaturesMenu()" title="Open Features &amp; Add-ons Menu">
+                    <i class="fa-solid fa-shapes"></i>
+                    <span>Add-ons</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.62rem; margin-left: 2px;"></i>
+                </button>
+
+                <!-- Push Notification Bell -->
+                <button class="header-btn-icon" id="btn-notification-bell" onclick="toggleNotificationDrawer()" title="View System Push Notifications" style="position: relative;">
+                    <i class="fa-solid fa-bell" style="color: #c084fc;"></i>
+                    <span id="notif-badge" style="display: none; position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; border: 2px solid var(--console-header); animation: notifPulse 1.5s infinite;"></span>
+                </button>
+
+                <!-- Settings Button -->
+                <a href="./settings.html" class="header-btn-icon" id="header-settings-btn" title="Open System &amp; Voice Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="header-btn-icon" id="headerThemeToggle" title="Toggle Theme" aria-label="Toggle Theme">
+                    <span id="headerThemeIcon">🌙</span>
+                </button>
+
+                <div class="header-uid-badge" id="headerUserUidBadge" onclick="copyStudentUID()" title="Click to copy your Algorithmic Sovereign UID">
+                    <i class="fa-solid fa-fingerprint"></i>
+                    <span id="header-vani-id-text">V.A.N.I-xAI-SOVEREIGN</span>
+                    <i class="fa-regular fa-copy" style="margin-left: 4px;"></i>
+                </div>
+
+                <button class="header-btn-icon" onclick="clearConsoleChat()" title="Clear Conversation">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+
+                <button class="header-btn-icon" id="btn-signout" title="Sign Out" style="color: #ef4444;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace (Dual-Pane Multi-Agent Hub) -->
+        <main class="app-workspace">
+            <!-- Left Sidebar: Multi-Agent Hub & Prompt Explorations -->
+            <aside class="agent-sidebar" id="agent-sidebar">
+                <!-- New Chat Button -->
+                <button class="sidebar-new-chat-btn" onclick="clearConsoleChat()" title="Start a fresh conversation">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>New Chat</span>
+                </button>
+
+                <div class="sidebar-section-title">WORKSPACES</div>
+
+                <!-- Agentic Capability Selector Cards -->
+                <div class="agent-modes-grid">
+                    <div class="mode-card active" onclick="selectAgentMode('socratic', this)" title="Socratic Pedagogical Scaffolding (NEP 2020)">
+                        <div class="mode-icon socratic-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="mode-info">
+                            <div class="mode-title">Socratic Mentor</div>
+                            <div class="mode-desc">Step-by-step guidance</div>
+                        </div>
+                    </div>
+
+                    <div class="mode-card" onclick="selectAgentMode('autonomous', this)" title="Autonomous Desktop & GUI Automation">
+                        <div class="mode-icon autonomous-icon"><i class="fa-solid fa-robot"></i></div>
+                        <div class="mode-info">
+                            <div class="mode-title">Autonomous OS</div>
+                            <div class="mode-desc">GUI &amp; Desktop Agent</div>
+                        </div>
+                    </div>
+
+                    <div class="mode-card" onclick="selectAgentMode('swarm', this)" title="Cross-Device Swarm Handoff & Clipboard Sync">
+                        <div class="mode-icon swarm-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+                        <div class="mode-info">
+                            <div class="mode-title">Swarm Mesh</div>
+                            <div class="mode-desc">Cross-device sync</div>
+                        </div>
+                    </div>
+
+                    <div class="mode-card" onclick="selectAgentMode('local', this)" title="100% Offline Edge Neural Engine (Ollama)">
+                        <div class="mode-icon local-icon"><i class="fa-solid fa-microchip"></i></div>
+                        <div class="mode-info">
+                            <div class="mode-title">Edge Offline AI</div>
+                            <div class="mode-desc">100% Local Ollama</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saras Ecosystem & Add-on Features Section -->
+                <div class="sidebar-section-title" style="margin-top: 10px;">SARAS ECOSYSTEM &amp; ADD-ONS</div>
+
+                <div class="sidebar-addons-grid">
+                    <!-- Admin Panel (Sidebar shortcut) -->
+                    <button class="sidebar-addon-btn admin-addon" id="sidebar-admin-btn" onclick="window.location.href='./admin-vaniXai.html'" style="display: none;" title="Admin Command Center">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Admin Panel</span>
+                    </button>
+                    <button class="sidebar-addon-btn radar-addon" onclick="window.location.href='/quantum_radar'" title="Open Quantum Radar Device Discovery">
+                        <i class="fa-solid fa-satellite-dish"></i>
+                        <span>Quantum Radar</span>
+                    </button>
+                    <button class="sidebar-addon-btn mesh-addon" onclick="triggerSwarmHandoff()" title="Trigger Mesh Swarm Sync Across Devices">
+                        <i class="fa-solid fa-network-wired"></i>
+                        <span>Mesh Sync</span>
+                    </button>
+                    <button class="sidebar-addon-btn search-addon" onclick="openSarasWebSearchModal()" title="Zero-Tab Real-Time Search">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>Saras Search</span>
+                    </button>
+                    <button class="sidebar-addon-btn chat-addon" onclick="window.location.href='/quantum_connect'" title="Persistent Multi-Device AI Chat">
+                        <i class="fa-solid fa-comments"></i>
+                        <span>Saras Chat</span>
+                    </button>
+                    <button class="sidebar-addon-btn trap-addon" onclick="initiateLockdown()" title="Biometric Security Trap">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Intruder Trap</span>
+                    </button>
+                    <button class="sidebar-addon-btn voice-addon" onclick="testNeuralVoiceSynthesis()" title="Voice Synthesizer Studio">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                        <span>Voice Studio</span>
+                    </button>
+                    <button class="sidebar-addon-btn settings-addon" onclick="window.location.href='./settings.html'" title="Open System &amp; Voice Settings">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings</span>
+                    </button>
+                    <button class="sidebar-addon-btn portal-addon" onclick="window.location.href='./vani_presentation_light.html'" title="Interactive NCSC 2026 Presentation">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span>NCSC Portal</span>
+                    </button>
+                    <button class="sidebar-addon-btn home-addon" onclick="window.location.href='./index.html'" title="Return to Landing Page">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Landing Page</span>
+                    </button>
+                </div>
+
+                <!-- Prompt Suggestions -->
+                <div class="sidebar-section-title" style="margin-top: 10px;">PROMPT EXPLORER</div>
+
+                <div class="quick-demo-chips">
+                    <button class="quick-chip-btn" onclick="executeQuickPrompt('Give me the answer to 2x + 5 = 15.')">
+                        <i class="fa-solid fa-calculator" style="color: #a855f7;"></i>
+                        <span>Solve 2x + 5 = 15 Socratically</span>
+                    </button>
+                    <button class="quick-chip-btn" onclick="executeQuickPrompt('Open notepad and write code for Fibonacci series in Python')">
+                        <i class="fa-solid fa-laptop-code" style="color: #0284c7;"></i>
+                        <span>Open Notepad &amp; Write Code</span>
+                    </button>
+                    <button class="quick-chip-btn" onclick="executeQuickPrompt('Take screenshot and analyze screen')">
+                        <i class="fa-solid fa-camera" style="color: #10b981;"></i>
+                        <span>Capture &amp; Analyze Screen</span>
+                    </button>
+                    <button class="quick-chip-btn" onclick="executeQuickPrompt('Send clipboard to WhatsApp')">
+                        <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
+                        <span>Sync Clipboard to WhatsApp</span>
+                    </button>
+                </div>
+
+                <!-- Student Profile & Sovereignty Telemetry Footer -->
+                <div class="sidebar-footer">
+                    <a href="./settings.html" class="sidebar-user-card" title="Click to view Profile &amp; Settings">
+                        <div class="user-avatar-dot">DS</div>
+                        <div class="user-card-info" style="flex: 1;">
+                            <span class="user-card-name">Dhruv Sagar</span>
+                            <span class="user-card-id" id="sidebar-uid-text">V.A.N.I-SOVEREIGN</span>
+                        </div>
+                        <i class="fa-solid fa-gear" style="color: var(--console-text-muted); font-size: 0.75rem;"></i>
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Center/Right Side: Chat Canvas -->
+            <section class="panel chat-panel">
+                <!-- Chat History Stream -->
+                <div class="chat-history" id="chat-history">
+                    <!-- Welcome Hero Card -->
+                    <div class="message system welcome-card-wrap">
+                        <div class="welcome-card">
+                            <div class="welcome-card-header">
+                                <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" class="welcome-bov-logo" onerror="this.src='vani_icon.png'">
+                                <div class="welcome-header-text">
+                                    <h3>V.A.N.I-xAI Quantum Console</h3>
+                                    <p>Vāṇī Adhyātmik Navīn Intellect &bull; <em>Don't Assume, Verify.</em></p>
+                                </div>
+                            </div>
+                            <div class="welcome-badges-row">
+                                <span class="welcome-pill"><i class="fa-solid fa-graduation-cap"></i> Socratic NEP 2020</span>
+                                <span class="welcome-pill"><i class="fa-solid fa-robot"></i> Desktop GUI Agent</span>
+                                <span class="welcome-pill"><i class="fa-solid fa-satellite-dish"></i> Swarm Mesh</span>
+                                <span class="welcome-pill"><i class="fa-solid fa-lock-open"></i> 100% Free Sovereign</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unified Seamless Bottom Input Dock -->
+                <div class="input-dock-container">
+                    <div class="input-dock">
+                        <button class="dock-btn mic-btn" id="voice-btn" title="Speak to V.A.N.I">
+                            <i class="fa-solid fa-microphone" id="mic-icon"></i>
+                        </button>
+                        <button class="dock-btn tool-btn" onclick="openSarasWebSearchModal()" title="Search with Saras Web Search">
+                            <i class="fa-solid fa-globe" style="color: #0284c7;"></i>
+                        </button>
+                        <button class="dock-btn tool-btn" onclick="window.location.href='/quantum_radar'" title="Open Quantum Radar Device Discovery">
+                            <i class="fa-solid fa-satellite-dish" style="color: #d97706;"></i>
+                        </button>
+                        <button class="dock-btn tool-btn" onclick="triggerSwarmHandoff()" title="Trigger Mesh Swarm Sync Across Devices">
+                            <i class="fa-solid fa-network-wired" style="color: #059669;"></i>
+                        </button>
+                        <button class="dock-btn tool-btn" id="dock-addons-btn" onclick="toggleConsoleFeaturesMenu()" title="All Features &amp; Add-ons Menu">
+                            <i class="fa-solid fa-shapes" style="color: #7c3aed;"></i>
+                        </button>
+                        <button class="dock-btn tool-btn" onclick="window.location.href='./settings.html'" title="System &amp; Voice Settings">
+                            <i class="fa-solid fa-gear" style="color: #64748b;"></i>
+                        </button>
+                        <button class="dock-btn tool-btn" onclick="executeQuickPrompt('take screenshot')" title="Capture &amp; Analyze Screen">
+                            <i class="fa-solid fa-camera"></i>
+                        </button>
+                        <input type="text" id="text-input"
+                            placeholder="Ask anything, solve equations, or control desktop..." autocomplete="off">
+                        <button class="dock-btn send-btn" id="send-btn" title="Send (Enter)">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                    </div>
+                    <div class="dock-footnote">
+                        <span><i class="fa-solid fa-bolt" style="color:#0284c7;"></i> Real-time Indian Voice &bull; Socratic Scaffolding &bull; Zero Homework Shortcuts</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Floating Console Features & Add-ons Menu Popover -->
+        <div id="console-features-menu" class="console-features-popover hidden">
+            <div class="features-popover-header">
+                <div class="popover-title">
+                    <i class="fa-solid fa-shapes" style="color: #7c3aed;"></i>
+                    <span>V.A.N.I-xAI Features &amp; Add-ons</span>
+                </div>
+                <button class="popover-close-btn" onclick="toggleConsoleFeaturesMenu(false)" title="Close Menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="features-popover-grid">
+                <!-- Admin Card (Popover shortcut) -->
+                <a href="./admin-vaniXai.html" class="feature-popover-card" id="popover-admin-card" style="display: none;">
+                    <div class="popover-icon-box orange"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Admin Control Center</h4>
+                        <p>Personnel registry, user telemetry &amp; security PINs</p>
+                    </div>
+                </a>
+                <!-- Item 1: Saras Radar -->
+                <a href="/quantum_radar" class="feature-popover-card">
+                    <div class="popover-icon-box gold"><i class="fa-solid fa-satellite-dish"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Saras.Radar</h4>
+                        <p>Discover nearby devices &amp; neural nodes</p>
+                    </div>
+                </a>
+                <!-- Item 2: Mesh Sync -->
+                <div class="feature-popover-card" onclick="triggerSwarmHandoff(); toggleConsoleFeaturesMenu(false);">
+                    <div class="popover-icon-box emerald"><i class="fa-solid fa-network-wired"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Mesh Swarm Sync</h4>
+                        <p>Handoff prompt &amp; clipboard across devices</p>
+                    </div>
+                </div>
+                <!-- Item 3: Saras.WebSearch -->
+                <div class="feature-popover-card" onclick="openSarasWebSearchModal(); toggleConsoleFeaturesMenu(false);">
+                    <div class="popover-icon-box cyan"><i class="fa-solid fa-globe"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Saras.WebSearch</h4>
+                        <p>Zero-tab live search with AI citations</p>
+                    </div>
+                </div>
+                <!-- Item 4: Saras Chat -->
+                <a href="/quantum_connect" class="feature-popover-card">
+                    <div class="popover-icon-box purple"><i class="fa-solid fa-comments"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Saras_VANI.Chat</h4>
+                        <p>Multi-device persistent collaborative AI chat</p>
+                    </div>
+                </a>
+                <!-- Item 5: Settings -->
+                <a href="./settings.html" class="feature-popover-card">
+                    <div class="popover-icon-box purple"><i class="fa-solid fa-gear"></i></div>
+                    <div class="popover-card-text">
+                        <h4>System &amp; Voice Settings</h4>
+                        <p>Customize Indian voice, API keys &amp; telemetry</p>
+                    </div>
+                </a>
+                <!-- Item 6: Biometric Trap -->
+                <div class="feature-popover-card" onclick="initiateLockdown(); toggleConsoleFeaturesMenu(false);">
+                    <div class="popover-icon-box pink"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Biometric Intruder Trap</h4>
+                        <p>PIN lockdown &amp; silent camera security capture</p>
+                    </div>
+                </div>
+                <!-- Item 7: Voice Studio -->
+                <div class="feature-popover-card" onclick="testNeuralVoiceSynthesis(); toggleConsoleFeaturesMenu(false);">
+                    <div class="popover-icon-box purple"><i class="fa-solid fa-microphone-lines"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Voice Studio</h4>
+                        <p>Authentic Indian accent voice synthesis</p>
+                    </div>
+                </div>
+                <!-- Item 8: NCSC Presentation -->
+                <a href="./vani_presentation_light.html" class="feature-popover-card">
+                    <div class="popover-icon-box cyan"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <div class="popover-card-text">
+                        <h4>NCSC Presentation Deck</h4>
+                        <p>12-slide interactive science congress portal</p>
+                    </div>
+                </a>
+                <!-- Item 9: Project Report -->
+                <a href="./project_report_light.html" class="feature-popover-card">
+                    <div class="popover-icon-box emerald"><i class="fa-solid fa-file-lines"></i></div>
+                    <div class="popover-card-text">
+                        <h4>NCSC Project Report</h4>
+                        <p>Official full research report &amp; findings</p>
+                    </div>
+                </a>
+                <!-- Item 10: Landing Page -->
+                <a href="./index.html" class="feature-popover-card">
+                    <div class="popover-icon-box gold"><i class="fa-solid fa-house"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Landing Page</h4>
+                        <p>Return to main presentation &amp; overview</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Saras.WebSearch In-App Modal Overlay -->
+    <div id="saras-websearch-modal" class="saras-websearch-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.85); backdrop-filter:blur(10px); z-index:999999; justify-content:center; align-items:center;">
+        <div style="width:94vw; max-width:1200px; height:88vh; background:#ffffff; border-radius:18px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+            <div style="padding:10px 16px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:700; color:#0284c7; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-globe"></i> Saras.WebSearch // Zero-Tab Search Engine
+                </span>
+                <button onclick="closeSarasWebSearchModal()" style="border:none; background:#e2e8f0; border-radius:50%; width:28px; height:28px; cursor:pointer; font-weight:bold;">✕</button>
+            </div>
+            <iframe id="saras-websearch-iframe" src="./saras_web_search.html" style="flex:1; border:none; width:100%; height:100%;"></iframe>
+        </div>
+    </div>
+
+    <!-- Real-time Push Notification Toast Popup -->
+    <div id="push-toast-banner" style="display: none; position: fixed; top: 64px; right: 20px; z-index: 99999; max-width: 380px; width: calc(100% - 40px); background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(18px); border: 1px solid rgba(192, 132, 252, 0.5); border-radius: 14px; padding: 14px 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #ffffff;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.88rem; color: #c084fc;">
+                <span id="push-toast-icon">📢</span>
+                <span id="push-toast-title">System Announcement</span>
+            </div>
+            <button onclick="closePushToast()" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.9rem; padding: 0;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <p id="push-toast-body" style="margin: 8px 0 0 0; font-size: 0.8rem; color: #cbd5e1; line-height: 1.4;"></p>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; font-size: 0.68rem; color: #64748b;">
+            <span id="push-toast-time">Just now</span>
+            <span style="color: #a855f7; font-weight: 600;">V.A.N.I-xAI Push Alert</span>
+        </div>
+    </div>
+
+    <!-- Notification Drawer Slide-over -->
+    <div id="notification-drawer" class="hidden" style="position: fixed; top: 52px; right: 0; bottom: 0; width: 350px; max-width: 90vw; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-left: 1px solid rgba(255,255,255,0.1); z-index: 9999; box-shadow: -10px 0 30px rgba(0,0,0,0.5); display: flex; flex-direction: column;">
+        <div style="padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px; color: #f8fafc; font-weight: 700; font-size: 0.95rem;">
+                <i class="fa-solid fa-bell" style="color: #c084fc;"></i>
+                <span>Push Notifications</span>
+            </div>
+            <button onclick="toggleNotificationDrawer()" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1rem;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="notif-drawer-list" style="flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="text-align: center; color: #64748b; font-size: 0.82rem; padding: 30px 10px;">Listening for real-time broadcasts...</div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Modular v9 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81",
+            measurementId: "G-RJB5892YTQ"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Auth Guard, PIN Setup Check & Admin Recognition
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                // Not authenticated -> redirect to Auth page
+                window.location.href = './auth-vani-xai.html';
+                return;
+            }
+
+            // User authenticated -> Check Security PIN setup
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (!userDoc.exists || (!userDoc.data().pin && !userDoc.data().securityPin)) {
+                    window.location.href = './pin-vaniXai.html';
+                    return;
+                }
+
+                let vaniId = `V.A.N.I-xAI-${(user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase()}-2026`;
+                let isUserAdmin = user.email === 'official.vani.xai76@gmail.com';
+
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    if (data.vaniId) vaniId = data.vaniId;
+                    if (data.isAdmin === true || data.role === 'admin') isUserAdmin = true;
+                }
+
+                // If Admin, expose Admin Control Center in Header, Sidebar, and Popover
+                if (isUserAdmin) {
+                    const adminBtn = document.getElementById('admin-panel-btn');
+                    const sidebarAdminBtn = document.getElementById('sidebar-admin-btn');
+                    const popoverAdminCard = document.getElementById('popover-admin-card');
+                    if (adminBtn) adminBtn.style.display = 'inline-flex';
+                    if (sidebarAdminBtn) sidebarAdminBtn.style.display = 'flex';
+                    if (popoverAdminCard) popoverAdminCard.style.display = 'flex';
+                }
+
+                const headerUid = document.getElementById('header-vani-id-text');
+                const sidebarUid = document.getElementById('sidebar-uid-text');
+                if (headerUid) headerUid.textContent = vaniId;
+                if (sidebarUid) sidebarUid.innerHTML = `${vaniId} <i class="fa-regular fa-copy"></i>`;
+
+                // Initialize Real-time Push Notification Listener
+                initPushNotificationSystem();
+            } catch (e) {
+                console.warn("User profile fetch error:", e);
+            }
+        });
+
+        // Sign Out Handler
+        document.getElementById('btn-signout')?.addEventListener('click', () => {
+            if (confirm("Are you sure you want to sign out of V.A.N.I-xAI?")) {
+                auth.signOut().then(() => {
+                    window.location.href = './index.html';
+                });
+            }
+        });
+
+        // Theme Toggle Handler
+        const themeBtn = document.getElementById('headerThemeToggle');
+        const themeIcon = document.getElementById('headerThemeIcon');
+        function applyTheme(isDark) {
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                if (themeIcon) themeIcon.textContent = '☀️';
+                localStorage.setItem('vani_theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                if (themeIcon) themeIcon.textContent = '🌙';
+                localStorage.setItem('vani_theme', 'light');
+            }
+        }
+        const savedTheme = localStorage.getItem('vani_theme') || 'light';
+        applyTheme(savedTheme === 'dark');
+
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const isDark = document.body.classList.contains('dark-mode');
+                applyTheme(!isDark);
+            });
+        }
+
+        // Toggle Sidebar
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('agent-sidebar');
+            if (sidebar) sidebar.classList.toggle('collapsed');
+        };
+
+        // Select Agent Mode
+        window.selectAgentMode = function(modeName, cardElem) {
+            document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+            if (cardElem) cardElem.classList.add('active');
+            const badge = document.getElementById('current-mode-badge');
+            const names = {
+                'socratic': 'Socratic Mentor',
+                'autonomous': 'Autonomous OS',
+                'swarm': 'Swarm Mesh',
+                'local': 'Edge Offline AI'
+            };
+            if (badge) badge.textContent = names[modeName] || 'Socratic Mentor';
+        };
+
+        // Copy Student UID
+        window.copyStudentUID = function() {
+            const uidElem = document.getElementById('header-vani-id-text');
+            const val = uidElem ? uidElem.textContent : 'V.A.N.I-xAI-SOVEREIGN';
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(val).then(() => {
+                    const orig = uidElem.textContent;
+                    uidElem.textContent = 'Copied! ✓';
+                    setTimeout(() => { uidElem.textContent = orig; }, 1500);
+                });
+            }
+        };
+
+        // Execute Quick Prompt
+        window.executeQuickPrompt = function(promptText) {
+            const textInput = document.getElementById('text-input');
+            if (textInput) {
+                textInput.value = promptText;
+                textInput.focus();
+                if (typeof submitCommand === 'function') {
+                    submitCommand(promptText);
+                } else {
+                    document.getElementById('send-btn')?.click();
+                }
+            }
+        };
+
+        // Clear Console Chat
+        window.clearConsoleChat = function() {
+            const chatHistory = document.getElementById('chat-history');
+            if (chatHistory) {
+                chatHistory.innerHTML = `
+                    <div class="message system welcome-card-wrap">
+                        <div class="welcome-card">
+                            <div class="welcome-card-header">
+                                <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" class="welcome-bov-logo" onerror="this.src='vani_icon.png'">
+                                <div class="welcome-header-text">
+                                    <h3>Conversation Cleared</h3>
+                                    <p>V.A.N.I-xAI is ready for your next question or autonomous command.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        // Toggle Console Features Popover Menu
+        window.toggleConsoleFeaturesMenu = function(forceState) {
+            const menu = document.getElementById('console-features-menu');
+            if (!menu) return;
+            if (typeof forceState === 'boolean') {
+                if (forceState) menu.classList.remove('hidden');
+                else menu.classList.add('hidden');
+            } else {
+                menu.classList.toggle('hidden');
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('console-features-menu');
+            const menuBtn = document.getElementById('console-addons-menu-btn');
+            const dockMenuBtn = document.getElementById('dock-addons-btn');
+            if (menu && !menu.classList.contains('hidden')) {
+                if (!menu.contains(e.target) && (!menuBtn || !menuBtn.contains(e.target)) && (!dockMenuBtn || !dockMenuBtn.contains(e.target))) {
+                    menu.classList.add('hidden');
+                }
+            }
+        });
+        // --- Real-time Push Notification System ---
+        let lastNotifTimestamp = 0;
+        let isInitialNotifLoad = true;
+
+        function safeEscapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function initPushNotificationSystem() {
+            if ("Notification" in window && Notification.permission === "default") {
+                Notification.requestPermission().catch(console.warn);
+            }
+
+            if (typeof db === 'undefined') return;
+
+            db.collection('system_notifications')
+                .onSnapshot(snapshot => {
+                    if (!snapshot || snapshot.empty) return;
+
+                    const drawerList = document.getElementById('notif-drawer-list');
+                    const badge = document.getElementById('notif-badge');
+                    if (drawerList) drawerList.innerHTML = '';
+
+                    const docs = [];
+                    snapshot.forEach(doc => {
+                        docs.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    // Sort manually by timestamp newest first
+                    docs.sort((a, b) => {
+                        const tA = a.timestamp ? (typeof a.timestamp.toMillis === 'function' ? a.timestamp.toMillis() : new Date(a.timestamp).getTime()) : Date.now();
+                        const tB = b.timestamp ? (typeof b.timestamp.toMillis === 'function' ? b.timestamp.toMillis() : new Date(b.timestamp).getTime()) : Date.now();
+                        return tB - tA;
+                    });
+
+                    let latestDoc = docs[0] || null;
+
+                    docs.forEach((data) => {
+                        const timeMillis = data.timestamp ? (typeof data.timestamp.toMillis === 'function' ? data.timestamp.toMillis() : new Date(data.timestamp).getTime()) : Date.now();
+                        
+                        let icon = '📢';
+                        let typeColor = '#c084fc';
+                        if (data.type === 'security') { icon = '⚡'; typeColor = '#f59e0b'; }
+                        else if (data.type === 'feature') { icon = '✨'; typeColor = '#3b82f6'; }
+                        else if (data.type === 'urgent') { icon = '🚨'; typeColor = '#ef4444'; }
+
+                        if (drawerList) {
+                            const item = document.createElement('div');
+                            item.style.cssText = `background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; color: #f8fafc; margin-bottom: 8px; text-align: left;`;
+                            item.innerHTML = `
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; font-weight: 700; font-size: 0.84rem; color: ${typeColor};">
+                                    <span>${icon} ${safeEscapeHtml(data.title || 'Broadcast')}</span>
+                                    <span style="font-size: 0.65rem; color: #64748b; font-weight: normal;">${new Date(timeMillis).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                                </div>
+                                <p style="margin: 6px 0 0 0; font-size: 0.78rem; color: #cbd5e1; line-height: 1.4;">${safeEscapeHtml(data.message || '')}</p>
+                            `;
+                            drawerList.appendChild(item);
+                        }
+                    });
+
+                    if (latestDoc) {
+                        const latestTime = latestDoc.timestamp ? (typeof latestDoc.timestamp.toMillis === 'function' ? latestDoc.timestamp.toMillis() : new Date(latestDoc.timestamp).getTime()) : Date.now();
+                        
+                        if (isInitialNotifLoad) {
+                            isInitialNotifLoad = false;
+                            lastNotifTimestamp = latestTime;
+                            if (badge) badge.style.display = 'block';
+                            showPushToast(latestDoc.title, latestDoc.message, latestDoc.type);
+                        } else if (latestTime > lastNotifTimestamp) {
+                            lastNotifTimestamp = latestTime;
+                            if (badge) badge.style.display = 'block';
+                            showPushToast(latestDoc.title, latestDoc.message, latestDoc.type);
+                        }
+                    }
+                }, err => console.warn("Push listener warning:", err));
+        }
+
+        function showPushToast(title, message, type) {
+            const banner = document.getElementById('push-toast-banner');
+            const titleEl = document.getElementById('push-toast-title');
+            const bodyEl = document.getElementById('push-toast-body');
+            const iconEl = document.getElementById('push-toast-icon');
+            const timeEl = document.getElementById('push-toast-time');
+
+            if (!banner) return;
+
+            let icon = '📢';
+            if (type === 'security') icon = '⚡';
+            else if (type === 'feature') icon = '✨';
+            else if (type === 'urgent') icon = '🚨';
+
+            if (titleEl) titleEl.textContent = title;
+            if (bodyEl) bodyEl.textContent = message;
+            if (iconEl) iconEl.textContent = icon;
+            if (timeEl) timeEl.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            banner.style.display = 'block';
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                try {
+                    new Notification(title, {
+                        body: message,
+                        icon: './vani_icon.png'
+                    });
+                } catch(e) {}
+            }
+
+            playNotificationTone();
+
+            setTimeout(() => {
+                banner.style.display = 'none';
+            }, 8000);
+        }
+
+        window.closePushToast = function() {
+            const banner = document.getElementById('push-toast-banner');
+            if (banner) banner.style.display = 'none';
+        };
+
+        window.toggleNotificationDrawer = function() {
+            const drawer = document.getElementById('notification-drawer');
+            const badge = document.getElementById('notif-badge');
+            if (drawer) drawer.classList.toggle('hidden');
+            if (badge) badge.style.display = 'none';
+        };
+
+        function playNotificationTone() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.35);
+            } catch(e) {}
+        }
+    </script>
+
+    <!-- Main Logic Script -->
+    <script src="./main.js?v=2026_q2"></script>
+</body>
+
+</html>

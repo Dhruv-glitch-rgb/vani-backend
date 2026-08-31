@@ -1,7 +1,7 @@
 # Saras_VANI.Search (Radar Device Discovery)
 
 > Platform: VANI-xAI (Vāṇī Adhyātmik Navīn Intellect)  
-> URL: https://vani-nzdrsr.web.app/saras_vani_search.html
+> URL: https://vani-nzdrsr.firebaseapp.com/quantum_radar
 
 Local device radar discovery and pairing interface.
 

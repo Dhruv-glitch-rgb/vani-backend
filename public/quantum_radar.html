@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Radar - Nearby V.A.N.I-xAI Scanner</title>
+    <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #030712;
+            --panel-bg: rgba(15, 23, 42, 0.8);
+            --panel-border: rgba(99, 102, 241, 0.25);
+            --accent-indigo: #6366f1;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --saffron: #ea580c;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background: var(--bg-dark) url('/inxv_bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Header Bar */
+        .radar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            z-index: 10;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo-box img { width: 38px; height: 38px; border-radius: 50%; filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6)); }
+        .logo-box span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--text-primary); letter-spacing: 1px; }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--panel-border);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover { background: var(--accent-indigo); color: white; transform: translateY(-2px); }
+
+        /* Main Radar Dashboard */
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            gap: 25px;
+            padding: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-container { flex-direction: column; padding: 15px; }
+        }
+
+        /* Radar Viewport Panel */
+        .radar-panel {
+            flex: 1.2;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 440px;
+            width: 100%;
+        }
+
+        .radar-canvas-box {
+            position: relative;
+            width: min(340px, 80vw);
+            height: min(340px, 80vw);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        canvas#radarCanvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 35px rgba(99, 102, 241, 0.25), inset 0 0 25px rgba(99, 102, 241, 0.2);
+            touch-action: none;
+        }
+
+        .radar-center-user {
+            position: absolute;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-indigo);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.8);
+            object-fit: cover;
+            z-index: 5;
+            background: #000;
+        }
+
+        .radar-status-bar {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: rgba(0,0,0,0.4);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            box-shadow: 0 0 10px var(--accent-emerald);
+            animation: pulseDot 1.5s infinite;
+        }
+
+        @keyframes pulseDot { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+        /* Nearby Users List Panel */
+        .users-panel {
+            flex: 1;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+
+        .panel-title h2 { font-size: 1.25rem; font-weight: 700; color: #a5b4fc; display: flex; align-items: center; gap: 10px; }
+
+        .nearby-users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            max-height: 480px;
+            padding-right: 5px;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px 18px;
+            transition: all 0.3s;
+        }
+
+        .user-card:hover {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .user-info { display: flex; align-items: center; gap: 14px; }
+        .user-avatar { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--accent-cyan); object-fit: cover; }
+        .user-name { font-weight: 700; font-size: 1rem; color: var(--text-primary); }
+        .user-meta { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
+        .distance-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .pair-btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pair-btn:hover { background: linear-gradient(135deg, #4f46e5, #4338ca); transform: scale(1.05); }
+
+        /* Modal Overlay for OTP Verification */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+
+        .modal-card {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 440px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .otp-display {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: 12px;
+            color: var(--accent-cyan);
+            background: rgba(0,0,0,0.5);
+            padding: 15px 25px;
+            border-radius: 14px;
+            border: 1px dashed var(--accent-indigo);
+            margin: 20px 0;
+        }
+
+        .otp-input-field {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid var(--panel-border);
+            color: #fff;
+            padding: 12px;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.6rem;
+            letter-spacing: 10px;
+            text-align: center;
+            border-radius: 12px;
+            margin: 15px 0;
+            outline: none;
+        }
+
+        .otp-input-field:focus { border-color: var(--accent-cyan); }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="radar-header">
+        <div class="logo-box" onclick="window.location.href='/ai4consol.html'">
+            <img src="/vani_icon.png" alt="Logo">
+            <span>V.A.N.I-xAI QUANTUM RADAR</span>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a href="/quantum_connect" class="nav-btn">
+                <i class="fa-solid fa-comments"></i> Quantum Connect Chat
+            </a>
+            <a href="/ai4consol.html" class="nav-btn">
+                <i class="fa-solid fa-home"></i> Console
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="dashboard-container">
+        
+        <!-- Radar Viewport -->
+        <div class="radar-panel">
+            <h2 style="font-size: 1.1rem; color: #a5b4fc; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-satellite-dish"></i> ACTIVE NEIGHBORHOOD FREQUENCY SCAN
+            </h2>
+
+            <div class="radar-canvas-box">
+                <img id="myAvatar" class="radar-center-user" src="/vani_icon.png" alt="You">
+                <canvas id="radarCanvas" width="360" height="360"></canvas>
+            </div>
+
+            <div class="radar-status-bar">
+                <div class="status-dot"></div>
+                <span id="radarScanText" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600;">Scanning 50 km radius... 0 Nodes Detected</span>
+                <button onclick="requestAndroidLocation()" class="nav-btn" style="padding: 4px 10px; font-size: 0.75rem; background: rgba(99, 102, 241, 0.25); border-color: rgba(99, 102, 241, 0.5);">
+                    <i class="fa-solid fa-location-crosshairs"></i> Sync GPS
+                </button>
+            </div>
+        </div>
+
+        <!-- Nearby Users List -->
+        <div class="users-panel">
+            <div class="panel-title">
+                <h2><i class="fa-solid fa-users-rays"></i> Nearby V.A.N.I-xAI Personnel</h2>
+            </div>
+
+            <div class="nearby-users-list" id="usersList">
+                <div style="text-align: center; color: var(--text-secondary); padding: 40px 10px;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-indigo); margin-bottom: 15px;"></i>
+                    <p>Probing geolocation coordinates...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Request/Acceptance Modal -->
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal-card">
+            <h3 style="color: #a5b4fc; font-size: 1.3rem; margin-bottom: 10px;" id="modalTitle">⚡ Quantum Pairing Request</h3>
+            <p style="font-size: 0.9rem; color: #cbd5e1;" id="modalDesc">Share this 4-digit pairing OTP with target user to establish secure P2P encryption.</p>
+
+            <div id="otpDisplayBox" class="otp-display">8492</div>
+
+            <div id="otpInputArea" style="display: none;">
+                <input type="text" id="otpInputField" class="otp-input-field" maxlength="4" placeholder="0000" autocomplete="off">
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button class="nav-btn" style="flex: 1; justify-content: center; background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4);" onclick="closeOtpModal()">Cancel</button>
+                <button class="pair-btn" style="flex: 1; justify-content: center;" id="modalConfirmBtn" onclick="confirmOtpPairing()">Confirm Pair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (v9 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-messaging-compat.js"></script>
+    <script src="./fcm-notifications.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let myLocation = { lat: 28.6139, lng: 77.2090 }; // Default location
+        let detectedUsers = [];
+        let activePairingId = null;
+        let activeTargetUser = null;
+
+        // Canvas Radar Sweep Animation Setup
+        const canvas = document.getElementById('radarCanvas');
+        const ctx = canvas.getContext('2d');
+        let sweepAngle = 0;
+
+        function drawRadar() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const cx = width / 2;
+            const cy = height / 2;
+            const radius = width / 2 - 10;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Background Glass Circle
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Concentric Radar Rings
+            [0.25, 0.5, 0.75, 1].forEach(rRatio => {
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius * rRatio, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(99, 102, 241, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // Crosshair Axes
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - radius); ctx.lineTo(cx, cy + radius);
+            ctx.moveTo(cx - radius, cy); ctx.lineTo(cx + radius, cy);
+            ctx.strokeStyle = 'rgba(99, 102, 241, 0.15)';
+            ctx.stroke();
+
+            // Rotating Sweep Beam
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(sweepAngle);
+
+            const gradient = ctx.createConicGradient(0, 0, 0);
+            gradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+            gradient.addColorStop(0.2, 'rgba(16, 185, 129, 0.05)');
+            gradient.addColorStop(1, 'transparent');
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, radius, 0, Math.PI * 0.5);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.restore();
+
+            // Render Detected Nearby User Blips
+            detectedUsers.forEach((u, i) => {
+                const angle = (i + 1) * (Math.PI * 2 / Math.max(detectedUsers.length, 3));
+                const distRatio = Math.min(Math.max((u.distanceKm || 1) / 10, 0.25), 0.85);
+                const bx = cx + Math.cos(angle) * (radius * distRatio);
+                const by = cy + Math.sin(angle) * (radius * distRatio);
+
+                // Blip Outer Glow Ring
+                ctx.beginPath();
+                ctx.arc(bx, by, 10, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(6, 182, 212, 0.3)';
+                ctx.fill();
+
+                // Blip Inner Point
+                ctx.beginPath();
+                ctx.arc(bx, by, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#06b6d4';
+                ctx.fill();
+
+                // Draw Name Tag
+                ctx.font = '10px Outfit';
+                ctx.fillStyle = '#f8fafc';
+                ctx.textAlign = 'center';
+                ctx.fillText(u.name.split(' ')[0], bx, by + 20);
+            });
+
+            sweepAngle += 0.03;
+            requestAnimationFrame(drawRadar);
+        }
+
+        drawRadar();
+
+        // Auth & Geolocation Lifecycle
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = '/auth-vani-xai.html';
+                return;
+            }
+            currentUser = user;
+            document.getElementById('myAvatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'Me'}&background=030712&color=6366f1`;
+
+            if (window.VaniFCM) window.VaniFCM.init(user);
+
+            requestAndroidLocation();
+            listenToNearbyUsers();
+            listenToPairingRequests();
+        });
+
+        function requestAndroidLocation() {
+            const statusEl = document.getElementById('radarScanText');
+            if (statusEl) statusEl.textContent = 'Probing GPS coordinates...';
+
+            const geoOptions = {
+                enableHighAccuracy: false, // Low accuracy option for fast Android response
+                timeout: 8000,
+                maximumAge: 60000
+            };
+
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        console.log('[Radar] Mobile Location acquired:', pos.coords.latitude, pos.coords.longitude);
+                        myLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                        updateFirestorePresence();
+                    },
+                    (err) => {
+                        console.warn('[Radar] GPS access failed, falling back to IP Location:', err.message);
+                        fetchIpLocation();
+                    },
+                    geoOptions
+                );
+
+                // Continuous Watch Position for Mobile Movement
+                try {
+                    navigator.geolocation.watchPosition(
+                        (pos) => {
+                            if (pos && pos.coords) {
+                                myLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                                updateFirestorePresence();
+                            }
+                        },
+                        null,
+                        { enableHighAccuracy: false, timeout: 15000, maximumAge: 30000 }
+                    );
+                } catch(e) {}
+            } else {
+                fetchIpLocation();
+            }
+        }
+
+        async function fetchIpLocation() {
+            try {
+                // Tier 1: Try ipwho.is (CORS friendly free IP geolocation)
+                const res1 = await fetch('https://ipwho.is/').catch(() => null);
+                if (res1 && res1.ok) {
+                    const data = await res1.json().catch(() => null);
+                    if (data && data.success && data.latitude && data.longitude) {
+                        myLocation = { lat: data.latitude, lng: data.longitude };
+                        console.log('[Radar] IP location obtained (ipwho.is):', myLocation);
+                        updateFirestorePresence();
+                        return;
+                    }
+                }
+
+                // Tier 2: Try ipapi.co
+                const res2 = await fetch('https://ipapi.co/json/').catch(() => null);
+                if (res2 && res2.ok) {
+                    const data = await res2.json().catch(() => null);
+                    if (data && data.latitude && data.longitude) {
+                        myLocation = { lat: data.latitude, lng: data.longitude };
+                        console.log('[Radar] IP location obtained (ipapi.co):', myLocation);
+                        updateFirestorePresence();
+                        return;
+                    }
+                }
+            } catch(e) {
+                console.warn('[Radar] IP location fetch error:', e);
+            }
+
+            // Fallback default coordinates if GPS & IP APIs fail
+            if (!myLocation.lat || !myLocation.lng) {
+                myLocation = { lat: 28.6139, lng: 77.2090 };
+            }
+            updateFirestorePresence();
+        }
+
+        async function updateFirestorePresence() {
+            if (!currentUser) return;
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const uData = userDoc.exists ? userDoc.data() : {};
+
+                const safeLat = Number(myLocation.lat) || 28.6139;
+                const safeLng = Number(myLocation.lng) || 77.2090;
+
+                await db.collection('active_radar_users').doc(currentUser.uid).set({
+                    uid: currentUser.uid,
+                    name: currentUser.displayName || uData.name || currentUser.email.split('@')[0],
+                    email: currentUser.email,
+                    photoURL: currentUser.photoURL || `https://ui-avatars.com/api/?name=${currentUser.displayName || 'Vani'}&background=030712&color=6366f1`,
+                    vaniId: uData.vaniId || `V.A.N.I-${currentUser.uid.substring(0, 4).toUpperCase()}`,
+                    lat: safeLat,
+                    lng: safeLng,
+                    lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                    isDiscoverable: true,
+                    isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+                }, { merge: true });
+            } catch (err) {
+                console.error('[Radar] Presence update error:', err);
+            }
+        }
+
+        // Real-Time Nearby Users Subscription (Real Data Only)
+        function listenToNearbyUsers() {
+            db.collection('active_radar_users').onSnapshot((snapshot) => {
+                const list = [];
+                snapshot.forEach(doc => {
+                    const d = doc.data();
+                    if (d.uid !== currentUser.uid) {
+                        const targetLat = Number(d.lat) || Number(myLocation.lat) || 28.6139;
+                        const targetLng = Number(d.lng) || Number(myLocation.lng) || 77.2090;
+                        const dist = calculateDistance(myLocation.lat, myLocation.lng, targetLat, targetLng);
+                        list.push({ ...d, distanceKm: parseFloat(dist.toFixed(1)) });
+                    }
+                });
+
+                detectedUsers = list;
+                renderUsersList();
+            });
+        }
+
+        function renderUsersList() {
+            const container = document.getElementById('usersList');
+            document.getElementById('radarScanText').textContent = `Scanning 50 km radius... ${detectedUsers.length} Nodes Detected`;
+
+            if (detectedUsers.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding: 30px; color:#94a3b8;">No nearby V.A.N.I-xAI nodes found in current radius.</div>`;
+                return;
+            }
+
+            container.innerHTML = detectedUsers.map(u => `
+                <div class="user-card">
+                    <div class="user-info">
+                        <img src="${u.photoURL}" class="user-avatar" alt="${u.name}">
+                        <div>
+                            <div class="user-name">${escapeHtml(u.name)}</div>
+                            <div class="user-meta">${u.vaniId}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="distance-badge"><i class="fa-solid fa-location-dot"></i> ${isNaN(u.distanceKm) ? 0.5 : u.distanceKm} km</span>
+                        <button class="pair-btn" onclick="initiatePairing('${u.uid}', '${escapeHtml(u.name)}')">
+                            <i class="fa-solid fa-plug"></i> Pair
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Haversine Distance Formula with Safe Fallbacks
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const l1 = Number(lat1) || 28.6139;
+            const o1 = Number(lon1) || 77.2090;
+            const l2 = Number(lat2) || 28.6139;
+            const o2 = Number(lon2) || 77.2090;
+
+            const R = 6371;
+            const dLat = (l2 - l1) * Math.PI / 180;
+            const dLon = (o2 - o1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(l1 * Math.PI / 180) * Math.cos(l2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return isNaN(dist) ? 0.5 : dist;
+        }
+
+        // OTP Pairing Workflow
+        async function initiatePairing(targetUid, targetName) {
+            activeTargetUser = { uid: targetUid, name: targetName };
+            const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+            document.getElementById('modalTitle').textContent = `⚡ Pairing Request to ${targetName}`;
+            document.getElementById('modalDesc').textContent = `Share this 4-digit pairing OTP code with ${targetName}. Once confirmed, secure chat channel unlocks!`;
+            document.getElementById('otpDisplayBox').textContent = otpCode;
+            document.getElementById('otpDisplayBox').style.display = 'block';
+            document.getElementById('otpInputArea').style.display = 'none';
+            document.getElementById('modalConfirmBtn').textContent = 'Confirm Pair & Redirect';
+            document.getElementById('otpModal').style.display = 'flex';
+
+            const pairId = [currentUser.uid, targetUid].sort().join('_');
+            activePairingId = pairId;
+
+            try {
+                await db.collection('radar_pairings').doc(pairId).set({
+                    pairId: pairId,
+                    senderUid: currentUser.uid,
+                    senderName: currentUser.displayName || currentUser.email.split('@')[0],
+                    receiverUid: targetUid,
+                    receiverName: targetName,
+                    otp: otpCode,
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (err) {
+                console.error('[Pairing] Create error:', err);
+            }
+        }
+
+        // Listen for Incoming Requests
+        function listenToPairingRequests() {
+            db.collection('radar_pairings')
+              .where('receiverUid', '==', currentUser.uid)
+              .where('status', '==', 'pending')
+              .onSnapshot(snapshot => {
+                  snapshot.forEach(doc => {
+                      const data = doc.data();
+                      activePairingId = doc.id;
+                      activeTargetUser = { uid: data.senderUid, name: data.senderName };
+
+                      document.getElementById('modalTitle').textContent = `⚡ Incoming Request from ${data.senderName}`;
+                      document.getElementById('modalDesc').textContent = `Enter the 4-digit OTP provided by ${data.senderName} to complete quantum pairing.`;
+                      document.getElementById('otpDisplayBox').style.display = 'none';
+                      document.getElementById('otpInputArea').style.display = 'block';
+                      document.getElementById('modalConfirmBtn').textContent = 'Verify OTP & Chat';
+                      document.getElementById('otpModal').style.display = 'flex';
+                  });
+              });
+        }
+
+        async function confirmOtpPairing() {
+            if (!activePairingId) return;
+
+            const chatId = activePairingId;
+
+            try {
+                await db.collection('radar_pairings').doc(activePairingId).update({
+                    status: 'paired'
+                });
+
+                const targetEmailUsername = activeTargetUser && activeTargetUser.email ? activeTargetUser.email.split('@')[0] : (activeTargetUser && activeTargetUser.name ? (activeTargetUser.name.includes('@') ? activeTargetUser.name.split('@')[0] : activeTargetUser.name) : 'User');
+                const myEmailUsername = currentUser.email ? currentUser.email.split('@')[0] : (currentUser.displayName || 'User');
+
+                // Initialize Quantum Chat Collection
+                await db.collection('quantum_chats').doc(chatId).set({
+                    chatId: chatId,
+                    participants: [currentUser.uid, activeTargetUser.uid],
+                    partnerName: targetEmailUsername,
+                    partnerEmail: (activeTargetUser && activeTargetUser.email) || '',
+                    participantEmails: {
+                        [currentUser.uid]: currentUser.email || '',
+                        [activeTargetUser.uid]: (activeTargetUser && activeTargetUser.email) || ''
+                    },
+                    participantNames: {
+                        [currentUser.uid]: myEmailUsername,
+                        [activeTargetUser.uid]: targetEmailUsername
+                    },
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                // Redirect to Quantum Connect Chat
+                window.location.href = `/quantum_connect?chatId=${chatId}`;
+            } catch (err) {
+                // If target was simulated, redirect directly to chat
+                window.location.href = `/quantum_connect?chatId=${chatId}`;
+            }
+        }
+
+        function closeOtpModal() {
+            document.getElementById('otpModal').style.display = 'none';
+        }
+
+        function toggleSimulatedNodes() {
+            simulatedMode = !simulatedMode;
+            listenToNearbyUsers();
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>

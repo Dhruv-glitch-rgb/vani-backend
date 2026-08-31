@@ -1,7 +1,7 @@
 # Saras_VANI.Chat — Connected AI Chat Rooms
 
 > Platform: VANI-xAI (Vāṇī Adhyātmik Navīn Intellect)  
-> URL: https://vani-nzdrsr.web.app/saras_vani_chat.html
+> URL: https://vani-nzdrsr.web.app/quantum_connect
 
 Real-time multi-device collaborative AI chat room interface.
 

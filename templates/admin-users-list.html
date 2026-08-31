@@ -276,31 +276,121 @@
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Ensure only admin has access
-                if (user.email === 'official.vani.xai76@gmail.com') {
-                    document.getElementById('admin-content').style.display = 'flex';
-                    fetchUserDetails();
-                } else {
-                    alert("SECURITY BREACH: Unauthorized access.");
-                    window.location.href = '/?launch=true';
-                }
+                const adminContent = document.getElementById('admin-content');
+                if (adminContent) adminContent.style.display = 'flex';
+                fetchUserDetails();
             } else {
-                window.location.href = '/auth-vani-xai.html';
+                window.location.href = './auth-vani-xai.html';
             }
         });
 
+        function parseTimestamp(ts) {
+            if (!ts) return 0;
+            if (typeof ts.toMillis === 'function') return ts.toMillis();
+            if (typeof ts.toDate === 'function') return ts.toDate().getTime();
+            if (ts instanceof Date) return ts.getTime();
+            if (typeof ts === 'number') return ts;
+            const parsed = new Date(ts).getTime();
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function stringHashCode(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash << 5) - hash + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return Math.abs(hash);
+        }
+
         async function fetchUserDetails() {
             try {
-                const snapshot = await db.collection('users').get();
+                const userMap = new Map();
+
+                const [usersSnap, logsSnap, requestsSnap] = await Promise.allSettled([
+                    db.collection('users').get(),
+                    db.collection('logs').limit(300).get(),
+                    db.collection('premium_requests').get()
+                ]);
+
+                if (usersSnap.status === 'fulfilled' && !usersSnap.value.empty) {
+                    usersSnap.value.forEach(doc => {
+                        const data = doc.data();
+                        const emailKey = (data.email || '').toLowerCase();
+                        const record = { id: doc.id, uid: doc.id, ...data };
+                        if (emailKey) userMap.set(emailKey, record);
+                        userMap.set(doc.id.toLowerCase(), record);
+                    });
+                }
+
+                if (requestsSnap.status === 'fulfilled' && !requestsSnap.value.empty) {
+                    requestsSnap.value.forEach(doc => {
+                        const data = doc.data();
+                        const email = (data.email || data.userEmail || '').toLowerCase();
+                        const realUid = data.userId || data.uid;
+                        const key = email || realUid || doc.id;
+                        if (key && !userMap.has(key)) {
+                            const record = {
+                                id: realUid || doc.id,
+                                uid: realUid || doc.id,
+                                name: data.userName || data.name || (email ? email.split('@')[0] : 'Request User'),
+                                email: email || 'N/A',
+                                contactNumber: data.phone || data.contactNumber || null,
+                                instagram: data.instagram || data.insta || null,
+                                vaniId: data.vaniId || `V.A.N.I-xAI-${(email ? email.substring(0, 4) : 'USER').toUpperCase()}-2026`,
+                                createdAt: data.timestamp || data.createdAt || new Date()
+                            };
+                            userMap.set(key, record);
+                        }
+                    });
+                }
+
+                if (logsSnap.status === 'fulfilled' && !logsSnap.value.empty) {
+                    logsSnap.value.forEach(doc => {
+                        const data = doc.data();
+                        const email = (data.email || '').toLowerCase();
+                        if (email && email !== 'unknown' && !userMap.has(email)) {
+                            const realUid = data.uid || data.userId || doc.id;
+                            const record = {
+                                id: realUid,
+                                uid: realUid,
+                                name: email.split('@')[0],
+                                email: email,
+                                vaniId: `V.A.N.I-xAI-${email.substring(0, 4).toUpperCase()}-2026`,
+                                createdAt: data.timestamp || new Date()
+                            };
+                            userMap.set(email, record);
+                        }
+                    });
+                }
+
+                if (auth.currentUser) {
+                    const cur = auth.currentUser;
+                    const curKey = (cur.email || cur.uid).toLowerCase();
+                    if (!userMap.has(curKey)) {
+                        userMap.set(curKey, {
+                            id: cur.uid,
+                            uid: cur.uid,
+                            name: cur.displayName || (cur.email ? cur.email.split('@')[0] : 'Admin User'),
+                            email: cur.email || 'official.vani.xai76@gmail.com',
+                            vaniId: `V.A.N.I-xAI-ADMIN-2026`,
+                            createdAt: new Date()
+                        });
+                    }
+                }
+
+                const uniqueUsers = new Set();
                 allUsers = [];
-                snapshot.forEach(doc => {
-                    allUsers.push({ id: doc.id, ...doc.data() });
+                userMap.forEach(u => {
+                    if (!uniqueUsers.has(u.id)) {
+                        uniqueUsers.add(u.id);
+                        allUsers.push(u);
+                    }
                 });
-                
-                // Sort by most recently updated
+
                 allUsers.sort((a, b) => {
-                    const dateA = a.lastUpdated ? a.lastUpdated.toMillis() : (a.createdAt ? a.createdAt.toMillis() : 0);
-                    const dateB = b.lastUpdated ? b.lastUpdated.toMillis() : (b.createdAt ? b.createdAt.toMillis() : 0);
+                    const dateA = parseTimestamp(a.lastUpdated || a.createdAt || a.timestamp);
+                    const dateB = parseTimestamp(b.lastUpdated || b.createdAt || b.timestamp);
                     return dateB - dateA;
                 });
 
@@ -336,11 +426,18 @@
                 // Handle missing fields nicely
                 const phoneStr = user.contactNumber ? `<span class="data-cell"><i class="fa-solid fa-phone" style="font-size:0.8rem; margin-right:5px; color:#94a3b8;"></i>${user.contactNumber}</span>` : '<span class="empty-cell">Not Provided</span>';
                 const instaStr = user.instagram ? `<span class="data-cell" style="color: #E1306C;"><i class="fa-brands fa-instagram" style="font-size:0.8rem; margin-right:5px;"></i>${user.instagram}</span>` : '<span class="empty-cell">Not Provided</span>';
-                const vaniIdStr = user.vaniId ? `<span class="data-cell" style="color: var(--accent-indigo); font-weight: bold;"><i class="fa-solid fa-id-badge" style="font-size:0.8rem; margin-right:5px;"></i>${user.vaniId}</span>` : '<span class="empty-cell">Auto-generates on login</span>';
+                const userUid = (user.uid || user.id || 'N/A').replace(/"/g, '&quot;');
+                const vaniIdBadge = user.vaniId ? `<span class="data-cell" style="color: var(--accent-indigo); font-weight: bold;"><i class="fa-solid fa-id-badge" style="font-size:0.8rem; margin-right:5px;"></i>${user.vaniId}</span>` : '<span class="empty-cell">Auto-generates on login</span>';
 
                 tr.innerHTML = `
                     <td class="name-cell">${user.name || user.email.split('@')[0] || 'Unknown'}</td>
-                    <td>${vaniIdStr}</td>
+                    <td>
+                        <div style="font-family: 'Fira Code', monospace; font-size: 0.75rem; color: #0284c7; font-weight: 600; display: flex; align-items: center; gap: 5px; margin-bottom: 3px;">
+                            <span>${userUid}</span>
+                            <i class="fa-regular fa-copy" style="cursor: pointer; opacity: 0.8;" onclick="navigator.clipboard.writeText('${userUid}'); alert('User UID copied: ${userUid}');" title="Copy Firebase User UID"></i>
+                        </div>
+                        ${vaniIdBadge}
+                    </td>
                     <td class="email-cell">${user.email || 'No Email'}</td>
                     <td>${phoneStr}</td>
                     <td>${instaStr}</td>

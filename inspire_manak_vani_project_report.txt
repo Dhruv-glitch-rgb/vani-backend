@@ -2,8 +2,9 @@
 PROJECT TITLE: V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect
 ======================================================================
 
-SUBMITTED FOR: INSPIRE Awards-MANAK 2026-27
+SUBMITTED FOR: National Children's Science Congress (NCSC) 2026-27
 SUBMITTED BY: Dhruv Sagar
+STUDENT UID: 1001049893
 CLASS: 10th
 SCHOOL: PM SHRI KV NO.1 AFS CHAKERI KANPUR
 CATEGORY: Information Technology / Advanced Software
@@ -11,58 +12,58 @@ CATEGORY: Information Technology / Advanced Software
 ----------------------------------------------------------------------
 1. ABSTRACT / INTRODUCTION
 ----------------------------------------------------------------------
-V.A.N.I-xAI is a next-generation, indigenous Artificial Intelligence ecosystem designed to solve grassroots societal challenges, democratize digital learning, and empower the student community of India. It is a 100% cloud-based, hyper-localized AI gateway built to bridge the technological gap in rural and semi-urban areas.
+V.A.N.I-xAI is a next-generation, indigenous Artificial Intelligence ecosystem designed to solve grassroots societal challenges, democratize digital learning, and empower the student community of India. It is a 100% cloud-based, hyper-localized AI gateway built to bridge the technological gap in rural and semi-urban areas. Every feature is provided 100% free with zero subscriptions and zero paywalls for students.
 
 ----------------------------------------------------------------------
 2. THE PROBLEM STATEMENT
 ----------------------------------------------------------------------
-Rural and semi-urban students in India lack access to high-quality, personalized educational tutoring and technological ideation partners. Existing AI models are expensive, require heavy local processing power, lack socio-cultural context, and do not provide safety guardrails tailored for young Indian students.
+Rural and semi-urban students in India lack access to high-quality, personalized educational tutoring and technological ideation partners. Existing commercial AI models are expensive (charging ₹1,500-₹2,500/month behind recurring subscription paywalls), require heavy local processing power, lack socio-cultural context, and do not provide safety guardrails tailored for young Indian students.
 
 ----------------------------------------------------------------------
 3. THE SOLUTION (HOW IT IS USEFUL)
 ----------------------------------------------------------------------
-V.A.N.I-xAI solves this by offering a lightweight web portal that connects to massive server-side computational power. It utilizes a unique "Asymmetric Sub-User Architecture", allowing students with very basic mobile devices or slow internet to access world-class generative AI without needing expensive hardware. It serves as a digital mentor, specifically programmed to guide students through educational concepts rather than just feeding them answers.
+V.A.N.I-xAI solves this by offering an ultra-lightweight web portal that connects to massive server-side computational power. It utilizes a unique "Asymmetric Sub-User Architecture", allowing students with very basic mobile devices or slow 2G/3G internet to access world-class generative AI without needing expensive hardware. It serves as a digital mentor, specifically programmed to guide students through educational concepts with Socratic scaffolding rather than just feeding them answers. All premium subscription plans have been completely eliminated in favor of a 100% free sovereign model.
 
 ----------------------------------------------------------------------
 4. NOVELTY & TECHNOLOGICAL UNIQUENESS
 ----------------------------------------------------------------------
-* Proprietary Access Control: Unlike standard apps, V.A.N.I-xAI uses mathematically verified Activation Keys. These keys are algorithmic and linked exclusively to a unique user ID (e.g., V.A.N.I-xAI-ADVANCED-DHRU-3478), preventing unauthorized exploitation.
-* Multi-tier Architecture: Dynamically allocates server processing power based on distinct user roles (Free, Starter, Pro, Advanced, Master). This maximizes cloud resource efficiency.
-* InAixVAi Command Center: A custom administrative portal granting educators real-time oversight of resource utilization, subscription management, and complete platform security.
-* Automated Temporal Protocol: A built-in security feature that continuously evaluates timestamps and automatically revokes or downgrades premium access when a plan expires, requiring zero manual maintenance.
+* Proprietary Access Control: Unlike standard apps, V.A.N.I-xAI uses mathematically verified User UIDs. These algorithmic tokens are linked exclusively to verified student identities (e.g., V.A.N.I-xAI-DHRU-3478), securing persistent memory and multi-device workspaces without hardware lock-in.
+* 100% Free Sovereign Architecture: Unlocks all advanced AI features (Voice TTS, Socratic reasoning, multi-device swarm sync, vision analysis) with zero cost and zero subscription barriers.
+* InAixVAi Command Center: A custom administrative portal granting educators real-time oversight of resource utilization, student queries, classroom sessions, and platform security.
+* Autonomous Session & Memory Protocol: A built-in self-healing feature that continuously manages persistent SQLite memory (`vani_memory.db`), cross-device clipboard sync, and dynamic server load balancing with zero human maintenance.
 
 ----------------------------------------------------------------------
 5. SOCIAL & ENVIRONMENTAL IMPACT
 ----------------------------------------------------------------------
-* Democratizing Education: Brings personalized, advanced digital tutoring to Tier-2 and Tier-3 cities.
+* Democratizing Education: Brings personalized, advanced digital tutoring to Tier-2 and Tier-3 cities with zero financial cost to families.
 * 100% Zero E-Waste: Being a fully cloud-based software innovation, V.A.N.I-xAI requires zero physical manufacturing materials, eliminating e-waste and plastic usage entirely.
-* Economic Scalability: The ₹10,000 DBT fund provided by DST will be efficiently utilized strictly for cloud-server scaling and API optimization, instantly reaching thousands of local students.
+* Economic Scalability: The system utilizes serverless cloud optimization, instantly reaching thousands of local students across schools without charging a single rupee.
 
 ----------------------------------------------------------------------
 6. WHY SELECT V.A.N.I-xAI? (COMPETITIVE ADVANTAGE)
 ----------------------------------------------------------------------
 * True Grassroots Applicability: Engineered specifically for the Indian student community, focusing on mentorship and educational scaffolding rather than just providing shortcuts.
-* Complete Originality & Novelty: Features a completely original, hand-coded algorithmic Activation Key system and an asymmetric scaling architecture designed from scratch.
-* Perfect Alignment with MANAK: V.A.N.I-xAI is 100% zero e-waste, completely paperless, highly cost-efficient, and democratizes cutting-edge technology for Tier-3 cities.
-* Ready-to-Scale Prototype: Not just a theoretical idea, but a fully functional, cloud-deployed platform. The ₹10,000 DBT fund will instantly scale this working prototype to support thousands of concurrent students across the state.
+* Complete Originality & Novelty: Features a completely original, hand-coded algorithmic UID system, autonomous multi-agent loops, and an asymmetric scaling architecture designed from scratch.
+* Perfect Alignment with NCSC: V.A.N.I-xAI is 100% zero e-waste, completely paperless, highly cost-efficient, 100% free to access, and democratizes cutting-edge technology for Tier-3 cities.
+* Ready-to-Scale Prototype: Not just a theoretical idea, but a fully functional, cloud-deployed platform ready to support thousands of concurrent students across the state.
 
 ----------------------------------------------------------------------
 7. STEP-BY-STEP USER WORKFLOW (HOW TO USE)
 ----------------------------------------------------------------------
 STEP 1 - Secure Authentication:
-Students navigate to the login portal and authenticate securely using their Google Account. The system algorithmically generates their unique V.A.N.I-xAI ID.
+Students navigate to the login portal and authenticate securely using their Google Account. The system algorithmically generates their unique permanent V.A.N.I-xAI UID.
 
-STEP 2 - Upgrading via UPI:
-The student submits a Premium access request via the integrated UPI portal. The Admin reviews the request from the "InAixVAi" command center and generates a secure, single-use Activation Key.
+STEP 2 - Instant Sovereign Launch:
+The student launches the Generative AI Workspace immediately with 100% unlocked features, zero subscription friction, zero fees, and unlimited educational access.
 
-STEP 3 - Activating Premium:
-The student pastes the Activation Key into the secure Activation Portal. The system verifies the cryptographic match and instantly upgrades their computational tier.
+STEP 3 - Security & Multi-Device Swarm Sync:
+The system binds the student UID with secure session tokens, enabling encrypted persistent memory and instant cross-device clipboard & task synchronization.
 
-STEP 4 - Interacting with the AI:
-The student enters the Generative AI Workspace, typing queries into the prompt box. The socio-contextual AI guides them through educational problems step-by-step.
+STEP 4 - Interacting with Socratic AI:
+The student enters queries into the prompt box or uses the BoV Multimodal Voice Hub. The socio-contextual AI guides them through educational problems step-by-step with hints and reasoning.
 
-STEP 5 - Automated Expiry:
-When the allotted timeframe expires, the system's Automated Temporal Protocol seamlessly downgrades the user's capabilities back to the Free tier until a new key is activated.
+STEP 5 - Continuous Memory & Adaptive Mastery:
+The autonomous SQLite memory engine continuously records learning milestones, voice sessions, and concept mastery for lifelong student growth.
 
 ----------------------------------------------------------------------
 8. DEEP DIVE: SYSTEM ARCHITECTURE & COMPONENTS
@@ -72,21 +73,17 @@ The core of the platform is an advanced API-driven generative model customized f
 
 B. InAixVAi Admin Command Center:
 A highly secure dashboard exclusively for administrators and educators. From here, the admin can:
-- View a real-time list of all authenticated sub-users.
-- Track precise subscription expiry dates and plan tiers for each user.
-- Dynamically generate mathematical Activation Keys for users who request upgrades via UPI.
-- Instantly revoke access or copy keys for manual distribution.
+- View a real-time list of all authenticated sub-users and active classroom sessions.
+- Monitor query loads, token usage, and system health in real-time.
+- Safeguard student data with sandbox isolation and fast PIN authentication.
+- Dynamically manage classroom access and student learning analytics.
 
-C. Mathematical V.A.N.I-xAI ID Generation:
-Upon their first Google login, users do not just get a standard username. The system algorithmically generates a unique "V.A.N.I-xAI ID" (e.g., V.A.N.I-xAI-JOHN-4921) using their authentication credentials and a randomized numeric sequence. This ID is then permanently bound to their account and used for all cryptographic key verifications.
+C. Mathematical V.A.N.I-xAI UID Generation:
+Upon their first Google login, users do not just get a standard username. The system algorithmically generates a unique "V.A.N.I-xAI UID" (e.g., V.A.N.I-xAI-DHRU-3478) using their authentication credentials and randomized numeric sequences. This UID is permanently bound to their account and used for all memory and swarm synchronization.
 
-D. Cryptographic Activation Keys:
-To prevent unauthorized sharing of premium access, Activation Keys are generated specifically for a single user's ID and plan. When a key is entered on the Activation Portal, the system performs a strict 3-layer check:
-1. Does the key exist in the database?
-2. Is the key marked as 'Unused'?
-3. Does the key's assigned User UID perfectly match the person trying to use it?
-If any check fails, access is denied. Once used, the key is permanently burned.
+D. BoV Multimodal Voice Agent:
+Integrated voice synthesizer (`voice_agent.py`) converting written solutions to spoken words, enabling auditory learners and visually impaired students to engage effortlessly.
 
-E. The Temporal Downgrade Protocol (Self-Healing):
-The system utilizes a temporal security feature. If a student is on a 'Starter' 1-month plan, exactly one month from activation, the protocol triggers and automatically downgrades the student back to the 'Free' tier. It requires no human intervention, ensuring server resources are never wasted.
+E. Autonomous Memory & Multi-Agent Loops:
+`vani_memory.db` powers persistent context retention, `agentic_loop.py` handles vision-guided screen assistance, and `autonomous_agent.py` oversees background power and scheduling optimization.
 ======================================================================

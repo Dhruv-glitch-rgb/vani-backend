@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V.A.N.I-xAI (BoVxAi) | National Children's Science Congress (NCSC) Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --bg-canvas: #f1f5f9;
+    --slide-bg: #ffffff;
+    --navy-primary: #0f2744;
+    --royal-blue: #1d4ed8;
+    --sky-blue: #0284c7;
+    --cyan-accent: #06b6d4;
+    --emerald: #059669;
+    --emerald-light: #ecfdf5;
+    --gold: #d97706;
+    --gold-light: #fef3c7;
+    --purple: #7c3aed;
+    --purple-light: #f5f3ff;
+    --rose: #e11d48;
+    --rose-light: #fff1f2;
+    --slate-dark: #0f172a;
+    --slate-body: #334155;
+    --slate-muted: #64748b;
+    --card-border: #e2e8f0;
+    --card-bg-soft: #f8fafc;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    background: #0f172a;
+    font-family: 'Outfit', sans-serif;
+    color: var(--slate-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Presentation Top Header Toolbar */
+  .pres-header {
+    background: #1e293b;
+    color: #ffffff;
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+    z-index: 100;
+  }
+
+  .pres-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .pres-title img {
+    height: 32px;
+    width: 32px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #ffffff;
+    padding: 2px;
+  }
+
+  .pres-title-text h1 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: 0.5px;
+  }
+
+  .pres-title-text p {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+
+  .pres-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pres-btn {
+    background: #334155;
+    color: #ffffff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .pres-btn:hover {
+    background: #475569;
+    transform: translateY(-1px);
+  }
+
+  .pres-btn.btn-gold {
+    background: linear-gradient(135deg, #d97706, #f59e0b);
+    color: #ffffff;
+  }
+
+  .pres-btn.btn-blue {
+    background: linear-gradient(135deg, #1d4ed8, #0284c7);
+    color: #ffffff;
+  }
+
+  /* Main Slide Stage */
+  .stage-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+  }
+
+  /* 16:9 Slide Canvas */
+  .slide-viewport {
+    width: 1200px;
+    height: 675px;
+    background: var(--slide-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 34px 20px 34px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Slide Background Decor */
+  .slide-mesh-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 95% 5%, rgba(2, 132, 199, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 5% 95%, rgba(5, 150, 105, 0.04) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .slide-content-wrap {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Slide Header */
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .header-left {
+    flex: 1;
+  }
+
+  .category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+
+  .pill-blue { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+  .pill-green { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+  .pill-gold { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+  .pill-purple { background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+  .pill-red { background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; }
+
+  .slide-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 27px;
+    font-weight: 800;
+    color: var(--navy-primary);
+    line-height: 1.15;
+    letter-spacing: 0.5px;
+  }
+
+  .slide-subtitle {
+    font-size: 12.5px;
+    color: var(--slate-muted);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ncsc-tag {
+    background: #fffbeb;
+    border: 1px solid var(--gold-light);
+    color: #92400e;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .bov-logo-mini {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+  }
+
+  /* Slide Body Content */
+  .slide-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Slide Footer */
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 11px;
+    color: var(--slate-muted);
+  }
+
+  .footer-project-id {
+    font-weight: 600;
+    color: var(--royal-blue);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .footer-counter {
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-family: monospace;
+    color: var(--slate-dark);
+  }
+
+  /* Grids & Cards */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+
+  .light-card {
+    background: #ffffff;
+    border: 1.5px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(15, 39, 68, 0.03);
+    transition: all 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .light-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 39, 68, 0.07);
+  }
+
+  .card-accent-blue { border-top: 3.5px solid var(--royal-blue); }
+  .card-accent-green { border-top: 3.5px solid var(--emerald); }
+  .card-accent-gold { border-top: 3.5px solid var(--gold); }
+  .card-accent-purple { border-top: 3.5px solid var(--purple); }
+  .card-accent-red { border-top: 3.5px solid var(--rose); }
+
+  .card-icon-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .icon-blue { background: #eff6ff; color: var(--royal-blue); }
+  .icon-green { background: #ecfdf5; color: var(--emerald); }
+  .icon-gold { background: #fffbeb; color: var(--gold); }
+  .icon-purple { background: #faf5ff; color: var(--purple); }
+  .icon-red { background: #fff1f2; color: var(--rose); }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy-primary);
+    margin-bottom: 6px;
+  }
+
+  .card-desc {
+    font-size: 11.5px;
+    color: var(--slate-body);
+    line-height: 1.45;
+  }
+
+  .card-list {
+    list-style: none;
+    margin-top: 6px;
+  }
+
+  .card-list li {
+    font-size: 11px;
+    color: var(--slate-body);
+    margin-bottom: 5px;
+    position: relative;
+    padding-left: 14px;
+    line-height: 1.35;
+  }
+
+  .card-list li::before {
+    content: "•";
+    color: var(--royal-blue);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+  }
+
+  /* Hero Title Slide 1 Styling */
+  .hero-slide {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  .hero-top-banner {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 50%, #eff6ff 100%);
+    border: 1.5px solid #cbd5e1;
+    border-top: 4px solid var(--royal-blue);
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 6px 20px rgba(15, 39, 68, 0.05);
+  }
+
+  .hero-left-content {
+    flex: 1;
+  }
+
+  .hero-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fffbeb;
+    border: 1px solid var(--gold-border);
+    padding: 4px 14px;
+    border-radius: 20px;
+    color: #92400e;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .hero-main-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--navy-primary);
+    line-height: 1.1;
+    letter-spacing: 1.5px;
+  }
+
+  .hero-main-title span {
+    background: linear-gradient(135deg, #1d4ed8, #0284c7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-expansion {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--emerald);
+    letter-spacing: 1.5px;
+    margin: 2px 0 6px 0;
+  }
+
+  .hero-tagline {
+    font-size: 12px;
+    color: var(--slate-body);
+    font-weight: 500;
+    max-width: 90%;
+  }
+
+  .hero-logo-box {
+    width: 105px;
+    height: 105px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1.5px solid var(--gold-border);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 6px;
+  }
+
+  .hero-logo-box img {
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+  }
+
+  .hero-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  /* Table Design for Benchmark */
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+  }
+
+  .custom-table th {
+    background: #0f2744;
+    color: #ffffff;
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.5px;
+  }
+
+  .custom-table th:last-child {
+    background: #059669;
+  }
+
+  .custom-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--slate-body);
+  }
+
+  .custom-table tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+
+  .custom-table tr td:last-child {
+    background: #f0fdf4 !important;
+    font-weight: 700;
+    color: #065f46;
+  }
+
+  .custom-table tr td:first-child {
+    font-weight: 700;
+    color: var(--slate-dark);
+  }
+
+  /* Step Flow Component */
+  .step-flow-card {
+    background: #ffffff;
+    border: 1.5px solid var(--card-border);
+    border-radius: 10px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+  }
+
+  .step-num-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* Bottom Controls Carousel Bar */
+  .pres-carousel-bar {
+    background: #1e293b;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #334155;
+    z-index: 100;
+  }
+
+  .nav-btn-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .nav-arrow-btn {
+    background: #334155;
+    color: #ffffff;
+    border: 1px solid #475569;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+
+  .nav-arrow-btn:hover:not(:disabled) {
+    background: #0284c7;
+    border-color: #0284c7;
+  }
+
+  .nav-arrow-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .thumbnails-scroller {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 2px;
+    max-width: 65%;
+  }
+
+  .thumb-pill {
+    background: #334155;
+    color: #94a3b8;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .thumb-pill.active {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #38bdf8;
+  }
+
+  .thumb-pill:hover:not(.active) {
+    background: #475569;
+    color: #f8fafc;
+  }
+
+  /* Presenter Notes Modal / Bar */
+  .notes-pane {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 10px 24px;
+    font-size: 12px;
+    border-top: 1px solid #1e293b;
+    display: none;
+  }
+
+  .notes-pane.show {
+    display: block;
+  }
+
+  .notes-pane strong {
+    color: #f59e0b;
+  }
+
+  /* Print Styles for PPT Deck */
+  @media print {
+    body {
+      background: none !important;
+      overflow: visible !important;
+    }
+    .pres-header, .pres-carousel-bar, .notes-pane {
+      display: none !important;
+    }
+    .stage-container {
+      padding: 0 !important;
+      display: block !important;
+    }
+    .slide-viewport {
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      width: 100% !important;
+      height: 100vh !important;
+      page-break-after: always;
+      page-break-inside: avoid;
+    }
+    .slide-wrapper {
+      display: block !important;
+      margin-bottom: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="pres-header">
+    <div class="pres-title">
+      <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" alt="BoVxAi" onerror="this.src='svg.png'">
+      <div class="pres-title-text">
+        <h1>V.A.N.I-xAI &bull; Bureau Of V.A.N.I-xAI (BoVxAi)</h1>
+        <p>National Children's Science Congress (NCSC) 2026-27 | Light UI Presentation Deck</p>
+      </div>
+    </div>
+    <div class="pres-controls">
+      <button class="pres-btn" onclick="togglePresenterNotes()">
+        <i class="fa-solid fa-note-sticky"></i> Notes
+      </button>
+      <button class="pres-btn" onclick="toggleFullScreen()">
+        <i class="fa-solid fa-expand"></i> Fullscreen
+      </button>
+      <button class="pres-btn btn-blue" onclick="window.print()">
+        <i class="fa-solid fa-print"></i> Print / PDF
+      </button>
+      <a class="pres-btn btn-gold" href="front_page.html" target="_blank">
+        <i class="fa-solid fa-file-invoice"></i> View Front Page
+      </a>
+    </div>
+  </header>
+
+  <!-- Slide Stage -->
+  <main class="stage-container">
+    
+    <div class="slide-viewport" id="slideViewport">
+      <div class="slide-mesh-bg"></div>
+      
+      <!-- Slide Container (Active Slide Injected by JS) -->
+      <div class="slide-content-wrap" id="slideTarget">
+        <!-- Slide 1 will be loaded here -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Presenter Notes Pane -->
+  <div class="notes-pane" id="notesPane">
+    <strong>💡 Speaker / Jury Notes:</strong> <span id="notesContent">Loading notes...</span>
+  </div>
+
+  <!-- Bottom Navigation & Thumbnails Bar -->
+  <footer class="pres-carousel-bar">
+    <div class="nav-btn-group">
+      <button class="nav-arrow-btn" id="prevBtn" onclick="prevSlide()">
+        <i class="fa-solid fa-chevron-left"></i> Prev
+      </button>
+      <button class="nav-arrow-btn" id="nextBtn" onclick="nextSlide()">
+        Next <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Slide Thumbnails -->
+    <div class="thumbnails-scroller" id="thumbnailsScroller">
+      <!-- Generated via JS -->
+    </div>
+
+    <div style="color:#94a3b8; font-size:12px; font-weight:600;">
+      Slide <span id="slideCurrentNum" style="color:#ffffff;">1</span> of <span id="slideTotalNum">12</span>
+    </div>
+  </footer>
+
+  <script>
+    const slidesData = [
+      // -------------------------------------------------------------
+      // SLIDE 1: Title & Hero Showcase
+      // -------------------------------------------------------------
+      {
+        id: 1,
+        title: "Title & Executive Summary",
+        notes: "Introduce yourself as Dhruv Sagar, Class 10th from PM SHRI KV No. 1 AFS Chakeri Kanpur. State that V.A.N.I-xAI is a flagship project of the Bureau Of V.A.N.I-xAI (BoVxAi) created to democratize AI tutoring for all Indian students with zero subscriptions and zero e-waste.",
+        html: `
+          <div class="hero-slide">
+            <!-- Hero Top Banner -->
+            <div class="hero-top-banner">
+              <div class="hero-left-content">
+                <div class="hero-pill-badge">
+                  <i class="fa-solid fa-flask-vial"></i> NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27
+                </div>
+                <div class="hero-main-title">
+                  V.A.N.I - <span>xAI</span>
+                </div>
+                <div class="hero-expansion">VĀṆĪ ADHYĀTMIK NAVĪN INTELLECT</div>
+                <div class="hero-tagline">
+                  A Flagship Sovereign Innovation under the <strong>Bureau Of V.A.N.I-xAI (BoVxAi)</strong> &bull; Next-Gen 100% Free AI Tutoring, Multimodal Socratic Mentorship & Autonomous Learning for Bharat.
+                </div>
+              </div>
+              <div class="hero-logo-box">
+                <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" alt="BoVxAi Seal" onerror="this.src='svg.png'">
+              </div>
+            </div>
+
+            <!-- Two Light Cards Below -->
+            <div class="hero-bottom-grid">
+              <div class="light-card card-accent-blue">
+                <div class="card-title" style="display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-user-graduate" style="color:var(--royal-blue);"></i> Innovator & Institution
+                </div>
+                <ul class="card-list">
+                  <li><strong>Innovator:</strong> Dhruv Sagar (Class 10th)</li>
+                  <li><strong>Institution:</strong> PM SHRI KV No. 1 AFS Chakeri, Kanpur (UP)</li>
+                  <li><strong>Student UID:</strong> <code style="font-family:monospace; color:var(--royal-blue); font-weight:800;">1001049893</code></li>
+                </ul>
+              </div>
+
+              <div class="light-card card-accent-green">
+                <div class="card-title" style="display:flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-bullseye" style="color:var(--emerald);"></i> Core Innovation Pillars
+                </div>
+                <ul class="card-list">
+                  <li><strong>100% Free Sovereign Access:</strong> Zero subscriptions, zero paywalls.</li>
+                  <li><strong>Asymmetric Sub-User Architecture:</strong> &lt;50KB client load on 2G/3G.</li>
+                  <li><strong>Socratic Mentorship:</strong> Guided concept scaffolding, not a cheat engine.</li>
+                  <li><strong>100% Zero E-Waste:</strong> Software-driven sustainability model.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="slide-footer">
+              <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Bureau Of V.A.N.I-xAI &bull; Atmanirbhar Bharat AI</div>
+              <div class="footer-counter">01 / 12</div>
+            </div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 2: Innovator & Institutional Profile
+      // -------------------------------------------------------------
+      {
+        id: 2,
+        title: "Innovator & Organization Profile",
+        notes: "Explain the institutional backing from PM SHRI Kendriya Vidyalaya No. 1 AFS Chakeri Kanpur and the research vision of the Bureau Of V.A.N.I-xAI (BoVxAi).",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-blue"><i class="fa-solid fa-building-columns"></i> Institutional Profile</span>
+              <div class="slide-title">Innovator & Bureau Of V.A.N.I-xAI (BoVxAi)</div>
+              <div class="slide-subtitle">Grassroots technological leadership from PM SHRI KV No. 1 AFS Chakeri, Kanpur</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-3">
+              <div class="light-card card-accent-blue">
+                <div class="card-icon-wrap icon-blue"><i class="fa-solid fa-user-astronaut"></i></div>
+                <div class="card-title">The Student Innovator</div>
+                <div class="card-desc">
+                  <strong>Dhruv Sagar</strong><br>
+                  Class 10th student with deep specialization in Applied Machine Learning, Full-Stack Architecture, and Asymmetric Cloud Systems. Built V.A.N.I-xAI from scratch to solve educational inequality.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-green">
+                <div class="card-icon-wrap icon-green"><i class="fa-solid fa-school"></i></div>
+                <div class="card-title">PM SHRI KV No. 1 Chakeri</div>
+                <div class="card-desc">
+                  Selected under the Government of India's prestigious <strong>PM SHRI Scheme</strong> for exemplary educational standards. Fosters student research in science, robotics, and societal technology.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-icon-wrap icon-gold"><i class="fa-solid fa-shield"></i></div>
+                <div class="card-title">Bureau Of V.A.N.I-xAI</div>
+                <div class="card-desc">
+                  <strong>BoVxAi</strong> is the parent innovation cell dedicated to engineering sovereign, accessible AI algorithms. VANI AI serves as its primary educational deployment for Indian classrooms.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Bureau Of V.A.N.I-xAI &bull; Innovator Dossier</div>
+            <div class="footer-counter">02 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 3: Grassroots Problem Identification
+      // -------------------------------------------------------------
+      {
+        id: 3,
+        title: "Grassroots Problem Identification",
+        notes: "Emphasize why foreign commercial AI models fail 90% of Indian students due to recurring ₹2,000/mo paywalls, heavy phone RAM requirements, and direct cheat answers.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-red"><i class="fa-solid fa-triangle-exclamation"></i> Problem Statement</span>
+              <div class="slide-title">The Digital & Pedagogical Divide in India</div>
+              <div class="slide-subtitle">Why commercial AI platforms fail 250M+ grassroots school students across Bharat</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="light-card card-accent-red">
+                <div class="card-icon-wrap icon-red"><i class="fa-solid fa-credit-card"></i></div>
+                <div class="card-title">1. Severe Paywalls & Exclusivity</div>
+                <div class="card-desc">
+                  Commercial AI tools (ChatGPT Plus, Claude Pro) mandate recurring subscriptions of <strong>₹1,500 – ₹2,500/month</strong> and require international credit cards. This locks out millions of talented rural students.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-icon-wrap icon-gold"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <div class="card-title">2. Hardware & Bandwidth Barriers</div>
+                <div class="card-desc">
+                  Modern AI applications require heavy GPU RAM, modern flagship smartphones, and high-speed broadband. Underprivileged students using <strong>₹5,000 budget phones and 2G/3G</strong> suffer crashes.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-purple">
+                <div class="card-icon-wrap icon-purple"><i class="fa-solid fa-brain"></i></div>
+                <div class="card-title">3. The "Cheat-Engine" Pedagogical Flaw</div>
+                <div class="card-desc">
+                  Mainstream LLMs generate direct homework answers instantly. This encourages copy-pasting and cognitive laziness rather than critical thinking, problem-solving, and concept mastery.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-blue">
+                <div class="card-icon-wrap icon-blue"><i class="fa-solid fa-language"></i></div>
+                <div class="card-title">4. Lack of Vernacular & Safe Guardrails</div>
+                <div class="card-desc">
+                  Foreign AI platforms lack alignment with Indian NCERT/CBSE curricula, vernacular voice support for Hindi/regional dialects, and safety guardrails tailored for young school children.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Problem Identification & Field Reality</div>
+            <div class="footer-counter">03 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 4: The Proposed Innovation
+      // -------------------------------------------------------------
+      {
+        id: 4,
+        title: "The Proposed Innovation",
+        notes: "Explain the four transformative solution pillars of V.A.N.I-xAI: Asymmetric client, Socratic pedagogy, Multimodal Voice, and 100% Free Sovereign model.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-green"><i class="fa-solid fa-lightbulb"></i> Proposed Solution</span>
+              <div class="slide-title">V.A.N.I-xAI: Sovereign AI Mentor for Bharat</div>
+              <div class="slide-subtitle">Democratizing cloud intelligence through indigenous asymmetric architecture</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-4">
+              <div class="light-card card-accent-blue">
+                <div class="card-icon-wrap icon-blue"><i class="fa-solid fa-bolt"></i></div>
+                <div class="card-title">&lt;50KB Client Core</div>
+                <div class="card-desc">
+                  99% of compute is offloaded to cloud servers. Web client loads in sub-seconds even on legacy ₹5,000 mobile phones and slow 2G/3G connections.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-green">
+                <div class="card-icon-wrap icon-green"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div class="card-title">Socratic Mentorship</div>
+                <div class="card-desc">
+                  Never gives direct answers. Instead, it guides students step-by-step with interactive hints, Socratic questions, and concept breakdowns.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-purple">
+                <div class="card-icon-wrap icon-purple"><i class="fa-solid fa-microphone-lines"></i></div>
+                <div class="card-title">BoV Multimodal Voice</div>
+                <div class="card-desc">
+                  Integrated voice synthesis (<code>voice_agent.py</code>) enabling real-time auditory tutoring for auditory learners and visually challenged students.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-icon-wrap icon-gold"><i class="fa-solid fa-lock-open"></i></div>
+                <div class="card-title">100% Free Sovereign</div>
+                <div class="card-desc">
+                  Completely eliminated all paywalls, premium plans, and credit card friction. Permanently free for all Indian students and teachers.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Solution Architecture & Innovation Blueprint</div>
+            <div class="footer-counter">04 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 5: Bureau of V.A.N.I-xAI (BoVxAi) & Scientific Novelty
+      // -------------------------------------------------------------
+      {
+        id: 5,
+        title: "Scientific Novelty & BoVxAi IP",
+        notes: "Detail the 4 handcrafted algorithmic components: Mathematical UID generation, 3-layer authorization, InAixVAi dashboard, and autonomous self-healing memory.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-gold"><i class="fa-solid fa-atom"></i> Scientific Novelty</span>
+              <div class="slide-title">Bureau Of V.A.N.I-xAI (BoVxAi) Novel IP</div>
+              <div class="slide-subtitle">Handcrafted algorithmic systems engineered from scratch for the V.A.N.I ecosystem</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-4">
+              <div class="light-card card-accent-blue">
+                <div class="card-title" style="color:var(--royal-blue);">1. Mathematical UID</div>
+                <div class="card-desc">
+                  Algorithmically generates permanent tokens (e.g. <code>V.A.N.I-xAI-DHRU-3478</code>) binding persistent memory and multi-device sessions without hardware lock-in.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-green">
+                <div class="card-title" style="color:var(--emerald);">2. 3-Layer Security</div>
+                <div class="card-desc">
+                  Proprietary algorithmic authorization validated against: (1) DB check, (2) Active student token verification, and (3) UID sandbox isolation.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-title" style="color:var(--gold);">3. InAixVAi Dashboard</div>
+                <div class="card-desc">
+                  A bespoke educator/admin dashboard granting real-time classroom telemetry, query load oversight, token analytics, and sandbox security controls.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-purple">
+                <div class="card-title" style="color:var(--purple);">4. Autonomous Memory</div>
+                <div class="card-desc">
+                  Self-healing background engine managing cross-device sync, SQLite memory (<code>vani_memory.db</code>), and server load balancing with zero human maintenance.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Bureau Of V.A.N.I-xAI &bull; Algorithmic IP</div>
+            <div class="footer-counter">05 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 6: Multi-Agent Intelligence & Code Modules
+      // -------------------------------------------------------------
+      {
+        id: 6,
+        title: "Multi-Agent Intelligence Modules",
+        notes: "Explain the backend architecture in your repo: llm_router.py, voice_agent.py, agentic_loop.py, and autonomous_agent.py.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-purple"><i class="fa-solid fa-network-wired"></i> System Architecture</span>
+              <div class="slide-title">Multi-Agent Intelligence & Backend Modules</div>
+              <div class="slide-subtitle">State-of-the-art intelligent engines integrated in the local & cloud backend</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="light-card card-accent-blue">
+                <div class="card-icon-wrap icon-blue"><i class="fa-solid fa-route"></i></div>
+                <div class="card-title">LLM Router & SQLite Memory (<code>llm_router.py</code>)</div>
+                <div class="card-desc">
+                  Dynamic multi-model fallback across vision and text models. Powered by <code>vani_memory.db</code> for persistent contextual retention and lightning-fast semantic search.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-green">
+                <div class="card-icon-wrap icon-green"><i class="fa-solid fa-headset"></i></div>
+                <div class="card-title">Multimodal Voice Hub (<code>voice_agent.py</code>)</div>
+                <div class="card-desc">
+                  Integrates edge TTS to convert scientific derivations, diagrams, and guided explanations into crystal-clear speech for inclusive hands-free learning.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-icon-wrap icon-gold"><i class="fa-solid fa-robot"></i></div>
+                <div class="card-title">Vision-Guided Agentic Loop (<code>agentic_loop.py</code>)</div>
+                <div class="card-desc">
+                  Performs visual reasoning on user screen states, formulas, and diagrams, converting V.A.N.I into an interactive digital lab assistant.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-purple">
+                <div class="card-icon-wrap icon-purple"><i class="fa-solid fa-gauge-high"></i></div>
+                <div class="card-title">Proactive System Agent (<code>autonomous_agent.py</code>)</div>
+                <div class="card-desc">
+                  Monitors system battery status, initiates eco-friendly power optimization, and schedules automated learning reminders for students.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Applied AI & Multi-Agent Modules</div>
+            <div class="footer-counter">06 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 7: 5-Step Operational Pipeline & User Journey
+      // -------------------------------------------------------------
+      {
+        id: 7,
+        title: "5-Step Operational Workflow",
+        notes: "Walk through the frictionless 5-step journey from Google login to Socratic learning and persistent mastery.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-blue"><i class="fa-solid fa-diagram-project"></i> Operational Flow</span>
+              <div class="slide-title">5-Step Zero-Friction Operational Pipeline</div>
+              <div class="slide-subtitle">Instant onboarding with mathematical security and lifelong learning sync</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-5">
+              <div class="step-flow-card">
+                <span class="step-num-badge pill-blue">Step 01</span>
+                <div class="card-title">Auth & UID Gen</div>
+                <div class="card-desc">Student signs in securely via Google OAuth. System computes and assigns permanent UID.</div>
+              </div>
+
+              <div class="step-flow-card">
+                <span class="step-num-badge pill-green">Step 02</span>
+                <div class="card-title">Instant Launch</div>
+                <div class="card-desc">Launches workspace with 100% unlocked features, zero fees, zero subscription friction.</div>
+              </div>
+
+              <div class="step-flow-card">
+                <span class="step-num-badge pill-gold">Step 03</span>
+                <div class="card-title">Swarm Sync</div>
+                <div class="card-desc">Binds UID to encrypted session tokens, enabling cross-device sync & persistent state.</div>
+              </div>
+
+              <div class="step-flow-card">
+                <span class="step-num-badge pill-purple">Step 04</span>
+                <div class="card-title">Socratic Tutoring</div>
+                <div class="card-desc">Queries route through LLM router, memory DB, and Socratic scaffolding filters.</div>
+              </div>
+
+              <div class="step-flow-card">
+                <span class="step-num-badge pill-blue">Step 05</span>
+                <div class="card-title">Lifelong Memory</div>
+                <div class="card-desc">Autonomous memory engine records learning milestones for continuous concept mastery.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Operational Architecture & Data Pipeline</div>
+            <div class="footer-counter">07 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 8: Comparative Benchmarking Matrix
+      // -------------------------------------------------------------
+      {
+        id: 8,
+        title: "Comparative Benchmarking",
+        notes: "Present the comparative matrix showing how V.A.N.I-xAI outperforms commercial AI and EdTech platforms in affordability, accessibility, and pedagogical rigor.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-gold"><i class="fa-solid fa-scale-balanced"></i> Benchmarking</span>
+              <div class="slide-title">V.A.N.I-xAI vs Conventional Platforms</div>
+              <div class="slide-subtitle">Engineered specifically for maximum grassroots accessibility and pedagogical integrity</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Evaluation Metric</th>
+                  <th>Commercial AI (ChatGPT/Claude)</th>
+                  <th>Traditional EdTech Portals</th>
+                  <th>V.A.N.I - xAI (BoVxAi Innovation)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cost for Students</td>
+                  <td>₹1,500 – ₹2,500 / month</td>
+                  <td>₹5,000 – ₹25,000 / year</td>
+                  <td>100% Free Lifetime (Zero Paywalls)</td>
+                </tr>
+                <tr>
+                  <td>Hardware / Device Barrier</td>
+                  <td>Requires modern smartphone RAM</td>
+                  <td>Heavy 100MB+ app download</td>
+                  <td>Runs in any browser (&lt;50KB payload)</td>
+                </tr>
+                <tr>
+                  <td>Pedagogical Approach</td>
+                  <td>Direct answer output (cheat risk)</td>
+                  <td>Static pre-recorded videos</td>
+                  <td>Socratic Guidance & Concept Scaffolding</td>
+                </tr>
+                <tr>
+                  <td>Payment & Credit Barrier</td>
+                  <td>Mandates International Cards</td>
+                  <td>Closed recurring subscriptions</td>
+                  <td>Zero Paywalls / Instant Free Access</td>
+                </tr>
+                <tr>
+                  <td>Zero E-Waste & Ecology</td>
+                  <td>Heavy local battery & GPU drain</td>
+                  <td>Proprietary locked tablet devices</td>
+                  <td>100% Cloud-Native (Zero E-Waste)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Comparative Matrix & Competitive Edge</div>
+            <div class="footer-counter">08 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 9: Zero E-Waste & Environmental Sustainability
+      // -------------------------------------------------------------
+      {
+        id: 9,
+        title: "Zero E-Waste & Ecology",
+        notes: "Highlight the environmental benefits of 100% software-native innovation: zero toxic hardware, zero lithium battery waste, and low carbon footprint.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-green"><i class="fa-solid fa-leaf"></i> Environmental Sustainability</span>
+              <div class="slide-title">100% Zero E-Waste & Eco-Friendly Architecture</div>
+              <div class="slide-subtitle">A sustainable software innovation aligned with National Green Missions</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-3">
+              <div class="light-card card-accent-green">
+                <div class="card-icon-wrap icon-green"><i class="fa-solid fa-recycle"></i></div>
+                <div class="card-title">Zero Physical Manufacturing</div>
+                <div class="card-desc">
+                  Requires zero plastic injection molding, toxic lithium batteries, or PCB scrap. Completely eliminates electronic waste at the manufacturing root.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-blue">
+                <div class="card-icon-wrap icon-blue"><i class="fa-solid fa-mobile-retro"></i></div>
+                <div class="card-title">Extends Old Hardware Lifespan</div>
+                <div class="card-desc">
+                  Breathes new life into existing school computer labs and parents' low-cost old smartphones, preventing premature hardware disposal.
+                </div>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-icon-wrap icon-gold"><i class="fa-solid fa-file-excel"></i></div>
+                <div class="card-title">100% Paperless Ecosystem</div>
+                <div class="card-desc">
+                  Eliminates physical question banks, printed worksheets, and test guides through dynamic cloud mentoring and digital session memory.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Zero E-Waste & Green Software Model</div>
+            <div class="footer-counter">09 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 10: Societal Impact & DST ₹10,000 DBT Fund Budget
+      // -------------------------------------------------------------
+      {
+        id: 10,
+        title: "Societal Impact & ₹10,000 DBT Fund",
+        notes: "Explain how the ₹10,000 DBT award from DST will be meticulously utilized to support over 100,000 student queries and regional language scaling.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-gold"><i class="fa-solid fa-indian-rupee-sign"></i> Societal Value & DBT Utilization</span>
+              <div class="slide-title">Grassroots Value & ₹10,000 DBT Fund Budget</div>
+              <div class="slide-subtitle">Resource Optimization & Grassroots Scaling Plan for Bharat</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-2">
+              <div class="light-card card-accent-blue">
+                <div class="card-title"><i class="fa-solid fa-hand-holding-heart" style="color:var(--royal-blue); margin-right:6px;"></i> Grassroots Societal Value</div>
+                <ul class="card-list">
+                  <li><strong>Democratic Access:</strong> Delivers 24/7 personalized 1-on-1 STEM mentoring to Tier-2, Tier-3 & rural learners with ₹0 fees.</li>
+                  <li><strong>Empowers First-Gen Learners:</strong> Deep conceptual clarity in Science, Math & Coding.</li>
+                  <li><strong>NEP 2020 Alignment:</strong> Promotes inquiry-based, experiential learning over rote memorization.</li>
+                </ul>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-title"><i class="fa-solid fa-coins" style="color:var(--gold); margin-right:6px;"></i> DST ₹10,000 DBT Fund Plan</div>
+                <ul class="card-list">
+                  <li><strong>₹5,000:</strong> Cloud API credits (empowers 100,000+ student educational queries).</li>
+                  <li><strong>₹2,500:</strong> Serverless database hosting & low-latency Indian Edge CDN scaling.</li>
+                  <li><strong>₹1,500:</strong> Vernacular token optimization for Hindi & regional Indian dialects.</li>
+                  <li><strong>₹1,000:</strong> SSL security, domain infrastructure & school cluster deployment.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> DBT Fund Micro-Budget & Scalability</div>
+            <div class="footer-counter">10 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 11: Live Working Prototype & Readiness
+      // -------------------------------------------------------------
+      {
+        id: 11,
+        title: "Live Working Prototype Readiness",
+        notes: "Reiterate that V.A.N.I-xAI is not just a theoretical concept—it is a live, working, battle-tested prototype ready for school implementation.",
+        html: `
+          <div class="slide-header">
+            <div class="header-left">
+              <span class="category-pill pill-green"><i class="fa-solid fa-circle-check"></i> Prototype Readiness</span>
+              <div class="slide-title">Working Prototype & Validation Status</div>
+              <div class="slide-subtitle">Tested, verified codebase ready for school & district implementation</div>
+            </div>
+            <div class="header-right">
+              <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+              <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+            </div>
+          </div>
+
+          <div class="slide-body">
+            <div class="grid-4">
+              <div class="light-card card-accent-blue">
+                <div class="card-icon-wrap icon-blue"><i class="fa-solid fa-gauge"></i></div>
+                <div class="card-title">Live InAixVAi Panel</div>
+                <div class="card-desc">Active teacher command console tracking user queries, active sessions, and security isolation.</div>
+              </div>
+
+              <div class="light-card card-accent-green">
+                <div class="card-icon-wrap icon-green"><i class="fa-solid fa-database"></i></div>
+                <div class="card-title">SQLite Memory Engine</div>
+                <div class="card-desc"><code>vani_memory.db</code> operational with sub-5ms query retrieval and zero context loss.</div>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-icon-wrap icon-gold"><i class="fa-solid fa-volume-high"></i></div>
+                <div class="card-title">Edge TTS Voice Agent</div>
+                <div class="card-desc">Real-time speech synthesis enabled for conversational bilingual explanations.</div>
+              </div>
+
+              <div class="light-card card-accent-purple">
+                <div class="card-icon-wrap icon-purple"><i class="fa-solid fa-universal-access"></i></div>
+                <div class="card-title">Cross-Device Ready</div>
+                <div class="card-desc">Verified across low-cost Android, Windows PC, Raspberry Pi, and iOS browsers.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-footer">
+            <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Live Working Prototype & Readiness</div>
+            <div class="footer-counter">11 / 12</div>
+          </div>
+        `
+      },
+
+      // -------------------------------------------------------------
+      // SLIDE 12: Vision 2030 Roadmap & Conclusion
+      // -------------------------------------------------------------
+      {
+        id: 12,
+        title: "Vision 2030 & Conclusion",
+        notes: "Conclude by thanking the jury and reiterating the roadmap from KV Chakeri pilot to national PM eVidya / DIKSHA integration.",
+        html: `
+          <div class="hero-slide">
+            <div class="slide-header" style="margin-bottom:8px;">
+              <div class="header-left">
+                <span class="category-pill pill-gold"><i class="fa-solid fa-rocket"></i> Future Roadmap</span>
+                <div class="slide-title">Vision 2030: From School Lab to National Utility</div>
+                <div class="slide-subtitle">Structured scale-up strategy for NCSC & National Education Missions</div>
+              </div>
+              <div class="header-right">
+                <span class="ncsc-tag"><i class="fa-solid fa-flask-vial"></i> NCSC 2026-27</span>
+                <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" class="bov-logo-mini" onerror="this.src='svg.png'">
+              </div>
+            </div>
+
+            <div class="grid-3" style="margin-bottom:12px;">
+              <div class="light-card card-accent-blue">
+                <div class="card-title" style="color:var(--royal-blue);">Phase 1: School Pilot (2026)</div>
+                <div class="card-desc">
+                  • Sovereign sub-user engine deployed<br>
+                  • Socratic AI engine with zero-cost access<br>
+                  • Pilot launch at PM SHRI KV No. 1 Chakeri
+                </div>
+              </div>
+
+              <div class="light-card card-accent-green">
+                <div class="card-title" style="color:var(--emerald);">Phase 2: District & State</div>
+                <div class="card-desc">
+                  • 10+ Vernacular Indian languages<br>
+                  • Bi-directional voice conversation<br>
+                  • State-wide KV & Govt school rollout
+                </div>
+              </div>
+
+              <div class="light-card card-accent-gold">
+                <div class="card-title" style="color:var(--gold);">Phase 3: National Scale</div>
+                <div class="card-desc">
+                  • Integration with DIKSHA & PM eVidya<br>
+                  • Interactive AI virtual lab assistant<br>
+                  • Atmanirbhar Bharat AI mentoring stack
+                </div>
+              </div>
+            </div>
+
+            <!-- Conclusion Banner -->
+            <div style="background:linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%); border:1.5px solid #bbf7d0; border-radius:12px; padding:14px 20px; text-align:center;">
+              <div style="font-family:'Rajdhani', sans-serif; font-size:22px; font-weight:800; color:#065f46;">
+                "Empowering Every Student with Sovereign AI Mentorship"
+              </div>
+              <div style="font-size:12px; color:var(--slate-body); margin-top:2px;">
+                Thank you, Respected Jury Members & DST / NIF Mentors &bull; <strong>Bureau Of V.A.N.I-xAI (BoVxAi)</strong>
+              </div>
+            </div>
+
+            <div class="slide-footer">
+              <div class="footer-project-id"><i class="fa-solid fa-shield-halved"></i> Bureau Of V.A.N.I-xAI &bull; Final Jury Showcase</div>
+              <div class="footer-counter">12 / 12</div>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    let currentSlide = 1;
+    const totalSlides = slidesData.length;
+
+    function renderThumbnails() {
+      const scroller = document.getElementById('thumbnailsScroller');
+      scroller.innerHTML = '';
+      slidesData.forEach((s, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `thumb-pill ${s.id === currentSlide ? 'active' : ''}`;
+        btn.innerText = `${s.id}. ${s.title.split(' ')[0]}`;
+        btn.onclick = () => goToSlide(s.id);
+        scroller.appendChild(btn);
+      });
+    }
+
+    function renderSlide(index) {
+      const slide = slidesData.find(s => s.id === index);
+      if (!slide) return;
+      
+      const target = document.getElementById('slideTarget');
+      target.innerHTML = slide.html;
+      
+      document.getElementById('slideCurrentNum').innerText = currentSlide;
+      document.getElementById('slideTotalNum').innerText = totalSlides;
+      document.getElementById('notesContent').innerText = slide.notes;
+
+      document.getElementById('prevBtn').disabled = currentSlide === 1;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+
+      renderThumbnails();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        renderSlide(currentSlide);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        renderSlide(currentSlide);
+      }
+    }
+
+    function goToSlide(num) {
+      currentSlide = num;
+      renderSlide(currentSlide);
+    }
+
+    function togglePresenterNotes() {
+      const pane = document.getElementById('notesPane');
+      pane.classList.toggle('show');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      } else if (e.key === 'n' || e.key === 'N') {
+        togglePresenterNotes();
+      }
+    });
+
+    // Initialize
+    renderSlide(currentSlide);
+  </script>
+</body>
+</html>

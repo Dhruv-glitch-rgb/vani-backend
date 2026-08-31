@@ -297,8 +297,14 @@ def contact_page():
 def docs_page():
     return serve_page('docs.html', os.path.join('md', 'docs.md'))
 
+@app.route('/ai4consol.html')
+@app.route('/ai4consol')
+def ai4consol_page():
+    return serve_page('ai4consol.html')
+
 @app.route('/auth-vani-xai.html')
 @app.route('/auth')
+@app.route('/auth-vani-xai')
 def auth_page():
     return serve_page('auth-vani-xai.html')
 
@@ -328,10 +334,31 @@ def saras_web_search_page():
 def saras_vani_chat_page():
     return serve_page('saras_vani_chat.html', os.path.join('md', 'chat.md'))
 
+@app.route('/api/get_ip')
+def get_client_ip():
+    ip = request.headers.get('X-Forwarded-For', request.headers.get('X-Real-IP', request.remote_addr))
+    if ip and ',' in ip:
+        ip = ip.split(',')[0].strip()
+    return jsonify({'ip': ip or '127.0.0.1', 'status': 'success'})
+
 @app.route('/saras_vani_search.html')
 @app.route('/radar')
+@app.route('/saras_vani_search')
 def saras_vani_search_page():
     return serve_page('saras_vani_search.html', os.path.join('md', 'radar.md'))
+
+@app.route('/quantum_radar.html')
+@app.route('/quantum_radar')
+@app.route('/quantum_search')
+@app.route('/quantum-search')
+def quantum_radar_page():
+    return serve_page('quantum_radar.html', os.path.join('md', 'radar.md'))
+
+@app.route('/quantum_connect.html')
+@app.route('/quantum_connect')
+@app.route('/quantum-connect')
+def quantum_connect_page():
+    return serve_page('quantum_connect.html', os.path.join('md', 'chat.md'))
 
 @app.route('/terms.html')
 @app.route('/terms')

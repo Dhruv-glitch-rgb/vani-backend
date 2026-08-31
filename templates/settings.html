@@ -8,9 +8,7 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
     <!-- Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Cropper.js CSS -->
@@ -22,49 +20,201 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#059669">
     <style>
-        .settings-container {
+        /* Layout Wrapper */
+        .settings-dashboard {
             width: 100%;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 30px;
+            max-width: 1120px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: 270px 1fr;
+            gap: 24px;
+            padding: 0 20px 50px 20px;
+            animation: slideUpFade 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 868px) {
+            .settings-dashboard {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 0 15px 30px 15px;
+            }
+        }
+
+        /* Sidebar Styles */
+        .settings-sidebar {
             background: var(--panel-bg);
-            backdrop-filter: blur(12px);
-            border-radius: var(--border-radius-lg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--panel-border);
+            border-radius: var(--border-radius-lg);
+            padding: 20px 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            animation: slideUpFade 0.5s ease-out;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
         }
 
-        .settings-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .settings-header h1 {
-            font-size: 2rem;
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--text-primary);
-        }
-
-        .settings-section {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .settings-section h2 {
-            font-size: 1.25rem;
-            color: var(--accent-indigo);
-            margin-bottom: 15px;
+            padding: 0 10px 15px 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .setting-item {
+        .settings-nav-tabs {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 0;
+            padding: 0;
+        }
+
+        @media (max-width: 868px) {
+            .settings-nav-tabs {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                position: relative;
+            }
+            .settings-sidebar {
+                position: static;
+                top: 0;
+            }
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--border-radius-md);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            white-space: nowrap;
+        }
+
+        .tab-item i {
+            font-size: 1.05rem;
+            width: 20px;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .tab-item:hover {
+            background: rgba(99, 102, 241, 0.08);
+            color: var(--accent-indigo);
+        }
+
+        .tab-item.active {
+            background: linear-gradient(135deg, rgba(255, 153, 51, 0.15), rgba(19, 136, 8, 0.15));
+            color: var(--accent-indigo);
+            border: 1px solid rgba(255, 153, 51, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 153, 51, 0.1);
+        }
+
+        .tab-item.active i {
+            transform: scale(1.1);
+        }
+
+        /* Content Area & Panes */
+        .settings-content-area {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .settings-tab-pane {
+            display: none;
+            animation: paneFade 0.35s ease-out;
+        }
+
+        .settings-tab-pane.active {
+            display: block;
+        }
+
+        @keyframes paneFade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pane-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .pane-header h2 {
+            font-size: 1.35rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .pane-header p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        /* Modern Card Items */
+        .setting-card {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            margin-bottom: 18px;
+            transition: var(--transition-smooth);
+        }
+
+        body.dark-theme .setting-card,
+        body.inxv-theme .setting-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .setting-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+            border-color: var(--accent-indigo);
+        }
+
+        .setting-item-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .setting-item-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .setting-control {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+            .setting-control select,
+            .setting-control input[type="text"] {
+                width: 100% !important;
+            }
         }
 
         .setting-info h4 {
@@ -84,13 +234,22 @@
             padding: 10px 14px;
             border-radius: var(--border-radius-sm);
             border: 1px solid rgba(0, 0, 0, 0.1);
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             font-family: 'Outfit', sans-serif;
             font-size: 0.95rem;
             color: var(--text-primary);
             outline: none;
-            width: 200px;
+            width: 220px;
             transition: var(--transition-smooth);
+        }
+
+        body.dark-theme .setting-control select,
+        body.dark-theme .setting-control input[type="text"],
+        body.inxv-theme .setting-control select,
+        body.inxv-theme .setting-control input[type="text"] {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
         }
 
         .setting-control select:focus,
@@ -99,11 +258,12 @@
             box-shadow: 0 0 10px var(--accent-indigo-glow);
         }
 
+        /* Toggle Switches */
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 26px;
+            width: 52px;
+            height: 28px;
         }
 
         .toggle-switch input {
@@ -115,56 +275,103 @@
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-color: #cbd5e1;
-            transition: .4s;
+            transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 34px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 18px;
-            width: 18px;
+            height: 20px;
+            width: 20px;
             left: 4px;
             bottom: 4px;
             background-color: white;
-            transition: .4s;
+            transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        input:checked+.slider {
-            background-color: var(--accent-indigo);
+        input:checked + .slider {
+            background: linear-gradient(135deg, #10b981, #059669);
         }
 
-        input:checked+.slider:before {
+        input:checked + .slider:before {
             transform: translateX(24px);
         }
 
-        .save-settings-container {
-            text-align: center;
-            margin-top: 30px;
+        /* Save All Button Sidebar */
+        .save-all-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background: linear-gradient(135deg, #FF9933, #138808);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.3);
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .save-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 153, 51, 0.4);
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 99999;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .toast-notification i {
+            color: #10b981;
+            font-size: 1.2rem;
         }
 
         @keyframes slideUpFade {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
-        
+
         /* Modal Styles for Avatar */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
             display: none; justify-content: center; align-items: center; z-index: 1000;
         }
         .modal-overlay.active { display: flex; }
@@ -185,7 +392,6 @@
         /* Cropper Container */
         .img-container { max-height: 400px; width: 100%; margin-bottom: 20px; background: #000; }
         .img-container img { max-width: 100%; }
-        
     </style>
 </head>
 
@@ -198,293 +404,414 @@
                 <span>V.A.N.I-xAI</span>
             </div>
             <div class="landing-nav-actions">
-                <button id="pwa-install-btn-settings" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; margin-right: 10px; display: none;">
-                    <i class="fa-solid fa-download"></i> Install V.A.N.I-xAI
+                <button id="pwa-install-btn-settings" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; margin-right: 8px; display: none;">
+                    <i class="fa-solid fa-download"></i> Install App
+                </button>
+                <button id="settings-admin-btn" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; margin-right: 8px; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35); display: none;" onclick="window.location.href='./admin-vaniXai.html'">
+                    <i class="fa-solid fa-shield-halved"></i> Admin Panel
+                </button>
+                <button class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; border: none; margin-right: 8px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);" onclick="window.location.href='https://vani-nzdrsr.web.app/vani_history'">
+                    <i class="fa-solid fa-clock-rotate-left"></i> History
                 </button>
                 <button class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; border: none; margin-right: 8px; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35);" onclick="window.location.href='./saras_web_search.html'">
                     <i class="fa-solid fa-globe"></i> Saras.WebSearch
                 </button>
-                <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./index.html'">
-                    <i class="fa-solid fa-arrow-left"></i> Back to Console
+                <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./ai4consol.html'">
+                    <i class="fa-solid fa-arrow-left"></i> Console
                 </button>
             </div>
         </nav>
 
-        <div class="settings-container">
-            <div class="settings-header">
-                <h1><i class="fa-solid fa-gear"></i> System Settings</h1>
-                <p style="color: var(--text-secondary); margin-top: 5px;">Customize your AI assistant's behavior and
-                    interface.</p>
-            </div>
-
-            <!-- User Profile -->
-            <div class="settings-section">
-                <h2><i class="fa-solid fa-user"></i> Account Profile</h2>
-                <div class="setting-item" style="display: flex; gap: 20px; align-items: center;">
-                    <img id="profileImage" src="vani_icon.png" alt="Profile"
-                        style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-indigo); object-fit: cover;">
-                    <div style="flex: 1;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <h3 id="profileName" style="margin-bottom: 5px; color: var(--text-primary);">Loading...</h3>
-                            <span id="premiumBadge" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;"><i class="fa-solid fa-infinity"></i> Free Unlimited Plan</span>
-                        </div>
-                        <p id="profileVaniId" style="color: var(--accent-indigo); font-weight: bold; font-size: 0.95rem; margin-top: 5px; display: none;"><i class="fa-solid fa-id-badge"></i> <span></span></p>
-                        <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">...</p>
-                        <p id="profileInstagram" style="color: #E1306C; font-size: 0.9rem; margin-top: 5px; display: none;"><i class="fa-brands fa-instagram"></i> <span></span></p>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Security PIN:
-                            <strong>****</strong></p>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <button class="nav-cta-btn" id="btnUpdateAvatar" style="font-size: 0.8rem; padding: 6px 12px;">
-                            <i class="fa-solid fa-image"></i> Change Avatar
-                        </button>
-                        <button class="nav-cta-btn" id="btnChangePin"
-                            style="font-size: 0.8rem; padding: 6px 12px; border-color: var(--error-color); color: var(--error-color);">
-                            <i class="fa-solid fa-key"></i> Reset PIN
-                        </button>
-                    </div>
+        <!-- Main Settings Dashboard -->
+        <div class="settings-dashboard">
+            <!-- Sidebar Navigation -->
+            <aside class="settings-sidebar">
+                <div class="sidebar-title">
+                    <i class="fa-solid fa-sliders" style="color: var(--accent-indigo);"></i>
+                    <span>Settings Menu</span>
                 </div>
-            </div>
+                <ul class="settings-nav-tabs">
+                    <li class="tab-item active" data-tab="tab-account">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Account Profile</span>
+                    </li>
+                    <li class="tab-item" data-tab="tab-appearance">
+                        <i class="fa-solid fa-palette"></i>
+                        <span>Appearance &amp; AI</span>
+                    </li>
+                    <li class="tab-item" data-tab="tab-voice">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                        <span>Voice &amp; Speech</span>
+                    </li>
+                    <li class="tab-item" data-tab="tab-local-llm">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span>Local LLM Engine</span>
+                    </li>
+                    <li class="tab-item" data-tab="tab-notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        <span>Push Notifications</span>
+                    </li>
+                    <li class="tab-item" data-tab="tab-network">
+                        <i class="fa-solid fa-network-wired"></i>
+                        <span>Web &amp; Network</span>
+                    </li>
+                    <li class="tab-item" data-tab="tab-history">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>Chat History</span>
+                    </li>
+                </ul>
 
-            <!-- Appearance -->
-            <div class="settings-section">
-                <h2><i class="fa-solid fa-palette"></i> Appearance</h2>
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>UI Theme</h4>
-                        <p>Select your interface theme.</p>
-                    </div>
-                    <div class="setting-control">
-                        <select id="themeSelect">
-                            <option value="light">Premium Light (Default)</option>
-                            <option value="dark">Cyberpunk Dark</option>
-                            <option value="inxv">InX.V Theme (Mandala)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Voice & Speech -->
-            <div class="settings-section">
-                <h2><i class="fa-solid fa-microphone-lines"></i> Voice & Speech (Indian Girl Voice)</h2>
-                
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Auto-Speak Responses</h4>
-                        <p>Vāṇī will automatically read its responses aloud with a natural Indian girl voice.</p>
-                    </div>
-                    <div class="setting-control">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="autoSpeakToggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Indian Voice Style</h4>
-                        <p>Choose your preferred Indian feminine tone &amp; accent.</p>
-                    </div>
-                    <div class="setting-control">
-                        <select id="voiceAccentSelect" style="width: 220px;">
-                            <option value="vani_sweet" selected>🌸 Vāṇī Sweet (Hindi &amp; Hinglish Natural)</option>
-                            <option value="swara">✨ Swara (Expressive Hindi Girl)</option>
-                            <option value="neerja">💎 Neerja (Indian English Girl)</option>
-                            <option value="heera">🎙️ Heera (Indian Classic Female)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Voice Sweetness / Pitch</h4>
-                        <p>Adjust the vocal pitch (higher pitch = sweeter feminine tone).</p>
-                    </div>
-                    <div class="setting-control" style="display:flex; align-items:center; gap: 10px;">
-                        <input type="range" id="voicePitchSlider" min="0.8" max="1.5" step="0.05" value="1.15">
-                        <span id="voicePitchVal" style="min-width: 45px; font-weight: 600; color: var(--accent-indigo);">1.15x</span>
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Speech Speed / Rate</h4>
-                        <p>How fast Vāṇī speaks.</p>
-                    </div>
-                    <div class="setting-control" style="display:flex; align-items:center; gap: 10px;">
-                        <input type="range" id="speechRateSlider" min="0.5" max="2" step="0.1" value="1.0">
-                        <span id="speechRateVal" style="min-width: 45px; font-weight: 600; color: var(--accent-indigo);">1.0x</span>
-                    </div>
-                </div>
-
-                <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-                    <button class="nav-cta-btn animate-hover-scale" id="btnTestVoice" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; border: none; font-size: 0.85rem; padding: 8px 16px; border-radius: 8px; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);">
-                        <i class="fa-solid fa-play"></i> Test Indian Girl Voice
-                    </button>
-                </div>
-            </div>
-
-            <!-- Local LLM Engine -->
-            <div class="settings-section" style="background: rgba(14, 165, 233, 0.03); border: 1px solid rgba(14, 165, 233, 0.15); border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h2 style="margin-bottom: 0; color: #0284c7;">
-                        <i class="fa-solid fa-microchip"></i> Local LLM & Offline Intelligence
-                    </h2>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <span id="localLlmStatusBadge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-secondary); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                            <span class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; display: inline-block;"></span> Probing Local Engine...
-                        </span>
-                        <button id="btnScanLocalLlm" class="nav-cta-btn animate-hover-scale" style="font-size: 0.75rem; padding: 5px 12px; background: rgba(255,255,255,0.1); border: 1px solid var(--panel-border); cursor: pointer;" title="Refresh local engine scan">
-                            <i class="fa-solid fa-arrows-rotate"></i> Scan
-                        </button>
-                    </div>
-                </div>
-
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 18px;">
-                    Run V.A.N.I-xAI directly on your computer with <strong>Ollama</strong> or any OpenAI-compatible local AI server. Enjoy 100% private, offline reasoning with zero cloud delay.
-                </p>
-
-                <!-- Enable Toggle -->
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Enable Local LLM Engine</h4>
-                        <p>Route AI reasoning through your locally installed LLM on this device.</p>
-                    </div>
-                    <div class="setting-control">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="localLlmToggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Execution Mode -->
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Execution Mode</h4>
-                        <p>Choose routing priority between local machine and cloud.</p>
-                    </div>
-                    <div class="setting-control">
-                        <select id="localLlmMode" style="width: 220px;">
-                            <option value="local_first" selected>Local First (Fast Device AI + Cloud Fallback)</option>
-                            <option value="local_only">Local Only (100% Air-Gapped &amp; Private)</option>
-                            <option value="cloud_first">Cloud First (Cloud Primary + Local Backup)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Local Server URL -->
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Local Server URL</h4>
-                        <p>Default: <code>http://127.0.0.1:11434</code> (Ollama) or <code>http://127.0.0.1:1234/v1</code> (LM Studio).</p>
-                    </div>
-                    <div class="setting-control">
-                        <input type="text" id="localLlmUrl" value="http://127.0.0.1:11434" placeholder="http://127.0.0.1:11434" style="width: 220px; font-family: monospace; font-size: 0.85rem;">
-                    </div>
-                </div>
-
-                <!-- Active Model Selector -->
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Active Local Model</h4>
-                        <p>Select which local model V.A.N.I should use for thinking &amp; chatting.</p>
-                    </div>
-                    <div class="setting-control">
-                        <select id="localLlmModelSelect" style="width: 220px;">
-                            <option value="">-- No Local Models Detected --</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Quick Model Library / Downloader -->
-                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(14, 165, 233, 0.2);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <h4 style="font-size: 0.95rem; color: var(--text-primary); margin: 0;">
-                            <i class="fa-solid fa-cloud-arrow-down"></i> Quick Model Library (1-Click Install via Ollama)
-                        </h4>
-                    </div>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">
-                        Don't have a model yet? Click below to download a fast, lightweight model directly into your local Ollama engine:
-                    </p>
-
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
-                        <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="llama3.2:latest" style="font-size: 0.8rem; padding: 6px 12px; background: rgba(14, 165, 233, 0.1); border: 1px solid #0284c7; color: #0284c7;">
-                            <i class="fa-solid fa-download"></i> <strong>llama3.2</strong> (2.0 GB - Recommended)
-                        </button>
-                        <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="deepseek-r1:1.5b" style="font-size: 0.8rem; padding: 6px 12px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981;">
-                            <i class="fa-solid fa-brain"></i> <strong>deepseek-r1:1.5b</strong> (1.1 GB - Fast Reasoning)
-                        </button>
-                        <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="qwen2.5:3b" style="font-size: 0.8rem; padding: 6px 12px; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #a855f7;">
-                            <i class="fa-solid fa-language"></i> <strong>qwen2.5:3b</strong> (1.9 GB - Multilingual)
-                        </button>
-                        <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="phi3:mini" style="font-size: 0.8rem; padding: 6px 12px; background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; color: #f59e0b;">
-                            <i class="fa-solid fa-bolt"></i> <strong>phi3:mini</strong> (2.2 GB - Microsoft Compact)
-                        </button>
-                    </div>
-
-                    <!-- Live Pull Progress Bar -->
-                    <div id="pullProgressBox" style="display: none; background: rgba(0,0,0,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(14, 165, 233, 0.3);">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
-                            <span id="pullStatusLabel" style="color: var(--text-primary); font-weight: 600;"><i class="fa-solid fa-spinner fa-spin"></i> Downloading model...</span>
-                            <span id="pullPercentLabel" style="color: #0284c7; font-weight: bold;">0%</span>
-                        </div>
-                        <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden;">
-                            <div id="pullProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #0ea5e9, #10b981); transition: width 0.3s ease;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Network & Sync -->
-            <div class="settings-section">
-                <h2><i class="fa-solid fa-network-wired"></i> Web Tools & Network</h2>
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Saras.WebSearch</h4>
-                        <p>Search Google and browse live websites directly inside the app without opening new tabs.</p>
-                    </div>
-                    <div class="setting-control">
-                        <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./saras_web_search.html'" style="background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; border: none; font-weight: 600; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35);">
-                            <i class="fa-solid fa-globe"></i> Launch Search
-                        </button>
-                    </div>
-                </div>
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h4>Saras_VANI.Search (Radar)</h4>
-                        <p>Find and sync with other V.A.N.I-xAI instances on your local network.</p>
-                    </div>
-                    <div class="setting-control">
-                        <button class="nav-cta-btn" onclick="window.location.href='/saras_vani_search.html'" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; font-weight: 600;">
-                            <i class="fa-solid fa-satellite-dish"></i> Open Radar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chat History -->
-            <div class="settings-section">
-                <h2><i class="fa-solid fa-clock-rotate-left"></i> Chat History</h2>
-                <div class="setting-item" style="flex-direction: column; align-items: stretch;">
-                    <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">Your past
-                        conversations with V.A.N.I-xAI.</p>
-
-                    <div id="chatHistoryList"
-                        style="max-height: 400px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; gap: 15px; border: 1px solid var(--panel-border);">
-                        <div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Loading chat
-                            history...</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="save-settings-container">
-                <button class="cta-btn animate-hover-scale" id="saveSettingsBtn" style="margin: 0 auto;">
+                <button class="save-all-btn animate-hover-scale" id="saveSettingsBtn">
                     <i class="fa-solid fa-floppy-disk"></i> Save Preferences
                 </button>
-            </div>
+            </aside>
+
+            <!-- Settings Content Panes -->
+            <main class="settings-content-area">
+                
+                <!-- Pane 1: Account Profile -->
+                <div class="settings-tab-pane active" id="tab-account">
+                    <div class="pane-header">
+                        <h2><i class="fa-solid fa-user" style="color: var(--accent-indigo);"></i> Account Profile</h2>
+                        <p>Manage your account identity, security PIN, and avatar.</p>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row" style="align-items: center;">
+                            <img id="profileImage" src="vani_icon.png" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent-indigo); object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                    <h3 id="profileName" style="margin-bottom: 2px; color: var(--text-primary);">Loading...</h3>
+                                    <span id="premiumBadge" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;"><i class="fa-solid fa-infinity"></i> Free Unlimited Plan</span>
+                                </div>
+                                <p id="profileVaniId" style="color: var(--accent-indigo); font-weight: bold; font-size: 0.92rem; margin-top: 4px; display: none;"><i class="fa-solid fa-id-badge"></i> <span></span></p>
+                                <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">...</p>
+                                <p id="profileInstagram" style="color: #E1306C; font-size: 0.9rem; margin-top: 4px; display: none;"><i class="fa-brands fa-instagram"></i> <span></span></p>
+                                <p style="color: var(--text-secondary); font-size: 0.88rem; margin-top: 4px;">Security PIN: <strong>****</strong></p>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <button class="nav-cta-btn animate-hover-scale" id="btnUpdateAvatar" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(99, 102, 241, 0.12); color: var(--accent-indigo); border: 1px solid rgba(99, 102, 241, 0.3);">
+                                    <i class="fa-solid fa-image"></i> Change Avatar
+                                </button>
+                                <button class="nav-cta-btn animate-hover-scale" id="btnChangePin" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #ef4444;">
+                                    <i class="fa-solid fa-key"></i> Reset PIN
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 2: Appearance & Personality -->
+                <div class="settings-tab-pane" id="tab-appearance">
+                    <div class="pane-header">
+                        <h2><i class="fa-solid fa-palette" style="color: var(--accent-indigo);"></i> Appearance &amp; AI Personality</h2>
+                        <p>Customize the visual theme and cognitive tone of V.A.N.I-xAI.</p>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>UI Theme Mode</h4>
+                                <p>Choose your visual interface theme.</p>
+                            </div>
+                            <div class="setting-control">
+                                <select id="themeSelect">
+                                    <option value="light">Premium Light (Default)</option>
+                                    <option value="dark">Cyberpunk Dark</option>
+                                    <option value="inxv">InX.V Theme (Mandala)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>AI Assistant Personality</h4>
+                                <p>Select V.A.N.I's conversational behavior and reasoning style.</p>
+                            </div>
+                            <div class="setting-control">
+                                <select id="aiPersonality" style="width: 220px;">
+                                    <option value="human_girl" selected>🌸 Vāṇī - Friendly Indian Dost</option>
+                                    <option value="expert_tech">⚡ Vāṇī - Expert Technical AI</option>
+                                    <option value="spiritual_wise">🧘 Vāṇī - Spiritual &amp; Wise Guide</option>
+                                    <option value="compact_concise">🚀 Vāṇī - Concise &amp; Fast Engine</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 3: Voice & Speech -->
+                <div class="settings-tab-pane" id="tab-voice">
+                    <div class="pane-header">
+                        <h2><i class="fa-solid fa-microphone-lines" style="color: var(--accent-indigo);"></i> Voice &amp; Speech (Indian Girl Voice)</h2>
+                        <p>Tune V.A.N.I's vocal pitch, speed, and expressive Indian feminine tone.</p>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Auto-Speak Responses</h4>
+                                <p>Vāṇī will automatically read answers aloud with natural speech synthesis.</p>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoSpeakToggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Indian Voice Style</h4>
+                                <p>Choose your preferred vocal tone &amp; regional accent.</p>
+                            </div>
+                            <div class="setting-control">
+                                <select id="voiceAccentSelect" style="width: 220px;">
+                                    <option value="vani_sweet" selected>🌸 Vāṇī Sweet (Hindi &amp; Hinglish Natural)</option>
+                                    <option value="swara">✨ Swara (Expressive Hindi Girl)</option>
+                                    <option value="neerja">💎 Neerja (Indian English Girl)</option>
+                                    <option value="heera">🎙️ Heera (Indian Classic Female)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Voice Sweetness / Pitch</h4>
+                                <p>Adjust pitch (higher pitch = sweeter feminine tone).</p>
+                            </div>
+                            <div class="setting-control" style="display:flex; align-items:center; gap: 10px;">
+                                <input type="range" id="voicePitchSlider" min="0.8" max="1.5" step="0.05" value="1.15" style="width: 140px;">
+                                <span id="voicePitchVal" style="min-width: 45px; font-weight: 600; color: var(--accent-indigo);">1.15x</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Speech Speed / Rate</h4>
+                                <p>How fast Vāṇī speaks during conversation.</p>
+                            </div>
+                            <div class="setting-control" style="display:flex; align-items:center; gap: 10px;">
+                                <input type="range" id="speechRateSlider" min="0.5" max="2" step="0.1" value="1.0" style="width: 140px;">
+                                <span id="speechRateVal" style="min-width: 45px; font-weight: 600; color: var(--accent-indigo);">1.0x</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Voice Test Action -->
+                    <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                        <button id="btnTestVoice" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; font-weight: 600; padding: 10px 22px; border-radius: 10px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); cursor: pointer;">
+                            <i class="fa-solid fa-volume-high"></i> Test Indian Girl Voice
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pane 4: Local LLM Engine -->
+                <div class="settings-tab-pane" id="tab-local-llm">
+                    <div class="pane-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <h2><i class="fa-solid fa-microchip" style="color: #0284c7;"></i> Local LLM &amp; Offline Intelligence</h2>
+                            <p>Run V.A.N.I-xAI directly on your hardware via Ollama or LM Studio.</p>
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <span id="localLlmStatusBadge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-secondary); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                                <span class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; display: inline-block;"></span> Probing Local Engine...
+                            </span>
+                            <button id="btnScanLocalLlm" class="nav-cta-btn animate-hover-scale" style="font-size: 0.78rem; padding: 6px 12px; background: rgba(255,255,255,0.1); border: 1px solid var(--panel-border); cursor: pointer;" title="Refresh local engine scan">
+                                <i class="fa-solid fa-arrows-rotate"></i> Scan
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Enable Local LLM Engine</h4>
+                                <p>Route AI reasoning through your locally installed LLM on this device.</p>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="localLlmToggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Execution Routing Mode</h4>
+                                <p>Choose routing priority between local machine and cloud.</p>
+                            </div>
+                            <div class="setting-control">
+                                <select id="localLlmMode" style="width: 220px;">
+                                    <option value="local_first" selected>Local First (Fast Device AI + Cloud Fallback)</option>
+                                    <option value="local_only">Local Only (100% Air-Gapped &amp; Private)</option>
+                                    <option value="cloud_first">Cloud First (Cloud Primary + Local Backup)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Local Server Endpoint</h4>
+                                <p>Default: <code>http://127.0.0.1:11434</code> (Ollama) or <code>http://127.0.0.1:1234/v1</code> (LM Studio).</p>
+                            </div>
+                            <div class="setting-control">
+                                <input type="text" id="localLlmUrl" value="http://127.0.0.1:11434" placeholder="http://127.0.0.1:11434" style="width: 220px; font-family: monospace; font-size: 0.85rem;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Active Local Model</h4>
+                                <p>Select which local model V.A.N.I should use for thinking &amp; chatting.</p>
+                            </div>
+                            <div class="setting-control">
+                                <select id="localLlmModelSelect" style="width: 220px;">
+                                    <option value="">-- No Local Models Detected --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Downloader -->
+                    <div style="margin-top: 15px; padding: 18px; background: rgba(14, 165, 233, 0.04); border: 1px solid rgba(14, 165, 233, 0.2); border-radius: 14px;">
+                        <h4 style="font-size: 0.95rem; color: var(--text-primary); margin-bottom: 6px;">
+                            <i class="fa-solid fa-cloud-arrow-down" style="color: #0284c7;"></i> Quick Model Library (1-Click Install via Ollama)
+                        </h4>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px;">
+                            Download models directly into your local Ollama engine with full real-time progress:
+                        </p>
+
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="llama3.2:latest" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(14, 165, 233, 0.1); border: 1px solid #0284c7; color: #0284c7;">
+                                <i class="fa-solid fa-download"></i> <strong>llama3.2</strong> (2.0 GB - Recommended)
+                            </button>
+                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="deepseek-r1:1.5b" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981;">
+                                <i class="fa-solid fa-brain"></i> <strong>deepseek-r1:1.5b</strong> (1.1 GB - Fast Reasoning)
+                            </button>
+                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="qwen2.5:3b" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #a855f7;">
+                                <i class="fa-solid fa-language"></i> <strong>qwen2.5:3b</strong> (1.9 GB - Multilingual)
+                            </button>
+                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="phi3:mini" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; color: #f59e0b;">
+                                <i class="fa-solid fa-bolt"></i> <strong>phi3:mini</strong> (2.2 GB - Microsoft Compact)
+                            </button>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div id="pullProgressBox" style="display: none; background: rgba(0,0,0,0.05); padding: 12px; border-radius: 10px; border: 1px solid rgba(14, 165, 233, 0.3); margin-top: 10px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+                                <span id="pullStatusLabel" style="color: var(--text-primary); font-weight: 600;"><i class="fa-solid fa-spinner fa-spin"></i> Downloading model...</span>
+                                <span id="pullPercentLabel" style="color: #0284c7; font-weight: bold;">0%</span>
+                            </div>
+                            <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden;">
+                                <div id="pullProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #0ea5e9, #10b981); transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 5: Push Notifications -->
+                <div class="settings-tab-pane" id="tab-notifications">
+                    <div class="pane-header">
+                        <h2><i class="fa-solid fa-bell" style="color: var(--accent-indigo);"></i> Push Notifications (FCM)</h2>
+                        <p>Manage real-time background alerts and message notifications.</p>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Background Push Alerts</h4>
+                                <p>Receive real-time system broadcasts and chat alerts even when closed.</p>
+                                <p style="margin-top: 6px; font-size: 0.85rem;">Status: <strong id="fcm-status-badge" style="color: #fbbf24;">Checking status...</strong></p>
+                            </div>
+                            <div class="setting-control">
+                                <button class="nav-cta-btn animate-hover-scale" id="btnEnableFcm" style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border: none; font-size: 0.85rem; padding: 10px 18px; border-radius: 8px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); cursor: pointer;">
+                                    <i class="fa-solid fa-bell"></i> Enable Notifications
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 6: Web & Network Tools -->
+                <div class="settings-tab-pane" id="tab-network">
+                    <div class="pane-header">
+                        <h2><i class="fa-solid fa-network-wired" style="color: var(--accent-indigo);"></i> Web Tools &amp; Local Radar</h2>
+                        <p>Access external search tools and peer instance discovery on your local network.</p>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Saras.WebSearch Engine</h4>
+                                <p>Search live Google index and browse external web pages inside V.A.N.I.</p>
+                            </div>
+                            <div class="setting-control">
+                                <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./saras_web_search.html'" style="background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; border: none; font-weight: 600; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35);">
+                                    <i class="fa-solid fa-globe"></i> Launch Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-item-row">
+                            <div class="setting-info">
+                                <h4>Saras_VANI.Search Radar</h4>
+                                <p>Find and sync with peer V.A.N.I-xAI instances on your local LAN.</p>
+                            </div>
+                            <div class="setting-control">
+                                <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='/quantum_radar'" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; font-weight: 600;">
+                                    <i class="fa-solid fa-satellite-dish"></i> Open Radar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 7: Chat History -->
+                <div class="settings-tab-pane" id="tab-history">
+                    <div class="pane-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px;">
+                        <div>
+                            <h2><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-indigo);"></i> Conversation History</h2>
+                            <p>View your past chat logs and access date-by-date history.</p>
+                        </div>
+                        <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='https://vani-nzdrsr.web.app/vani_history'" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; border: none; font-weight: 600; padding: 10px 18px; border-radius: 10px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35); cursor: pointer;">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full History (Date-by-Date)
+                        </button>
+                    </div>
+
+                    <div class="setting-card" style="padding: 15px;">
+                        <div id="chatHistoryList" style="max-height: 420px; overflow-y: auto; background: rgba(0,0,0,0.15); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--panel-border);">
+                            <div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Loading chat history...</div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
         </div>
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toastNotification" class="toast-notification">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMessage">Preferences saved successfully!</span>
     </div>
 
     <!-- Avatar Selection Modal -->
@@ -494,7 +821,7 @@
             <div class="modal-btn-group">
                 <button class="modal-btn" id="btnUploadNew"><i class="fa-solid fa-upload"></i> Upload New Image</button>
                 <button class="modal-btn" id="btnRevertDefault"><i class="fa-brands fa-google"></i> Revert to Google Avatar</button>
-                <button class="modal-btn" id="btnCancelSelection" style="background: var(--error-color); color: white; border-color: transparent;"><i class="fa-solid fa-times"></i> Cancel</button>
+                <button class="modal-btn" id="btnCancelSelection" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: transparent;"><i class="fa-solid fa-times"></i> Cancel</button>
             </div>
             <input type="file" id="avatarFileInput" accept="image/png, image/jpeg, image/jpg" style="display: none;">
         </div>
@@ -508,19 +835,49 @@
                 <img id="cropperImage" src="">
             </div>
             <div class="modal-btn-group" style="flex-direction: row;">
-                <button class="modal-btn" id="btnCancelCrop" style="flex: 1; background: var(--error-color); color: white;"><i class="fa-solid fa-times"></i> Cancel</button>
+                <button class="modal-btn" id="btnCancelCrop" style="flex: 1; background: rgba(239, 68, 68, 0.2); color: #ef4444;"><i class="fa-solid fa-times"></i> Cancel</button>
                 <button class="modal-btn" id="btnSaveCrop" style="flex: 1; background: var(--accent-indigo); color: white;"><i class="fa-solid fa-check"></i> Save Crop</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK (Modular v9 Compat) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-messaging-compat.js"></script>
+    <script src="./fcm-notifications.js"></script>
     <!-- Cropper.js JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    
     <script>
+        // Tab Navigation Handler
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.settings-tab-pane').forEach(p => p.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const targetId = tab.getAttribute('data-tab');
+                const pane = document.getElementById(targetId);
+                if (pane) pane.classList.add('active');
+            });
+        });
+
+        // Toast Helper
+        function showToast(msg, iconClass = 'fa-circle-check') {
+            const toast = document.getElementById('toastNotification');
+            const toastMsg = document.getElementById('toastMessage');
+            if (toast && toastMsg) {
+                toastMsg.textContent = msg;
+                toast.querySelector('i').className = `fa-solid ${iconClass}`;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        }
+
         // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
@@ -536,9 +893,22 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Bind FCM Push Notification Button
+        const btnEnableFcm = document.getElementById('btnEnableFcm');
+        if (btnEnableFcm) {
+            btnEnableFcm.addEventListener('click', () => {
+                if (window.VaniFCM) {
+                    window.VaniFCM.requestPermission();
+                }
+            });
+        }
+
         // Auth State Listener
         auth.onAuthStateChanged(async user => {
             if (user) {
+                if (window.VaniFCM) {
+                    window.VaniFCM.init(user);
+                }
                 const nameEl = document.getElementById('profileName');
                 const emailEl = document.getElementById('profileEmail');
                 const avatarEl = document.getElementById('profileImage');
@@ -566,14 +936,10 @@
                             currentVaniId = data.vaniId;
                         }
                         
-                        // Free Unlimited Plan for all users
                         const premiumBadge = document.getElementById('premiumBadge');
                         if (premiumBadge) premiumBadge.style.display = 'inline-block';
-                        const btnUpgrade = document.getElementById('btnUpgrade');
-                        if (btnUpgrade) btnUpgrade.style.display = 'none';
                     }
 
-                    // Auto-generate if missing (Self-healing)
                     if (!currentVaniId) {
                         const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
                         const randomDigits = Math.floor(1000 + Math.random() * 9000);
@@ -584,20 +950,24 @@
                         needUpdate = true;
                     }
 
-                    // Display it
-                    vaniIdEl.querySelector('span').textContent = currentVaniId;
-                    vaniIdEl.style.display = 'block';
+                    if (vaniIdEl && vaniIdEl.querySelector('span')) {
+                        vaniIdEl.querySelector('span').textContent = currentVaniId;
+                        vaniIdEl.style.display = 'block';
+                    }
 
-                    // Save if we generated a new one
                     if (needUpdate) {
                         await db.collection('users').doc(user.uid).set(updates, { merge: true });
                     }
 
+                    const isUserAdmin = user.email === 'official.vani.xai76@gmail.com' || (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin'));
+                    if (isUserAdmin) {
+                        const adminBtn = document.getElementById('settings-admin-btn');
+                        if (adminBtn) adminBtn.style.display = 'inline-flex';
+                    }
                 } catch (e) {
-                    console.error("Error fetching/updating user details", e);
+                    console.error("Error fetching user details:", e);
                 }
 
-                // Fetch Chat History
                 fetchChatHistory(user.uid);
             } else {
                 window.location.href = '/auth-vani-xai.html';
@@ -621,7 +991,6 @@
                     const data = doc.data();
                     const date = data.timestamp ? data.timestamp.toDate() : new Date();
                     const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
                     const senderName = data.sender === 'user' ? 'You' : 'V.A.N.I';
                     const color = data.sender === 'user' ? 'var(--accent-primary)' : 'var(--accent-indigo)';
 
@@ -631,16 +1000,15 @@
                                 <strong style="color: ${color};">${senderName}</strong>
                                 <span style="color: var(--text-muted);">${timeStr}</span>
                             </div>
-                            <div style="font-size: 0.95rem; color: var(--text-primary); word-break: break-word;">${data.content}</div>
+                            <div style="font-size: 0.92rem; color: var(--text-primary); word-break: break-word;">${data.content}</div>
                         </div>
                     `;
                 });
                 listEl.innerHTML = html;
-                // Scroll to bottom
                 listEl.scrollTop = listEl.scrollHeight;
             } catch (err) {
                 console.error("Error fetching chats:", err);
-                listEl.innerHTML = '<div style="text-align: center; color: var(--error-color); font-size: 0.9rem;">Error loading chat history. Make sure Firestore rules are set.</div>';
+                listEl.innerHTML = '<div style="text-align: center; color: var(--error-color); font-size: 0.9rem;">Error loading chat history.</div>';
             }
         }
 
@@ -650,109 +1018,88 @@
             }
         });
 
-        // Avatar Management Variables
+        // Avatar Management
         let cropper = null;
         const selectionModal = document.getElementById('avatarSelectionModal');
         const cropperModal = document.getElementById('cropperModal');
         const fileInput = document.getElementById('avatarFileInput');
         const cropperImage = document.getElementById('cropperImage');
 
-        // Show Selection Modal
         document.getElementById('btnUpdateAvatar').addEventListener('click', () => {
             selectionModal.classList.add('active');
         });
 
-        // Cancel Selection
         document.getElementById('btnCancelSelection').addEventListener('click', () => {
             selectionModal.classList.remove('active');
         });
 
-        // Trigger File Input
         document.getElementById('btnUploadNew').addEventListener('click', () => {
             fileInput.click();
         });
 
-        // Revert to Default Avatar
         document.getElementById('btnRevertDefault').addEventListener('click', async () => {
             const user = auth.currentUser;
             if (!user) return;
-            
             try {
-                // Find Google photoUrl from provider data, if exists
                 let googlePhoto = null;
                 user.providerData.forEach(profile => {
                     if (profile.providerId === 'google.com' && profile.photoURL) {
                         googlePhoto = profile.photoURL;
                     }
                 });
-
                 const finalPhoto = googlePhoto || `https://ui-avatars.com/api/?name=${user.displayName || user.email.split('@')[0]}&background=020617&color=38bdf8`;
-                
                 await user.updateProfile({ photoURL: finalPhoto });
                 document.getElementById('profileImage').src = finalPhoto;
                 selectionModal.classList.remove('active');
-                alert("Successfully reverted to default profile picture!");
+                showToast("Reverted to default profile picture!");
             } catch (e) {
                 alert("Error reverting profile image: " + e.message);
             }
         });
 
-        // Handle File Selection
         fileInput.addEventListener('change', (e) => {
             if (e.target.files && e.target.files[0]) {
                 const file = e.target.files[0];
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    selectionModal.classList.remove('active'); // Close selection
+                    selectionModal.classList.remove('active');
                     cropperImage.src = event.target.result;
-                    cropperModal.classList.add('active'); // Open cropper
-                    
-                    if (cropper) { cropper.destroy(); }
-                    cropper = new Cropper(cropperImage, {
-                        aspectRatio: 1, // Square crop
-                        viewMode: 1,
-                        background: false
-                    });
+                    cropperModal.classList.add('active');
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(cropperImage, { aspectRatio: 1, viewMode: 1, background: false });
                 };
                 reader.readAsDataURL(file);
             }
-            // Reset input so same file can be chosen again
             e.target.value = '';
         });
 
-        // Cancel Crop
         document.getElementById('btnCancelCrop').addEventListener('click', () => {
             cropperModal.classList.remove('active');
             if (cropper) { cropper.destroy(); cropper = null; }
         });
 
-        // Save Crop
         document.getElementById('btnSaveCrop').addEventListener('click', async () => {
             const user = auth.currentUser;
             if (!user || !cropper) return;
-
-            // Get cropped image as Base64 JPEG (compresses to save space)
             const canvas = cropper.getCroppedCanvas({ width: 200, height: 200 });
             const base64Image = canvas.toDataURL('image/jpeg', 0.7);
-
             const btn = document.getElementById('btnSaveCrop');
             const ogText = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
-            
             try {
-                // Save base64 to Firebase Auth Profile
                 await user.updateProfile({ photoURL: base64Image });
                 document.getElementById('profileImage').src = base64Image;
-                
                 cropperModal.classList.remove('active');
                 if (cropper) { cropper.destroy(); cropper = null; }
+                showToast("Avatar updated successfully!");
             } catch (e) {
                 console.error(e);
-                alert("Failed to save image. It might be too large. Try zooming in more or using a smaller image.");
+                alert("Failed to save image. Try a smaller file.");
             } finally {
                 btn.innerHTML = ogText;
             }
         });
+
         // Local LLM Functions
         let pullPollInterval = null;
 
@@ -772,12 +1119,11 @@
                 const data = await res.json();
                 
                 if (data.online) {
-                    const providerName = data.provider === 'ollama' ? 'Ollama' : 'OpenAI-Compatible Local';
+                    const providerName = data.provider === 'ollama' ? 'Ollama' : 'OpenAI-Compatible';
                     badge.innerHTML = `<span class="dot" style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;"></span> ${providerName} Online`;
                     badge.style.color = "#10b981";
                     badge.style.background = "rgba(16, 185, 129, 0.15)";
                     
-                    // Populate models
                     selectEl.innerHTML = '';
                     if (data.models && data.models.length > 0) {
                         data.models.forEach(m => {
@@ -810,11 +1156,9 @@
                     selectEl.innerHTML = '<option value="">-- Local Engine Offline --</option>';
                 }
 
-                // Check if pull is in progress
                 if (data.pull_status && data.pull_status.is_pulling) {
                     startPullPolling();
                 }
-
             } catch (err) {
                 badge.innerHTML = `<span class="dot" style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;"></span> Offline`;
                 badge.style.color = "#ef4444";
@@ -881,6 +1225,7 @@
                             percentLabel.textContent = '100%';
                             label.innerHTML = `<i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Successfully installed and activated <strong>${status.model}</strong>!`;
                             scanLocalLlm();
+                            showToast(`Model ${status.model} installed successfully!`);
                         } else if (status.status === 'failed') {
                             label.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i> Download failed: ${status.error || 'Unknown error'}`;
                         }
@@ -891,7 +1236,6 @@
             }, 1200);
         }
 
-        // Attach Quick Pull Buttons
         document.querySelectorAll('.btn-pull-model').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -902,13 +1246,8 @@
             });
         });
 
-        document.getElementById('btnScanLocalLlm').addEventListener('click', () => {
-            scanLocalLlm();
-        });
-
-        document.getElementById('localLlmUrl').addEventListener('change', () => {
-            scanLocalLlm();
-        });
+        document.getElementById('btnScanLocalLlm').addEventListener('click', () => { scanLocalLlm(); });
+        document.getElementById('localLlmUrl').addEventListener('change', () => { scanLocalLlm(); });
 
         // Load Settings
         document.addEventListener('DOMContentLoaded', () => {
@@ -934,7 +1273,6 @@
                 document.body.classList.add('inxv-theme');
             }
 
-            // Probe and configure Local LLM
             scanLocalLlm();
         });
 
@@ -961,14 +1299,17 @@
             if (typeof speakAsIndianGirl === 'function') {
                 speakAsIndianGirl(testPhrase);
             } else {
+                window.speechSynthesis.cancel();
                 const msg = new SpeechSynthesisUtterance(testPhrase);
                 msg.rate = parseFloat(rate);
                 msg.pitch = parseFloat(pitch);
                 msg.lang = 'hi-IN';
                 window.speechSynthesis.speak(msg);
             }
+            showToast("Testing voice output...", "fa-volume-high");
         });
 
+        // Save All Settings
         document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
             const selectedTheme = document.getElementById('themeSelect').value;
             const autoSpeak = document.getElementById('autoSpeakToggle').checked;
@@ -984,7 +1325,6 @@
             localStorage.setItem('vani_voice_accent', accent);
             localStorage.setItem('vani_personality', personality);
 
-            // Save Local LLM Configuration to Backend
             const localEnabled = document.getElementById('localLlmToggle').checked;
             const localMode = document.getElementById('localLlmMode').value;
             const localUrl = document.getElementById('localLlmUrl').value.trim();
@@ -1010,10 +1350,6 @@
                 console.warn("Could not persist local LLM config to backend:", e);
             }
 
-            const btn = document.getElementById('saveSettingsBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Preferences Saved!';
-
             document.body.classList.remove('dark-theme', 'inxv-theme');
             if (selectedTheme === 'dark') {
                 document.body.classList.add('dark-theme');
@@ -1021,106 +1357,8 @@
                 document.body.classList.add('inxv-theme');
             }
 
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-            }, 2000);
+            showToast("Preferences & Settings Saved Successfully!");
         });
     </script>
-<!-- Custom PWA Install Modal -->
-<div id="custom-install-modal" class="custom-install-overlay" style="display: none;">
-    <div class="custom-install-box">
-        <div class="install-header">
-            <img src="./vani_icon.png" alt="VANI-xAI Icon" class="install-icon pulse-icon">
-            <div class="install-title">
-                <h3>Install V.A.N.I-xAI</h3>
-                <p>Vāṇī Adhyātmik Navīn Intellect</p>
-            </div>
-        </div>
-        <div class="install-body">
-            <p>Install the official V.A.N.I-xAI app on your device for lightning-fast access, native OS features, and an immersive full-screen experience.</p>
-            <div class="install-features">
-                <span><i class="fa-solid fa-bolt"></i> Instant Access</span>
-                <span><i class="fa-solid fa-mobile-screen"></i> Native Feel</span>
-                <span><i class="fa-solid fa-shield-halved"></i> Secure</span>
-            </div>
-        </div>
-        <div class="install-footer">
-            <button id="btn-cancel-install" class="btn-cancel-install">Cancel</button>
-            <button id="btn-confirm-install" class="btn-confirm-install">Install App</button>
-        </div>
-    </div>
-</div>
-
-<style>
-/* Custom Install Modal Styles */
-.custom-install-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(2, 6, 23, 0.8);
-    backdrop-filter: blur(12px);
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.3s ease-out;
-}
-.custom-install-box {
-    background: rgba(30, 41, 59, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    width: 90%;
-    max-width: 380px;
-    padding: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    animation: slideUpFade 0.4s ease-out;
-}
-.install-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-.install-icon {
-    width: 56px; height: 56px;
-    border-radius: 14px;
-    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
-}
-.install-title h3 {
-    margin: 0; font-size: 1.25rem; color: #fff; font-family: 'Outfit', sans-serif; font-weight: 700;
-}
-.install-title p {
-    margin: 4px 0 0 0; font-size: 0.75rem; color: var(--saffron); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-}
-.install-body p {
-    color: #94a3b8;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 24px;
-}
-.install-features {
-    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px;
-}
-.install-features span {
-    background: rgba(14, 165, 233, 0.1);
-    color: #38bdf8;
-    padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
-    display: flex; align-items: center; gap: 6px;
-}
-.install-footer {
-    display: flex; justify-content: flex-end; gap: 12px;
-}
-.btn-cancel-install {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1;
-    padding: 10px 18px; border-radius: 10px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 500; transition: 0.2s;
-}
-.btn-cancel-install:hover { color: #fff; background: rgba(255,255,255,0.1); }
-.btn-confirm-install {
-    background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: #fff;
-    border: none; padding: 10px 22px; border-radius: 10px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 600;
-    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4); transition: 0.2s;
-}
-.btn-confirm-install:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5); }
-</style>
-
 </body>
 </html>

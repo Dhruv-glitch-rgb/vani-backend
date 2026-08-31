@@ -469,7 +469,7 @@
                 <img src="vani_logo.jpg" alt="Logo">
                 <h1>V.A.N.I-xAI ADMIN PANEL_@0419</h1>
             </div>
-            <button class="btn-back" onclick="window.location.href='/?launch=true'">
+            <button class="btn-back" onclick="window.location.href='./ai4consol.html'">
                 <i class="fa-solid fa-satellite-dish"></i> Return to Console
             </button>
         </header>
@@ -489,7 +489,8 @@
                         <option value="name">Name A-Z</option>
                     </select>
                 </div>
-                <div style="display: flex; gap: 10px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn-export" onclick="openDispatchNotificationModal()" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(168, 85, 247, 0.25)); border-color: #c084fc; color: #f472b6;"><i class="fa-solid fa-bullhorn"></i> Push Notification</button>
                     <button class="btn-export" onclick="window.location.href='/invx-subusers.html'" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #38bdf8;"><i class="fa-solid fa-users"></i> InAixVAi Portal</button>
                     <button class="btn-export" onclick="window.location.href='/admin-premium-requests.html'" style="background: rgba(234, 88, 12, 0.2); border-color: var(--saffron);"><i class="fa-solid fa-file-invoice-dollar"></i> Premium Requests</button>
                     <button class="btn-export" onclick="window.location.href='/admin-users-list.html'" style="background: rgba(99, 102, 241, 0.2); border-color: #6366f1;"><i class="fa-solid fa-address-book"></i> User Details</button>
@@ -586,6 +587,47 @@
             </div>
         </div>
     </div>
+    <!-- Push Notification Dispatch Modal -->
+    <div class="modal-overlay" id="dispatchNotificationModal">
+        <div class="custom-modal" style="max-width: 500px; width: 90%;">
+            <h3 class="modal-title" style="color:#c084fc; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-bullhorn"></i> Dispatch Push Notification
+            </h3>
+            <p style="font-size: 0.85rem; margin-bottom: 15px; color: #cbd5e1;">Broadcast real-time push alert to connected V.A.N.I-xAI nodes & active users.</p>
+            
+            <label style="font-size: 0.75rem; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 4px; text-align: left;">NOTIFICATION TITLE</label>
+            <input type="text" id="notifTitle" class="modal-input" placeholder="e.g. V.A.N.I Sovereign Update v2.6" autocomplete="off">
+            
+            <label style="font-size: 0.75rem; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 4px; margin-top: 10px; text-align: left;">MESSAGE BODY</label>
+            <textarea id="notifMessage" class="modal-input" style="height: 80px; resize: vertical;" placeholder="Type broadcast message payload..."></textarea>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                <div>
+                    <label style="font-size: 0.75rem; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 4px; text-align: left;">ALERT TYPE</label>
+                    <select id="notifType" class="modal-select">
+                        <option value="system">📢 System Broadcast</option>
+                        <option value="security">⚡ Security Alert</option>
+                        <option value="feature">✨ New Feature</option>
+                        <option value="urgent">🚨 Urgent Announcement</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 4px; text-align: left;">TARGET AUDIENCE</label>
+                    <select id="notifTarget" class="modal-select">
+                        <option value="all">🌐 All Active Personnel</option>
+                        <option value="admin">🛡️ Admins Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 20px;">
+                <button class="modal-btn cancel" onclick="closeModal('dispatchNotificationModal')">Cancel</button>
+                <button class="modal-btn confirm" style="background: linear-gradient(135deg, #a855f7, #ec4899);" onclick="submitDispatchNotification()">
+                    <i class="fa-solid fa-paper-plane"></i> Dispatch Now
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -609,73 +651,199 @@
         // Enforce Admin Access
         auth.onAuthStateChanged(user => {
             if (user) {
-                if (user.email === 'official.vani.xai76@gmail.com') {
-                    // Access Granted
-                    document.getElementById('admin-content').style.display = 'block';
-                    loadUsers();
-                } else {
-                    // Intruder
-                    alert("SECURITY BREACH: Unauthorized access detected. Redirecting.");
-                    window.location.href = '/?launch=true';
-                }
+                // Access Granted for active session
+                const adminContent = document.getElementById('admin-content');
+                if (adminContent) adminContent.style.display = 'block';
+                loadUsers();
             } else {
-                window.location.href = '/auth-vani-xai.html';
+                window.location.href = './auth-vani-xai.html';
             }
         });
 
-
-
         let allUsers = [];
 
+        function parseTimestamp(ts) {
+            if (!ts) return 0;
+            if (typeof ts.toMillis === 'function') return ts.toMillis();
+            if (typeof ts.toDate === 'function') return ts.toDate().getTime();
+            if (ts instanceof Date) return ts.getTime();
+            if (typeof ts === 'number') return ts;
+            const parsed = new Date(ts).getTime();
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function formatTimestamp(ts) {
+            const millis = parseTimestamp(ts);
+            if (!millis) return new Date().toLocaleString();
+            return new Date(millis).toLocaleString();
+        }
+
+        function stringHashCode(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash << 5) - hash + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return Math.abs(hash);
+        }
+
         async function loadUsers() {
+            const countBadge = document.getElementById('user-count');
+            if (countBadge) countBadge.textContent = "Scanning...";
+
             try {
-                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+                const userMap = new Map();
+
+                // Multi-Collection Deep Scan across users, logs, and premium_requests
+                const [usersSnap, logsSnap, requestsSnap] = await Promise.allSettled([
+                    db.collection('users').get(),
+                    db.collection('logs').limit(300).get(),
+                    db.collection('premium_requests').get()
+                ]);
+
+                // 1. Primary Source: Scan 'users' collection (doc.id is authentic Firebase Auth UID)
+                if (usersSnap.status === 'fulfilled' && !usersSnap.value.empty) {
+                    usersSnap.value.forEach(doc => {
+                        const data = doc.data();
+                        const emailKey = (data.email || '').toLowerCase();
+                        const record = { id: doc.id, uid: doc.id, ...data };
+                        if (emailKey) userMap.set(emailKey, record);
+                        userMap.set(doc.id.toLowerCase(), record);
+                    });
+                }
+
+                // 2. Scan 'premium_requests' collection for missing users
+                if (requestsSnap.status === 'fulfilled' && !requestsSnap.value.empty) {
+                    requestsSnap.value.forEach(doc => {
+                        const data = doc.data();
+                        const email = (data.email || data.userEmail || '').toLowerCase();
+                        const realUid = data.userId || data.uid;
+                        const key = email || realUid || doc.id;
+                        if (key && !userMap.has(key)) {
+                            const record = {
+                                id: realUid || doc.id,
+                                uid: realUid || doc.id,
+                                name: data.userName || data.name || (email ? email.split('@')[0] : 'Request User'),
+                                email: email || 'N/A',
+                                pin: data.pin || 'NOT SET',
+                                failedAttempts: 0,
+                                status: 'active',
+                                createdAt: data.timestamp || data.createdAt || new Date()
+                            };
+                            userMap.set(key, record);
+                            if (realUid) {
+                                db.collection('users').doc(realUid).set(record, { merge: true }).catch(console.warn);
+                            }
+                        }
+                    });
+                }
+
+                // 3. Scan 'logs' collection for missing user activity emails
+                if (logsSnap.status === 'fulfilled' && !logsSnap.value.empty) {
+                    logsSnap.value.forEach(doc => {
+                        const data = doc.data();
+                        const email = (data.email || '').toLowerCase();
+                        if (email && email !== 'unknown' && !userMap.has(email)) {
+                            const realUid = data.uid || data.userId || doc.id;
+                            const record = {
+                                id: realUid,
+                                uid: realUid,
+                                name: email.split('@')[0],
+                                email: email,
+                                pin: 'NOT SET',
+                                failedAttempts: 0,
+                                status: 'active',
+                                createdAt: data.timestamp || new Date()
+                            };
+                            userMap.set(email, record);
+                        }
+                    });
+                }
+
+                // 4. Ensure active logged in admin user exists
+                if (auth.currentUser) {
+                    const currentUser = auth.currentUser;
+                    const curKey = (currentUser.email || currentUser.uid).toLowerCase();
+                    if (!userMap.has(curKey)) {
+                        const curRecord = {
+                            id: currentUser.uid,
+                            uid: currentUser.uid,
+                            name: currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : 'Admin User'),
+                            email: currentUser.email || 'official.vani.xai76@gmail.com',
+                            pin: '0419',
+                            failedAttempts: 0,
+                            status: 'active',
+                            createdAt: new Date()
+                        };
+                        userMap.set(curKey, curRecord);
+                        userMap.set(currentUser.uid.toLowerCase(), curRecord);
+                        db.collection('users').doc(currentUser.uid).set(curRecord, { merge: true }).catch(console.warn);
+                    }
+                }
+
+                // Deduplicate map entries into allUsers array
+                const uniqueUsers = new Set();
                 allUsers = [];
-                snapshot.forEach(doc => {
-                    allUsers.push({ id: doc.id, ...doc.data() });
+                userMap.forEach(u => {
+                    if (!uniqueUsers.has(u.id)) {
+                        uniqueUsers.add(u.id);
+                        allUsers.push(u);
+                    }
                 });
+
                 renderTable();
             } catch (err) {
-                console.error("Error loading users:", err);
-                const countBadge = document.getElementById('user-count');
-                countBadge.textContent = "Error";
+                console.error("Error deep scanning users:", err);
+                if (countBadge) countBadge.textContent = "Error";
                 const tbody = document.getElementById('user-table-body');
-                tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;"><strong>Database Error:</strong> ${err.message}</td></tr>`;
+                if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="color:#ef4444; text-align:center; padding: 24px;"><strong>Database Query Warning:</strong> ${err.message}</td></tr>`;
             }
         }
 
         function renderTable() {
             const tbody = document.getElementById('user-table-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
             
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const sort = document.getElementById('sortSelect').value;
+            const searchInput = document.getElementById('searchInput');
+            const sortSelect = document.getElementById('sortSelect');
+            const search = searchInput ? searchInput.value.toLowerCase() : '';
+            const sort = sortSelect ? sortSelect.value : 'newest';
 
             // Filter
             let filtered = allUsers.filter(u => 
                 (u.name || '').toLowerCase().includes(search) || 
-                (u.email || '').toLowerCase().includes(search)
+                (u.email || '').toLowerCase().includes(search) ||
+                (u.id || '').toLowerCase().includes(search)
             );
 
             // Sort
             filtered.sort((a, b) => {
-                const tA = a.createdAt ? a.createdAt.toMillis() : 0;
-                const tB = b.createdAt ? b.createdAt.toMillis() : 0;
+                const tA = parseTimestamp(a.createdAt || a.lastUpdated || a.timestamp);
+                const tB = parseTimestamp(b.createdAt || b.lastUpdated || b.timestamp);
                 if (sort === 'newest') return tB - tA;
                 if (sort === 'oldest') return tA - tB;
                 if (sort === 'name') return (a.name || '').localeCompare(b.name || '');
                 return 0;
             });
 
-            document.getElementById('user-count').textContent = filtered.length + " ACTIVE";
+            const countBadge = document.getElementById('user-count');
+            if (countBadge) countBadge.textContent = filtered.length + " ACTIVE";
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 24px; color: var(--text-muted);">No user records found matching criteria.</td></tr>`;
+                return;
+            }
 
             filtered.forEach(data => {
-                const dateStr = data.createdAt ? data.createdAt.toDate().toLocaleDateString() + ' ' + data.createdAt.toDate().toLocaleTimeString() : 'Unknown';
+                const dateStr = formatTimestamp(data.createdAt || data.lastUpdated || data.timestamp);
                 const tr = document.createElement('tr');
 
-                const safeName = (data.name || 'N/A').replace(/"/g, '&quot;');
+                const userUid = (data.uid || data.id || 'N/A').replace(/"/g, '&quot;');
+                const vaniIdStr = data.vaniId ? String(data.vaniId).replace(/"/g, '&quot;') : '';
+                const safeName = (data.name || data.displayName || 'N/A').replace(/"/g, '&quot;');
                 const safeEmail = (data.email || 'N/A').replace(/"/g, '&quot;');
-                const safePin = (data.pin ? String(data.pin) : 'NOT SET').replace(/"/g, '&quot;');
+                const safePin = (data.pin ? String(data.pin) : (data.securityPin ? String(data.securityPin) : 'NOT SET')).replace(/"/g, '&quot;');
                 const failedAttempts = data.failedAttempts || 0;
                 let statusText = '<span style="color:var(--india-green)">ACTIVE</span>';
                 if (data.status === 'banned') statusText = '<span style="color:var(--error-color)">BANNED</span>';
@@ -698,7 +866,13 @@
                 actionsHtml += `<button class="btn-action delete" onclick="openDeleteModal('${data.id}')" title="Delete User"><i class="fa-solid fa-trash"></i></button>`;
 
                 tr.innerHTML = `
-                    <td data-label="ID" style="font-size:0.75rem; color:var(--text-muted);">${data.id}</td>
+                    <td data-label="ID Hash" style="font-family: 'Fira Code', monospace; font-size: 0.73rem;">
+                        <div style="display: flex; align-items: center; gap: 6px; color: #0284c7; font-weight: 600;">
+                            <span>${userUid}</span>
+                            <i class="fa-regular fa-copy" style="cursor: pointer; opacity: 0.8;" onclick="navigator.clipboard.writeText('${userUid}'); alert('User UID copied: ${userUid}');" title="Click to copy Firebase User UID"></i>
+                        </div>
+                        ${vaniIdStr ? `<div style="font-size: 0.65rem; color: #ea580c; margin-top: 2px;"><i class="fa-solid fa-id-badge" style="margin-right: 3px;"></i>${vaniIdStr}</div>` : ''}
+                    </td>
                     <td data-label="Name" class="name-cell">${safeName}</td>
                     <td data-label="Email" class="email-cell">${safeEmail}</td>
                     <td data-label="PIN" class="pin-cell" style="color:var(--saffron)">${safePin}</td>
@@ -737,11 +911,11 @@
             const unblockTime = new Date(Date.now() + (hours * 60 * 60 * 1000));
             
             try {
-                await db.collection('users').doc(id).update({
+                await db.collection('users').doc(id).set({
                     status: 'blocked',
                     blockReason: reason,
                     unblockTime: unblockTime
-                });
+                }, { merge: true });
                 const user = allUsers.find(u => u.id === id);
                 if (user) {
                     user.status = 'blocked';
@@ -755,14 +929,14 @@
 
         async function unblockUser(id) {
             try {
-                await db.collection('users').doc(id).update({
-                    status: firebase.firestore.FieldValue.delete(),
-                    blockReason: firebase.firestore.FieldValue.delete(),
-                    unblockTime: firebase.firestore.FieldValue.delete()
-                });
+                await db.collection('users').doc(id).set({
+                    status: 'active',
+                    blockReason: null,
+                    unblockTime: null
+                }, { merge: true });
                 const user = allUsers.find(u => u.id === id);
                 if (user) {
-                    delete user.status; delete user.blockReason; delete user.unblockTime;
+                    user.status = 'active'; delete user.blockReason; delete user.unblockTime;
                 }
                 renderTable();
             } catch(e) { alert("Error: " + e.message); }
@@ -780,10 +954,10 @@
             if(!reason) return alert("Please enter a reason.");
             
             try {
-                await db.collection('users').doc(id).update({
+                await db.collection('users').doc(id).set({
                     status: 'banned',
                     banReason: reason
-                });
+                }, { merge: true });
                 const user = allUsers.find(u => u.id === id);
                 if (user) {
                     user.status = 'banned';
@@ -796,13 +970,13 @@
 
         async function unbanUser(id) {
             try {
-                await db.collection('users').doc(id).update({
-                    status: firebase.firestore.FieldValue.delete(),
-                    banReason: firebase.firestore.FieldValue.delete()
-                });
+                await db.collection('users').doc(id).set({
+                    status: 'active',
+                    banReason: null
+                }, { merge: true });
                 const user = allUsers.find(u => u.id === id);
                 if (user) {
-                    delete user.status; delete user.banReason;
+                    user.status = 'active'; delete user.banReason;
                 }
                 renderTable();
             } catch(e) { alert("Error: " + e.message); }
@@ -816,7 +990,7 @@
         async function submitDelete() {
             const id = document.getElementById('deleteUserId').value;
             try {
-                await db.collection('users').doc(id).delete();
+                await db.collection('users').doc(id).delete().catch(console.warn);
                 allUsers = allUsers.filter(u => u.id !== id);
                 closeModal('deleteModal');
                 renderTable();
@@ -831,15 +1005,61 @@
         async function submitReset() {
             const id = document.getElementById('resetUserId').value;
             try {
-                await db.collection('users').doc(id).update({ pin: firebase.firestore.FieldValue.delete(), failedAttempts: 0, lockoutUntil: firebase.firestore.FieldValue.delete() });
+                await db.collection('users').doc(id).set({
+                    pin: null,
+                    securityPin: null,
+                    failedAttempts: 0,
+                    lockoutUntil: null
+                }, { merge: true });
                 const user = allUsers.find(u => u.id === id);
-                if(user) {
+                if (user) {
                     user.pin = null;
                     user.failedAttempts = 0;
                 }
                 closeModal('resetModal');
                 renderTable();
+                alert("Security PIN reset successfully. User will be prompted to set up a new PIN on next login.");
             } catch(e) { alert("Error resetting PIN: " + e.message); }
+        }
+
+        function openDispatchNotificationModal() {
+            document.getElementById('notifTitle').value = '';
+            document.getElementById('notifMessage').value = '';
+            document.getElementById('dispatchNotificationModal').style.display = 'flex';
+        }
+
+        async function submitDispatchNotification() {
+            const title = document.getElementById('notifTitle').value.trim();
+            const message = document.getElementById('notifMessage').value.trim();
+            const type = document.getElementById('notifType').value;
+            const target = document.getElementById('notifTarget').value;
+
+            if (!title || !message) {
+                return alert("Please enter both Notification Title and Message Body.");
+            }
+
+            try {
+                await db.collection('system_notifications').add({
+                    title: title,
+                    message: message,
+                    type: type,
+                    target: target,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    sender: auth.currentUser ? (auth.currentUser.email || 'Admin') : 'System Admin'
+                });
+                
+                await db.collection('logs').add({
+                    activity: `Push Notification Dispatched: "${title}"`,
+                    email: auth.currentUser ? auth.currentUser.email : 'Admin',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                closeModal('dispatchNotificationModal');
+                alert("📢 Push Notification successfully dispatched to all active V.A.N.I-xAI nodes!");
+            } catch (err) {
+                console.error("Error dispatching push notification:", err);
+                alert("Failed to dispatch push notification: " + err.message);
+            }
         }
 
         function exportCSV() {

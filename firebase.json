@@ -165,6 +165,62 @@
     ],
     "rewrites": [
       {
+        "source": "/quantum_search",
+        "destination": "/quantum_radar.html"
+      },
+      {
+        "source": "/quantum-search",
+        "destination": "/quantum_radar.html"
+      },
+      {
+        "source": "/quantum_radar",
+        "destination": "/quantum_radar.html"
+      },
+      {
+        "source": "/quantum_connect",
+        "destination": "/quantum_connect.html"
+      },
+      {
+        "source": "/quantum-connect",
+        "destination": "/quantum_connect.html"
+      },
+      {
+        "source": "/saras_web_search",
+        "destination": "/saras_web_search.html"
+      },
+      {
+        "source": "/saras_vani_search",
+        "destination": "/saras_vani_search.html"
+      },
+      {
+        "source": "/saras_vani_chat",
+        "destination": "/saras_vani_chat.html"
+      },
+      {
+        "source": "/connect-with-us",
+        "destination": "/connect-with-us.html"
+      },
+      {
+        "source": "/ai4consol",
+        "destination": "/ai4consol.html"
+      },
+      {
+        "source": "/ai4consol/**",
+        "destination": "/ai4consol.html"
+      },
+      {
+        "source": "/auth-vani-xai",
+        "destination": "/auth-vani-xai.html"
+      },
+      {
+        "source": "/ai4",
+        "destination": "/ai4.html"
+      },
+      {
+        "source": "/ai4/**",
+        "destination": "/ai4.html"
+      },
+      {
         "source": "/*/blocked-by-vani-xai0419",
         "destination": "/blocked.html"
       },

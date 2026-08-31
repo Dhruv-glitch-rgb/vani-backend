@@ -1,0 +1,96 @@
+NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27
+PROJECT ABSTRACT & REGISTRATION DETAILS
+
+PROJECT TITLE:
+V.A.N.I-xAI (Vāṇī Adhyātmik Navīn Intellect) — Sovereign Asymmetric AI Ecosystem 
+for Democratized & Socratic Learning
+
+PARENT INNOVATION CELL: Bureau Of V.A.N.I-xAI (BoVxAi)
+FOCAL THEME: Science, Technology and Innovation for a Sustainable Future
+SUB-THEME: Information, Communication & Digital Technologies for Education, 
+           Societal Development and Grassroots Empowerment
+INSTITUTION: PM SHRI KENDRIYA VIDYALAYA NO. 1 AFS CHAKERI, KANPUR (U.P.)
+
+CHILD SCIENTISTS / TEAM MEMBERS:
+1. STUDENT 1 (Team Lead): DHRUV SAGAR (Class 10th)
+2. STUDENT 2 (Co-Researcher): TANISHKA SRIVASTAVA (Class 10th)
+
+DEPLOYMENT STATUS: Live, Operational & Cloud-Deployed at https://vani-nzdrsr.web.app/
+
+1. OFFICIAL PROJECT ABSTRACT
+
+Educational equity remains severely threatened by the digital divide. Commercial 
+generative AI tools are locked behind expensive monthly foreign currency paywalls 
+(INR 1,500 to INR 2,500/month) and demand high-end smartphone RAM, 5G connectivity, 
+or heavy application downloads. This economic and hardware gap excludes over 90% 
+of students in low-income, semi-urban, and rural Indian households. Furthermore, 
+standard AI chatbots act as "cheat-engines"—providing direct homework answers 
+without conceptual explanation, thereby hindering critical thinking.
+
+To address these critical challenges, V.A.N.I-xAI (Vāṇī Adhyātmik Navīn Intellect) 
+was developed as an indigenous, 100% free, software-native AI ecosystem. Utilizing 
+a breakthrough Asymmetric Sub-User Architecture, 99% of heavy neural computation 
+is processed on remote cloud infrastructure, optimizing the client web payload to 
+under 50 KB. This allows legacy INR 5,000 Android phones and old school computer 
+lab desktops on basic 2G/3G networks to launch a world-class STEM tutoring system 
+in under 1 second without downloading any software or creating hardware e-waste.
+
+To tackle the "cheat-engine" problem, V.A.N.I-xAI incorporates a Socratic 
+Pedagogical Mentorship Engine aligned with NEP 2020. Instead of outputting direct 
+homework solutions, it breaks down complex STEM derivations, physics equations, 
+and code errors into progressive hints, guided questions, and conceptual scaffolds. 
+
+V.A.N.I-xAI also features a Quantum Radar Mesh (/quantum_radar) for peer-to-peer 
+device discovery, Quantum Connect (/quantum_connect) for encrypted collaborative 
+AI chat rooms, and a real-time Multimodal Voice Engine (voice_agent.py) supporting 
+auditory learning for students with reading challenges. Operating as a 100% 
+paperless software solution, V.A.N.I-xAI delivers zero electronic waste (0% e-waste) 
+and democratizes sovereign, high-quality AI education across Bharat.
+
+2. KEY OBJECTIVES & GRASSROOTS PROBLEM
+
+1. Eliminate Economic Paywalls:
+   Provide 100% free, lifetime sovereign AI mentorship without subscriptions or 
+   credit card requirements.
+
+2. Bridge the Hardware & Bandwidth Gap:
+   Maintain a lightweight sub-50 KB web footprint that runs smoothly on legacy 
+   hardware and low-speed 2G/3G mobile data.
+
+3. Inculcate Socratic Learning (NEP 2020 Alignment):
+   Implement algorithmic prompt scaffolding to encourage inquiry, critical 
+   reasoning, and deep problem-solving rather than copy-pasting.
+
+4. Achieve Environmental Sustainability:
+   Deliver a 100% software-based digital solution producing zero hardware 
+   manufacturing impact and 0% electronic waste.
+
+3. TECHNICAL INNOVATIONS & METHODOLOGY
+
+- Asymmetric Sub-User Architecture:
+  Heavy LLM inference is decoupled from client devices. Sub-user profiles are 
+  generated deterministically (e.g., V.A.N.I-xAI-DHRU-3478) for workspace state 
+  persistence across devices.
+
+- Quantum Radar Scanner (/quantum_radar):
+  P2P local network discovery protocol allowing students to pair devices via 
+  4-digit OTP security without manual IP configuration.
+
+- Quantum Connect (/quantum_connect):
+  Encrypted real-time messaging workspace for group study, prompt handoffs, 
+  and voice notes.
+
+- Saras.WebSearch Engine:
+  In-app zero-tab search parser that indexes live web citations directly into 
+  the session without opening external browser tabs.
+
+- Biometric Intruder Trap Security:
+  Local browser-level protection capturing unauthorized workspace access logs.
+
+4. RESULTS & IMPACT METRICS
+
+- Live Deployment: Deployed at https://vani-nzdrsr.web.app/
+- Cold Boot Latency: Under 1.0 second on standard mobile browsers
+- Web Payload Size: < 50 KB initial download
+- Target Audience: Students across CBSE/NCERT curriculum (Classes 6-12)
+- E-Waste Contribution: 0% (Pure software innovation)

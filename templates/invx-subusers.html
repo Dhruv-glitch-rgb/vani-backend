@@ -352,12 +352,28 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        auth.onAuthStateChanged(user => {
-            if (user && user.email === 'official.vani.xai76@gmail.com') {
-                loadUsers();
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                let isAuthorized = (user.email && user.email.toLowerCase() === 'official.vani.xai76@gmail.com');
+                if (!isAuthorized) {
+                    try {
+                        const doc = await db.collection('users').doc(user.uid).get();
+                        if (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin')) {
+                            isAuthorized = true;
+                        }
+                    } catch (e) {
+                        console.warn("Admin check error:", e);
+                    }
+                }
+
+                if (isAuthorized) {
+                    loadUsers();
+                } else {
+                    alert("Unauthorized Access. Admins only.");
+                    window.location.href = './ai4consol.html';
+                }
             } else {
-                alert("Unauthorized Access. Admins only.");
-                window.location.href = '/';
+                window.location.href = './auth-vani-xai.html';
             }
         });
 

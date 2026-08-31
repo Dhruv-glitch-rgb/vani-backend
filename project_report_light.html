@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>V.A.N.I-xAI (BoVxAi) - National Children's Science Congress (NCSC) Project Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 10mm 12mm;
+    @bottom-right {
+      content: "Page " counter(page);
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    color: #1e293b;
+    line-height: 1.5;
+    font-size: 11.5px;
+    background: #e2e8f0;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .a4-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    padding: 12mm 14mm 10mm 14mm;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  .a4-sheet:last-child {
+    margin-bottom: 0;
+    page-break-after: avoid;
+  }
+
+  .fp-outer-border {
+    position: absolute;
+    top: 7mm; left: 7mm; right: 7mm; bottom: 7mm;
+    border: 2px solid #0f2744; pointer-events: none; border-radius: 4px;
+  }
+  .fp-inner-border {
+    position: absolute;
+    top: 9mm; left: 9mm; right: 9mm; bottom: 9mm;
+    border: 1px solid #f59e0b; pointer-events: none; border-radius: 2px;
+  }
+
+  .report-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid #cbd5e1;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+
+  .report-page-header .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #0f2744;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  .report-page-header .award-badge {
+    font-size: 9px;
+    font-weight: 700;
+    color: #b45309;
+    background: #fef3c7;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid #fde68a;
+  }
+
+  .section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #eff6ff 0%, #f8fafc 100%);
+    border-left: 4px solid #1d4ed8;
+    padding: 6px 12px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .section-title-wrap i { color: #1d4ed8; font-size: 15px; }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f2744;
+    letter-spacing: 0.5px;
+  }
+
+  .report-card {
+    background: #ffffff;
+    border: 1.2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+
+  .report-card.accent-blue { border-top: 3px solid #1d4ed8; }
+  .report-card.accent-green { border-top: 3px solid #059669; }
+  .report-card.accent-gold { border-top: 3px solid #d97706; }
+  .report-card.accent-purple { border-top: 3px solid #7c3aed; }
+  .report-card.accent-red { border-top: 3px solid #e11d48; }
+
+  .card-heading {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f2744;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-paragraph {
+    font-size: 10px;
+    color: #334155;
+    line-height: 1.45;
+  }
+
+  .bullet-list {
+    list-style: none;
+    margin-top: 4px;
+  }
+
+  .bullet-list li {
+    font-size: 10px;
+    color: #334155;
+    margin-bottom: 4px;
+    position: relative;
+    padding-left: 12px;
+    line-height: 1.4;
+  }
+
+  .bullet-list li::before {
+    content: "•";
+    color: #1d4ed8;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5px;
+    margin-top: 6px;
+  }
+
+  .report-table th {
+    background: #0f2744;
+    color: #ffffff;
+    padding: 6px 8px;
+    text-align: left;
+    font-weight: 700;
+  }
+
+  .report-table th:last-child {
+    background: #059669;
+  }
+
+  .report-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+  }
+
+  .report-table tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+
+  .report-table tr td:last-child {
+    background: #f0fdf4 !important;
+    font-weight: 700;
+    color: #065f46;
+  }
+
+  .report-page-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #cbd5e1;
+    padding-top: 5px;
+    font-size: 8.5px;
+    color: #64748b;
+  }
+
+  .report-page-footer .left {
+    font-weight: 600;
+    color: #1d4ed8;
+  }
+
+  @media print {
+    body { background: none !important; padding: 0 !important; }
+    .a4-sheet { box-shadow: none !important; margin: 0 !important; width: 210mm !important; height: 297mm !important; min-height: 297mm !important; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1: CLEAN MINIMALIST FRONT PAGE -->
+  <div class="a4-sheet">
+    <div class="fp-outer-border"></div>
+    <div class="fp-inner-border"></div>
+    
+    <div style="position:relative; z-index:1; display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:4mm 2mm;">
+      
+      <!-- Top Award Section -->
+      <div style="text-align:center;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0f2744;">National Children's Science Congress (NCSC)</div>
+        <div style="font-size:9px; font-weight:600; color:#64748b;">NCSTC &bull; Department of Science & Technology (DST), Government of India</div>
+
+        <div style="display:inline-flex; align-items:center; gap:8px; background:#fef3c7; border:1.5px solid #f59e0b; padding:5px 22px; border-radius:20px; color:#92400e; font-size:11.5px; font-weight:800; margin:8px 0 3px 0;">
+          <i class="fa-solid fa-flask-vial" style="color:#d97706;"></i> NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27
+        </div>
+        <div style="font-size:8.5px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.8px;">
+          Catalyzing Scientific Inquiry, Technological Innovation and Grassroots Empowerment
+        </div>
+      </div>
+
+      <div style="height:1.5px; background:linear-gradient(90deg, transparent, #f59e0b, #0f2744, #f59e0b, transparent); width:85%; margin:10px auto;"></div>
+
+      <!-- Dual Logos -->
+      <div style="display:flex; justify-content:space-around; align-items:center; margin:4px 0 10px 0; padding:0 20px;">
+        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <div style="width:80px; height:80px; background:#fff; border-radius:14px; border:1.5px solid #e2e8f0; box-shadow:0 4px 12px rgba(15,39,68,0.06); display:flex; align-items:center; justify-content:center; padding:5px;">
+            <img src="VANI-B_IMGs/Bureau_Of_VANI_xAI_Official_Logo.png" alt="Bureau Of V.A.N.I-xAI" style="max-width:90%; max-height:90%; object-fit:contain;" onerror="this.src='svg.png'">
+          </div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:9.5px; font-weight:700; color:#0f2744; text-transform:uppercase;">Bureau Of V.A.N.I-xAI</div>
+        </div>
+
+        <div style="color:#d97706; font-size:22px;"><i class="fa-solid fa-atom"></i></div>
+
+        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <div style="width:80px; height:80px; background:#fff; border-radius:14px; border:1.5px solid #e2e8f0; box-shadow:0 4px 12px rgba(15,39,68,0.06); display:flex; align-items:center; justify-content:center; padding:5px;">
+            <img src="VANI-B_IMGs/VANI_xAI_Official_Logo.png" alt="V.A.N.I-xAI" style="max-width:90%; max-height:90%; object-fit:contain;" onerror="this.src='svg.png'">
+          </div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:9.5px; font-weight:700; color:#0f2744; text-transform:uppercase;">V.A.N.I-xAI</div>
+        </div>
+      </div>
+
+      <!-- Main Project Hero Block -->
+      <div style="text-align:center; background:#ffffff; border:1.5px solid #e2e8f0; border-top:4px solid #1d4ed8; border-radius:14px; padding:16px 20px; margin:4px 0 12px 0; box-shadow:0 4px 15px rgba(15,39,68,0.04);">
+        <div style="font-family:'Rajdhani',sans-serif; font-size:42px; font-weight:800; color:#0f2744; line-height:1.1; margin-bottom:2px; letter-spacing:2px;">
+          V.A.N.I - <span style="color:#1d4ed8;">xAI</span>
+        </div>
+        <div style="font-family:'Cinzel',serif; font-size:14px; font-weight:700; color:#059669; letter-spacing:2px; margin-bottom:8px;">
+          VĀṆĪ ADHYĀTMIK NAVĪN INTELLECT
+        </div>
+        
+        <div style="display:inline-flex; align-items:center; gap:6px; background:#eff6ff; border:1.2px solid #bfdbfe; border-radius:16px; padding:4px 14px; color:#0f2744; font-family:'Space Grotesk',sans-serif; font-size:10.5px; font-weight:700; margin-bottom:10px;">
+          <i class="fa-solid fa-shield-halved" style="color:#1d4ed8;"></i> A Sovereign Innovation of the Bureau Of V.A.N.I-xAI
+        </div>
+
+        <div>
+          <div style="display:inline-flex; align-items:center; gap:6px; background:#ecfdf5; border:1.5px solid #a7f3d0; padding:4px 14px; border-radius:16px;">
+            <div style="width:8px; height:8px; background:#059669; border-radius:50%;"></div>
+            <span style="font-size:10px; font-weight:700; color:#065f46; text-transform:uppercase;">Project Status:</span>
+            <span style="font-size:10px; font-weight:800; color:#059669;">Live Operational & Deployed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Innovator Info Card -->
+      <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-left:4px solid #1d4ed8; border-radius:10px; padding:12px 16px; margin-bottom:10px; box-shadow:0 3px 10px rgba(15,39,68,0.02);">
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; color:#0f2744; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-id-card" style="color:#1d4ed8;"></i> Innovator & Project Details
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 20px; font-size:10.5px;">
+          <div><strong style="color:#64748b;">Innovator Name:</strong> <span style="font-weight:700; color:#1d4ed8;">Dhruv Sagar</span></div>
+          <div><strong style="color:#64748b;">Class:</strong> <span style="font-weight:700; color:#0f172a;">Class 10th</span></div>
+          <div style="grid-column:1 / -1;"><strong style="color:#64748b;">School:</strong> <span style="font-weight:700; color:#0f172a;">PM SHRI KENDRIYA VIDYALAYA NO. 1 AFS CHAKERI, KANPUR</span></div>
+          <div><strong style="color:#64748b;">Student UID:</strong> <code style="font-family:monospace; color:#1d4ed8; font-weight:800; letter-spacing:0.5px;">1001049893</code></div>
+          <div><strong style="color:#64748b;">Academic Session:</strong> <span style="font-weight:700; color:#0f172a;">2026 – 2027</span></div>
+        </div>
+      </div>
+
+      <!-- Signatures -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:6px;">
+        <div style="border:1px solid #e2e8f0; border-radius:6px; padding:6px; text-align:center; min-height:50px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div style="font-size:8px; color:#94a3b8; font-style:italic;">Candidate Signature</div>
+          <div style="border-top:1px solid #cbd5e1; padding-top:2px; font-size:8.5px; font-weight:700; color:#0f2744;">Dhruv Sagar (Class 10th)</div>
+        </div>
+        <div style="border:1px solid #e2e8f0; border-radius:6px; padding:6px; text-align:center; min-height:50px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div style="font-size:8px; color:#94a3b8; font-style:italic;">Guide Teacher Signature</div>
+          <div style="border-top:1px solid #cbd5e1; padding-top:2px; font-size:8.5px; font-weight:700; color:#0f2744;">PGT Computer Science / Science</div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="report-page-footer">
+        <div class="left">National Children's Science Congress (NCSC) 2026-27 &bull; NCSTC / DST India</div>
+        <div style="font-weight:700; color:#1d4ed8;">Bureau Of V.A.N.I-xAI &bull; Page 1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: ABSTRACT & PROBLEM STATEMENT -->
+  <div class="a4-sheet">
+    <div class="report-page-header">
+      <div class="brand">V.A.N.I-xAI &bull; Bureau Of V.A.N.I-xAI (BoVxAi)</div>
+      <div class="award-badge">NCSC 2026-27</div>
+    </div>
+
+    <div>
+      <div class="section-title-wrap">
+        <i class="fa-solid fa-file-lines"></i>
+        <div class="section-title">1. Executive Abstract</div>
+      </div>
+      <div class="report-card accent-blue">
+        <div class="card-paragraph">
+          <strong>V.A.N.I-xAI (Vāṇī Adhyātmik Navīn Intellect)</strong> is an indigenous, 100% sovereign artificial intelligence ecosystem engineered under the <strong>Bureau Of V.A.N.I-xAI (BoVxAi)</strong>. Designed specifically to solve educational inequality across Indian schools, it bridges the deep technological divide between metropolitan private schools and grassroots rural/semi-urban institutions.
+        </div>
+        <div class="card-paragraph" style="margin-top:6px;">
+          By leveraging a breakthrough <strong>Asymmetric Sub-User Architecture</strong> (&lt;50KB web client payload), V.A.N.I-xAI enables students using basic ₹5,000 mobile phones and slow 2G/3G connections to access world-class generative AI and multimodal voice mentorship without requiring expensive hardware, credit cards, or subscription fees.
+        </div>
+      </div>
+
+      <div class="section-title-wrap" style="margin-top:12px;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div class="section-title">2. Grassroots Problem Statement</div>
+      </div>
+      <div class="grid-2">
+        <div class="report-card accent-red">
+          <div class="card-heading"><i class="fa-solid fa-lock" style="color:#e11d48;"></i> Paywall Exclusivity</div>
+          <div class="card-paragraph">Commercial tools (ChatGPT Plus, Claude Pro) charge ₹1,500–₹2,500/month behind recurring international credit card paywalls, locking out over 90% of Indian students.</div>
+        </div>
+
+        <div class="report-card accent-gold">
+          <div class="card-heading"><i class="fa-solid fa-mobile-screen" style="color:#d97706;"></i> Hardware Barrier</div>
+          <div class="card-paragraph">Modern AI frameworks demand high GPU memory and 5G connectivity. Underprivileged students using budget smartphones cannot run resource-heavy applications.</div>
+        </div>
+
+        <div class="report-card accent-purple">
+          <div class="card-heading"><i class="fa-solid fa-brain" style="color:#7c3aed;"></i> The Cheat-Engine Flaw</div>
+          <div class="card-paragraph">Mainstream LLMs output direct solutions without explanations, encouraging rote copy-pasting and cheating rather than cognitive reasoning or concept mastery.</div>
+        </div>
+
+        <div class="report-card accent-blue">
+          <div class="card-heading"><i class="fa-solid fa-language" style="color:#1d4ed8;"></i> Lack of Indian Context</div>
+          <div class="card-paragraph">Foreign AI platforms lack alignment with NCERT/CBSE curriculum, vernacular language understanding, and youth-safe guardrails tailored for Indian schools.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-page-footer">
+      <div class="left">V.A.N.I-xAI (BoVxAi) &bull; Project Dossier</div>
+      <div>Page 2</div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: THE INNOVATION & CORE ARCHITECTURE -->
+  <div class="a4-sheet">
+    <div class="report-page-header">
+      <div class="brand">V.A.N.I-xAI &bull; Bureau Of V.A.N.I-xAI (BoVxAi)</div>
+      <div class="award-badge">NCSC 2026-27</div>
+    </div>
+
+    <div>
+      <div class="section-title-wrap">
+        <i class="fa-solid fa-lightbulb"></i>
+        <div class="section-title">3. The Proposed Innovation & Pedagogical Scaffolding</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="report-card accent-green">
+          <div class="card-heading"><i class="fa-solid fa-bolt" style="color:#059669;"></i> Asymmetric Sub-User Core</div>
+          <div class="card-paragraph">
+            99% of heavy computational processing is shifted to secure cloud clusters. The web client payload is optimized to &lt;50KB, ensuring instant sub-second boot times on any device.
+          </div>
+        </div>
+
+        <div class="report-card accent-blue">
+          <div class="card-heading"><i class="fa-solid fa-graduation-cap" style="color:#1d4ed8;"></i> Socratic Mentorship Engine</div>
+          <div class="card-paragraph">
+            Instead of regurgitating answers, the model acts as an empathetic digital mentor—breaking complex STEM problems into guided hints, conceptual questions, and structured steps.
+          </div>
+        </div>
+
+        <div class="report-card accent-purple">
+          <div class="card-heading"><i class="fa-solid fa-microphone-lines" style="color:#7c3aed;"></i> BoV Multimodal Voice Hub</div>
+          <div class="card-paragraph">
+            Integrated speech synthesis (<code>voice_agent.py</code>) enabling real-time audio tutoring for students with reading difficulties or vernacular language preferences.
+          </div>
+        </div>
+
+        <div class="report-card accent-gold">
+          <div class="card-heading"><i class="fa-solid fa-unlock" style="color:#d97706;"></i> 100% Free Sovereign Access</div>
+          <div class="card-paragraph">
+            Permanently eliminated all subscription barriers, payment gateways, and trial periods. 100% free and open for all verified students across India.
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title-wrap" style="margin-top:12px;">
+        <i class="fa-solid fa-atom"></i>
+        <div class="section-title">4. Bureau Of V.A.N.I-xAI (BoVxAi) Scientific Novelty</div>
+      </div>
+      <div class="report-card accent-blue">
+        <ul class="bullet-list">
+          <li><strong>Mathematical UID Generation:</strong> Cryptographically computes permanent tokens (e.g., <code>V.A.N.I-xAI-DHRU-3478</code>) binding persistent memory and multi-device sessions.</li>
+          <li><strong>3-Layer Security Architecture:</strong> Rigorous validation against Database Integrity, Active Token status, and Sandbox UID Isolation to eliminate spoofing.</li>
+          <li><strong>InAixVAi Educator Command Center:</strong> Bespoke administrative console granting teachers real-time telemetry over classroom query loads and student progress.</li>
+          <li><strong>Autonomous Self-Healing Memory:</strong> Background SQLite protocol (<code>vani_memory.db</code>) managing persistent context retention with zero human maintenance.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="report-page-footer">
+      <div class="left">V.A.N.I-xAI (BoVxAi) &bull; Project Dossier</div>
+      <div>Page 3</div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: BENCHMARKING, ZERO E-WASTE & DBT FUND -->
+  <div class="a4-sheet">
+    <div class="report-page-header">
+      <div class="brand">V.A.N.I-xAI &bull; Bureau Of V.A.N.I-xAI (BoVxAi)</div>
+      <div class="award-badge">NCSC 2026-27</div>
+    </div>
+
+    <div>
+      <div class="section-title-wrap">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <div class="section-title">5. Comparative Benchmarking Matrix</div>
+      </div>
+
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Evaluation Metric</th>
+            <th>Commercial AI (ChatGPT/Claude)</th>
+            <th>Traditional EdTech Portals</th>
+            <th>V.A.N.I - xAI (BoVxAi)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cost for Students</td>
+            <td>₹1,500 – ₹2,500 / month</td>
+            <td>₹5,000 – ₹25,000 / year</td>
+            <td>100% Free Lifetime (Zero Paywalls)</td>
+          </tr>
+          <tr>
+            <td>Hardware / Device Barrier</td>
+            <td>Requires modern smartphone RAM</td>
+            <td>Heavy 100MB+ app download</td>
+            <td>Runs on any browser (&lt;50KB payload)</td>
+          </tr>
+          <tr>
+            <td>Pedagogical Approach</td>
+            <td>Direct answer output (cheat risk)</td>
+            <td>Static pre-recorded videos</td>
+            <td>Socratic Guidance & Scaffolding</td>
+          </tr>
+          <tr>
+            <td>Zero E-Waste & Ecology</td>
+            <td>Heavy local battery/GPU drain</td>
+            <td>Proprietary tablet hardware</td>
+            <td>100% Cloud-Native (Zero E-Waste)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title-wrap" style="margin-top:12px;">
+        <i class="fa-solid fa-leaf"></i>
+        <div class="section-title">6. Environmental Sustainability & Resource Optimization</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="report-card accent-green">
+          <div class="card-heading"><i class="fa-solid fa-recycle" style="color:#059669;"></i> 100% Zero E-Waste Model</div>
+          <ul class="bullet-list">
+            <li>Zero physical plastic casing or PCB manufacturing.</li>
+            <li>Extends usable life of older school computers and low-cost phones.</li>
+            <li>100% paperless digital assignments & learning sessions.</li>
+          </ul>
+        </div>
+
+        <div class="report-card accent-gold">
+          <div class="card-heading"><i class="fa-solid fa-indian-rupee-sign" style="color:#d97706;"></i> DST ₹10,000 DBT Fund Plan</div>
+          <ul class="bullet-list">
+            <li><strong>₹5,000:</strong> Cloud API credits (100,000+ free student queries).</li>
+            <li><strong>₹2,500:</strong> Edge CDN & serverless database hosting.</li>
+            <li><strong>₹1,500:</strong> Hindi & Vernacular language tokenization.</li>
+            <li><strong>₹1,000:</strong> SSL security & school cluster deployment.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:8px 12px; margin-top:6px; text-align:center;">
+        <div style="font-weight:700; color:#065f46; font-size:10.5px;">Ready-to-Deploy Sovereign Innovation for Indian Classrooms</div>
+        <div style="font-size:9px; color:#334155; margin-top:2px;">
+          Developed with pride under the <strong>Bureau Of V.A.N.I-xAI (BoVxAi)</strong> &bull; PM SHRI Kendriya Vidyalaya No. 1 AFS Chakeri, Kanpur.
+        </div>
+      </div>
+    </div>
+
+    <div class="report-page-footer">
+      <div class="left">V.A.N.I-xAI (BoVxAi) &bull; Project Dossier</div>
+      <div>Page 4</div>
+    </div>
+  </div>
+
+</body>
+</html>

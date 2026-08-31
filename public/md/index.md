@@ -58,8 +58,8 @@ VANI-xAI (Vāṇī Adhyātmik Navīn Intellect) is a futuristic, web-native arti
 ## 🔗 Navigation Links
 
 - [Saras.WebSearch](https://vani-nzdrsr.web.app/saras_web_search.html)
-- [Saras Chat](https://vani-nzdrsr.web.app/saras_vani_chat.html)
-- [Saras Radar Search](https://vani-nzdrsr.web.app/saras_vani_search.html)
+- [Quantum Connect (Chat)](https://vani-nzdrsr.web.app/quantum_connect)
+- [Quantum Radar](https://vani-nzdrsr.firebaseapp.com/quantum_radar)
 - [Free Unlimited Plan](https://vani-nzdrsr.web.app/premium.html)
 - [Frequently Asked Questions](https://vani-nzdrsr.web.app/faq)
 - [Terms & Conditions](https://vani-nzdrsr.web.app/terms)

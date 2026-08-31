@@ -14,68 +14,172 @@
 
     <link rel="stylesheet" href="./style.css">
     <style>
-        /* Page Specific Overrides */
-        .logo-container { margin-top: 20px; margin-bottom: 30px; }
-        .logo-container img { width: 140px; height: auto; }
-        .auth-title { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
-        .auth-subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 30px; }
-        .auth-subtitle span.brand { color: var(--accent-green); font-weight: 600; }
-        .auth-desc { font-size: 0.95rem; color: var(--text-muted); max-width: 320px; line-height: 1.6; margin-bottom: 50px; }
-
-        .features-row { display: flex; gap: 20px; justify-content: center; margin-bottom: 80px; }
-        .feature-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .feature-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .feature-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-        .feature-icon.green { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-        .feature-icon.orange { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-        .feature-icon.purple { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
-        .feature-text { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-align: center; line-height: 1.2; }
-
-        .taj-mahal-bg {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 200px;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1200px-Taj_Mahal_%28Edited%29.jpeg');
-            background-size: cover; background-position: center bottom;
-            opacity: 0.1; mask-image: linear-gradient(to top, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+        body {
+            background: #090d16 !important;
+            color: #f8fafc !important;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .lang-selector { position: absolute; top: 30px; right: 30px; border: 1px solid var(--panel-border); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .form-container { max-width: 400px; width: 100%; margin: auto; display: flex; flex-direction: column; }
-        
-        .welcome-title { font-size: 2.2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; text-align: center; }
-        .welcome-sub { font-size: 0.95rem; color: var(--text-muted); text-align: center; margin-bottom: 30px; }
-        .welcome-sub span { color: var(--accent-blue); font-weight: 600; }
+        .split-container {
+            display: flex;
+            max-width: 960px;
+            width: 100%;
+            min-height: 600px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            overflow: hidden;
+            position: relative;
+        }
 
+        .split-left {
+            flex: 1;
+            padding: 48px;
+            background: rgba(10, 15, 30, 0.7);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .split-right {
+            flex: 1.1;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-container { margin-bottom: 24px; }
+        .logo-container img { width: 90px; height: auto; border-radius: 14px; filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.3)); }
+        
+        .auth-title { font-size: 2rem; font-weight: 800; color: #f8fafc; margin-bottom: 8px; }
+        .auth-subtitle { font-size: 1.05rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.4; }
+        .auth-subtitle span.brand { color: #00f0ff; font-weight: 700; }
+        .auth-desc { font-size: 0.9rem; color: #cbd5e1; max-width: 340px; line-height: 1.6; margin-bottom: 40px; }
+
+        .features-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 40px; }
+        .feature-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .feature-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+        .feature-icon.blue { background: rgba(0, 240, 255, 0.15); color: #00f0ff; }
+        .feature-icon.green { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .feature-icon.orange { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+        .feature-icon.purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+        .feature-text { font-size: 0.72rem; font-weight: 600; color: #94a3b8; text-align: center; line-height: 1.2; }
+
+        .lang-selector { position: absolute; top: 24px; right: 24px; border: 1px solid rgba(255, 255, 255, 0.1); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; color: #94a3b8; display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(255, 255, 255, 0.04); }
+        .form-container { max-width: 380px; width: 100%; margin: auto; display: flex; flex-direction: column; }
+        
+        .welcome-title { font-size: 1.8rem; font-weight: 800; color: #f8fafc; margin-bottom: 6px; text-align: center; }
+        .welcome-sub { font-size: 0.9rem; color: #94a3b8; text-align: center; margin-bottom: 24px; }
+        .welcome-sub span { color: #00f0ff; font-weight: 700; }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f8fafc;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-google:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(0, 240, 255, 0.4); }
         .btn-google img { width: 20px; height: 20px; }
 
-        .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--panel-border); }
+        .divider { display: flex; align-items: center; text-align: center; color: #64748b; font-size: 0.8rem; margin: 20px 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
         .divider:not(:empty)::before { margin-right: 15px; }
         .divider:not(:empty)::after { margin-left: 15px; }
 
-        .toggle-password { position: absolute; right: 14px; color: var(--text-muted); cursor: pointer; }
-        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-size: 0.85rem; }
-        .remember-me { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); }
-        .forgot-pass { color: #3b82f6; text-decoration: none; font-weight: 500; }
-        
-        .signup-text { text-align: center; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 30px; }
-        .signup-text a { color: #3b82f6; font-weight: 600; text-decoration: none; }
-        .security-badges { display: flex; gap: 12px; justify-content: space-between; margin-bottom: 30px; }
-        .sec-badge { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; color: var(--text-secondary); background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--panel-border); }
-        .terms-text { text-align: center; font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
-        .terms-text a { color: #3b82f6; text-decoration: none; }
+        .sys-input-group { margin-bottom: 16px; }
+        .sys-input-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
+        .sys-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(10, 15, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 0 14px;
+            transition: all 0.2s ease;
+        }
+        .sys-input-wrapper:focus-within {
+            border-color: #00f0ff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+        .sys-input-wrapper .icon-left { color: #64748b; font-size: 0.9rem; margin-right: 10px; }
+        .sys-input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 12px 0;
+            color: #f8fafc;
+            font-size: 0.9rem;
+        }
+        .toggle-password { color: #64748b; cursor: pointer; }
 
-        #loading-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--panel-bg); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 100; border-radius: var(--border-radius-lg); }
-        .spinner { width: 40px; height: 40px; border: 4px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 0.8rem; }
+        .remember-me { display: flex; align-items: center; gap: 8px; color: #94a3b8; cursor: pointer; }
+        .forgot-pass { color: #00f0ff; text-decoration: none; font-weight: 600; }
+        
+        .btn-submit {
+            padding: 13px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #00f0ff, #3b82f6);
+            color: #030712;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.3);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 240, 255, 0.45);
+        }
+
+        .signup-text { text-align: center; font-size: 0.85rem; color: #94a3b8; margin: 20px 0; }
+        .signup-text a { color: #00f0ff; font-weight: 700; text-decoration: none; }
+        
+        .security-badges { display: flex; gap: 8px; justify-content: space-between; margin-bottom: 20px; }
+        .sec-badge { display: flex; align-items: center; gap: 6px; font-size: 0.68rem; color: #94a3b8; background: rgba(255, 255, 255, 0.03); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.06); }
+        
+        .terms-text { text-align: center; font-size: 0.72rem; color: #64748b; line-height: 1.4; }
+        .terms-text a { color: #94a3b8; text-decoration: underline; }
+
+        #loading-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(9, 13, 22, 0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 100; border-radius: 24px; }
+        .spinner { width: 40px; height: 40px; border: 3px solid rgba(0, 240, 255, 0.2); border-top-color: #00f0ff; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        #error-msg { color: #ef4444; font-size: 0.85rem; text-align: center; margin-bottom: 12px; display: none; }
+        #error-msg { color: #f43f5e; font-size: 0.82rem; text-align: center; margin-bottom: 12px; display: none; background: rgba(244, 63, 94, 0.1); padding: 8px; border-radius: 8px; border: 1px solid rgba(244, 63, 94, 0.3); }
         
         @media (max-width: 768px) {
-            .split-container { flex-direction: column; min-height: auto; border-radius: 0; }
-            .split-left { padding: 40px 20px; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.05); }
-            .features-row { flex-wrap: wrap; margin-bottom: 40px; }
-            .split-right { padding: 40px 20px; }
-            .lang-selector { position: static; margin-bottom: 20px; width: max-content; align-self: flex-end; }
-            .security-badges { flex-direction: column; align-items: center; }
+            .split-container { flex-direction: column; min-height: auto; }
+            .split-left { padding: 32px 24px; border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+            .features-row { grid-template-columns: repeat(2, 1fr); margin-bottom: 24px; }
+            .split-right { padding: 32px 24px; }
+            .lang-selector { top: 16px; right: 16px; }
         }
     </style>
 </head>
@@ -254,16 +358,40 @@
             loading.style.display = 'none';
         }
 
-        // Helper for logging
+        // Helper for logging & registering user in Firestore with PIN enforcement
         async function logActivityAndRedirect(msg, user) {
+            let hasPin = false;
             try {
-                await db.collection('logs').add({
-                    activity: msg,
-                    email: user.email || 'Unknown',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } catch (e) { console.error("Log error", e); }
-            window.location.href = '/?launch=true';
+                if (user && typeof db !== 'undefined') {
+                    const nameBase = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+                    const vaniId = `V.A.N.I-xAI-${nameBase.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase()}-2026`;
+                    
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists && (doc.data().pin || doc.data().securityPin)) {
+                        hasPin = true;
+                    }
+
+                    await Promise.all([
+                        db.collection('logs').add({
+                            activity: msg,
+                            email: user.email || 'Unknown',
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        }),
+                        db.collection('users').doc(user.uid).set({
+                            name: nameBase,
+                            email: user.email || 'N/A',
+                            vaniId: vaniId,
+                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true })
+                    ]);
+                }
+            } catch (e) { console.error("Log/save user error", e); }
+            
+            if (!hasPin) {
+                window.location.href = './pin-vaniXai.html';
+            } else {
+                window.location.href = './ai4consol.html';
+            }
         }
 
         // Email Auth
@@ -304,10 +432,17 @@
                 });
         });
 
-        // Redirect if already logged in (Don't log this to avoid spam on refresh)
-        auth.onAuthStateChanged(user => {
+        // Redirect if already logged in (Check PIN setup first)
+        auth.onAuthStateChanged(async user => {
             if (user && !loading.style.display.includes('flex')) {
-                window.location.href = '/?launch=true';
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (!doc.exists || (!doc.data().pin && !doc.data().securityPin)) {
+                        window.location.href = './pin-vaniXai.html';
+                        return;
+                    }
+                } catch (e) { console.warn("Pin check error:", e); }
+                window.location.href = './ai4consol.html';
             }
         });
     </script>
