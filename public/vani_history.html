@@ -7,7 +7,7 @@
     <meta name="description" content="View, search, filter, and manage your complete V.A.N.I-xAI chat history date by date with high-speed search and export tools.">
     <meta name="keywords" content="vani history, vani-xai chat history, vani chat logs, vani-nzdrsr.web.app/vani_history">
 
-    <!-- Google Fonts & FontAwesome -->
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
@@ -554,8 +554,8 @@
                     <div class="stat-label">Active Days</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" style="color:#10b981;"><i class="fa-solid fa-circle" style="font-size:0.6rem; vertical-align:middle;"></i> Sync</div>
-                    <div class="stat-label">Live Firestore</div>
+                    <div class="stat-value" style="color:#10b981;"><i class="fa-solid fa-circle" style="font-size:0.6rem; vertical-align:middle;"></i> Ready</div>
+                    <div class="stat-label">Instant Display</div>
                 </div>
             </div>
         </section>
@@ -579,9 +579,10 @@
         <!-- History Date-by-Date Feed -->
         <section id="history-feed-container">
             <div class="empty-history-box">
-                <i class="fa-solid fa-spinner fa-spin"></i>
-                <h3>Loading Chat History...</h3>
-                <p>Connecting to secure V.A.N.I database...</p>
+                <i class="fa-solid fa-folder-open"></i>
+                <h3>No Chat History Found</h3>
+                <p>You haven't started any chat conversations with V.A.N.I yet.</p>
+                <a href="/ai4consol" class="nav-btn active" style="display:inline-block; margin-top:14px;"><i class="fa-solid fa-comment-dots"></i> Start a Conversation</a>
             </div>
         </section>
     </main>
@@ -594,12 +595,7 @@
         </div>
     </footer>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="./main.js"></script>
-
+    <!-- Instant Pre-Render Engine (0ms Execution!) -->
     <script>
         let allChatDocs = [];
         let activeDateFilter = 'all';
@@ -622,137 +618,85 @@
             themeIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         });
 
-        let hasLoadedOnce = false;
-
-        // Instant Local Backup Pre-render (0ms latency!)
-        function loadLocalHistoryBackup() {
+        // 0ms Instant Local Preload Engine
+        (function instantLocalPreload() {
             try {
-                const localData = JSON.parse(localStorage.getItem('vani_local_chat_history') || '[]');
-                if (localData.length > 0 && !hasLoadedOnce) {
-                    allChatDocs = localData.map((item, idx) => ({
-                        id: 'local-' + idx,
-                        sender: item.sender,
-                        content: item.content,
-                        actionName: item.actionName,
-                        timestamp: item.timestamp ? new Date(item.timestamp) : new Date()
-                    }));
-                    allChatDocs.sort((a, b) => {
-                        const tA = new Date(a.timestamp).getTime();
-                        const tB = new Date(b.timestamp).getTime();
-                        return tB - tA;
-                    });
-                    renderHistoryFeed();
+                const rawLocal = localStorage.getItem('vani_local_chat_history') || localStorage.getItem('vani_chat_history');
+                if (rawLocal) {
+                    const parsed = JSON.parse(rawLocal);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        allChatDocs = parsed.map((item, idx) => ({
+                            id: item.id || ('local-' + idx),
+                            sender: item.sender || 'user',
+                            content: item.content || item.text || '',
+                            actionName: item.actionName || null,
+                            timestamp: item.timestamp ? new Date(item.timestamp) : new Date()
+                        }));
+                        allChatDocs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+                    }
                 }
-            } catch(e) { console.warn("Local backup load error:", e); }
-        }
+            } catch(e) {}
+        })();
+    </script>
 
-        // Try pre-rendering local backup immediately
-        loadLocalHistoryBackup();
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="./main.js"></script>
 
-        // Safety timeout in case Auth or Network hangs
-        let authSafetyTimeout = setTimeout(() => {
-            if (!hasLoadedOnce) {
-                if (typeof auth !== 'undefined' && auth.currentUser) {
-                    fetchAndListenChatHistory(auth.currentUser.uid);
-                } else {
-                    renderUnauthenticatedState();
-                }
-            }
-        }, 2000);
+    <script>
+        // Immediate synchronous render call
+        renderHistoryFeed();
 
-        // Auth Listener
+        // Background async sync with Firestore
         if (typeof auth !== 'undefined') {
             auth.onAuthStateChanged(user => {
-                clearTimeout(authSafetyTimeout);
                 if (user) {
-                    fetchAndListenChatHistory(user.uid);
-                } else {
-                    renderUnauthenticatedState();
+                    syncFirestoreChats(user.uid);
                 }
             });
         }
 
-        function renderUnauthenticatedState() {
-            hasLoadedOnce = true;
-            const container = document.getElementById('history-feed-container');
-            container.innerHTML = `
-                <div class="empty-history-box">
-                    <i class="fa-solid fa-lock"></i>
-                    <h3>Authentication Required</h3>
-                    <p>Please log in to view and manage your date-by-date chat history.</p>
-                    <a href="/auth-vani-xai" class="nav-btn active" style="display:inline-block; margin-top:14px;">Sign In / Register</a>
-                </div>
-            `;
-        }
-
-        async function fetchAndListenChatHistory(uid) {
-            hasLoadedOnce = true;
-
-            // Step 1: Direct Failsafe Get (without strict orderBy to prevent Firestore Index blocking)
+        async function syncFirestoreChats(uid) {
             try {
                 const snapshot = await db.collection('users').doc(uid).collection('chats').get();
                 if (snapshot && !snapshot.empty) {
-                    processSnapshotDocs(snapshot);
-                } else if (allChatDocs.length === 0) {
+                    const remoteDocs = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        let ts = new Date();
+                        if (data.timestamp) {
+                            if (typeof data.timestamp.toDate === 'function') ts = data.timestamp.toDate();
+                            else if (data.timestamp.seconds) ts = new Date(data.timestamp.seconds * 1000);
+                            else ts = new Date(data.timestamp);
+                        }
+                        remoteDocs.push({
+                            id: doc.id,
+                            ...data,
+                            timestamp: ts
+                        });
+                    });
+
+                    // Merge remote + local uniquely
+                    const existingMap = new Map();
+                    allChatDocs.forEach(d => existingMap.set((d.content + '-' + (d.sender||'')), d));
+                    remoteDocs.forEach(d => existingMap.set((d.content + '-' + (d.sender||'')), d));
+
+                    allChatDocs = Array.from(existingMap.values());
+                    allChatDocs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+                    
                     renderHistoryFeed();
                 }
-            } catch (err) {
-                console.warn("Direct collection get error:", err);
-                if (allChatDocs.length === 0) loadLocalHistoryBackup();
+            } catch(e) {
+                console.warn("Firestore sync warning:", e);
             }
-
-            // Step 2: Real-time Listener for updates
-            try {
-                db.collection('users').doc(uid).collection('chats').onSnapshot(snapshot => {
-                    if (snapshot) {
-                        processSnapshotDocs(snapshot);
-                    }
-                }, err => {
-                    console.warn("Firestore snapshot warning:", err);
-                    if (allChatDocs.length === 0) renderHistoryFeed();
-                });
-            } catch (err) {
-                console.warn("Firestore listen setup error:", err);
-                if (allChatDocs.length === 0) renderHistoryFeed();
-            }
-        }
-
-        function processSnapshotDocs(snapshot) {
-            if (!snapshot) return;
-            const docs = [];
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                let ts = new Date();
-                if (data.timestamp) {
-                    if (typeof data.timestamp.toDate === 'function') {
-                        ts = data.timestamp.toDate();
-                    } else if (data.timestamp.seconds) {
-                        ts = new Date(data.timestamp.seconds * 1000);
-                    } else {
-                        ts = new Date(data.timestamp);
-                    }
-                }
-                docs.push({
-                    id: doc.id,
-                    ...data,
-                    timestamp: ts
-                });
-            });
-
-            // Fast client-side sort: newest first
-            docs.sort((a, b) => {
-                const tA = a.timestamp ? new Date(a.timestamp).getTime() : Date.now();
-                const tB = b.timestamp ? new Date(b.timestamp).getTime() : Date.now();
-                return tB - tA;
-            });
-
-            allChatDocs = docs;
-            renderHistoryFeed();
         }
 
         // Render History Grouped Date-by-Date
         function renderHistoryFeed() {
             const container = document.getElementById('history-feed-container');
+            if (!container) return;
             
             // Filter by search query & date filters
             let filtered = allChatDocs.filter(item => {
@@ -784,7 +728,8 @@
             });
 
             // Update Statistics
-            document.getElementById('stat-total-messages').textContent = filtered.length;
+            const totalMsgEl = document.getElementById('stat-total-messages');
+            if (totalMsgEl) totalMsgEl.textContent = filtered.length;
             
             // Unique Dates Count
             const uniqueDates = new Set();
@@ -792,7 +737,8 @@
                 const docDate = item.timestamp ? (typeof item.timestamp.toDate === 'function' ? item.timestamp.toDate() : new Date(item.timestamp)) : new Date();
                 uniqueDates.add(docDate.toDateString());
             });
-            document.getElementById('stat-active-days').textContent = uniqueDates.size;
+            const activeDaysEl = document.getElementById('stat-active-days');
+            if (activeDaysEl) activeDaysEl.textContent = uniqueDates.size;
 
             if (filtered.length === 0) {
                 container.innerHTML = `
@@ -860,7 +806,7 @@
                 `;
 
                 sortedItems.forEach(msg => {
-                    const timeStr = msg.timestamp ? (typeof msg.timestamp.toDate === 'function' ? msg.timestamp.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '') : '';
+                    const timeStr = msg.timestamp ? (typeof msg.timestamp.toDate === 'function' ? msg.timestamp.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})) : '';
                     
                     if (msg.sender === 'user') {
                         feedHtml += `
@@ -912,10 +858,13 @@
         }
 
         // Search Input Handling
-        document.getElementById('history-search').addEventListener('input', (e) => {
-            searchQuery = e.target.value.toLowerCase().trim();
-            renderHistoryFeed();
-        });
+        const searchEl = document.getElementById('history-search');
+        if (searchEl) {
+            searchEl.addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase().trim();
+                renderHistoryFeed();
+            });
+        }
 
         // Filter Chips
         document.querySelectorAll('.filter-chip').forEach(btn => {
@@ -923,19 +872,23 @@
                 document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 activeDateFilter = btn.getAttribute('data-filter');
-                document.getElementById('history-date-picker').value = '';
+                const datePicker = document.getElementById('history-date-picker');
+                if (datePicker) datePicker.value = '';
                 renderHistoryFeed();
             });
         });
 
         // Date Picker
-        document.getElementById('history-date-picker').addEventListener('change', (e) => {
-            if (e.target.value) {
-                document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-                activeDateFilter = `date:${e.target.value}`;
-                renderHistoryFeed();
-            }
-        });
+        const datePickerEl = document.getElementById('history-date-picker');
+        if (datePickerEl) {
+            datePickerEl.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+                    activeDateFilter = `date:${e.target.value}`;
+                    renderHistoryFeed();
+                }
+            });
+        }
 
         // Actions: Copy Single Message
         function copySingleMessage(btn) {
@@ -960,30 +913,51 @@
 
         // Actions: Delete Single Message
         async function deleteSingleMessage(docId) {
-            if (!auth.currentUser) return;
-            if (!confirm("Are you sure you want to delete this chat message?")) return;
-            try {
-                await db.collection('users').doc(auth.currentUser.uid).collection('chats').doc(docId).delete();
-            } catch (err) {
-                alert("Error deleting message: " + err.message);
+            if (docId.startsWith('local-')) {
+                allChatDocs = allChatDocs.filter(d => d.id !== docId);
+                localStorage.setItem('vani_local_chat_history', JSON.stringify(allChatDocs));
+                renderHistoryFeed();
+                return;
+            }
+            if (typeof auth !== 'undefined' && auth.currentUser) {
+                if (!confirm("Are you sure you want to delete this chat message?")) return;
+                try {
+                    await db.collection('users').doc(auth.currentUser.uid).collection('chats').doc(docId).delete();
+                    allChatDocs = allChatDocs.filter(d => d.id !== docId);
+                    localStorage.setItem('vani_local_chat_history', JSON.stringify(allChatDocs));
+                    renderHistoryFeed();
+                } catch (err) {
+                    alert("Error deleting message: " + err.message);
+                }
             }
         }
 
         // Actions: Delete Date Group
         async function deleteDateGroup(dateKey) {
-            if (!auth.currentUser) return;
             if (!confirm(`Are you sure you want to delete all chat history for ${dateKey}?`)) return;
             try {
                 const toDelete = allChatDocs.filter(item => {
                     const docDate = item.timestamp ? (typeof item.timestamp.toDate === 'function' ? item.timestamp.toDate() : new Date(item.timestamp)) : new Date();
                     return docDate.toISOString().split('T')[0] === dateKey;
                 });
-                const batch = db.batch();
-                toDelete.forEach(doc => {
-                    const ref = db.collection('users').doc(auth.currentUser.uid).collection('chats').doc(doc.id);
-                    batch.delete(ref);
+                
+                if (typeof auth !== 'undefined' && auth.currentUser) {
+                    const batch = db.batch();
+                    toDelete.forEach(doc => {
+                        if (!doc.id.startsWith('local-')) {
+                            const ref = db.collection('users').doc(auth.currentUser.uid).collection('chats').doc(doc.id);
+                            batch.delete(ref);
+                        }
+                    });
+                    await batch.commit();
+                }
+
+                allChatDocs = allChatDocs.filter(item => {
+                    const docDate = item.timestamp ? (typeof item.timestamp.toDate === 'function' ? item.timestamp.toDate() : new Date(item.timestamp)) : new Date();
+                    return docDate.toISOString().split('T')[0] !== dateKey;
                 });
-                await batch.commit();
+                localStorage.setItem('vani_local_chat_history', JSON.stringify(allChatDocs));
+                renderHistoryFeed();
             } catch (err) {
                 alert("Error deleting date group: " + err.message);
             }
@@ -991,14 +965,20 @@
 
         // Actions: Clear All History
         async function confirmClearAllHistory() {
-            if (!auth.currentUser) return;
             if (!confirm("⚠️ CAUTION: Are you sure you want to permanently delete your ENTIRE V.A.N.I chat history? This cannot be undone.")) return;
             try {
-                const snapshot = await db.collection('users').doc(auth.currentUser.uid).collection('chats').get();
-                if (snapshot.empty) return;
-                const batch = db.batch();
-                snapshot.forEach(doc => batch.delete(doc.ref));
-                await batch.commit();
+                if (typeof auth !== 'undefined' && auth.currentUser) {
+                    const snapshot = await db.collection('users').doc(auth.currentUser.uid).collection('chats').get();
+                    if (!snapshot.empty) {
+                        const batch = db.batch();
+                        snapshot.forEach(doc => batch.delete(doc.ref));
+                        await batch.commit();
+                    }
+                }
+                allChatDocs = [];
+                localStorage.removeItem('vani_local_chat_history');
+                localStorage.removeItem('vani_chat_history');
+                renderHistoryFeed();
                 alert("All chat history cleared successfully!");
             } catch (err) {
                 alert("Error clearing chat history: " + err.message);
