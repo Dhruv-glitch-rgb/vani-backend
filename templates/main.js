@@ -338,7 +338,7 @@ function addChatMessage(sender, content, actionName = null, imageUrl = null) {
     chatHistory.appendChild(messageDiv);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
-    // Save to Firestore if user is authenticated
+    // Save to Firestore if user is authenticated & save to localStorage backup
     try {
         if (typeof auth !== 'undefined' && typeof db !== 'undefined') {
             const user = auth.currentUser;
@@ -352,6 +352,16 @@ function addChatMessage(sender, content, actionName = null, imageUrl = null) {
                 }).catch(e => console.error("Firestore Error:", e));
             }
         }
+        const localHistory = JSON.parse(localStorage.getItem('vani_local_chat_history') || '[]');
+        localHistory.push({
+            sender: sender,
+            content: content,
+            actionName: actionName || null,
+            imageUrl: imageUrl || null,
+            timestamp: new Date().toISOString()
+        });
+        if (localHistory.length > 300) localHistory.shift();
+        localStorage.setItem('vani_local_chat_history', JSON.stringify(localHistory));
     } catch (e) {
         console.error("Error saving chat:", e);
     }

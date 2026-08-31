@@ -622,16 +622,58 @@
             themeIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         });
 
-        // Auth & Firestore History Listener
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                listenToChatHistory(user.uid);
-            } else {
-                renderUnauthenticatedState();
+        let hasLoadedOnce = false;
+
+        // Instant Local Backup Pre-render (0ms latency!)
+        function loadLocalHistoryBackup() {
+            try {
+                const localData = JSON.parse(localStorage.getItem('vani_local_chat_history') || '[]');
+                if (localData.length > 0 && !hasLoadedOnce) {
+                    allChatDocs = localData.map((item, idx) => ({
+                        id: 'local-' + idx,
+                        sender: item.sender,
+                        content: item.content,
+                        actionName: item.actionName,
+                        timestamp: item.timestamp ? new Date(item.timestamp) : new Date()
+                    }));
+                    allChatDocs.sort((a, b) => {
+                        const tA = new Date(a.timestamp).getTime();
+                        const tB = new Date(b.timestamp).getTime();
+                        return tB - tA;
+                    });
+                    renderHistoryFeed();
+                }
+            } catch(e) { console.warn("Local backup load error:", e); }
+        }
+
+        // Try pre-rendering local backup immediately
+        loadLocalHistoryBackup();
+
+        // Safety timeout in case Auth or Network hangs
+        let authSafetyTimeout = setTimeout(() => {
+            if (!hasLoadedOnce) {
+                if (typeof auth !== 'undefined' && auth.currentUser) {
+                    fetchAndListenChatHistory(auth.currentUser.uid);
+                } else {
+                    renderUnauthenticatedState();
+                }
             }
-        });
+        }, 2000);
+
+        // Auth Listener
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(user => {
+                clearTimeout(authSafetyTimeout);
+                if (user) {
+                    fetchAndListenChatHistory(user.uid);
+                } else {
+                    renderUnauthenticatedState();
+                }
+            });
+        }
 
         function renderUnauthenticatedState() {
+            hasLoadedOnce = true;
             const container = document.getElementById('history-feed-container');
             container.innerHTML = `
                 <div class="empty-history-box">
@@ -643,30 +685,69 @@
             `;
         }
 
-        function listenToChatHistory(uid) {
-            db.collection('users').doc(uid).collection('chats')
-                .orderBy('timestamp', 'desc')
-                .onSnapshot(snapshot => {
-                    allChatDocs = [];
-                    if (snapshot && !snapshot.empty) {
-                        snapshot.forEach(doc => {
-                            allChatDocs.push({
-                                id: doc.id,
-                                ...doc.data()
-                            });
-                        });
-                    }
+        async function fetchAndListenChatHistory(uid) {
+            hasLoadedOnce = true;
+
+            // Step 1: Direct Failsafe Get (without strict orderBy to prevent Firestore Index blocking)
+            try {
+                const snapshot = await db.collection('users').doc(uid).collection('chats').get();
+                if (snapshot && !snapshot.empty) {
+                    processSnapshotDocs(snapshot);
+                } else if (allChatDocs.length === 0) {
                     renderHistoryFeed();
+                }
+            } catch (err) {
+                console.warn("Direct collection get error:", err);
+                if (allChatDocs.length === 0) loadLocalHistoryBackup();
+            }
+
+            // Step 2: Real-time Listener for updates
+            try {
+                db.collection('users').doc(uid).collection('chats').onSnapshot(snapshot => {
+                    if (snapshot) {
+                        processSnapshotDocs(snapshot);
+                    }
                 }, err => {
-                    console.error("Firestore history error:", err);
-                    document.getElementById('history-feed-container').innerHTML = `
-                        <div class="empty-history-box">
-                            <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>
-                            <h3>Error Loading Chat History</h3>
-                            <p>${err.message || 'Could not fetch chat logs from database.'}</p>
-                        </div>
-                    `;
+                    console.warn("Firestore snapshot warning:", err);
+                    if (allChatDocs.length === 0) renderHistoryFeed();
                 });
+            } catch (err) {
+                console.warn("Firestore listen setup error:", err);
+                if (allChatDocs.length === 0) renderHistoryFeed();
+            }
+        }
+
+        function processSnapshotDocs(snapshot) {
+            if (!snapshot) return;
+            const docs = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                let ts = new Date();
+                if (data.timestamp) {
+                    if (typeof data.timestamp.toDate === 'function') {
+                        ts = data.timestamp.toDate();
+                    } else if (data.timestamp.seconds) {
+                        ts = new Date(data.timestamp.seconds * 1000);
+                    } else {
+                        ts = new Date(data.timestamp);
+                    }
+                }
+                docs.push({
+                    id: doc.id,
+                    ...data,
+                    timestamp: ts
+                });
+            });
+
+            // Fast client-side sort: newest first
+            docs.sort((a, b) => {
+                const tA = a.timestamp ? new Date(a.timestamp).getTime() : Date.now();
+                const tB = b.timestamp ? new Date(b.timestamp).getTime() : Date.now();
+                return tB - tA;
+            });
+
+            allChatDocs = docs;
+            renderHistoryFeed();
         }
 
         // Render History Grouped Date-by-Date
