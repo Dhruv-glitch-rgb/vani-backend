@@ -688,6 +688,13 @@
                     status: 'pending',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+
+                // Listen for receiver to enter correct OTP and pair
+                db.collection('radar_pairings').doc(pairId).onSnapshot(snapshot => {
+                    if (snapshot && snapshot.exists && snapshot.data().status === 'paired') {
+                        window.location.href = `/quantum_connect?chatId=${pairId}`;
+                    }
+                });
             } catch (err) {
                 console.error('[Pairing] Create error:', err);
             }
@@ -708,6 +715,11 @@
                       document.getElementById('modalDesc').textContent = `Enter the 4-digit OTP provided by ${data.senderName} to complete quantum pairing.`;
                       document.getElementById('otpDisplayBox').style.display = 'none';
                       document.getElementById('otpInputArea').style.display = 'block';
+                      const otpField = document.getElementById('otpInputField');
+                      if (otpField) {
+                          otpField.value = '';
+                          otpField.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                      }
                       document.getElementById('modalConfirmBtn').textContent = 'Verify OTP & Chat';
                       document.getElementById('otpModal').style.display = 'flex';
                   });
@@ -717,38 +729,105 @@
         async function confirmOtpPairing() {
             if (!activePairingId) return;
 
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            const otpInputArea = document.getElementById('otpInputArea');
+            const otpInputField = document.getElementById('otpInputField');
             const chatId = activePairingId;
 
-            try {
-                await db.collection('radar_pairings').doc(activePairingId).update({
-                    status: 'paired'
-                });
+            // IF Receiver Mode (Entering OTP code):
+            if (otpInputArea && otpInputArea.style.display !== 'none') {
+                const enteredOtp = otpInputField ? otpInputField.value.trim() : '';
 
-                const targetEmailUsername = activeTargetUser && activeTargetUser.email ? activeTargetUser.email.split('@')[0] : (activeTargetUser && activeTargetUser.name ? (activeTargetUser.name.includes('@') ? activeTargetUser.name.split('@')[0] : activeTargetUser.name) : 'User');
-                const myEmailUsername = currentUser.email ? currentUser.email.split('@')[0] : (currentUser.displayName || 'User');
+                if (enteredOtp.length !== 4) {
+                    alert('⚠️ Please enter the complete 4-digit pairing OTP code.');
+                    if (otpInputField) {
+                        otpInputField.focus();
+                        otpInputField.style.borderColor = '#ef4444';
+                    }
+                    return;
+                }
 
-                // Initialize Quantum Chat Collection
-                await db.collection('quantum_chats').doc(chatId).set({
-                    chatId: chatId,
-                    participants: [currentUser.uid, activeTargetUser.uid],
-                    partnerName: targetEmailUsername,
-                    partnerEmail: (activeTargetUser && activeTargetUser.email) || '',
-                    participantEmails: {
-                        [currentUser.uid]: currentUser.email || '',
-                        [activeTargetUser.uid]: (activeTargetUser && activeTargetUser.email) || ''
-                    },
-                    participantNames: {
-                        [currentUser.uid]: myEmailUsername,
-                        [activeTargetUser.uid]: targetEmailUsername
-                    },
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                if (confirmBtn) {
+                    confirmBtn.disabled = true;
+                    confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying OTP...';
+                }
 
-                // Redirect to Quantum Connect Chat
-                window.location.href = `/quantum_connect?chatId=${chatId}`;
-            } catch (err) {
-                // If target was simulated, redirect directly to chat
-                window.location.href = `/quantum_connect?chatId=${chatId}`;
+                try {
+                    const pairDoc = await db.collection('radar_pairings').doc(activePairingId).get();
+                    
+                    if (!pairDoc.exists) {
+                        alert('❌ Pairing session expired or target user disconnected.');
+                        if (confirmBtn) {
+                            confirmBtn.disabled = false;
+                            confirmBtn.textContent = 'Verify OTP & Chat';
+                        }
+                        return;
+                    }
+
+                    const expectedOtp = String(pairDoc.data().otp || '').trim();
+
+                    // STRICT SECURITY CHECK: STOP IF OTP IS WRONG!
+                    if (enteredOtp !== expectedOtp) {
+                        alert('❌ Invalid OTP Code! Pairing Failed.\n\nPlease enter the exact 4-digit OTP provided by the sender.');
+                        if (otpInputField) {
+                            otpInputField.style.borderColor = '#ef4444';
+                            otpInputField.value = '';
+                            otpInputField.focus();
+                        }
+                        if (confirmBtn) {
+                            confirmBtn.disabled = false;
+                            confirmBtn.textContent = 'Verify OTP & Chat';
+                        }
+                        return; // DO NOT PAIR! STOP EXECUTION!
+                    }
+
+                    // OTP MATCHES! Mark status as 'paired'
+                    await db.collection('radar_pairings').doc(activePairingId).update({
+                        status: 'paired'
+                    });
+
+                    const targetEmailUsername = activeTargetUser && activeTargetUser.email ? activeTargetUser.email.split('@')[0] : (activeTargetUser && activeTargetUser.name ? (activeTargetUser.name.includes('@') ? activeTargetUser.name.split('@')[0] : activeTargetUser.name) : 'User');
+                    const myEmailUsername = currentUser.email ? currentUser.email.split('@')[0] : (currentUser.displayName || 'User');
+
+                    // Initialize Quantum Chat Collection
+                    await db.collection('quantum_chats').doc(chatId).set({
+                        chatId: chatId,
+                        participants: [currentUser.uid, activeTargetUser.uid],
+                        partnerName: targetEmailUsername,
+                        partnerEmail: (activeTargetUser && activeTargetUser.email) || '',
+                        participantEmails: {
+                            [currentUser.uid]: currentUser.email || '',
+                            [activeTargetUser.uid]: (activeTargetUser && activeTargetUser.email) || ''
+                        },
+                        participantNames: {
+                            [currentUser.uid]: myEmailUsername,
+                            [activeTargetUser.uid]: targetEmailUsername
+                        },
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+
+                    // Redirect receiver to chat
+                    window.location.href = `/quantum_connect?chatId=${chatId}`;
+                } catch (err) {
+                    console.error('[Pairing Error]', err);
+                    alert('Error verifying OTP: ' + err.message);
+                    if (confirmBtn) {
+                        confirmBtn.disabled = false;
+                        confirmBtn.textContent = 'Verify OTP & Chat';
+                    }
+                }
+            } else {
+                // Sender Mode (Displaying OTP and waiting for receiver to enter & verify):
+                try {
+                    const pairDoc = await db.collection('radar_pairings').doc(activePairingId).get();
+                    if (pairDoc.exists && pairDoc.data().status === 'paired') {
+                        window.location.href = `/quantum_connect?chatId=${chatId}`;
+                    } else {
+                        alert('⏳ Waiting for target user to enter and verify your 4-digit pairing OTP code...');
+                    }
+                } catch (err) {
+                    window.location.href = `/quantum_connect?chatId=${chatId}`;
+                }
             }
         }
 
