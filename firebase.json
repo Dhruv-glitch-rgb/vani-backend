@@ -209,6 +209,14 @@
         "destination": "/ai4consol.html"
       },
       {
+        "source": "/vani_history",
+        "destination": "/vani_history.html"
+      },
+      {
+        "source": "/vani-history",
+        "destination": "/vani_history.html"
+      },
+      {
         "source": "/auth-vani-xai",
         "destination": "/auth-vani-xai.html"
       },

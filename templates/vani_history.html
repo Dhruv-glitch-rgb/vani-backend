@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V.A.N.I-xAI // Date-by-Date Chat History</title>
+    <meta name="description" content="View, search, filter, and manage your complete V.A.N.I-xAI chat history date by date with high-speed search and export tools.">
+    <meta name="keywords" content="vani history, vani-xai chat history, vani chat logs, vani-nzdrsr.web.app/vani_history">
+
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Base Stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+
+    <style>
+        :root {
+            --hist-bg: #f8fafc;
+            --hist-panel: #ffffff;
+            --hist-border: #cbd5e1;
+            --hist-text: #0f172a;
+            --hist-muted: #64748b;
+            --hist-accent: #0284c7;
+            --hist-purple: #7c3aed;
+        }
+
+        body.dark-mode {
+            --hist-bg: #0f172a;
+            --hist-panel: #1e293b;
+            --hist-border: rgba(255, 255, 255, 0.1);
+            --hist-text: #f8fafc;
+            --hist-muted: #94a3b8;
+            --hist-accent: #38bdf8;
+            --hist-purple: #c084fc;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--hist-bg);
+            color: var(--hist-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Top Navbar */
+        .history-navbar {
+            height: 60px;
+            background: var(--hist-panel);
+            border-bottom: 1px solid var(--hist-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--hist-text);
+        }
+
+        .nav-logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .nav-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-badge {
+            background: rgba(2, 132, 199, 0.1);
+            color: var(--hist-accent);
+            border: 1px solid rgba(2, 132, 199, 0.25);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--hist-muted);
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--hist-text);
+            background: rgba(0,0,0,0.04);
+        }
+
+        body.dark-mode .nav-btn:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .nav-btn.active {
+            background: var(--hist-accent);
+            color: #ffffff !important;
+            border-color: var(--hist-accent);
+        }
+
+        /* Main Container */
+        .history-container {
+            flex: 1;
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 28px 20px 80px;
+            box-sizing: border-box;
+        }
+
+        /* Header Dashboard Banner */
+        .history-hero {
+            background: var(--hist-panel);
+            border: 1px solid var(--hist-border);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .hero-left h1 {
+            margin: 0 0 6px 0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--hist-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-left p {
+            margin: 0;
+            font-size: 0.88rem;
+            color: var(--hist-muted);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(2, 132, 199, 0.06);
+            border: 1px solid rgba(2, 132, 199, 0.15);
+            border-radius: 12px;
+            padding: 10px 16px;
+            text-align: center;
+            min-width: 110px;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--hist-accent);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--hist-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Toolbar Controls */
+        .toolbar-panel {
+            background: var(--hist-panel);
+            border: 1px solid var(--hist-border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .search-box-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 240px;
+        }
+
+        .search-box-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--hist-muted);
+            font-size: 0.9rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: 10px;
+            border: 1px solid var(--hist-border);
+            background: var(--hist-bg);
+            color: var(--hist-text);
+            font-size: 0.88rem;
+            font-family: inherit;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--hist-accent);
+        }
+
+        .toolbar-filters {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .date-picker-input {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--hist-border);
+            background: var(--hist-bg);
+            color: var(--hist-text);
+            font-size: 0.84rem;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filter-chip {
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--hist-border);
+            background: var(--hist-bg);
+            color: var(--hist-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: var(--hist-accent);
+            color: #ffffff;
+            border-color: var(--hist-accent);
+        }
+
+        .action-btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--hist-border);
+            background: var(--hist-panel);
+            color: var(--hist-text);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            border-color: var(--hist-accent);
+            color: var(--hist-accent);
+        }
+
+        .action-btn.danger-btn:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        /* Feed & Date Grouping */
+        .date-group-card {
+            background: var(--hist-panel);
+            border: 1px solid var(--hist-border);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .date-group-header {
+            padding: 16px 20px;
+            background: rgba(2, 132, 199, 0.04);
+            border-bottom: 1px solid var(--hist-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .date-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--hist-text);
+        }
+
+        .date-badge {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--hist-purple);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        .date-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn-small {
+            background: transparent;
+            border: none;
+            color: var(--hist-muted);
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn-small:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--hist-text);
+        }
+
+        body.dark-mode .icon-btn-small:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .date-group-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .date-group-body.collapsed {
+            display: none;
+        }
+
+        /* Message Rows */
+        .msg-row {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--hist-border);
+        }
+
+        .msg-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .msg-bubble-user {
+            align-self: flex-end;
+            max-width: 85%;
+            background: #0284c7;
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 16px 16px 4px 16px;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
+        }
+
+        body.dark-mode .msg-bubble-user {
+            background: #1e293b;
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .msg-bubble-user .msg-meta {
+            font-size: 0.68rem;
+            opacity: 0.8;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .msg-row-assistant {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-width: 95%;
+        }
+
+        .assistant-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .assistant-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--hist-accent);
+        }
+
+        .assistant-name {
+            font-weight: 700;
+            font-size: 0.86rem;
+            color: var(--hist-text);
+        }
+
+        .assistant-body {
+            font-size: 0.93rem;
+            line-height: 1.6;
+            color: var(--hist-text);
+            padding-left: 34px;
+            word-break: break-word;
+        }
+
+        .assistant-footer {
+            padding-left: 34px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.72rem;
+            color: var(--hist-muted);
+            margin-top: 2px;
+        }
+
+        .empty-history-box {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--hist-panel);
+            border: 1px solid var(--hist-border);
+            border-radius: 18px;
+            color: var(--hist-muted);
+        }
+
+        .empty-history-box i {
+            font-size: 3rem;
+            color: var(--hist-accent);
+            margin-bottom: 16px;
+            opacity: 0.7;
+        }
+
+        /* Footer Branding */
+        .history-footer {
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid var(--hist-border);
+            background: var(--hist-panel);
+            font-size: 0.8rem;
+            color: var(--hist-muted);
+            margin-top: auto;
+        }
+
+        .indian-flag-icon {
+            height: 1.15em;
+            width: 22px !important;
+            max-width: 22px !important;
+            vertical-align: middle;
+            display: inline-block;
+            border-radius: 2px;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <header class="history-navbar">
+        <a href="/ai4consol" class="nav-brand">
+            <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" class="nav-logo" alt="VANI Logo" onerror="this.src='vani_icon.png'">
+            <span class="nav-title">V.A.N.I-xAI</span>
+            <span class="nav-badge">v2.6 Chat History</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/ai4consol" class="nav-btn"><i class="fa-solid fa-terminal"></i> Console</a>
+            <a href="/saras_web_search" class="nav-btn"><i class="fa-solid fa-globe"></i> Saras Search</a>
+            <a href="/quantum_radar" class="nav-btn"><i class="fa-solid fa-radar"></i> Radar</a>
+            <a href="/settings" class="nav-btn"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="/vani_history" class="nav-btn active"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
+            <button class="icon-btn-small" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="history-container">
+        <!-- Hero Dashboard -->
+        <section class="history-hero">
+            <div class="hero-left">
+                <h1><i class="fa-solid fa-clock-rotate-left" style="color: var(--hist-accent);"></i> V.A.N.I Chat History</h1>
+                <p>View, filter, and manage your complete AI conversations organized chronologically date by date.</p>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-total-messages">0</div>
+                    <div class="stat-label">Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-active-days">0</div>
+                    <div class="stat-label">Active Days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color:#10b981;"><i class="fa-solid fa-circle" style="font-size:0.6rem; vertical-align:middle;"></i> Sync</div>
+                    <div class="stat-label">Live Firestore</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Toolbar Panel -->
+        <section class="toolbar-panel">
+            <div class="search-box-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="history-search" class="search-input" placeholder="Search chat history by keyword or topic...">
+            </div>
+            <div class="toolbar-filters">
+                <input type="date" id="history-date-picker" class="date-picker-input" title="Select specific date">
+                <button class="filter-chip active" data-filter="all">All Dates</button>
+                <button class="filter-chip" data-filter="today">Today</button>
+                <button class="filter-chip" data-filter="yesterday">Yesterday</button>
+                <button class="action-btn" onclick="exportChatHistoryJSON()"><i class="fa-solid fa-download"></i> Export JSON</button>
+                <button class="action-btn danger-btn" onclick="confirmClearAllHistory()"><i class="fa-solid fa-trash-can"></i> Clear History</button>
+            </div>
+        </section>
+
+        <!-- History Date-by-Date Feed -->
+        <section id="history-feed-container">
+            <div class="empty-history-box">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <h3>Loading Chat History...</h3>
+                <p>Connecting to secure V.A.N.I database...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="history-footer">
+        <div>
+            V.A.N.I-xAI &copy; 2026. All rights reserved. &bull; Don't Assume, Verify. &bull; 
+            <img src="/indian_flag.svg" alt="Indian Flag" class="indian-flag-icon"> Proudly Envisioned &amp; Built in India
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="./main.js"></script>
+
+    <script>
+        let allChatDocs = [];
+        let activeDateFilter = 'all';
+        let searchQuery = '';
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        const savedTheme = localStorage.getItem('vani_theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.className = 'fa-solid fa-sun';
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('vani_theme', isDark ? 'dark' : 'light');
+            themeIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        });
+
+        // Auth & Firestore History Listener
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                listenToChatHistory(user.uid);
+            } else {
+                renderUnauthenticatedState();
+            }
+        });
+
+        function renderUnauthenticatedState() {
+            const container = document.getElementById('history-feed-container');
+            container.innerHTML = `
+                <div class="empty-history-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <h3>Authentication Required</h3>
+                    <p>Please log in to view and manage your date-by-date chat history.</p>
+                    <a href="/auth-vani-xai" class="nav-btn active" style="display:inline-block; margin-top:14px;">Sign In / Register</a>
+                </div>
+            `;
+        }
+
+        function listenToChatHistory(uid) {
+            db.collection('users').doc(uid).collection('chats')
+                .orderBy('timestamp', 'desc')
+                .onSnapshot(snapshot => {
+                    allChatDocs = [];
+                    if (snapshot && !snapshot.empty) {
+                        snapshot.forEach(doc => {
+                            allChatDocs.push({
+                                id: doc.id,
+                                ...doc.data()
+                            });
+                        });
+                    }
+                    renderHistoryFeed();
+                }, err => {
+                    console.error("Firestore history error:", err);
+                    document.getElementById('history-feed-container').innerHTML = `
+                        <div class="empty-history-box">
+                            <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>
+                            <h3>Error Loading Chat History</h3>
+                            <p>${err.message || 'Could not fetch chat logs from database.'}</p>
+                        </div>
+                    `;
+                });
+        }
+
+        // Render History Grouped Date-by-Date
+        function renderHistoryFeed() {
+            const container = document.getElementById('history-feed-container');
+            
+            // Filter by search query & date filters
+            let filtered = allChatDocs.filter(item => {
+                if (searchQuery) {
+                    const contentStr = String(item.content || '').toLowerCase();
+                    const senderStr = String(item.sender || '').toLowerCase();
+                    if (!contentStr.includes(searchQuery) && !senderStr.includes(searchQuery)) {
+                        return false;
+                    }
+                }
+
+                if (activeDateFilter !== 'all') {
+                    const docDate = item.timestamp ? (typeof item.timestamp.toDate === 'function' ? item.timestamp.toDate() : new Date(item.timestamp)) : new Date();
+                    const today = new Date();
+                    
+                    if (activeDateFilter === 'today') {
+                        if (docDate.toDateString() !== today.toDateString()) return false;
+                    } else if (activeDateFilter === 'yesterday') {
+                        const yesterday = new Date();
+                        yesterday.setDate(today.getDate() - 1);
+                        if (docDate.toDateString() !== yesterday.toDateString()) return false;
+                    } else if (activeDateFilter.startsWith('date:')) {
+                        const selectedDateStr = activeDateFilter.replace('date:', '');
+                        const docDateIso = docDate.toISOString().split('T')[0];
+                        if (docDateIso !== selectedDateStr) return false;
+                    }
+                }
+                return true;
+            });
+
+            // Update Statistics
+            document.getElementById('stat-total-messages').textContent = filtered.length;
+            
+            // Unique Dates Count
+            const uniqueDates = new Set();
+            filtered.forEach(item => {
+                const docDate = item.timestamp ? (typeof item.timestamp.toDate === 'function' ? item.timestamp.toDate() : new Date(item.timestamp)) : new Date();
+                uniqueDates.add(docDate.toDateString());
+            });
+            document.getElementById('stat-active-days').textContent = uniqueDates.size;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-history-box">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <h3>No Chat History Found</h3>
+                        <p>${allChatDocs.length === 0 ? "You haven't started any chat conversations with V.A.N.I yet." : "No chat entries match your current search or date filter."}</p>
+                        <a href="/ai4consol" class="nav-btn active" style="display:inline-block; margin-top:14px;"><i class="fa-solid fa-comment-dots"></i> Start a Conversation</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group by Date string
+            const groupsMap = new Map();
+            filtered.forEach(item => {
+                const docDate = item.timestamp ? (typeof item.timestamp.toDate === 'function' ? item.timestamp.toDate() : new Date(item.timestamp)) : new Date();
+                const dateKey = docDate.toISOString().split('T')[0]; // YYYY-MM-DD
+                
+                if (!groupsMap.has(dateKey)) {
+                    groupsMap.set(dateKey, {
+                        dateObj: docDate,
+                        items: []
+                    });
+                }
+                groupsMap.get(dateKey).items.push(item);
+            });
+
+            let feedHtml = '';
+            groupsMap.forEach((group, dateKey) => {
+                const dateObj = group.dateObj;
+                const todayStr = new Date().toDateString();
+                const yesterdayObj = new Date();
+                yesterdayObj.setDate(new Date().getDate() - 1);
+                
+                let dateDisplayTitle = dateObj.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                if (dateObj.toDateString() === todayStr) {
+                    dateDisplayTitle = `Today — ${dateDisplayTitle}`;
+                } else if (dateObj.toDateString() === yesterdayObj.toDateString()) {
+                    dateDisplayTitle = `Yesterday — ${dateDisplayTitle}`;
+                }
+
+                // Sort group items chronologically ascending for readable flow inside date card
+                const sortedItems = group.items.slice().reverse();
+
+                feedHtml += `
+                    <div class="date-group-card" id="group-${dateKey}">
+                        <div class="date-group-header" onclick="toggleDateGroup('${dateKey}')">
+                            <div class="date-header-left">
+                                <i class="fa-regular fa-calendar-days" style="color: var(--hist-accent);"></i>
+                                <span class="date-title">${dateDisplayTitle}</span>
+                                <span class="date-badge">${group.items.length} ${group.items.length === 1 ? 'message' : 'messages'}</span>
+                            </div>
+                            <div class="date-header-right">
+                                <button class="icon-btn-small" onclick="event.stopPropagation(); copyDateGroupText('${dateKey}')" title="Copy date's conversation">
+                                    <i class="fa-regular fa-copy"></i> Copy
+                                </button>
+                                <button class="icon-btn-small" onclick="event.stopPropagation(); deleteDateGroup('${dateKey}')" title="Delete date's history" style="color:#ef4444;">
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </button>
+                                <i class="fa-solid fa-chevron-down" id="chevron-${dateKey}"></i>
+                            </div>
+                        </div>
+                        <div class="date-group-body" id="body-${dateKey}">
+                `;
+
+                sortedItems.forEach(msg => {
+                    const timeStr = msg.timestamp ? (typeof msg.timestamp.toDate === 'function' ? msg.timestamp.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '') : '';
+                    
+                    if (msg.sender === 'user') {
+                        feedHtml += `
+                            <div class="msg-row">
+                                <div class="msg-bubble-user">
+                                    <div>${escapeHtml(msg.content)}</div>
+                                    <div class="msg-meta"><i class="fa-solid fa-user"></i> You &bull; ${timeStr}</div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        feedHtml += `
+                            <div class="msg-row">
+                                <div class="msg-row-assistant">
+                                    <div class="assistant-header">
+                                        <img src="./vani_icon.png" class="assistant-avatar" alt="VANI">
+                                        <span class="assistant-name">V.A.N.I-xAI</span>
+                                        <span class="date-badge" style="font-size:0.65rem; background:rgba(2,132,199,0.1); color:var(--hist-accent);"><i class="fa-solid fa-sparkles"></i> AI Response</span>
+                                    </div>
+                                    <div class="assistant-body">${msg.content}</div>
+                                    <div class="assistant-footer">
+                                        <span><i class="fa-solid fa-clock"></i> ${timeStr}</span>
+                                        <button class="icon-btn-small" onclick="copySingleMessage(this)" data-text="${escapeAttr(msg.content)}" title="Copy message"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        <button class="icon-btn-small" onclick="deleteSingleMessage('${msg.id}')" title="Delete message" style="color:#ef4444;"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                feedHtml += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = feedHtml;
+        }
+
+        // Toggle Group Expansion
+        function toggleDateGroup(dateKey) {
+            const body = document.getElementById(`body-${dateKey}`);
+            const chevron = document.getElementById(`chevron-${dateKey}`);
+            if (body) body.classList.toggle('collapsed');
+            if (chevron) {
+                chevron.className = body.classList.contains('collapsed') ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-down';
+            }
+        }
+
+        // Search Input Handling
+        document.getElementById('history-search').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            renderHistoryFeed();
+        });
+
+        // Filter Chips
+        document.querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeDateFilter = btn.getAttribute('data-filter');
+                document.getElementById('history-date-picker').value = '';
+                renderHistoryFeed();
+            });
+        });
+
+        // Date Picker
+        document.getElementById('history-date-picker').addEventListener('change', (e) => {
+            if (e.target.value) {
+                document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+                activeDateFilter = `date:${e.target.value}`;
+                renderHistoryFeed();
+            }
+        });
+
+        // Actions: Copy Single Message
+        function copySingleMessage(btn) {
+            const rawText = btn.getAttribute('data-text') || '';
+            const cleanText = rawText.replace(/<[^>]*>/g, '');
+            navigator.clipboard.writeText(cleanText).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                setTimeout(() => { btn.innerHTML = orig; }, 1500);
+            });
+        }
+
+        // Actions: Copy Date's Conversation
+        function copyDateGroupText(dateKey) {
+            const body = document.getElementById(`body-${dateKey}`);
+            if (!body) return;
+            const text = body.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`Copied date conversation (${dateKey}) to clipboard!`);
+            });
+        }
+
+        // Actions: Delete Single Message
+        async function deleteSingleMessage(docId) {
+            if (!auth.currentUser) return;
+            if (!confirm("Are you sure you want to delete this chat message?")) return;
+            try {
+                await db.collection('users').doc(auth.currentUser.uid).collection('chats').doc(docId).delete();
+            } catch (err) {
+                alert("Error deleting message: " + err.message);
+            }
+        }
+
+        // Actions: Delete Date Group
+        async function deleteDateGroup(dateKey) {
+            if (!auth.currentUser) return;
+            if (!confirm(`Are you sure you want to delete all chat history for ${dateKey}?`)) return;
+            try {
+                const toDelete = allChatDocs.filter(item => {
+                    const docDate = item.timestamp ? (typeof item.timestamp.toDate === 'function' ? item.timestamp.toDate() : new Date(item.timestamp)) : new Date();
+                    return docDate.toISOString().split('T')[0] === dateKey;
+                });
+                const batch = db.batch();
+                toDelete.forEach(doc => {
+                    const ref = db.collection('users').doc(auth.currentUser.uid).collection('chats').doc(doc.id);
+                    batch.delete(ref);
+                });
+                await batch.commit();
+            } catch (err) {
+                alert("Error deleting date group: " + err.message);
+            }
+        }
+
+        // Actions: Clear All History
+        async function confirmClearAllHistory() {
+            if (!auth.currentUser) return;
+            if (!confirm("⚠️ CAUTION: Are you sure you want to permanently delete your ENTIRE V.A.N.I chat history? This cannot be undone.")) return;
+            try {
+                const snapshot = await db.collection('users').doc(auth.currentUser.uid).collection('chats').get();
+                if (snapshot.empty) return;
+                const batch = db.batch();
+                snapshot.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+                alert("All chat history cleared successfully!");
+            } catch (err) {
+                alert("Error clearing chat history: " + err.message);
+            }
+        }
+
+        // Export JSON
+        function exportChatHistoryJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allChatDocs, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `vani_chat_history_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        // Helpers
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        function escapeAttr(str) {
+            if (!str) return '';
+            return String(str).replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>

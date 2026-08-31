@@ -214,6 +214,11 @@ def serve_sitemap_xml():
 def serve_robots_txt():
     return send_from_directory(PUBLIC_DIR, 'robots.txt', mimetype='text/plain; charset=utf-8')
 
+@app.route('/vani_history')
+@app.route('/vani-history')
+def serve_vani_history():
+    return serve_page('vani_history.html')
+
 @app.route('/.well-known/mcp.json', methods=['GET', 'POST'])
 @app.route('/.well-known/mcp', methods=['GET', 'POST'])
 @app.route('/api/mcp', methods=['GET', 'POST'])
