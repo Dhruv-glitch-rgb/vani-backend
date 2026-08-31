@@ -1381,7 +1381,12 @@
                 <i class="fa-solid fa-bell" style="color: #c084fc;"></i>
                 <span>Push Notifications</span>
             </div>
-            <button onclick="toggleNotificationDrawer()" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1rem;"><i class="fa-solid fa-xmark"></i></button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button onclick="markAllNotificationsSeen()" title="Mark all as read" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #c084fc; font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                    <i class="fa-solid fa-check-double"></i> Mark Seen
+                </button>
+                <button onclick="toggleNotificationDrawer()" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1rem;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
         </div>
         <div id="notif-drawer-list" style="flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px;">
             <div style="text-align: center; color: #64748b; font-size: 0.82rem; padding: 30px 10px;">Listening for real-time broadcasts...</div>
@@ -1585,9 +1590,20 @@
                 }
             }
         });
-        // --- Real-time Push Notification System ---
-        let lastNotifTimestamp = 0;
+        // --- Real-time Push Notification System with LocalStorage Persistence ---
+        let lastNotifTimestamp = parseInt(localStorage.getItem('vani_last_seen_notif_time') || '0', 10);
         let isInitialNotifLoad = true;
+        let currentLatestNotifTime = 0;
+
+        window.markAllNotificationsSeen = function(timeMillis) {
+            const timeToMark = timeMillis || currentLatestNotifTime;
+            if (timeToMark > 0) {
+                lastNotifTimestamp = Math.max(lastNotifTimestamp, timeToMark);
+                localStorage.setItem('vani_last_seen_notif_time', lastNotifTimestamp.toString());
+            }
+            const badge = document.getElementById('notif-badge');
+            if (badge) badge.style.display = 'none';
+        };
 
         function safeEscapeHtml(str) {
             if (!str) return '';
@@ -1653,22 +1669,28 @@
 
                     if (latestDoc) {
                         const latestTime = latestDoc.timestamp ? (typeof latestDoc.timestamp.toMillis === 'function' ? latestDoc.timestamp.toMillis() : new Date(latestDoc.timestamp).getTime()) : Date.now();
-                        
+                        currentLatestNotifTime = latestTime;
+
                         if (isInitialNotifLoad) {
                             isInitialNotifLoad = false;
-                            lastNotifTimestamp = latestTime;
-                            if (badge) badge.style.display = 'block';
-                            showPushToast(latestDoc.title, latestDoc.message, latestDoc.type);
+                            if (latestTime > lastNotifTimestamp) {
+                                if (badge) badge.style.display = 'block';
+                                showPushToast(latestDoc.title, latestDoc.message, latestDoc.type, latestTime);
+                            } else {
+                                if (badge) badge.style.display = 'none';
+                            }
                         } else if (latestTime > lastNotifTimestamp) {
-                            lastNotifTimestamp = latestTime;
                             if (badge) badge.style.display = 'block';
-                            showPushToast(latestDoc.title, latestDoc.message, latestDoc.type);
+                            showPushToast(latestDoc.title, latestDoc.message, latestDoc.type, latestTime);
                         }
                     }
                 }, err => console.warn("Push listener warning:", err));
         }
 
-        function showPushToast(title, message, type) {
+        function showPushToast(title, message, type, timeMillis) {
+            if (timeMillis) {
+                currentLatestNotifTime = Math.max(currentLatestNotifTime, timeMillis);
+            }
             const banner = document.getElementById('push-toast-banner');
             const titleEl = document.getElementById('push-toast-title');
             const bodyEl = document.getElementById('push-toast-body');
@@ -1702,18 +1724,26 @@
 
             setTimeout(() => {
                 banner.style.display = 'none';
+                if (timeMillis) window.markAllNotificationsSeen(timeMillis);
             }, 8000);
         }
 
         window.closePushToast = function() {
             const banner = document.getElementById('push-toast-banner');
             if (banner) banner.style.display = 'none';
+            window.markAllNotificationsSeen();
         };
 
         window.toggleNotificationDrawer = function() {
             const drawer = document.getElementById('notification-drawer');
             const badge = document.getElementById('notif-badge');
-            if (drawer) drawer.classList.toggle('hidden');
+            if (drawer) {
+                const isHidden = drawer.classList.contains('hidden');
+                drawer.classList.toggle('hidden');
+                if (isHidden) {
+                    window.markAllNotificationsSeen();
+                }
+            }
             if (badge) badge.style.display = 'none';
         };
 
