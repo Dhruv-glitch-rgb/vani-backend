@@ -1859,16 +1859,38 @@
         }
         window.executeAppSignOut = executeAppSignOut;
 
-        document.getElementById('btn-signout')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+        // Override window.confirm so native browser popups are impossible for logout
+        window.confirm = function(msg) {
+            console.log("Native confirm blocked:", msg);
             openCustomLogoutModal();
-        });
-        document.getElementById('btn-signout-sidebar')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            openCustomLogoutModal();
-        });
+            return false;
+        };
+
+        const btnHeaderSignout = document.getElementById('btn-signout');
+        if (btnHeaderSignout) {
+            btnHeaderSignout.onclick = function(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                }
+                openCustomLogoutModal();
+                return false;
+            };
+        }
+
+        const btnSidebarSignout = document.getElementById('btn-signout-sidebar');
+        if (btnSidebarSignout) {
+            btnSidebarSignout.onclick = function(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                }
+                openCustomLogoutModal();
+                return false;
+            };
+        }
 
         // Close modal on Escape
         window.addEventListener('keydown', (e) => {
@@ -2215,7 +2237,7 @@
     </div>
 
     <!-- Main Logic Script -->
-    <script src="./main.js?v=2026_q2"></script>
+    <script src="./main.js?v=2026_q2_v_custom_logout_final"></script>
 </body>
 
 </html>

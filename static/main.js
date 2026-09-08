@@ -924,27 +924,26 @@ window.addEventListener('DOMContentLoaded', () => {
         if (btn) {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopImmediatePropagation();
                 if (typeof window.openCustomLogoutModal === 'function') {
                     window.openCustomLogoutModal();
                     return;
                 }
-                if (confirm("Are you sure you want to sign out of V.A.N.I-xAI?")) {
-                    if (typeof auth !== 'undefined' && auth.signOut) {
-                        auth.signOut().then(() => {
-                            localStorage.removeItem('vani_session_token');
-                            window.location.href = './auth-vani-xai.html';
-                        }).catch(err => {
-                            console.error("Sign out error:", err);
-                            window.location.href = './auth-vani-xai.html';
-                        });
-                    } else if (typeof firebase !== 'undefined' && firebase.auth) {
-                        firebase.auth().signOut().then(() => {
-                            localStorage.removeItem('vani_session_token');
-                            window.location.href = './auth-vani-xai.html';
-                        });
-                    } else {
+                if (typeof auth !== 'undefined' && auth.signOut) {
+                    auth.signOut().then(() => {
+                        localStorage.removeItem('vani_session_token');
                         window.location.href = './auth-vani-xai.html';
-                    }
+                    }).catch(err => {
+                        console.error("Sign out error:", err);
+                        window.location.href = './auth-vani-xai.html';
+                    });
+                } else if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut().then(() => {
+                        localStorage.removeItem('vani_session_token');
+                        window.location.href = './auth-vani-xai.html';
+                    });
+                } else {
+                    window.location.href = './auth-vani-xai.html';
                 }
             });
         }
