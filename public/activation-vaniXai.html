@@ -239,6 +239,50 @@
             transform: none;
         }
 
+        .gmail-quick-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #1e293b;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-top: 6px;
+        }
+        .gmail-quick-btn:hover {
+            background: #f8fafc;
+            border-color: #0284c7;
+            color: #0284c7;
+        }
+
+        .sovereign-fallback-btn {
+            background: rgba(2, 132, 199, 0.08);
+            border: 1px dashed rgba(2, 132, 199, 0.35);
+            color: var(--accent-primary);
+            padding: 9px 16px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 6px;
+        }
+        .sovereign-fallback-btn:hover {
+            background: rgba(2, 132, 199, 0.16);
+            border-color: var(--accent-primary);
+        }
+
         /* Form Controls */
         .input-group {
             text-align: left;
@@ -498,6 +542,11 @@
                 <div id="emailNoticeSub" style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">
                     Contacting Bureau mail service to deliver your welcome key...
                 </div>
+                <div id="emailNoticeActions" style="display: none;">
+                    <a id="btnCheckGmail" href="https://mail.google.com/mail/u/0/#search/from%3Aemailjs.com+OR+subject%3AVANI" target="_blank" class="gmail-quick-btn">
+                        <i class="fa-brands fa-google" style="color: #ea4335;"></i> Search in Gmail (Inbox &amp; Spam)
+                    </a>
+                </div>
             </div>
             <button type="button" onclick="handleResendKey()" class="mini-resend-btn" id="btnMiniResend" title="Resend Email Now">
                 <i class="fa-solid fa-rotate-right"></i>
@@ -539,13 +588,18 @@
         <div id="statusFeedback" class="status-feedback"></div>
 
         <!-- Secondary Actions -->
-        <div class="helper-actions">
-            <button type="button" class="btn-link" id="btnResend" onclick="handleResendKey()">
-                <i class="fa-solid fa-rotate-right"></i> Resend Email
+        <div class="helper-actions" style="flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <button type="button" class="btn-link" id="btnResend" onclick="handleResendKey()">
+                    <i class="fa-solid fa-rotate-right"></i> Resend Email
+                </button>
+                <a href="#" class="btn-link signout-link" onclick="handleSignOut(event)">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign in with different email
+                </a>
+            </div>
+            <button type="button" class="sovereign-fallback-btn" id="btnRevealFallback" onclick="handleRevealAndAutoFill()" title="Zero-Lockout Guarantee: Retrieve your key directly">
+                <i class="fa-solid fa-shield-halved"></i> Can't find email? Auto-Fill My Sovereign Key
             </button>
-            <a href="#" class="btn-link signout-link" onclick="handleSignOut(event)">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign in with different email
-            </a>
         </div>
 
         <!-- Footer Stamp -->
@@ -633,6 +687,7 @@
         // Update notice card UI
         function updateEmailNotice(state, email, errorMsg) {
             if (displayEmail) displayEmail.textContent = email || 'your account email';
+            const emailActions = document.getElementById('emailNoticeActions');
             if (!emailNoticeCard || !emailNoticeIcon || !emailNoticeTitle || !emailNoticeSub) return;
 
             if (state === 'sending') {
@@ -642,20 +697,47 @@
                 emailNoticeIcon.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
                 emailNoticeTitle.innerHTML = 'Sending Activation Email...';
                 emailNoticeSub.textContent = 'Contacting Bureau mail service to deliver your welcome key...';
+                if (emailActions) emailActions.style.display = 'none';
             } else if (state === 'success') {
                 emailNoticeCard.style.borderColor = '#bbf7d0';
                 emailNoticeCard.style.background = '#f0fdf4';
                 emailNoticeIcon.style.background = '#10b981';
                 emailNoticeIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
                 emailNoticeTitle.innerHTML = 'Activation Key Dispatched';
-                emailNoticeSub.innerHTML = 'Official welcome message & key sent! <b>Check inbox and spam folder</b>.';
+                emailNoticeSub.innerHTML = 'Welcome message sent to <b>' + (email || 'your email') + '</b>! Check Inbox, Spam, and Promotions.';
+                if (emailActions) emailActions.style.display = 'block';
             } else if (state === 'error') {
                 emailNoticeCard.style.borderColor = '#fecaca';
                 emailNoticeCard.style.background = '#fef2f2';
                 emailNoticeIcon.style.background = '#ef4444';
                 emailNoticeIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
                 emailNoticeTitle.innerHTML = 'Email Delivery Notice';
-                emailNoticeSub.innerHTML = (errorMsg ? errorMsg + '. ' : '') + 'Click <b>Resend Email</b> to retry.';
+                emailNoticeSub.innerHTML = (errorMsg ? errorMsg + '. ' : '') + 'Click <b>Resend Email</b> or use <b>Auto-Fill Key</b> below.';
+                if (emailActions) emailActions.style.display = 'none';
+            }
+        }
+
+        // Direct zero-lockout key retrieval for authenticated users
+        async function handleRevealAndAutoFill() {
+            if (!currentUser) return;
+            try {
+                // Ensure latest key
+                if (!pendingKey) {
+                    const doc = await db.collection('users').doc(currentUser.uid).get();
+                    if (doc.exists && doc.data().pendingActivationKey) {
+                        pendingKey = doc.data().pendingActivationKey;
+                    }
+                }
+                if (pendingKey) {
+                    keyInput.value = pendingKey.toUpperCase();
+                    keyInput.focus();
+                    showStatus('success', '✓ Sovereign Key verified from authenticated profile: ' + pendingKey + '. Click "Verify & Proceed to PIN Setup" below.');
+                } else {
+                    showStatus('error', 'Could not locate pending key. Please click Resend Email.');
+                }
+            } catch (e) {
+                console.error("Auto-fill error:", e);
+                showStatus('error', 'Error retrieving sovereign key: ' + e.message);
             }
         }
 
@@ -694,7 +776,7 @@
                 console.error("EmailJS dispatch error:", err);
                 const reason = err.text || err.message || (typeof err === 'string' ? err : 'Network or delivery issue');
                 updateEmailNotice('error', user.email, reason);
-                showStatus('error', 'Unable to send email to ' + user.email + ' (' + reason + '). Please click "Resend Email" below.');
+                showStatus('error', 'Unable to send email to ' + user.email + ' (' + reason + '). Please click "Resend Email" or use Auto-Fill Key below.');
             }
         }
 
