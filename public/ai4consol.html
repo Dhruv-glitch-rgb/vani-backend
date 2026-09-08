@@ -1301,8 +1301,8 @@
                     <i class="fa-solid fa-bars-staggered"></i>
                 </button>
                 <a href="./index.html" class="header-logo" title="Back to Landing Page">
-                    <img src="./vani_icon.png" alt="VANI Icon">
-                    <span class="header-logo-text">V.A.N.I-xAI</span>
+                    <img src="/bureau_logo.png" alt="Bureau of V.A.N.I-xAI" onerror="this.src='./vani_icon.png'">
+                    <span class="header-logo-text">Bureau of V.A.N.I-xAI</span>
                     <span class="quantum-pill">v2.6</span>
                 </a>
                 <div class="header-status-pill">
@@ -1735,15 +1735,24 @@
                 window.VaniFCM.init(user, { autoPrompt: true });
             }
 
-            // User authenticated -> Check PIN session verification & Security PIN setup
-            if (sessionStorage.getItem('pin_verified') !== 'true') {
-                window.location.href = './pin-vaniXai.html';
-                return;
-            }
-
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
-                if (!userDoc.exists || (!userDoc.data().pin && !userDoc.data().securityPin)) {
+                const userData = userDoc.exists ? userDoc.data() : {};
+
+                // 1. Sovereign Activation check (All users, new and existing, must be activated)
+                if (userData.isActivated !== true && userData.activationKeyVerified !== true) {
+                    window.location.href = './activation-vaniXai.html';
+                    return;
+                }
+
+                // 2. PIN setup check
+                if (!userData.pin && !userData.securityPin) {
+                    window.location.href = './pin-vaniXai.html';
+                    return;
+                }
+
+                // 3. PIN session verification check
+                if (sessionStorage.getItem('pin_verified') !== 'true') {
                     window.location.href = './pin-vaniXai.html';
                     return;
                 }

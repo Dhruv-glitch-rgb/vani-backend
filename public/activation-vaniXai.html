@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bureau of V.A.N.I-xAI — Sovereign Account Activation</title>
+    <link rel="shortcut icon" href="/bureau_logo.png" type="image/x-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-canvas: #f8fafc;
+            --surface-card: rgba(255, 255, 255, 0.94);
+            --border-card: rgba(226, 232, 240, 0.85);
+            --accent-primary: #0284c7;
+            --accent-indigo: #6366f1;
+            --accent-saffron: #ea580c;
+            --accent-emerald: #10b981;
+            --accent-rose: #ef4444;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-sub: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            position: relative;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(2, 132, 199, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 85% 20%, rgba(234, 88, 12, 0.07) 0%, transparent 45%),
+                radial-gradient(circle at 50% 85%, rgba(99, 102, 241, 0.06) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Ambient Glow Spheres */
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-1 {
+            top: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: rgba(14, 165, 233, 0.18);
+        }
+        .orb-2 {
+            bottom: -100px;
+            right: -100px;
+            width: 420px;
+            height: 420px;
+            background: rgba(234, 88, 12, 0.15);
+        }
+
+        /* Container Card */
+        .activation-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            box-shadow: 
+                0 25px 60px -15px rgba(15, 23, 42, 0.12),
+                0 0 0 1px rgba(255, 255, 255, 0.8) inset,
+                0 1px 3px rgba(0, 0, 0, 0.05);
+            max-width: 520px;
+            width: 100%;
+            padding: 42px 36px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            animation: cardEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Bureau Official Seal Header */
+        .bureau-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .bureau-logo-ring {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(234, 88, 12, 0.12));
+            border: 2px solid rgba(2, 132, 199, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.2);
+            position: relative;
+        }
+
+        .bureau-logo-img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .bureau-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            background: rgba(2, 132, 199, 0.08);
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            border-radius: 9999px;
+            color: var(--accent-primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .bureau-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        .bureau-sub {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+            max-width: 440px;
+        }
+
+        /* Dispatched Email Badge Card */
+        .email-notice-card {
+            background: rgba(241, 245, 249, 0.7);
+            border: 1px solid rgba(203, 213, 225, 0.8);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin: 22px 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-align: left;
+        }
+
+        .email-notice-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0284c7, #6366f1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+        }
+
+        .email-notice-text {
+            flex-grow: 1;
+        }
+
+        .email-notice-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 3px;
+        }
+
+        .email-notice-recipient {
+            font-size: 0.82rem;
+            color: var(--accent-primary);
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        /* Form Controls */
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 16px 95px 16px 18px;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: 1px;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            text-transform: uppercase;
+        }
+
+        .key-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .key-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+        }
+
+        .paste-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 14px;
+            background: rgba(2, 132, 199, 0.08);
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            color: var(--accent-primary);
+            border-radius: 9px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .paste-btn:hover {
+            background: rgba(2, 132, 199, 0.16);
+        }
+
+        /* Action Buttons */
+        .btn-activate {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 24px -4px rgba(2, 132, 199, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .btn-activate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -4px rgba(2, 132, 199, 0.5);
+        }
+
+        .btn-activate:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .helper-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 0.88rem;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .btn-link:hover {
+            color: #0369a1;
+            text-decoration: underline;
+        }
+
+        .btn-link:disabled {
+            color: #94a3b8;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .signout-link {
+            color: var(--text-muted);
+        }
+        .signout-link:hover {
+            color: var(--accent-rose);
+        }
+
+        /* Status & Feedback Messages */
+        .status-feedback {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: none;
+            text-align: left;
+        }
+        .status-feedback.success {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+        .status-feedback.error {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+        .status-feedback.info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            color: #0369a1;
+        }
+
+        /* Loading Spinner */
+        .loader-backdrop {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3.5px solid rgba(2, 132, 199, 0.15);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer Stamp */
+        .bureau-footer {
+            margin-top: 28px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            border-top: 1px solid #e2e8f0;
+            padding-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+
+    <div class="activation-card" id="activationCard">
+        <!-- Overlay for processing -->
+        <div class="loader-backdrop" id="loaderBackdrop" style="display: flex;">
+            <div class="spinner"></div>
+            <p id="loaderText" style="font-size: 0.92rem; font-weight: 600; color: #0f172a;">Verifying Sovereign Clearance...</p>
+        </div>
+
+        <!-- Bureau Header -->
+        <div class="bureau-header">
+            <div class="bureau-logo-ring">
+                <img src="/bureau_logo.png" alt="Bureau of V.A.N.I-xAI" class="bureau-logo-img" onerror="this.src='/Bureau_Of_VANI_xAI_Official_Logo.png'">
+            </div>
+            <div class="bureau-tag">
+                <i class="fa-solid fa-shield-halved"></i> Bureau of V.A.N.I-xAI
+            </div>
+            <h1 class="bureau-title">Sovereign Account Activation</h1>
+            <p class="bureau-sub">
+                Enter your official activation key to verify your identity, setup your security PIN, and access the quantum workspace console.
+            </p>
+        </div>
+
+        <!-- Dispatched Email Notice Card -->
+        <div class="email-notice-card">
+            <div class="email-notice-icon">
+                <i class="fa-solid fa-envelope-open-text"></i>
+            </div>
+            <div class="email-notice-text">
+                <div class="email-notice-title">Activation Key Dispatched</div>
+                <div class="email-notice-recipient" id="displayUserEmail">Loading recipient email...</div>
+                <div style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">Check your inbox or spam folder for your welcome message.</div>
+            </div>
+        </div>
+
+        <!-- Key Input Form -->
+        <form id="activationForm" onsubmit="handleVerifyKey(event)">
+            <div class="input-group">
+                <div class="input-label">
+                    <span>Activation Key (BoVxAi Key)</span>
+                    <span style="font-size: 0.75rem; color: #0284c7; font-family: 'Fira Code', monospace;">V.A.N.I-xAI-XXXX-NNNN</span>
+                </div>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="activationKeyInput" 
+                        class="key-input" 
+                        placeholder="V.A.N.I-xAI-XXXX-0000" 
+                        required 
+                        autocomplete="off" 
+                        autocorrect="off" 
+                        spellcheck="false"
+                        oninput="formatKeyInput(this)"
+                    >
+                    <button type="button" class="paste-btn" onclick="handlePasteKey()" title="Paste from clipboard">
+                        <i class="fa-solid fa-paste"></i> Paste
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-activate" id="btnActivate">
+                <span>Verify &amp; Proceed to PIN Setup</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <!-- Status Message -->
+        <div id="statusFeedback" class="status-feedback"></div>
+
+        <!-- Secondary Actions -->
+        <div class="helper-actions">
+            <button type="button" class="btn-link" id="btnResend" onclick="handleResendKey()">
+                <i class="fa-solid fa-rotate-right"></i> Resend Email
+            </button>
+            <a href="#" class="btn-link signout-link" onclick="handleSignOut(event)">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign in with different email
+            </a>
+        </div>
+
+        <!-- Footer Stamp -->
+        <div class="bureau-footer">
+            <span>Official Bureau Protocol &bull; 2026</span>
+            <span style="color: #10b981; font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Sovereign Protection</span>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Modular v9 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <!-- EmailJS SDK & Configuration -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="/emailjs-config.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81",
+            measurementId: "G-RJB5892YTQ"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let pendingKey = null;
+        let cooldownSeconds = 0;
+        let cooldownTimer = null;
+
+        const loader = document.getElementById('loaderBackdrop');
+        const loaderText = document.getElementById('loaderText');
+        const displayEmail = document.getElementById('displayUserEmail');
+        const keyInput = document.getElementById('activationKeyInput');
+        const btnActivate = document.getElementById('btnActivate');
+        const btnResend = document.getElementById('btnResend');
+        const statusEl = document.getElementById('statusFeedback');
+
+        // Helper: Generate BoVxAi Activation Key in format: V.A.N.I-xAI-{first 4 letters of name}-{4 random digits}
+        function generateBoVKey(userName) {
+            let letters = (userName || 'USER').toUpperCase().replace(/[^A-Z]/g, '');
+            if (letters.length < 4) letters = (letters + 'VANI').substring(0, 4);
+            else letters = letters.substring(0, 4);
+            const digits = Math.floor(1000 + Math.random() * 9000);
+            return `V.A.N.I-xAI-${letters}-${digits}`;
+        }
+
+        // Auto uppercase and format input
+        function formatKeyInput(input) {
+            input.value = input.value.toUpperCase();
+        }
+
+        // Paste helper
+        async function handlePasteKey() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    keyInput.value = text.trim().toUpperCase();
+                    keyInput.focus();
+                }
+            } catch (e) {
+                console.warn("Clipboard paste error:", e);
+            }
+        }
+
+        function showStatus(type, msg) {
+            statusEl.className = 'status-feedback ' + type;
+            statusEl.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'circle-check' : (type === 'error' ? 'circle-exclamation' : 'circle-info')}"></i> <span>${msg}</span>`;
+            statusEl.style.display = 'flex';
+        }
+
+        // Auth state watcher
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = '/auth-vani-xai.html';
+                return;
+            }
+            currentUser = user;
+            displayEmail.textContent = user.email || 'Authenticated User';
+
+            try {
+                const userDocRef = db.collection('users').doc(user.uid);
+                const doc = await userDocRef.get();
+                const userData = doc.exists ? doc.data() : {};
+
+                // If already verified, move straight to PIN setup/verify
+                if (userData.isActivated === true || userData.activationKeyVerified === true) {
+                    loaderText.textContent = "Account verified! Proceeding to PIN...";
+                    sessionStorage.setItem('activation_verified', 'true');
+                    setTimeout(() => {
+                        window.location.href = './pin-vaniXai.html';
+                    }, 400);
+                    return;
+                }
+
+                // If user doesn't have a pending key generated yet, generate and send one!
+                if (!userData.pendingActivationKey) {
+                    loaderText.textContent = "Generating your sovereign activation key...";
+                    const name = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+                    pendingKey = generateBoVKey(name);
+
+                    // Save to Firestore
+                    await userDocRef.set({
+                        name: name,
+                        email: user.email,
+                        pendingActivationKey: pendingKey,
+                        pendingActivationAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        isActivated: false
+                    }, { merge: true });
+
+                    // Dispatch welcome email via EmailJS
+                    loaderText.textContent = "Dispatching welcome email & key to " + user.email + "...";
+                    try {
+                        await sendActivationEmail(user.email, name, pendingKey);
+                        showStatus('info', 'A fresh activation key was sent to your email inbox.');
+                    } catch (emailErr) {
+                        console.error("Auto email dispatch error:", emailErr);
+                        showStatus('error', 'Generated key but failed to send email: ' + (emailErr.text || emailErr.message || 'Please click Resend.'));
+                    }
+                } else {
+                    pendingKey = userData.pendingActivationKey;
+                }
+
+                // Hide loader
+                loader.style.display = 'none';
+
+            } catch (err) {
+                console.error("Activation initialization error:", err);
+                loader.style.display = 'none';
+                showStatus('error', 'Error connecting to Bureau database: ' + err.message);
+            }
+        });
+
+        // Email Dispatch helper
+        async function sendActivationEmail(toEmail, userName, key) {
+            return await sendVaniEmail({
+                to_name: userName || 'User',
+                user_name: userName || 'User',
+                to_email: toEmail,
+                user_email: toEmail,
+                activation_key: key,
+                key: key,
+                subject: `Welcome to V.A.N.I-xAI! Your Activation Key: ${key}`,
+                message: `Welcome to the Bureau of V.A.N.I-xAI!\n\nYour account has been registered. Below is your official Sovereign Activation Key:\n\n🔑 YOUR ACTIVATION KEY:\n${key}\n\nPlease paste this key into the verification page to complete activation, after which you will set up your secure PIN.\n\nSupport: official.vanixai.india@gmail.com\nBureau of V.A.N.I-xAI Sovereign Intelligence`
+            });
+        }
+
+        // Verification handler
+        async function handleVerifyKey(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const entered = keyInput.value.trim().toUpperCase();
+            if (!entered) {
+                showStatus('error', 'Please enter your activation key.');
+                return;
+            }
+
+            btnActivate.disabled = true;
+            btnActivate.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying Key...';
+
+            try {
+                // Re-fetch latest document to prevent stale keys
+                const doc = await db.collection('users').doc(currentUser.uid).get();
+                const expectedKey = (doc.exists && doc.data().pendingActivationKey) ? doc.data().pendingActivationKey.trim().toUpperCase() : (pendingKey ? pendingKey.toUpperCase() : '');
+
+                if (entered !== expectedKey) {
+                    btnActivate.disabled = false;
+                    btnActivate.innerHTML = '<span>Verify &amp; Proceed to PIN Setup</span> <i class="fa-solid fa-arrow-right"></i>';
+                    showStatus('error', 'Invalid activation key. Please make sure to enter the exact key sent to ' + currentUser.email);
+                    return;
+                }
+
+                // Key is correct! Mark user as activated
+                showStatus('success', 'Activation key verified successfully! Initializing PIN security...');
+                await db.collection('users').doc(currentUser.uid).set({
+                    isActivated: true,
+                    activationKeyVerified: true,
+                    activationKey: entered,
+                    activatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                // Also log activity
+                await db.collection('logs').add({
+                    activity: "Sovereign Account Activated with Key: " + entered,
+                    email: currentUser.email,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }).catch(console.warn);
+
+                sessionStorage.setItem('activation_verified', 'true');
+                setTimeout(() => {
+                    window.location.href = './pin-vaniXai.html';
+                }, 900);
+
+            } catch (err) {
+                console.error("Verification error:", err);
+                btnActivate.disabled = false;
+                btnActivate.innerHTML = '<span>Verify &amp; Proceed to PIN Setup</span> <i class="fa-solid fa-arrow-right"></i>';
+                showStatus('error', 'Verification error: ' + err.message);
+            }
+        }
+
+        // Resend Key handler
+        async function handleResendKey() {
+            if (!currentUser || cooldownSeconds > 0) return;
+
+            btnResend.disabled = true;
+            btnResend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const name = currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : 'User');
+                // Generate a fresh key if user requests resend
+                pendingKey = generateBoVKey(name);
+
+                await db.collection('users').doc(currentUser.uid).set({
+                    pendingActivationKey: pendingKey,
+                    pendingActivationAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                await sendActivationEmail(currentUser.email, name, pendingKey);
+                showStatus('success', 'A new activation key has been dispatched to ' + currentUser.email);
+
+                // Start cooldown
+                cooldownSeconds = 30;
+                btnResend.innerHTML = `<i class="fa-solid fa-clock"></i> Resend (${cooldownSeconds}s)`;
+                cooldownTimer = setInterval(() => {
+                    cooldownSeconds--;
+                    if (cooldownSeconds <= 0) {
+                        clearInterval(cooldownTimer);
+                        btnResend.disabled = false;
+                        btnResend.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Resend Email';
+                    } else {
+                        btnResend.innerHTML = `<i class="fa-solid fa-clock"></i> Resend (${cooldownSeconds}s)`;
+                    }
+                }, 1000);
+
+            } catch (err) {
+                console.error("Resend error:", err);
+                btnResend.disabled = false;
+                btnResend.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Resend Email';
+                showStatus('error', 'Failed to resend key: ' + (err.text || err.message || 'Please try again.'));
+            }
+        }
+
+        // Sign out option
+        async function handleSignOut(e) {
+            e.preventDefault();
+            try {
+                await auth.signOut();
+                sessionStorage.clear();
+                window.location.href = '/auth-vani-xai.html';
+            } catch (err) {
+                console.error("Sign out error:", err);
+            }
+        }
+    </script>
+</body>
+</html>

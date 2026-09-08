@@ -221,6 +221,14 @@
         "destination": "/auth-vani-xai.html"
       },
       {
+        "source": "/activation-vaniXai",
+        "destination": "/activation-vaniXai.html"
+      },
+      {
+        "source": "/activation-vani-xai",
+        "destination": "/activation-vaniXai.html"
+      },
+      {
         "source": "/ai4",
         "destination": "/ai4.html"
       },

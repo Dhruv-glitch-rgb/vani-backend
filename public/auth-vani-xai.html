@@ -363,7 +363,7 @@
         <!-- Left Branding Panel -->
         <div class="split-left">
             <div class="logo-container">
-                <img src="./vani_icon.png" alt="Logo">
+                <img src="/bureau_logo.png" alt="Bureau of V.A.N.I-xAI Logo" onerror="this.src='./vani_icon.png'">
             </div>
 
             <h1 class="auth-title">V.A.N.I-xAI</h1>
@@ -471,6 +471,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <!-- EmailJS SDK & Configuration -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="/emailjs-config.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -531,12 +535,25 @@
             loading.style.display = 'none';
         }
 
-        // Helper for logging & registering user in Firestore with PIN enforcement
+        // Helper to generate BoVxAi Activation Key
+        function generateBoVKey(userName) {
+            let letters = (userName || 'USER').toUpperCase().replace(/[^A-Z]/g, '');
+            if (letters.length < 4) letters = (letters + 'VANI').substring(0, 4);
+            else letters = letters.substring(0, 4);
+            const digits = Math.floor(1000 + Math.random() * 9000);
+            return `V.A.N.I-xAI-${letters}-${digits}`;
+        }
+
+        // Helper for logging & registering user in Firestore with Activation & PIN enforcement
         async function logActivityAndRedirect(msg, user) {
             try {
                 if (user && typeof db !== 'undefined') {
                     const nameBase = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
                     const vaniId = `V.A.N.I-xAI-${nameBase.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase()}-2026`;
+
+                    const userDocRef = db.collection('users').doc(user.uid);
+                    const userDoc = await userDocRef.get();
+                    const userData = userDoc.exists ? userDoc.data() : {};
 
                     await Promise.all([
                         db.collection('logs').add({
@@ -544,17 +561,52 @@
                             email: user.email || 'Unknown',
                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         }),
-                        db.collection('users').doc(user.uid).set({
+                        userDocRef.set({
                             name: nameBase,
                             email: user.email || 'N/A',
                             vaniId: vaniId,
                             lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                         }, { merge: true })
                     ]);
+
+                    // Check if user has completed sovereign activation
+                    if (userData.isActivated !== true && userData.activationKeyVerified !== true) {
+                        let keyToSend = userData.pendingActivationKey;
+                        if (!keyToSend) {
+                            keyToSend = generateBoVKey(nameBase);
+                            await userDocRef.set({
+                                pendingActivationKey: keyToSend,
+                                pendingActivationAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                isActivated: false
+                            }, { merge: true });
+                        }
+
+                        // Send welcome email with activation key via EmailJS
+                        try {
+                            if (typeof sendVaniEmail === 'function' && user.email) {
+                                await sendVaniEmail({
+                                    to_name: nameBase,
+                                    user_name: nameBase,
+                                    to_email: user.email,
+                                    user_email: user.email,
+                                    activation_key: keyToSend,
+                                    key: keyToSend,
+                                    subject: `Welcome to V.A.N.I-xAI! Your Activation Key: ${keyToSend}`,
+                                    message: `Welcome to the Bureau of V.A.N.I-xAI!\n\nYour account has been registered. Below is your official Sovereign Activation Key:\n\n🔑 YOUR ACTIVATION KEY:\n${keyToSend}\n\nPlease paste this key into the verification page to complete activation, after which you will set up your secure PIN.\n\nSupport: official.vanixai.india@gmail.com\nBureau of V.A.N.I-xAI Sovereign Intelligence`
+                                });
+                            }
+                        } catch (mailErr) {
+                            console.warn("EmailJS welcome dispatch error:", mailErr);
+                        }
+
+                        sessionStorage.removeItem('pin_verified');
+                        window.location.href = './activation-vaniXai.html';
+                        return;
+                    }
                 }
             } catch (e) { console.error("Log/save user error", e); }
             
-            // Clear previous verification state so user must verify PIN or create one
+            // User is activated -> proceed to PIN setup / verify
             sessionStorage.removeItem('pin_verified');
             window.location.href = './pin-vaniXai.html';
         }
@@ -597,9 +649,19 @@
                 });
         });
 
-        // Redirect if already logged in (Always verify PIN first)
+        // Redirect if already logged in (Always verify Activation & PIN first)
         auth.onAuthStateChanged(async user => {
             if (user && !loading.style.display.includes('flex')) {
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (!doc.exists || (doc.data().isActivated !== true && doc.data().activationKeyVerified !== true)) {
+                        window.location.href = './activation-vaniXai.html';
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("Auth check error:", e);
+                }
+
                 if (sessionStorage.getItem('pin_verified') !== 'true') {
                     window.location.href = './pin-vaniXai.html';
                 } else {

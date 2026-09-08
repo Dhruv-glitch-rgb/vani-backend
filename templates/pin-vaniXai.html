@@ -342,7 +342,7 @@
     <div class="texture-grid"></div>
 
     <div class="pin-container glass-panel">
-        <img src="vani_logo.jpg" class="auth-logo" alt="V.A.N.I-xAI">
+        <img src="/bureau_logo.png" class="auth-logo" alt="Bureau of V.A.N.I-xAI" onerror="this.src='vani_logo.jpg'">
         <h2 id="pin-title">Security Gateway</h2>
         <p class="subtitle" id="pin-subtitle">Authenticating session...</p>
         
@@ -1069,6 +1069,12 @@
                     if (doc.exists) {
                         const data = doc.data();
                         const idName = data.name ? encodeURIComponent(data.name.replace(/ /g, '-')) : 'User';
+                        
+                        // Check if account is activated with sovereign BoVxAi key
+                        if (data.isActivated !== true && data.activationKeyVerified !== true) {
+                            window.location.href = './activation-vaniXai.html';
+                            return;
+                        }
                         
                         // Check if banned
                         if (data.status === 'banned') {
