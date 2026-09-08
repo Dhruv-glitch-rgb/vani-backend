@@ -11,36 +11,54 @@
     <link rel="stylesheet" href="./style.css">
     <style>
         :root {
-            --accent-primary: #38bdf8;
-            --accent-secondary: #818cf8;
+            --accent-primary: #0284c7;
+            --accent-secondary: #7c3aed;
+            --accent-pink: #ec4899;
+            --accent-amber: #f59e0b;
+            --accent-emerald: #10b981;
             --error-color: #ef4444;
-            --success-color: #22c55e;
+            --success-color: #10b981;
+            --text-main: #0f172a;
+            --text-dim: #475569;
         }
 
-        /* Specific PIN Page Styles (Overrides) */
+        body.light-theme {
+            background: #f8faff !important;
+            color: #0f172a !important;
+            font-family: 'Outfit', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
 
-        /* Ambient Glows */
+        /* Ambient Colorful Floating Mesh Blobs */
         .ambient-core {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80vw; height: 80vw;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 50%);
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(110px);
+            pointer-events: none;
             z-index: 0;
-            animation: breathe 8s ease-in-out infinite alternate;
+            opacity: 0.42;
+            animation: floatGlow 14s infinite alternate ease-in-out;
         }
+        .pin-glow-1 { top: -10%; left: -8%; width: 500px; height: 500px; background: radial-gradient(circle, #fcd34d 0%, rgba(245, 158, 11, 0.4) 45%, transparent 70%); }
+        .pin-glow-2 { top: 10%; right: -8%; width: 520px; height: 520px; background: radial-gradient(circle, #38bdf8 0%, rgba(2, 132, 199, 0.4) 45%, transparent 70%); animation-delay: -3.5s; }
+        .pin-glow-3 { bottom: -10%; left: 10%; width: 540px; height: 540px; background: radial-gradient(circle, #f472b6 0%, rgba(236, 72, 153, 0.35) 45%, transparent 70%); animation-delay: -7s; }
+        .pin-glow-4 { bottom: 5%; right: 10%; width: 480px; height: 480px; background: radial-gradient(circle, #34d399 0%, rgba(16, 185, 129, 0.35) 45%, transparent 70%); animation-delay: -10s; }
 
-        @keyframes breathe {
-            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(35px, 25px) scale(1.08); }
+            100% { transform: translate(-30px, -20px) scale(0.95); }
         }
 
         /* Grid */
         .texture-grid {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
             pointer-events: none;
             z-index: 1;
         }
@@ -51,9 +69,31 @@
             z-index: 10;
             width: 90%;
             max-width: 420px;
-            padding: 50px 40px;
+            padding: 44px 36px 36px;
             text-align: center;
+            background: rgba(255, 255, 255, 0.88) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            border-radius: 28px;
+            box-shadow: 0 25px 70px rgba(124, 58, 237, 0.12), 0 0 35px rgba(14, 165, 233, 0.18), 0 10px 30px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
             animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            overflow: hidden;
+        }
+
+        .pin-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3.5px;
+            background: linear-gradient(90deg, #f43f5e, #ec4899, #a855f7, #3b82f6, #06b6d4, #10b981, #f59e0b);
+            background-size: 200% 100%;
+            animation: rainbowBar 4s linear infinite;
+        }
+
+        @keyframes rainbowBar {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
         }
 
         @keyframes slideUpFade {
@@ -63,56 +103,62 @@
 
         /* Header */
         .auth-logo {
-            width: 70px;
-            margin-bottom: 20px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-primary);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+            width: 76px;
+            margin-bottom: 16px;
+            border-radius: 20px;
+            border: 2px solid rgba(2, 132, 199, 0.4);
+            box-shadow: 0 8px 25px rgba(2, 132, 199, 0.25), 0 0 15px rgba(236, 72, 153, 0.2);
+            background: #ffffff;
+            padding: 4px;
         }
 
         h2 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            background: linear-gradient(to right, #fff, var(--text-dim));
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #0284c7 0%, #7c3aed 50%, #db2777 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
         }
 
         p.subtitle {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            margin-bottom: 30px;
+            color: #475569;
+            font-size: 0.92rem;
+            margin-bottom: 24px;
+            font-weight: 500;
         }
 
         /* PIN Display Area */
         .pin-display {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 30px;
-            min-height: 20px;
+            gap: 14px;
+            margin-bottom: 26px;
+            min-height: 22px;
         }
 
         .pin-dot {
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            border: 2px solid rgba(128, 128, 128, 0.5);
-            transition: all 0.2s ease;
+            border: 2px solid #cbd5e1;
+            background: #f1f5f9;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .pin-dot.filled {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 10px var(--accent-primary);
+            background: linear-gradient(135deg, #0284c7 0%, #ec4899 100%);
+            border-color: #0284c7;
+            box-shadow: 0 0 14px rgba(2, 132, 199, 0.55), 0 0 8px rgba(236, 72, 153, 0.4);
+            transform: scale(1.15);
         }
         
         .pin-dot.error {
-            background: var(--error-color);
-            border-color: var(--error-color);
-            box-shadow: 0 0 10px var(--error-color);
+            background: #ef4444;
+            border-color: #ef4444;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
             animation: shake 0.4s ease-in-out;
         }
 
@@ -147,70 +193,88 @@
                 content: "Please use your keyboard to enter the PIN";
                 display: block;
                 margin-top: 20px;
-                color: var(--text-dim);
-                font-size: 0.8rem;
+                color: #64748b;
+                font-size: 0.82rem;
                 font-family: 'Space Grotesk', sans-serif;
+                font-weight: 500;
             }
         }
 
         .num-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
             border-radius: 16px;
-            color: #fff;
+            color: #0f172a;
             font-size: 1.5rem;
             font-family: 'Space Grotesk', sans-serif;
-            font-weight: 500;
+            font-weight: 700;
             cursor: pointer;
             aspect-ratio: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.2s;
+            transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .num-btn:hover {
+            transform: translateY(-2px);
+            border-color: #0284c7;
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.2);
+            color: #0284c7;
         }
 
         .num-btn:active, .num-btn.active {
-            background: rgba(56, 189, 248, 0.2);
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(236, 72, 153, 0.15));
+            border-color: #0284c7;
+            box-shadow: 0 0 16px rgba(2, 132, 199, 0.35);
             transform: scale(0.95);
         }
         
         .num-btn.action {
-            background: transparent;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--text-dim);
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            font-size: 1.25rem;
+            color: #64748b;
+        }
+        .num-btn.action:hover {
+            border-color: #ec4899;
+            color: #ec4899;
         }
 
         .msg-text {
-            margin-top: 20px;
-            height: 20px;
-            font-size: 0.85rem;
-            color: var(--accent-primary);
+            margin-top: 18px;
+            min-height: 20px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #0284c7;
         }
         
         .msg-error {
-            color: var(--error-color);
+            color: #e11d48;
         }
 
         .loading-spinner {
             display: none;
             margin: 20px auto;
-            width: 30px; height: 30px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top: 3px solid var(--accent-primary);
+            width: 34px; height: 34px;
+            border: 3px solid rgba(2, 132, 199, 0.15);
+            border-top: 3px solid #0284c7;
+            border-right: 3px solid #ec4899;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
     </style>
 </head>
-<body class="dark-theme" style="height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; margin: 0;">
+<body class="light-theme" style="height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; margin: 0;">
 
-    <div class="ambient-core"></div>
+    <div class="ambient-core pin-glow-1"></div>
+    <div class="ambient-core pin-glow-2"></div>
+    <div class="ambient-core pin-glow-3"></div>
+    <div class="ambient-core pin-glow-4"></div>
     <div class="texture-grid"></div>
 
     <div class="pin-container glass-panel">
@@ -256,6 +320,12 @@
             </div>
 
             <div class="msg-text" id="status-msg"></div>
+
+            <div style="margin-top: 18px;">
+                <button id="btn-signout-pin" onclick="signOutFromPinPage()" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(244, 63, 94, 0.15)); color: #e11d48; border: 1.2px solid rgba(244, 63, 94, 0.35); padding: 9px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.25s;" title="Sign Out of this account">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out / Switch Account
+                </button>
+            </div>
         </div>
     </div>
 
@@ -292,6 +362,17 @@
         let maxPinLength = 8; // Default max
         const urlParams = new URLSearchParams(window.location.search);
         const action = urlParams.get('action');
+
+        function signOutFromPinPage() {
+            if (confirm("Are you sure you want to sign out?")) {
+                auth.signOut().then(() => {
+                    localStorage.removeItem('vani_session_token');
+                    window.location.href = '/auth-vani-xai.html';
+                }).catch(() => {
+                    window.location.href = '/auth-vani-xai.html';
+                });
+            }
+        }
 
         // Show/Hide Loading
         function setLoading(isLoading) {
@@ -418,7 +499,7 @@
                     }
 
                     await logActivity("Security PIN Verified");
-                    setTimeout(() => window.location.href = './ai4consol.html', 500);
+                    setTimeout(() => window.location.href = './login-loading-vaniXai.html', 500);
                 }
             } else {
                 failedAttempts++;
@@ -468,7 +549,7 @@
                 statusMsg.textContent = "Security PIN configured successfully.";
                 sessionStorage.setItem('pin_verified', 'true');
                 await logActivity("Security PIN Configured");
-                setTimeout(() => window.location.href = './ai4consol.html', 500);
+                setTimeout(() => window.location.href = './login-loading-vaniXai.html', 500);
             } catch (err) {
                 console.error(err);
                 statusMsg.textContent = "Error saving PIN. Please try again.";
@@ -568,41 +649,41 @@
                         }
 
                         if (data.pin) {
-                        expectedPin = doc.data().pin;
-                        maxPinLength = expectedPin.length;
+                            expectedPin = doc.data().pin;
+                            maxPinLength = expectedPin.length;
 
-                        if (action === 'reset') {
-                            // User wants to reset -> Reset Verify Mode
-                            mode = 'reset_verify';
-                            titleEl.textContent = 'Reset Security PIN';
-                            subtitleEl.textContent = 'Enter your CURRENT PIN to verify identity';
-                            drawDots(maxPinLength);
-                            setLoading(false);
-                            interactionArea.style.display = 'block';
-                            hiddenInput.focus();
-                        } else {
-                            // Normal Login -> Verify Mode
-                            mode = 'verify';
-                            titleEl.textContent = 'Enter Security PIN';
-                            subtitleEl.textContent = 'Please verify your identity to continue';
-                            
-                            const data = doc.data();
-                            failedAttempts = data.failedAttempts || 0;
-                            
-                            if (data.lockoutUntil) {
-                                const lockoutUntil = data.lockoutUntil.toDate();
-                                if (lockoutUntil > new Date()) {
-                                    startLockoutTimer(lockoutUntil);
-                                    drawDots(maxPinLength);
-                                    return; // Don't allow input yet
+                            if (action === 'reset') {
+                                // User wants to reset -> Reset Verify Mode
+                                mode = 'reset_verify';
+                                titleEl.textContent = 'Reset Security PIN';
+                                subtitleEl.textContent = 'Enter your CURRENT PIN to verify identity';
+                                drawDots(maxPinLength);
+                                setLoading(false);
+                                interactionArea.style.display = 'block';
+                                hiddenInput.focus();
+                            } else {
+                                // Normal Login -> Verify Mode
+                                mode = 'verify';
+                                titleEl.textContent = 'Enter Security PIN';
+                                subtitleEl.textContent = 'Please verify your identity to continue';
+                                
+                                const data = doc.data();
+                                failedAttempts = data.failedAttempts || 0;
+                                
+                                if (data.lockoutUntil) {
+                                    const lockoutUntil = data.lockoutUntil.toDate();
+                                    if (lockoutUntil > new Date()) {
+                                        startLockoutTimer(lockoutUntil);
+                                        drawDots(maxPinLength);
+                                        return; // Don't allow input yet
+                                    }
                                 }
+                                
+                                drawDots(maxPinLength);
+                                setLoading(false);
+                                interactionArea.style.display = 'block';
+                                hiddenInput.focus();
                             }
-                            
-                            drawDots(maxPinLength);
-                            setLoading(false);
-                            interactionArea.style.display = 'block';
-                            hiddenInput.focus();
-                        }
                         }
                     }
                     
