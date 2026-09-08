@@ -1012,38 +1012,38 @@
         .header-power-btn {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 5px;
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(244, 63, 94, 0.22));
-            border: 1.5px solid rgba(244, 63, 94, 0.45);
-            border-radius: 20px;
-            padding: 3px 12px 3px 4px;
+            border: 1.2px solid rgba(244, 63, 94, 0.45);
+            border-radius: 14px;
+            padding: 2px 7px 2px 3px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 0 14px rgba(239, 68, 68, 0.2);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.18);
             position: relative;
             overflow: hidden;
-            height: 34px;
+            height: 26px;
             box-sizing: border-box;
         }
 
         .header-power-btn:hover {
-            transform: translateY(-1px) scale(1.05);
+            transform: translateY(-1px) scale(1.04);
             border-color: #f43f5e;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(244, 63, 94, 0.38));
-            box-shadow: 0 0 22px rgba(244, 63, 94, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.22), rgba(244, 63, 94, 0.35));
+            box-shadow: 0 0 16px rgba(244, 63, 94, 0.4);
         }
 
         .power-vid-container {
-            width: 26px;
-            height: 26px;
+            width: 19px;
+            height: 19px;
             border-radius: 50%;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #000;
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             flex-shrink: 0;
         }
 
@@ -1055,12 +1055,13 @@
         }
 
         .power-label {
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.6px;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
             color: #ef4444;
             text-transform: uppercase;
             font-family: 'Outfit', sans-serif;
+            line-height: 1;
         }
 
         body.dark-mode .power-label {
@@ -1094,11 +1095,11 @@
         .logout-modal-card {
             background: linear-gradient(145deg, #090e1d 0%, #111a2f 50%, #0c1426 100%);
             border: 1.5px solid rgba(244, 63, 94, 0.4);
-            border-radius: 24px;
-            max-width: 460px;
+            border-radius: 20px;
+            max-width: 350px;
             width: 100%;
-            padding: 28px 24px 24px;
-            box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9), 0 0 45px rgba(244, 63, 94, 0.28);
+            padding: 20px 18px 16px;
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(244, 63, 94, 0.24);
             position: relative;
             text-align: center;
             color: #f8fafc;
@@ -1113,16 +1114,16 @@
 
         .logout-modal-close {
             position: absolute;
-            top: 14px;
-            right: 16px;
+            top: 12px;
+            right: 14px;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #94a3b8;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1139,45 +1140,45 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 16px;
-            padding: 10px 0;
+            gap: 14px;
+            margin-bottom: 12px;
+            padding: 4px 0;
         }
 
         .logout-avatar-slot {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .logout-bureau-logo {
-            width: 68px;
-            height: 68px;
-            border-radius: 16px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             object-fit: contain;
             background: rgba(15, 23, 42, 0.8);
-            padding: 6px;
-            border: 2px solid rgba(56, 189, 248, 0.5);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+            padding: 4px;
+            border: 1.5px solid rgba(56, 189, 248, 0.5);
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
         }
 
         .logout-user-avatar {
-            width: 68px;
-            height: 68px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             object-fit: cover;
             background: rgba(15, 23, 42, 0.8);
-            border: 2px solid rgba(244, 63, 94, 0.6);
-            box-shadow: 0 0 20px rgba(244, 63, 94, 0.35);
+            border: 1.5px solid rgba(244, 63, 94, 0.6);
+            box-shadow: 0 0 14px rgba(244, 63, 94, 0.28);
         }
 
         .logout-entity-label {
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             font-weight: 700;
             color: #cbd5e1;
-            letter-spacing: 0.5px;
-            max-width: 130px;
+            letter-spacing: 0.4px;
+            max-width: 110px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1187,9 +1188,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
             color: #f43f5e;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             animation: bridgePulse 1.8s infinite;
         }
 
@@ -1200,32 +1201,32 @@
 
         .logout-modal-title {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 1.55rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            letter-spacing: 1px;
-            margin: 0 0 6px 0;
+            letter-spacing: 0.8px;
+            margin: 0 0 4px 0;
             background: linear-gradient(135deg, #ffffff 0%, #fecdd3 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .logout-modal-sub {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #94a3b8;
-            margin: 0 0 12px 0;
-            line-height: 1.4;
+            margin: 0 0 8px 0;
+            line-height: 1.35;
         }
 
         .logout-user-badge {
             display: inline-block;
             font-family: 'Fira Code', monospace;
-            font-size: 0.72rem;
-            padding: 4px 12px;
+            font-size: 0.68rem;
+            padding: 2px 10px;
             background: rgba(56, 189, 248, 0.12);
             color: #38bdf8;
             border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 20px;
-            margin-bottom: 16px;
+            border-radius: 16px;
+            margin-bottom: 10px;
             max-width: 90%;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1233,52 +1234,37 @@
         }
 
         .logout-gif-trigger-card {
-            margin: 8px auto 14px;
-            padding: 16px 20px;
-            background: radial-gradient(circle, rgba(244, 63, 94, 0.18) 0%, rgba(15, 23, 42, 0.75) 75%);
-            border: 2px dashed rgba(244, 63, 94, 0.6);
-            border-radius: 20px;
+            margin: 6px auto 12px;
+            width: 70px;
+            height: 70px;
+            padding: 4px;
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.2) 0%, rgba(15, 23, 42, 0.85) 75%);
+            border: 1.5px solid rgba(244, 63, 94, 0.55);
+            border-radius: 16px;
             cursor: pointer;
             position: relative;
-            max-width: 240px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 0 25px rgba(244, 63, 94, 0.25);
-        }
-
-        .logout-gif-trigger-card:hover {
-            transform: scale(1.06);
-            border-color: #f43f5e;
-            border-style: solid;
-            box-shadow: 0 0 35px rgba(244, 63, 94, 0.55), 0 0 12px #f43f5e;
-            background: radial-gradient(circle, rgba(244, 63, 94, 0.3) 0%, rgba(15, 23, 42, 0.9) 75%);
-        }
-
-        .logout-gif-img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            border-radius: 12px;
-            display: block;
-            margin: 0 auto 8px;
-            filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.6));
-        }
-
-        .logout-gif-instruction {
-            font-size: 0.76rem;
-            font-weight: 800;
-            color: #f43f5e;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            animation: gifLabelPulse 1.5s infinite alternate;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 16px rgba(244, 63, 94, 0.28);
         }
 
-        @keyframes gifLabelPulse {
-            from { opacity: 0.8; }
-            to { opacity: 1; transform: scale(1.03); }
+        .logout-gif-trigger-card:hover {
+            transform: scale(1.08);
+            border-color: #f43f5e;
+            box-shadow: 0 0 24px rgba(244, 63, 94, 0.55);
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.35) 0%, rgba(15, 23, 42, 0.95) 75%);
+        }
+
+        .logout-gif-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+            filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.55));
         }
 
         .logout-cancel-btn {
@@ -1287,14 +1273,14 @@
             color: #cbd5e1;
             font-family: 'Outfit', sans-serif;
             font-weight: 600;
-            font-size: 0.86rem;
-            padding: 9px 20px;
-            border-radius: 12px;
+            font-size: 0.78rem;
+            padding: 6px 14px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .logout-cancel-btn:hover {
@@ -2217,12 +2203,8 @@
             <div class="logout-user-badge" id="logout-modal-user-email">Authenticated Node</div>
 
             <!-- Clickable Logout GIF Trigger -->
-            <div class="logout-gif-trigger-card" id="logout-gif-trigger" onclick="executeAppSignOut()" title="Click this power animation to sign out">
+            <div class="logout-gif-trigger-card" id="logout-gif-trigger" onclick="executeAppSignOut()" title="Click to sign out">
                 <img src="./logout.gif" alt="Click here to Sign Out" class="logout-gif-img">
-                <div class="logout-gif-instruction">
-                    <i class="fa-solid fa-arrow-pointer"></i>
-                    <span>Click Animation to Sign Out</span>
-                </div>
             </div>
 
             <div id="logout-exec-status" style="display: none; font-size: 0.82rem; color: #f43f5e; margin: 8px 0; font-weight: 700;"></div>
@@ -2237,7 +2219,7 @@
     </div>
 
     <!-- Main Logic Script -->
-    <script src="./main.js?v=2026_q2_v_custom_logout_final"></script>
+    <script src="./main.js?v=2026_q2_v_compact_modal"></script>
 </body>
 
 </html>
