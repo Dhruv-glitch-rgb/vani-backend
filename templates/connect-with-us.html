@@ -66,6 +66,32 @@
                     <p style="font-size: 1.2rem;"><strong>Working Days:</strong> Monday to Saturday</p>
                     <p style="font-size: 1.2rem;"><strong>Working Hours:</strong> 9:00 AM to 9:00 PM</p>
                     <p style="margin-top: 20px; color: var(--text-muted, #94a3b8);"><em>Please note that response times may vary depending on the volume of inquiries, but we strive to get back to you as soon as possible.</em></p>
+                <section class="docs-section-block" style="margin-top: 40px; background: rgba(0,0,0,0.2); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 12px;"><i class="fa-solid fa-paper-plane" style="color: var(--accent-indigo, #6366f1);"></i> Send Us a Message</h3>
+                    <p style="font-size: 1.05rem; color: var(--text-muted, #94a3b8); margin-bottom: 24px;">Have questions or need assistance? Fill in the form and we'll reply to your email directly.</p>
+                    
+                    <form id="connectForm" onsubmit="handleConnectSubmit(event)" style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+                            <div>
+                                <label style="display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px;">Your Name</label>
+                                <input type="text" id="connName" required placeholder="Name" style="width: 100%; box-sizing: border-box; padding: 12px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: inherit; font-family: inherit; font-size: 0.95rem; outline: none;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px;">Your Email</label>
+                                <input type="email" id="connEmail" required placeholder="Email address" style="width: 100%; box-sizing: border-box; padding: 12px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: inherit; font-family: inherit; font-size: 0.95rem; outline: none;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px;">Message</label>
+                            <textarea id="connMessage" required rows="4" placeholder="How can we help you?" style="width: 100%; box-sizing: border-box; padding: 12px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: inherit; font-family: inherit; font-size: 0.95rem; outline: none; resize: vertical;"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" id="btnConnSubmit" class="cta-btn docs-btn" style="margin: 0; padding: 12px 24px; font-size: 1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-paper-plane"></i> Send Message
+                            </button>
+                            <span id="connStatus" style="margin-left: 14px; font-size: 0.9rem; display: none;"></span>
+                        </div>
+                    </form>
                 </section>
             </div>
 
@@ -155,6 +181,48 @@
   })();
 </script>
 
+  <!-- EmailJS SDK & Configuration -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="/emailjs-config.js"></script>
+  <script>
+    async function handleConnectSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnConnSubmit');
+      const status = document.getElementById('connStatus');
+      const name = document.getElementById('connName').value.trim();
+      const email = document.getElementById('connEmail').value.trim();
+      const message = document.getElementById('connMessage').value.trim();
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+      status.style.display = 'inline';
+      status.style.color = '#38bdf8';
+      status.textContent = 'Sending your message...';
+
+      try {
+        await sendVaniEmail({
+          from_name: name,
+          to_name: 'VANI-xAI Team',
+          userName: name,
+          user_email: email,
+          email: email,
+          reply_to: email,
+          subject: 'New Connect Inquiry from ' + name,
+          message: message
+        });
+        status.style.color = '#10b981';
+        status.textContent = '✓ Message sent! We will contact you at ' + email;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Sent';
+        document.getElementById('connectForm').reset();
+      } catch (err) {
+        console.error("Connect form error:", err);
+        status.style.color = '#ef4444';
+        status.textContent = 'Failed to send message: ' + (err.text || err.message || 'Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Retry Send';
+      }
+    }
+  </script>
 </body>
 
 </html>

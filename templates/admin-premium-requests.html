@@ -262,7 +262,13 @@
                 </div>
             </div>
             
-            <p id="copyStatusText" style="text-align: center; color: #10b981; font-size: 0.85rem; margin-top: 15px; opacity: 0; transition: 0.2s;">Key successfully copied!</p>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+                <button class="btn-action" id="btnSendEmailKey" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: white; padding: 9px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; border: none; box-shadow: 0 4px 12px rgba(2,132,199,0.35); transition: opacity 0.2s;">
+                    <i class="fa-solid fa-paper-plane"></i> Send Key to User via EmailJS
+                </button>
+            </div>
+            <p id="emailStatusText" style="text-align: center; font-size: 0.85rem; margin: 8px 0 0; display: none;"></p>
+            <p id="copyStatusText" style="text-align: center; color: #10b981; font-size: 0.85rem; margin-top: 10px; opacity: 0; transition: 0.2s;">Key successfully copied!</p>
             <p style="text-align: center; color: #64748b; font-size: 0.8rem; margin: 5px 0 0;">Press <strong>Enter</strong> to copy, press again to close.</p>
         </div>
     </div>
@@ -271,6 +277,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <!-- EmailJS SDK & Configuration -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="/emailjs-config.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -421,6 +431,52 @@
                 };
                 
                 document.getElementById('btnCopyKey').onclick = doCopy;
+                
+                // Wire up EmailJS sending
+                const btnSendEmailKey = document.getElementById('btnSendEmailKey');
+                const emailStatusText = document.getElementById('emailStatusText');
+                if (btnSendEmailKey) {
+                    btnSendEmailKey.disabled = false;
+                    btnSendEmailKey.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Key to User via EmailJS';
+                    emailStatusText.style.display = 'none';
+
+                    btnSendEmailKey.onclick = async () => {
+                        if (!userEmail || userEmail === 'No Email' || !userEmail.includes('@')) {
+                            alert("No valid recipient email address found for this user.");
+                            return;
+                        }
+                        btnSendEmailKey.disabled = true;
+                        btnSendEmailKey.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending via EmailJS...';
+                        emailStatusText.style.display = 'block';
+                        emailStatusText.style.color = '#38bdf8';
+                        emailStatusText.textContent = 'Dispatching email to ' + userEmail + '...';
+
+                        try {
+                            await sendVaniEmail({
+                                to_name: userName || 'User',
+                                user_name: userName || 'User',
+                                to_email: userEmail,
+                                user_email: userEmail,
+                                vani_id: vaniId,
+                                plan_name: planName || 'Premium',
+                                expire_date: expireDateStr,
+                                activation_key: activationKey,
+                                key: activationKey,
+                                subject: `Your V.A.N.I-xAI Premium Activation Key: ${activationKey}`,
+                                message: `Hello ${userName || 'User'},\n\nYour request for ${planName || 'Premium'} has been approved!\n\nActivation Key: ${activationKey}\nV.A.N.I-xAI ID: ${vaniId}\nExpiration: ${expireDateStr}\n\nPaste this key into the Premium Activation page on your account to activate.\n\nSupport: official.vanixai.india@gmail.com`
+                            });
+                            emailStatusText.style.color = '#10b981';
+                            emailStatusText.textContent = `✓ Activation key sent successfully to ${userEmail}!`;
+                            btnSendEmailKey.innerHTML = '<i class="fa-solid fa-check"></i> Email Sent';
+                        } catch (err) {
+                            console.error("EmailJS sending error:", err);
+                            emailStatusText.style.color = '#ef4444';
+                            emailStatusText.textContent = `Failed to send email: ${err.text || err.message || 'Unknown error'}`;
+                            btnSendEmailKey.disabled = false;
+                            btnSendEmailKey.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Retry Sending';
+                        }
+                    };
+                }
                 
                 modal.classList.add('active');
                 
