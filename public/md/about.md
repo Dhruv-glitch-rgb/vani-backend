@@ -30,7 +30,7 @@ The name draws upon Sanskrit wisdom:
 
 - **Founder**: Dhruv Sagar
 - **Location**: New Delhi, Delhi 110001, India (IN)
-- **Support Email**: support@vani-nzdrsr.web.app
+- **Support Email**: official.vanixai.india@gmail.com
 - **Developer Inquiries**: developer@vani-nzdrsr.web.app
 - **Phone**: +91-9555778474
 - **Official Publications**: https://vani-xin.blogspot.com/

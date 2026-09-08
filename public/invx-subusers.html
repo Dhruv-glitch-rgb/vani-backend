@@ -354,7 +354,7 @@
 
         auth.onAuthStateChanged(async user => {
             if (user) {
-                let isAuthorized = (user.email && user.email.toLowerCase() === 'official.vani.xai76@gmail.com');
+                let isAuthorized = (user.email && (user.email.toLowerCase() === 'official.vanixai.india@gmail.com' || user.email.toLowerCase() === 'official.vani.xai76@gmail.com'));
                 if (!isAuthorized) {
                     try {
                         const doc = await db.collection('users').doc(user.uid).get();

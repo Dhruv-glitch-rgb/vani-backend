@@ -994,7 +994,7 @@
                         await db.collection('users').doc(user.uid).set(updates, { merge: true });
                     }
 
-                    const isUserAdmin = user.email === 'official.vani.xai76@gmail.com' || (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin'));
+                    const isUserAdmin = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com' || (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin'));
                     if (isUserAdmin) {
                         const adminBtn = document.getElementById('settings-admin-btn');
                         if (adminBtn) adminBtn.style.display = 'inline-flex';
@@ -1454,7 +1454,7 @@
                 if (nameEl) nameEl.textContent = user.displayName || user.email.split('@')[0];
                 if (emailEl) emailEl.textContent = user.email;
 
-                if (user.email === 'official.vani.xai76@gmail.com' && adminBtn) {
+                if ((user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com') && adminBtn) {
                     adminBtn.style.display = 'inline-flex';
                 }
 

@@ -8,7 +8,7 @@
 ## 📞 Support & Communication Channels
 
 ### 1. General & Customer Support
-- **Email**: [support@vani-nzdrsr.web.app](mailto:support@vani-nzdrsr.web.app)
+- **Email**: [official.vanixai.india@gmail.com](mailto:official.vanixai.india@gmail.com)
 - **Phone**: +91-9555778474
 - **Operating Hours**: Monday - Saturday (9:00 AM - 7:00 PM IST)
 

@@ -6,4 +6,4 @@
 Get in touch with the VANI-xAI team:
 - **Official Website**: https://vani-nzdrsr.web.app/
 - **Blog**: https://vani-xin.blogspot.com/
-- **Support**: support@vani-nzdrsr.web.app
+- **Support**: official.vanixai.india@gmail.com
