@@ -20,6 +20,22 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#059669">
     <style>
+        :root {
+            --bg-main: #f8faff;
+            --panel-bg: rgba(255, 255, 255, 0.92);
+            --panel-border: rgba(99, 102, 241, 0.14);
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-indigo: #4f46e5;
+            --accent-indigo-glow: rgba(79, 70, 229, 0.18);
+        }
+
+        body, .landing-page {
+            background-color: #f8faff !important;
+            color: #0f172a !important;
+        }
+
         /* Layout Wrapper */
         .settings-dashboard {
             width: 100%;
@@ -42,13 +58,13 @@
 
         /* Sidebar Styles */
         .settings-sidebar {
-            background: var(--panel-bg);
+            background: #ffffff;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--panel-border);
+            border: 1.5px solid rgba(99, 102, 241, 0.15);
             border-radius: var(--border-radius-lg);
             padding: 20px 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(2, 132, 199, 0.06);
             display: flex;
             flex-direction: column;
             height: fit-content;
@@ -57,15 +73,20 @@
         }
 
         .sidebar-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a !important;
             padding: 0 10px 15px 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            border-bottom: 1.5px solid #f1f5f9;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .sidebar-title span {
+            color: #0f172a !important;
+            font-weight: 800;
         }
 
         .settings-nav-tabs {
@@ -96,9 +117,9 @@
             gap: 12px;
             padding: 12px 16px;
             border-radius: var(--border-radius-md);
-            color: var(--text-secondary);
+            color: #334155 !important;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             cursor: pointer;
             transition: var(--transition-smooth);
             white-space: nowrap;
@@ -108,34 +129,37 @@
             font-size: 1.05rem;
             width: 20px;
             text-align: center;
+            color: #6366f1;
             transition: var(--transition-smooth);
         }
 
         .tab-item:hover {
             background: rgba(99, 102, 241, 0.08);
-            color: var(--accent-indigo);
+            color: #4f46e5 !important;
         }
 
         .tab-item.active {
-            background: linear-gradient(135deg, rgba(255, 153, 51, 0.15), rgba(19, 136, 8, 0.15));
-            color: var(--accent-indigo);
-            border: 1px solid rgba(255, 153, 51, 0.3);
-            box-shadow: 0 4px 12px rgba(255, 153, 51, 0.1);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(236, 72, 153, 0.08));
+            color: #4f46e5 !important;
+            border: 1.5px solid rgba(99, 102, 241, 0.35);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.12);
         }
 
         .tab-item.active i {
             transform: scale(1.1);
+            color: #4f46e5;
         }
 
         /* Content Area & Panes */
         .settings-content-area {
-            background: var(--panel-bg);
+            background: #ffffff;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--panel-border);
+            border: 1.5px solid rgba(99, 102, 241, 0.15);
             border-radius: var(--border-radius-lg);
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(2, 132, 199, 0.06);
         }
 
         .settings-tab-pane {
@@ -155,12 +179,13 @@
         .pane-header {
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            border-bottom: 1.5px solid #f1f5f9;
         }
 
         .pane-header h2 {
-            font-size: 1.35rem;
-            color: var(--text-primary);
+            font-size: 1.4rem;
+            color: #0f172a !important;
+            font-weight: 800 !important;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -168,29 +193,25 @@
         }
 
         .pane-header p {
-            font-size: 0.88rem;
-            color: var(--text-secondary);
+            font-size: 0.92rem;
+            color: #475569 !important;
+            font-weight: 500 !important;
         }
 
         /* Modern Card Items */
         .setting-card {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            background: #ffffff !important;
+            border: 1.5px solid #e2e8f0 !important;
             border-radius: var(--border-radius-md);
-            padding: 20px;
+            padding: 22px;
             margin-bottom: 18px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
             transition: var(--transition-smooth);
         }
 
-        body.dark-theme .setting-card,
-        body.inxv-theme .setting-card {
-            background: rgba(15, 23, 42, 0.6);
-            border-color: rgba(255, 255, 255, 0.08);
-        }
-
         .setting-card:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
-            border-color: var(--accent-indigo);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
+            border-color: #cbd5e1 !important;
         }
 
         .setting-item-row {
@@ -218,14 +239,17 @@
         }
 
         .setting-info h4 {
-            font-size: 1rem;
-            color: var(--text-primary);
+            font-size: 1.05rem;
+            color: #0f172a !important;
+            font-weight: 700 !important;
             margin-bottom: 4px;
         }
 
         .setting-info p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+            font-size: 0.88rem;
+            color: #475569 !important;
+            font-weight: 500 !important;
+            line-height: 1.5;
         }
 
         .setting-control select,
@@ -233,29 +257,28 @@
         .setting-control input[type="password"] {
             padding: 10px 14px;
             border-radius: var(--border-radius-sm);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid #cbd5e1 !important;
+            background: #ffffff !important;
             font-family: 'Outfit', sans-serif;
             font-size: 0.95rem;
-            color: var(--text-primary);
+            color: #0f172a !important;
+            font-weight: 600 !important;
             outline: none;
             width: 220px;
             transition: var(--transition-smooth);
         }
 
-        body.dark-theme .setting-control select,
-        body.dark-theme .setting-control input[type="text"],
-        body.inxv-theme .setting-control select,
-        body.inxv-theme .setting-control input[type="text"] {
-            background: rgba(30, 41, 59, 0.8);
-            border-color: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
+        select option {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            font-weight: 500 !important;
+            padding: 8px 12px;
         }
 
         .setting-control select:focus,
         .setting-control input:focus {
-            border-color: var(--accent-indigo);
-            box-shadow: 0 0 10px var(--accent-indigo-glow);
+            border-color: #4f46e5 !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
         }
 
         /* Toggle Switches */
@@ -306,16 +329,16 @@
         .save-all-btn {
             width: 100%;
             margin-top: 20px;
-            padding: 12px;
-            background: linear-gradient(135deg, #FF9933, #138808);
+            padding: 13px;
+            background: linear-gradient(135deg, #0284c7, #6366f1, #d946ef);
             color: white;
             border: none;
             border-radius: var(--border-radius-md);
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.3);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
             transition: var(--transition-smooth);
             display: flex;
             align-items: center;
@@ -325,7 +348,7 @@
 
         .save-all-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 153, 51, 0.4);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
         }
 
         /* Toast Notification */
@@ -340,7 +363,7 @@
             font-family: 'Outfit', sans-serif;
             font-weight: 600;
             font-size: 0.95rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
@@ -371,23 +394,23 @@
         /* Modal Styles for Avatar */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(8px);
             display: none; justify-content: center; align-items: center; z-index: 1000;
         }
         .modal-overlay.active { display: flex; }
         .modal-content {
-            background: var(--panel-bg); border: 1px solid var(--panel-border);
-            border-radius: var(--border-radius-md); padding: 25px; width: 90%; max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;
+            background: #ffffff !important; border: 1.5px solid #cbd5e1 !important;
+            border-radius: var(--border-radius-md); padding: 28px; width: 90%; max-width: 420px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2) !important; text-align: center;
         }
-        .modal-content h3 { margin-top: 0; color: var(--text-primary); margin-bottom: 20px; }
+        .modal-content h3 { margin-top: 0; color: #0f172a !important; font-weight: 800; margin-bottom: 20px; }
         .modal-btn-group { display: flex; flex-direction: column; gap: 10px; }
         .modal-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid var(--panel-border);
-            padding: 12px; border-radius: var(--border-radius-sm); color: var(--text-primary);
-            font-family: 'Outfit', sans-serif; font-weight: 600; cursor: pointer; transition: 0.3s;
+            background: #f8fafc !important; border: 1.5px solid #cbd5e1 !important;
+            padding: 12px; border-radius: var(--border-radius-sm); color: #0f172a !important;
+            font-family: 'Outfit', sans-serif; font-weight: 700 !important; cursor: pointer; transition: 0.3s;
         }
-        .modal-btn:hover { background: var(--accent-indigo); color: white; }
+        .modal-btn:hover { background: #4f46e5 !important; color: white !important; border-color: #4f46e5 !important; }
         
         /* Cropper Container */
         .img-container { max-height: 400px; width: 100%; margin-bottom: 20px; background: #000; }
@@ -416,8 +439,11 @@
                 <button class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; border: none; margin-right: 8px; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35);" onclick="window.location.href='./saras_web_search.html'">
                     <i class="fa-solid fa-globe"></i> Saras.WebSearch
                 </button>
-                <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./ai4consol.html'">
+                <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./ai4consol.html'" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff !important; border: none; margin-right: 8px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35); font-weight: 700;">
                     <i class="fa-solid fa-arrow-left"></i> Console
+                </button>
+                <button id="btn-signout-settings" onclick="handleUserSignOut()" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white !important; border: none; font-weight: bold; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35); cursor: pointer;" title="Sign Out of V.A.N.I-xAI">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
                 </button>
             </div>
         </nav>
@@ -427,7 +453,7 @@
             <!-- Sidebar Navigation -->
             <aside class="settings-sidebar">
                 <div class="sidebar-title">
-                    <i class="fa-solid fa-sliders" style="color: var(--accent-indigo);"></i>
+                    <i class="fa-solid fa-sliders" style="color: #4f46e5;"></i>
                     <span>Settings Menu</span>
                 </div>
                 <ul class="settings-nav-tabs">
@@ -464,6 +490,12 @@
                 <button class="save-all-btn animate-hover-scale" id="saveSettingsBtn">
                     <i class="fa-solid fa-floppy-disk"></i> Save Preferences
                 </button>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.06);">
+                    <button class="tab-item" id="btn-signout-sidebar" onclick="handleUserSignOut()" style="color: #dc2626 !important; width: 100%; border: 1.5px solid rgba(239, 68, 68, 0.35); background: rgba(239, 68, 68, 0.08); font-weight: 700; cursor: pointer;">
+                        <i class="fa-solid fa-right-from-bracket" style="color: #dc2626;"></i>
+                        <span>Log Out Account</span>
+                    </button>
+                </div>
             </aside>
 
             <!-- Settings Content Panes -->
@@ -472,29 +504,32 @@
                 <!-- Pane 1: Account Profile -->
                 <div class="settings-tab-pane active" id="tab-account">
                     <div class="pane-header">
-                        <h2><i class="fa-solid fa-user" style="color: var(--accent-indigo);"></i> Account Profile</h2>
+                        <h2><i class="fa-solid fa-user" style="color: #4f46e5;"></i> Account Profile</h2>
                         <p>Manage your account identity, security PIN, and avatar.</p>
                     </div>
 
                     <div class="setting-card">
                         <div class="setting-item-row" style="align-items: center;">
-                            <img id="profileImage" src="vani_icon.png" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent-indigo); object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+                            <img id="profileImage" src="vani_icon.png" alt="Profile" style="width: 82px; height: 82px; border-radius: 50%; border: 3px solid #4f46e5; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
                             <div style="flex: 1;">
                                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                                    <h3 id="profileName" style="margin-bottom: 2px; color: var(--text-primary);">Loading...</h3>
+                                    <h3 id="profileName" style="margin-bottom: 2px; color: #0f172a !important; font-weight: 800; font-size: 1.35rem;">Loading...</h3>
                                     <span id="premiumBadge" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;"><i class="fa-solid fa-infinity"></i> Free Unlimited Plan</span>
                                 </div>
-                                <p id="profileVaniId" style="color: var(--accent-indigo); font-weight: bold; font-size: 0.92rem; margin-top: 4px; display: none;"><i class="fa-solid fa-id-badge"></i> <span></span></p>
-                                <p id="profileEmail" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">...</p>
+                                <p id="profileVaniId" style="color: #0284c7 !important; font-weight: 700; font-size: 0.95rem; margin-top: 5px; display: none;"><i class="fa-solid fa-id-badge"></i> <span></span></p>
+                                <p id="profileEmail" style="color: #475569 !important; font-size: 0.92rem; font-weight: 600; margin-top: 4px;">...</p>
                                 <p id="profileInstagram" style="color: #E1306C; font-size: 0.9rem; margin-top: 4px; display: none;"><i class="fa-brands fa-instagram"></i> <span></span></p>
-                                <p style="color: var(--text-secondary); font-size: 0.88rem; margin-top: 4px;">Security PIN: <strong>****</strong></p>
+                                <p style="color: #475569 !important; font-size: 0.88rem; margin-top: 4px; font-weight: 500;">Security PIN: <strong style="color: #0f172a;">••••••••</strong></p>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 10px;">
-                                <button class="nav-cta-btn animate-hover-scale" id="btnUpdateAvatar" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(99, 102, 241, 0.12); color: var(--accent-indigo); border: 1px solid rgba(99, 102, 241, 0.3);">
+                                <button class="nav-cta-btn animate-hover-scale" id="btnUpdateAvatar" style="font-size: 0.82rem; padding: 8px 16px; background: rgba(99, 102, 241, 0.12); color: #4f46e5 !important; border: 1.5px solid rgba(99, 102, 241, 0.35); font-weight: 700; border-radius: 999px;">
                                     <i class="fa-solid fa-image"></i> Change Avatar
                                 </button>
-                                <button class="nav-cta-btn animate-hover-scale" id="btnChangePin" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #ef4444;">
+                                <button class="nav-cta-btn animate-hover-scale" id="btnChangePin" style="font-size: 0.82rem; padding: 8px 16px; background: rgba(239, 68, 68, 0.1); border: 1.5px solid rgba(239, 68, 68, 0.35); color: #dc2626 !important; font-weight: 700; border-radius: 999px;">
                                     <i class="fa-solid fa-key"></i> Reset PIN
+                                </button>
+                                <button class="nav-cta-btn animate-hover-scale" id="btn-signout-large" onclick="handleUserSignOut()" style="font-size: 0.82rem; padding: 9px 16px; background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff !important; border: none; font-weight: 700; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); cursor: pointer; border-radius: 999px;" title="Sign Out of V.A.N.I-xAI">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Log Out / Sign Out
                                 </button>
                             </div>
                         </div>
@@ -602,14 +637,14 @@
                             </div>
                             <div class="setting-control" style="display:flex; align-items:center; gap: 10px;">
                                 <input type="range" id="speechRateSlider" min="0.5" max="2" step="0.1" value="1.0" style="width: 140px;">
-                                <span id="speechRateVal" style="min-width: 45px; font-weight: 600; color: var(--accent-indigo);">1.0x</span>
+                                <span id="speechRateVal" style="min-width: 45px; font-weight: 700; color: #0284c7 !important;">1.0x</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Voice Test Action -->
                     <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
-                        <button id="btnTestVoice" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; font-weight: 600; padding: 10px 22px; border-radius: 10px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); cursor: pointer;">
+                        <button id="btnTestVoice" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #10b981, #059669); color: white !important; border: none; font-weight: 700; padding: 10px 22px; border-radius: 10px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); cursor: pointer;">
                             <i class="fa-solid fa-volume-high"></i> Test Indian Girl Voice
                         </button>
                     </div>
@@ -623,10 +658,10 @@
                             <p>Run V.A.N.I-xAI directly on your hardware via Ollama or LM Studio.</p>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <span id="localLlmStatusBadge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-secondary); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            <span id="localLlmStatusBadge" style="background: #f1f5f9; color: #334155 !important; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; border: 1.5px solid #cbd5e1;">
                                 <span class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; display: inline-block;"></span> Probing Local Engine...
                             </span>
-                            <button id="btnScanLocalLlm" class="nav-cta-btn animate-hover-scale" style="font-size: 0.78rem; padding: 6px 12px; background: rgba(255,255,255,0.1); border: 1px solid var(--panel-border); cursor: pointer;" title="Refresh local engine scan">
+                            <button id="btnScanLocalLlm" class="nav-cta-btn animate-hover-scale" style="font-size: 0.82rem; padding: 7px 14px; background: #ffffff; color: #0f172a !important; border: 1.5px solid #cbd5e1; font-weight: 700; border-radius: 8px; cursor: pointer;" title="Refresh local engine scan">
                                 <i class="fa-solid fa-arrows-rotate"></i> Scan
                             </button>
                         </div>
@@ -667,10 +702,10 @@
                         <div class="setting-item-row">
                             <div class="setting-info">
                                 <h4>Local Server Endpoint</h4>
-                                <p>Default: <code>http://127.0.0.1:11434</code> (Ollama) or <code>http://127.0.0.1:1234/v1</code> (LM Studio).</p>
+                                <p>Default: <code style="background: #e0f2fe; color: #0369a1; padding: 2px 7px; border-radius: 6px; font-weight: 700; border: 1px solid #bae6fd;">http://127.0.0.1:11434</code> (Ollama) or <code style="background: #e0f2fe; color: #0369a1; padding: 2px 7px; border-radius: 6px; font-weight: 700; border: 1px solid #bae6fd;">http://127.0.0.1:1234/v1</code> (LM Studio).</p>
                             </div>
                             <div class="setting-control">
-                                <input type="text" id="localLlmUrl" value="http://127.0.0.1:11434" placeholder="http://127.0.0.1:11434" style="width: 220px; font-family: monospace; font-size: 0.85rem;">
+                                <input type="text" id="localLlmUrl" value="http://127.0.0.1:11434" placeholder="http://127.0.0.1:11434" style="width: 220px; font-family: monospace; font-size: 0.88rem; font-weight: 700;">
                             </div>
                         </div>
                     </div>
@@ -690,36 +725,36 @@
                     </div>
 
                     <!-- Downloader -->
-                    <div style="margin-top: 15px; padding: 18px; background: rgba(14, 165, 233, 0.04); border: 1px solid rgba(14, 165, 233, 0.2); border-radius: 14px;">
-                        <h4 style="font-size: 0.95rem; color: var(--text-primary); margin-bottom: 6px;">
+                    <div style="margin-top: 15px; padding: 20px; background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 14px;">
+                        <h4 style="font-size: 1rem; color: #0f172a !important; font-weight: 800; margin-bottom: 6px;">
                             <i class="fa-solid fa-cloud-arrow-down" style="color: #0284c7;"></i> Quick Model Library (1-Click Install via Ollama)
                         </h4>
-                        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px;">
+                        <p style="font-size: 0.88rem; color: #475569 !important; font-weight: 500; margin-bottom: 14px;">
                             Download models directly into your local Ollama engine with full real-time progress:
                         </p>
 
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
-                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="llama3.2:latest" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(14, 165, 233, 0.1); border: 1px solid #0284c7; color: #0284c7;">
+                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="llama3.2:latest" style="font-size: 0.82rem; padding: 8px 16px; background: #e0f2fe; border: 1.5px solid #0284c7; color: #0284c7 !important; font-weight: 700; border-radius: 8px;">
                                 <i class="fa-solid fa-download"></i> <strong>llama3.2</strong> (2.0 GB - Recommended)
                             </button>
-                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="deepseek-r1:1.5b" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981;">
+                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="deepseek-r1:1.5b" style="font-size: 0.82rem; padding: 8px 16px; background: #dcfce7; border: 1.5px solid #10b981; color: #059669 !important; font-weight: 700; border-radius: 8px;">
                                 <i class="fa-solid fa-brain"></i> <strong>deepseek-r1:1.5b</strong> (1.1 GB - Fast Reasoning)
                             </button>
-                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="qwen2.5:3b" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #a855f7;">
+                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="qwen2.5:3b" style="font-size: 0.82rem; padding: 8px 16px; background: #f3e8ff; border: 1.5px solid #a855f7; color: #7c3aed !important; font-weight: 700; border-radius: 8px;">
                                 <i class="fa-solid fa-language"></i> <strong>qwen2.5:3b</strong> (1.9 GB - Multilingual)
                             </button>
-                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="phi3:mini" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; color: #f59e0b;">
+                            <button class="nav-cta-btn btn-pull-model animate-hover-scale" data-model="phi3:mini" style="font-size: 0.82rem; padding: 8px 16px; background: #fef3c7; border: 1.5px solid #f59e0b; color: #b45309 !important; font-weight: 700; border-radius: 8px;">
                                 <i class="fa-solid fa-bolt"></i> <strong>phi3:mini</strong> (2.2 GB - Microsoft Compact)
                             </button>
                         </div>
 
                         <!-- Progress Bar -->
-                        <div id="pullProgressBox" style="display: none; background: rgba(0,0,0,0.05); padding: 12px; border-radius: 10px; border: 1px solid rgba(14, 165, 233, 0.3); margin-top: 10px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
-                                <span id="pullStatusLabel" style="color: var(--text-primary); font-weight: 600;"><i class="fa-solid fa-spinner fa-spin"></i> Downloading model...</span>
-                                <span id="pullPercentLabel" style="color: #0284c7; font-weight: bold;">0%</span>
+                        <div id="pullProgressBox" style="display: none; background: #ffffff; padding: 14px; border-radius: 10px; border: 1.5px solid #bae6fd; margin-top: 10px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px;">
+                                <span id="pullStatusLabel" style="color: #0f172a !important; font-weight: 700;"><i class="fa-solid fa-spinner fa-spin"></i> Downloading model...</span>
+                                <span id="pullPercentLabel" style="color: #0284c7 !important; font-weight: 800;">0%</span>
                             </div>
-                            <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden;">
+                            <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
                                 <div id="pullProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #0ea5e9, #10b981); transition: width 0.3s ease;"></div>
                             </div>
                         </div>
@@ -798,8 +833,8 @@
                     </div>
 
                     <div class="setting-card" style="padding: 15px;">
-                        <div id="chatHistoryList" style="max-height: 420px; overflow-y: auto; background: rgba(0,0,0,0.15); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--panel-border);">
-                            <div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Loading chat history...</div>
+                        <div id="chatHistoryList" style="max-height: 420px; overflow-y: auto; background: #f8faff; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; border: 1.5px solid #e2e8f0;">
+                            <div style="text-align: center; color: #64748b; font-size: 0.92rem; font-weight: 600;">Loading chat history...</div>
                         </div>
                     </div>
                 </div>
@@ -982,7 +1017,7 @@
                     .limit(100).get();
 
                 if (snapshot.empty) {
-                    listEl.innerHTML = '<div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">No chat history found. Start a conversation!</div>';
+                    listEl.innerHTML = '<div style="text-align: center; color: #64748b; font-size: 0.95rem; font-weight: 600; padding: 20px;">No chat history found. Start a conversation!</div>';
                     return;
                 }
 
@@ -991,16 +1026,18 @@
                     const data = doc.data();
                     const date = data.timestamp ? data.timestamp.toDate() : new Date();
                     const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const senderName = data.sender === 'user' ? 'You' : 'V.A.N.I';
-                    const color = data.sender === 'user' ? 'var(--accent-primary)' : 'var(--accent-indigo)';
+                    const isUser = data.sender === 'user';
+                    const senderName = isUser ? 'You' : 'V.A.N.I';
+                    const tagBg = isUser ? 'rgba(2, 132, 199, 0.12)' : 'rgba(99, 102, 241, 0.12)';
+                    const tagColor = isUser ? '#0284c7' : '#4f46e5';
 
                     html += `
-                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.8rem;">
-                                <strong style="color: ${color};">${senderName}</strong>
-                                <span style="color: var(--text-muted);">${timeStr}</span>
+                        <div style="background: #ffffff; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="background: ${tagBg}; color: ${tagColor}; font-weight: 700; font-size: 0.8rem; padding: 3px 10px; border-radius: 6px;">${senderName}</span>
+                                <span style="color: #64748b; font-size: 0.8rem; font-weight: 500;">${timeStr}</span>
                             </div>
-                            <div style="font-size: 0.92rem; color: var(--text-primary); word-break: break-word;">${data.content}</div>
+                            <div style="font-size: 0.95rem; color: #0f172a !important; word-break: break-word; line-height: 1.5; font-weight: 500;">${data.content}</div>
                         </div>
                     `;
                 });
@@ -1008,7 +1045,7 @@
                 listEl.scrollTop = listEl.scrollHeight;
             } catch (err) {
                 console.error("Error fetching chats:", err);
-                listEl.innerHTML = '<div style="text-align: center; color: var(--error-color); font-size: 0.9rem;">Error loading chat history.</div>';
+                listEl.innerHTML = '<div style="text-align: center; color: #dc2626; font-size: 0.9rem; font-weight: 600;">Error loading chat history.</div>';
             }
         }
 
@@ -1358,6 +1395,86 @@
             }
 
             showToast("Preferences & Settings Saved Successfully!");
+        });
+    </script>
+
+    <!-- Firebase SDK & Sign Out Handler -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Sign Out Handler Function
+        function handleUserSignOut() {
+            if (confirm("Are you sure you want to sign out of V.A.N.I-xAI?")) {
+                sessionStorage.removeItem('pin_verified');
+                localStorage.removeItem('vani_session_token');
+                if (typeof auth !== 'undefined' && auth) {
+                    auth.signOut().finally(() => {
+                        window.location.href = './auth-vani-xai.html';
+                    });
+                } else {
+                    window.location.href = './auth-vani-xai.html';
+                }
+            }
+        }
+
+        // Attach listeners to all signout buttons on settings page
+        ['btn-signout-settings', 'btn-signout-large', 'btn-signout-sidebar'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleUserSignOut();
+                });
+            }
+        });
+
+        // Load profile info if logged in
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const nameEl = document.getElementById('profileName');
+                const emailEl = document.getElementById('profileEmail');
+                const vaniIdEl = document.getElementById('profileVaniId');
+                const adminBtn = document.getElementById('settings-admin-btn');
+                
+                if (nameEl) nameEl.textContent = user.displayName || user.email.split('@')[0];
+                if (emailEl) emailEl.textContent = user.email;
+
+                if (user.email === 'official.vani.xai76@gmail.com' && adminBtn) {
+                    adminBtn.style.display = 'inline-flex';
+                }
+
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.name && nameEl) nameEl.textContent = data.name;
+                        if (data.vaniId && vaniIdEl) {
+                            vaniIdEl.querySelector('span').textContent = data.vaniId;
+                            vaniIdEl.style.display = 'block';
+                        }
+                        if (data.isAdmin === true && adminBtn) {
+                            adminBtn.style.display = 'inline-flex';
+                        }
+                    }
+                } catch(e) {
+                    console.warn("User profile fetch error:", e);
+                }
+            }
         });
     </script>
 </body>
