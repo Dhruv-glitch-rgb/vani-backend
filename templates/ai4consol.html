@@ -575,6 +575,44 @@
             display: block;
         }
 
+        /* Sidebar Sign Out Button */
+        .sidebar-signout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+        }
+
+        .sidebar-signout-btn:hover {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            border-color: #ef4444;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+            transform: translateY(-1px);
+        }
+
+        body.dark-mode .sidebar-signout-btn {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #f87171;
+        }
+
+        body.dark-mode .sidebar-signout-btn:hover {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+        }
+
         /* Chat Panel */
         .chat-panel {
             flex: 1;
@@ -969,6 +1007,301 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        /* --- Sovereign Power Sign Out Video Button & Custom Logout Modal --- */
+        .header-power-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(244, 63, 94, 0.22));
+            border: 1.5px solid rgba(244, 63, 94, 0.45);
+            border-radius: 20px;
+            padding: 3px 12px 3px 4px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 14px rgba(239, 68, 68, 0.2);
+            position: relative;
+            overflow: hidden;
+            height: 34px;
+            box-sizing: border-box;
+        }
+
+        .header-power-btn:hover {
+            transform: translateY(-1px) scale(1.05);
+            border-color: #f43f5e;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(244, 63, 94, 0.38));
+            box-shadow: 0 0 22px rgba(244, 63, 94, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .power-vid-container {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            flex-shrink: 0;
+        }
+
+        .power-video-elem {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .power-label {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            color: #ef4444;
+            text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body.dark-mode .power-label {
+            color: #fda4af;
+        }
+
+        /* Custom Logout Modal */
+        .logout-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(4, 7, 16, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+            padding: 16px;
+            box-sizing: border-box;
+            animation: logoutFadeIn 0.25s ease-out forwards;
+        }
+
+        @keyframes logoutFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .logout-modal-card {
+            background: linear-gradient(145deg, #090e1d 0%, #111a2f 50%, #0c1426 100%);
+            border: 1.5px solid rgba(244, 63, 94, 0.4);
+            border-radius: 24px;
+            max-width: 460px;
+            width: 100%;
+            padding: 28px 24px 24px;
+            box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9), 0 0 45px rgba(244, 63, 94, 0.28);
+            position: relative;
+            text-align: center;
+            color: #f8fafc;
+            box-sizing: border-box;
+            animation: logoutCardScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes logoutCardScale {
+            from { transform: scale(0.88); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .logout-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .logout-modal-close:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: #fff;
+            border-color: #ef4444;
+        }
+
+        .logout-identity-deck {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 16px;
+            padding: 10px 0;
+        }
+
+        .logout-avatar-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-bureau-logo {
+            width: 68px;
+            height: 68px;
+            border-radius: 16px;
+            object-fit: contain;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 6px;
+            border: 2px solid rgba(56, 189, 248, 0.5);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+
+        .logout-user-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(244, 63, 94, 0.6);
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.35);
+        }
+
+        .logout-entity-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            letter-spacing: 0.5px;
+            max-width: 130px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .logout-bridge-pulse {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #f43f5e;
+            font-size: 1.3rem;
+            animation: bridgePulse 1.8s infinite;
+        }
+
+        @keyframes bridgePulse {
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 10px #f43f5e); }
+        }
+
+        .logout-modal-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 0 0 6px 0;
+            background: linear-gradient(135deg, #ffffff 0%, #fecdd3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logout-modal-sub {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin: 0 0 12px 0;
+            line-height: 1.4;
+        }
+
+        .logout-user-badge {
+            display: inline-block;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.72rem;
+            padding: 4px 12px;
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
+            margin-bottom: 16px;
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .logout-gif-trigger-card {
+            margin: 8px auto 14px;
+            padding: 16px 20px;
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.18) 0%, rgba(15, 23, 42, 0.75) 75%);
+            border: 2px dashed rgba(244, 63, 94, 0.6);
+            border-radius: 20px;
+            cursor: pointer;
+            position: relative;
+            max-width: 240px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 25px rgba(244, 63, 94, 0.25);
+        }
+
+        .logout-gif-trigger-card:hover {
+            transform: scale(1.06);
+            border-color: #f43f5e;
+            border-style: solid;
+            box-shadow: 0 0 35px rgba(244, 63, 94, 0.55), 0 0 12px #f43f5e;
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.3) 0%, rgba(15, 23, 42, 0.9) 75%);
+        }
+
+        .logout-gif-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 12px;
+            display: block;
+            margin: 0 auto 8px;
+            filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.6));
+        }
+
+        .logout-gif-instruction {
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: #f43f5e;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            animation: gifLabelPulse 1.5s infinite alternate;
+        }
+
+        @keyframes gifLabelPulse {
+            from { opacity: 0.8; }
+            to { opacity: 1; transform: scale(1.03); }
+        }
+
+        .logout-cancel-btn {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.86rem;
+            padding: 9px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 
@@ -1040,8 +1373,11 @@
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
 
-                <button class="header-btn-icon" id="btn-signout" title="Sign Out" style="color: #ef4444;">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <button class="header-power-btn" id="btn-signout" title="Power Down / Sign Out of V.A.N.I-xAI" aria-label="Sign Out" onclick="openCustomLogoutModal()">
+                    <div class="power-vid-container">
+                        <video src="./Logout.mp4" autoplay loop muted playsinline class="power-video-elem"></video>
+                    </div>
+                    <span class="power-label">Sign Out</span>
                 </button>
             </div>
         </header>
@@ -1166,12 +1502,18 @@
                 <div class="sidebar-footer">
                     <a href="./settings.html" class="sidebar-user-card" title="Click to view Profile &amp; Settings">
                         <div class="user-avatar-dot">DS</div>
-                        <div class="user-card-info" style="flex: 1;">
-                            <span class="user-card-name">Dhruv Sagar</span>
-                            <span class="user-card-id" id="sidebar-uid-text">V.A.N.I-SOVEREIGN</span>
+                        <div class="user-card-info" style="flex: 1; min-width: 0;">
+                            <span class="user-card-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Dhruv Sagar</span>
+                            <span class="user-card-id" id="sidebar-uid-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">V.A.N.I-SOVEREIGN</span>
                         </div>
                         <i class="fa-solid fa-gear" style="color: var(--console-text-muted); font-size: 0.75rem;"></i>
                     </a>
+                    <button id="btn-signout-sidebar" class="sidebar-signout-btn" title="Sign Out of V.A.N.I-xAI" onclick="openCustomLogoutModal()">
+                        <div class="power-vid-container" style="width: 20px; height: 20px; border-color: rgba(244, 63, 94, 0.4);">
+                            <video src="./Logout.mp4" autoplay loop muted playsinline class="power-video-elem"></video>
+                        </div>
+                        <span>Log Out Account</span>
+                    </button>
                 </div>
             </aside>
 
@@ -1375,6 +1717,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-messaging-compat.js"></script>
+    <script src="./fcm-notifications.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -1400,7 +1744,17 @@
                 return;
             }
 
-            // User authenticated -> Check Security PIN setup
+            // Initialize Background Push Notifications
+            if (window.VaniFCM) {
+                window.VaniFCM.init(user, { autoPrompt: true });
+            }
+
+            // User authenticated -> Check PIN session verification & Security PIN setup
+            if (sessionStorage.getItem('pin_verified') !== 'true') {
+                window.location.href = './pin-vaniXai.html';
+                return;
+            }
+
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 if (!userDoc.exists || (!userDoc.data().pin && !userDoc.data().securityPin)) {
@@ -1439,12 +1793,87 @@
             }
         });
 
-        // Sign Out Handler
-        document.getElementById('btn-signout')?.addEventListener('click', () => {
-            if (confirm("Are you sure you want to sign out of V.A.N.I-xAI?")) {
+        // Sovereign Custom Logout Modal Functions
+        function openCustomLogoutModal() {
+            const modal = document.getElementById('customLogoutModal');
+            if (!modal) return;
+
+            try {
+                const user = auth.currentUser;
+                const avatarImg = document.getElementById('logout-modal-user-avatar');
+                const userNameEl = document.getElementById('logout-modal-user-name');
+                const userEmailEl = document.getElementById('logout-modal-user-email');
+
+                if (user) {
+                    if (avatarImg) {
+                        if (user.photoURL) {
+                            avatarImg.src = user.photoURL;
+                        } else {
+                            avatarImg.src = './vani_icon.png';
+                        }
+                    }
+                    if (userNameEl) {
+                        userNameEl.textContent = user.displayName || (user.email ? user.email.split('@')[0] : 'Sovereign Node');
+                    }
+                    if (userEmailEl) {
+                        userEmailEl.textContent = user.email || 'Authenticated Sovereign Personnel';
+                    }
+                }
+            } catch (err) {
+                console.warn("Logout modal populate warning:", err);
+            }
+
+            modal.style.display = 'flex';
+        }
+        window.openCustomLogoutModal = openCustomLogoutModal;
+
+        function closeCustomLogoutModal() {
+            const modal = document.getElementById('customLogoutModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        window.closeCustomLogoutModal = closeCustomLogoutModal;
+
+        function executeAppSignOut() {
+            const statusEl = document.getElementById('logout-exec-status');
+            const gifCard = document.getElementById('logout-gif-trigger');
+            if (statusEl) {
+                statusEl.style.display = 'block';
+                statusEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Terminating Sovereign Session...';
+            }
+            if (gifCard) {
+                gifCard.style.opacity = '0.6';
+                gifCard.style.pointerEvents = 'none';
+            }
+            
+            setTimeout(() => {
                 auth.signOut().then(() => {
-                    window.location.href = './index.html';
+                    localStorage.removeItem('vani_session_token');
+                    window.location.href = './auth-vani-xai.html';
+                }).catch(err => {
+                    console.error("Sign out error:", err);
+                    window.location.href = './auth-vani-xai.html';
                 });
+            }, 500);
+        }
+        window.executeAppSignOut = executeAppSignOut;
+
+        document.getElementById('btn-signout')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openCustomLogoutModal();
+        });
+        document.getElementById('btn-signout-sidebar')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openCustomLogoutModal();
+        });
+
+        // Close modal on Escape
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeCustomLogoutModal();
             }
         });
 
@@ -1735,6 +2164,55 @@
             } catch(e) {}
         }
     </script>
+
+    <!-- Sovereign Custom Logout Confirmation Modal -->
+    <div class="logout-modal-backdrop" id="customLogoutModal" onclick="if(event.target === this) closeCustomLogoutModal();">
+        <div class="logout-modal-card" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
+            <button class="logout-modal-close" onclick="closeCustomLogoutModal()" title="Cancel & Close" aria-label="Close dialog">&times;</button>
+            
+            <!-- Dual Identity Header: Bureau Logo & User Profile -->
+            <div class="logout-identity-deck">
+                <div class="logout-avatar-slot">
+                    <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" alt="Bureau of V.A.N.I-xAI" class="logout-bureau-logo" onerror="this.src='./bureau_logo.png'">
+                    <span class="logout-entity-label">Bureau of V.A.N.I-xAI</span>
+                </div>
+
+                <div class="logout-bridge-pulse">
+                    <i class="fa-solid fa-power-off"></i>
+                </div>
+
+                <div class="logout-avatar-slot">
+                    <img id="logout-modal-user-avatar" src="./vani_icon.png" alt="User Profile" class="logout-user-avatar" onerror="this.src='./vani_icon.png'">
+                    <span class="logout-entity-label" id="logout-modal-user-name">Sovereign User</span>
+                </div>
+            </div>
+
+            <!-- Modal Heading & Prompt -->
+            <h3 class="logout-modal-title" id="logoutModalTitle">Confirm Sovereign Logout</h3>
+            <p class="logout-modal-sub">
+                Are you sure you want to sign out of <strong>V.A.N.I-xAI Quantum Console</strong>?
+            </p>
+            <div class="logout-user-badge" id="logout-modal-user-email">Authenticated Node</div>
+
+            <!-- Clickable Logout GIF Trigger -->
+            <div class="logout-gif-trigger-card" id="logout-gif-trigger" onclick="executeAppSignOut()" title="Click this power animation to sign out">
+                <img src="./logout.gif" alt="Click here to Sign Out" class="logout-gif-img">
+                <div class="logout-gif-instruction">
+                    <i class="fa-solid fa-arrow-pointer"></i>
+                    <span>Click Animation to Sign Out</span>
+                </div>
+            </div>
+
+            <div id="logout-exec-status" style="display: none; font-size: 0.82rem; color: #f43f5e; margin: 8px 0; font-weight: 700;"></div>
+
+            <!-- Dismiss / Stay Option -->
+            <div style="margin-top: 10px;">
+                <button type="button" class="logout-cancel-btn" onclick="closeCustomLogoutModal()">
+                    <i class="fa-solid fa-arrow-left"></i> Cancel / Stay Logged In
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Logic Script -->
     <script src="./main.js?v=2026_q2"></script>

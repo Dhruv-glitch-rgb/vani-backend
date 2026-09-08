@@ -924,6 +924,10 @@ window.addEventListener('DOMContentLoaded', () => {
         if (btn) {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                if (typeof window.openCustomLogoutModal === 'function') {
+                    window.openCustomLogoutModal();
+                    return;
+                }
                 if (confirm("Are you sure you want to sign out of V.A.N.I-xAI?")) {
                     if (typeof auth !== 'undefined' && auth.signOut) {
                         auth.signOut().then(() => {
