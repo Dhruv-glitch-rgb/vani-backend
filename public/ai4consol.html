@@ -1073,11 +1073,6 @@
                     <span id="headerThemeIcon">🌙</span>
                 </button>
 
-                <div class="header-uid-badge" id="headerUserUidBadge" onclick="copyStudentUID()" title="Click to copy your Algorithmic Sovereign UID">
-                    <i class="fa-solid fa-fingerprint"></i>
-                    <span id="header-vani-id-text">V.A.N.I-xAI-SOVEREIGN</span>
-                    <i class="fa-regular fa-copy" style="margin-left: 4px;"></i>
-                </div>
 
                 <button class="header-btn-icon" onclick="clearConsoleChat()" title="Clear Conversation">
                     <i class="fa-solid fa-trash-can"></i>
@@ -1178,11 +1173,7 @@
                         <i class="fa-solid fa-gear"></i>
                         <span>Settings</span>
                     </button>
-                    <button class="sidebar-addon-btn portal-addon" onclick="window.location.href='./project_report_light.html'" title="Official Research &amp; Project Report">
-                        <i class="fa-solid fa-file-lines"></i>
-                        <span>Project Report</span>
-                    </button>
-                    <button class="sidebar-addon-btn home-addon" onclick="window.location.href='./index.html'" title="Return to Landing Page">
+                    <button class="sidebar-addon-btn home-addon" style="grid-column: span 2;" onclick="window.location.href='./index.html'" title="Return to Landing Page">
                         <i class="fa-solid fa-house"></i>
                         <span>Landing Page</span>
                     </button>
@@ -1260,20 +1251,11 @@
                         <button class="dock-btn tool-btn" onclick="openSarasWebSearchModal()" title="Search with Saras Web Search">
                             <i class="fa-solid fa-globe" style="color: #0284c7;"></i>
                         </button>
-                        <button class="dock-btn tool-btn" onclick="window.location.href='/quantum_radar'" title="Open Quantum Radar Device Discovery">
-                            <i class="fa-solid fa-satellite-dish" style="color: #d97706;"></i>
-                        </button>
                         <button class="dock-btn tool-btn" onclick="triggerSwarmHandoff()" title="Trigger Mesh Swarm Sync Across Devices">
                             <i class="fa-solid fa-network-wired" style="color: #059669;"></i>
                         </button>
-                        <button class="dock-btn tool-btn" id="dock-addons-btn" onclick="toggleConsoleFeaturesMenu()" title="All Features &amp; Add-ons Menu">
-                            <i class="fa-solid fa-shapes" style="color: #7c3aed;"></i>
-                        </button>
                         <button class="dock-btn tool-btn" onclick="window.location.href='./settings.html'" title="System &amp; Voice Settings">
                             <i class="fa-solid fa-gear" style="color: #64748b;"></i>
-                        </button>
-                        <button class="dock-btn tool-btn" onclick="executeQuickPrompt('take screenshot')" title="Capture &amp; Analyze Screen">
-                            <i class="fa-solid fa-camera"></i>
                         </button>
                         <input type="text" id="text-input"
                             placeholder="Ask anything, solve equations, or control desktop..." autocomplete="off">
