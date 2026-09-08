@@ -81,7 +81,7 @@ def create_vani_presentation():
         footer_box = slide.shapes.add_textbox(Inches(0.8), Inches(7.0), Inches(11.733), Inches(0.35))
         tf_f = footer_box.text_frame
         p_f = tf_f.paragraphs[0]
-        p_f.text = f"V.A.N.I - xAI (BoVxAi) | National Children's Science Congress (NCSC) | Slide {slide_num:02d}"
+        p_f.text = f"V.A.N.I - xAI (BoVxAi) | Sovereign AI Initiative | Slide {slide_num:02d}"
         p_f.font.name = "Segoe UI"
         p_f.font.size = Pt(10)
         p_f.font.color.rgb = TEXT_MUTED
@@ -103,7 +103,7 @@ def create_vani_presentation():
 
     # Top National Badge inside Hero
     p0 = tf_hero.paragraphs[0]
-    p0.text = "🏆 NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27"
+    p0.text = "🚀 BUREAU OF V.A.N.I-xAI (BoVxAi) 2026-27"
     p0.font.name = "Segoe UI"
     p0.font.size = Pt(12)
     p0.font.bold = True
@@ -675,7 +675,7 @@ def create_vani_presentation():
     # =========================================================================
     s10 = prs.slides.add_slide(blank_slide_layout)
     set_slide_background(s10)
-    add_header(s10, "Future Scope & Scale", "Roadmap: From School Innovation to National Digital Utility", "Structured scale-up strategy for NCSC & National Digital Education Missions", ACCENT_GOLD)
+    add_header(s10, "Future Scope & Scale", "Roadmap: From School Innovation to National Digital Utility", "Structured scale-up strategy for National Digital Education Missions", ACCENT_GOLD)
 
     phases = [
         ("Phase 1: School Level (2026)", 
@@ -742,7 +742,7 @@ def create_vani_presentation():
     tf_end.word_wrap = True
 
     p0 = tf_end.paragraphs[0]
-    p0.text = "🏆 INVENTED FOR BHARAT'S FUTURE LEARNERS | NCSC 2026-27"
+    p0.text = "🚀 INVENTED FOR BHARAT'S FUTURE LEARNERS | BoVxAi 2026-27"
     p0.font.name = "Segoe UI"
     p0.font.size = Pt(13)
     p0.font.bold = True
@@ -787,7 +787,7 @@ def create_vani_presentation():
     p_chip.space_before = Pt(12)
 
     p4 = tf_end.add_paragraph()
-    p4.text = "Innovator: Dhruv Sagar (Class 10th) | PM SHRI KV NO.1 AFS Chakeri, Kanpur (UP)\nNational Children's Science Congress (NCSC) | NCSTC, DST India"
+    p4.text = "Innovator: Dhruv Sagar (Class 10th) | PM SHRI KV NO.1 AFS Chakeri, Kanpur (UP)\nBureau Of V.A.N.I-xAI (BoVxAi) | Sovereign AI Initiative"
     p4.font.name = "Segoe UI"
     p4.font.size = Pt(12.5)
     p4.font.color.rgb = RGBColor(203, 213, 225)

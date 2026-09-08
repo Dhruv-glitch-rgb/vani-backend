@@ -575,6 +575,44 @@
             display: block;
         }
 
+        /* Sidebar Sign Out Button */
+        .sidebar-signout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+        }
+
+        .sidebar-signout-btn:hover {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            border-color: #ef4444;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+            transform: translateY(-1px);
+        }
+
+        body.dark-mode .sidebar-signout-btn {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #f87171;
+        }
+
+        body.dark-mode .sidebar-signout-btn:hover {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+        }
+
         /* Chat Panel */
         .chat-panel {
             flex: 1;
@@ -1045,8 +1083,9 @@
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
 
-                <button class="header-btn-icon" id="btn-signout" title="Sign Out" style="color: #ef4444;">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <button class="header-btn-icon signout" id="btn-signout" title="Sign Out of V.A.N.I-xAI" style="color: #ef4444; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span style="font-size: 0.8rem; font-weight: 700;">Sign Out</span>
                 </button>
             </div>
         </header>
@@ -1139,9 +1178,9 @@
                         <i class="fa-solid fa-gear"></i>
                         <span>Settings</span>
                     </button>
-                    <button class="sidebar-addon-btn portal-addon" onclick="window.location.href='./vani_presentation_light.html'" title="Interactive NCSC 2026 Presentation">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                        <span>NCSC Portal</span>
+                    <button class="sidebar-addon-btn portal-addon" onclick="window.location.href='./project_report_light.html'" title="Official Research &amp; Project Report">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Project Report</span>
                     </button>
                     <button class="sidebar-addon-btn home-addon" onclick="window.location.href='./index.html'" title="Return to Landing Page">
                         <i class="fa-solid fa-house"></i>
@@ -1175,12 +1214,16 @@
                 <div class="sidebar-footer">
                     <a href="./settings.html" class="sidebar-user-card" title="Click to view Profile &amp; Settings">
                         <div class="user-avatar-dot">DS</div>
-                        <div class="user-card-info" style="flex: 1;">
-                            <span class="user-card-name">Dhruv Sagar</span>
-                            <span class="user-card-id" id="sidebar-uid-text">V.A.N.I-SOVEREIGN</span>
+                        <div class="user-card-info" style="flex: 1; min-width: 0;">
+                            <span class="user-card-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Dhruv Sagar</span>
+                            <span class="user-card-id" id="sidebar-uid-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">V.A.N.I-SOVEREIGN</span>
                         </div>
                         <i class="fa-solid fa-gear" style="color: var(--console-text-muted); font-size: 0.75rem;"></i>
                     </a>
+                    <button id="btn-signout-sidebar" class="sidebar-signout-btn" title="Sign Out of V.A.N.I-xAI">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Log Out Account</span>
+                    </button>
                 </div>
             </aside>
 
@@ -1321,19 +1364,11 @@
                         <p>Authentic Indian accent voice synthesis</p>
                     </div>
                 </div>
-                <!-- Item 8: NCSC Presentation -->
-                <a href="./vani_presentation_light.html" class="feature-popover-card">
-                    <div class="popover-icon-box cyan"><i class="fa-solid fa-chalkboard-user"></i></div>
-                    <div class="popover-card-text">
-                        <h4>NCSC Presentation Deck</h4>
-                        <p>12-slide interactive science congress portal</p>
-                    </div>
-                </a>
-                <!-- Item 9: Project Report -->
+                <!-- Item 8: Project Report -->
                 <a href="./project_report_light.html" class="feature-popover-card">
                     <div class="popover-icon-box emerald"><i class="fa-solid fa-file-lines"></i></div>
                     <div class="popover-card-text">
-                        <h4>NCSC Project Report</h4>
+                        <h4>Research &amp; Project Report</h4>
                         <p>Official full research report &amp; findings</p>
                     </div>
                 </a>
@@ -1433,7 +1468,12 @@
                 window.VaniFCM.init(user, { autoPrompt: true });
             }
 
-            // User authenticated -> Check Security PIN setup
+            // User authenticated -> Check PIN session verification & Security PIN setup
+            if (sessionStorage.getItem('pin_verified') !== 'true') {
+                window.location.href = './pin-vaniXai.html';
+                return;
+            }
+
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 if (!userDoc.exists || (!userDoc.data().pin && !userDoc.data().securityPin)) {
@@ -1473,13 +1513,20 @@
         });
 
         // Sign Out Handler
-        document.getElementById('btn-signout')?.addEventListener('click', () => {
+        function triggerAppSignOut() {
             if (confirm("Are you sure you want to sign out of V.A.N.I-xAI?")) {
                 auth.signOut().then(() => {
-                    window.location.href = './index.html';
+                    localStorage.removeItem('vani_session_token');
+                    window.location.href = './auth-vani-xai.html';
+                }).catch(err => {
+                    console.error("Sign out error:", err);
+                    window.location.href = './auth-vani-xai.html';
                 });
             }
-        });
+        }
+
+        document.getElementById('btn-signout')?.addEventListener('click', triggerAppSignOut);
+        document.getElementById('btn-signout-sidebar')?.addEventListener('click', triggerAppSignOut);
 
         // Theme Toggle Handler
         const themeBtn = document.getElementById('headerThemeToggle');

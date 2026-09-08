@@ -5,7 +5,7 @@ from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 
-def build_ncsc_presentation():
+def build_presentation():
     prs = Presentation()
     # 16:9 Widescreen standard
     prs.slide_width = Inches(13.333)
@@ -87,7 +87,7 @@ def build_ncsc_presentation():
         footer_box = slide.shapes.add_textbox(Inches(0.8), Inches(7.02), Inches(11.733), Inches(0.35))
         tf_f = footer_box.text_frame
         p_f = tf_f.paragraphs[0]
-        p_f.text = f"V.A.N.I - xAI | Bureau Of V.A.N.I-xAI (BoVxAi) | National Children's Science Congress (NCSC) 2026-27 | Slide {slide_num:02d} of {total_slides:02d}"
+        p_f.text = f"V.A.N.I - xAI | Bureau Of V.A.N.I-xAI (BoVxAi) | Sovereign AI Initiative 2026-27 | Slide {slide_num:02d} of {total_slides:02d}"
         p_f.font.name = "Segoe UI"
         p_f.font.size = Pt(9.5)
         p_f.font.color.rgb = TEXT_MUTED
@@ -112,7 +112,7 @@ def build_ncsc_presentation():
     tf_hero.word_wrap = True
 
     p0 = tf_hero.paragraphs[0]
-    p0.text = "🏆 NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27"
+    p0.text = "🚀 BUREAU OF V.A.N.I-xAI (BoVxAi) 2026-27"
     p0.font.name = "Segoe UI"
     p0.font.size = Pt(11.5)
     p0.font.bold = True
@@ -188,7 +188,7 @@ def build_ncsc_presentation():
     tf2 = c2.text_frame
     tf2.word_wrap = True
     p = tf2.paragraphs[0]
-    p.text = "🎯 NCSC Focal Theme & Innovation Scope"
+    p.text = "🎯 Research Domain & Innovation Scope"
     p.font.name = "Segoe UI"
     p.font.size = Pt(14.5)
     p.font.bold = True
@@ -942,7 +942,7 @@ def build_ncsc_presentation():
     # =========================================================================
     s13 = prs.slides.add_slide(blank_layout)
     set_slide_background(s13)
-    add_slide_header(s13, "Future Scope & Vision 2030", "Roadmap: From School Innovation to National Utility", "Structured multi-phase scaling strategy for NCSC and National Digital Education Missions", ACCENT_PURPLE)
+    add_slide_header(s13, "Future Scope & Vision 2030", "Roadmap: From School Innovation to National Utility", "Structured multi-phase scaling strategy for National Digital Education Missions", ACCENT_PURPLE)
 
     phases_roadmap = [
         ("Phase 1: School Pilot (2026)", 
@@ -1022,7 +1022,7 @@ def build_ncsc_presentation():
     tf_end.word_wrap = True
 
     p0 = tf_end.paragraphs[0]
-    p0.text = "🏆 NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27"
+    p0.text = "🚀 BUREAU OF V.A.N.I-xAI (BoVxAi) 2026-27"
     p0.font.name = "Segoe UI"
     p0.font.size = Pt(12)
     p0.font.bold = True
@@ -1030,7 +1030,7 @@ def build_ncsc_presentation():
     p0.alignment = PP_ALIGN.CENTER
 
     p1 = tf_end.add_paragraph()
-    p1.text = "Thank You, Respected Jury Members & Mentors!"
+    p1.text = "Thank You, Mentors & Evaluators!"
     p1.font.name = "Segoe UI"
     p1.font.size = Pt(28)
     p1.font.bold = True
@@ -1078,7 +1078,7 @@ def build_ncsc_presentation():
     p_ack.space_before = Pt(10)
 
     p4 = tf_end.add_paragraph()
-    p4.text = "Child Scientist: Dhruv Sagar (Class 10th) | Student UID: 1001049893\nPM SHRI KV NO.1 AFS Chakeri, Kanpur (UP) | Bureau Of V.A.N.I-xAI (BoVxAi)\n\n[ Live Working Prototype Ready for Jury Demonstration ]"
+    p4.text = "Lead Innovator: Dhruv Sagar (Class 10th) | Student UID: 1001049893\nPM SHRI KV NO.1 AFS Chakeri, Kanpur (UP) | Bureau Of V.A.N.I-xAI (BoVxAi)\n\n[ Live Working Prototype Ready for Demonstration ]"
     p4.font.name = "Segoe UI"
     p4.font.size = Pt(11.5)
     p4.font.bold = True
@@ -1089,15 +1089,15 @@ def build_ncsc_presentation():
     add_slide_footer(s14, 14)
 
     # Save presentation to both target names
-    output_filename = "VANI_xAI_NCSC_Official_Presentation.pptx"
+    output_filename = "VANI_xAI_Official_Presentation.pptx"
     prs.save(output_filename)
-    print(f"[SUCCESS] Official NCSC PPTX created: {output_filename}")
+    print(f"[SUCCESS] Official PPTX created: {output_filename}")
     
-    output_light = "VANI_xAI_NCSC_2026_Light.pptx"
+    output_light = "VANI_xAI_2026_Light.pptx"
     prs.save(output_light)
     print(f"[SUCCESS] Synced to: {output_light}")
 
     return output_filename
 
 if __name__ == "__main__":
-    build_ncsc_presentation()
+    build_presentation()

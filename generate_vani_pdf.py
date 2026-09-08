@@ -29,7 +29,7 @@ def generate_portrait_presentation_doc():
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>V.A.N.I-xAI (BoVxAi) - National Children's Science Congress (NCSC) Presentation</title>
+<title>V.A.N.I-xAI (BoVxAi) - Sovereign AI Presentation</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -365,7 +365,7 @@ def generate_portrait_presentation_doc():
   <div class="page-container">
     <div class="hero-card">
       <div class="hero-text-side">
-        <div class="header-badge">🏆 NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27</div>
+        <div class="header-badge">🚀 BUREAU OF V.A.N.I-xAI (BoVxAi) 2026-27</div>
         <h1 class="project-title">V.A.N.I - xAI (BoVxAi)</h1>
         <div class="project-subtitle">Vāṇī Adhyātmik Navīn Intellect & Bridge of Voice</div>
         <p class="project-desc">
@@ -430,7 +430,7 @@ def generate_portrait_presentation_doc():
     </div>
 
     <div class="page-footer">
-      <span>Bureau of V.A.N.I-xAI &bull; National Children's Science Congress (NCSC)</span>
+      <span>Bureau of V.A.N.I-xAI &bull; Sovereign AI Initiative</span>
       <span>PM SHRI KV NO.1 AFS Chakeri Kanpur</span>
     </div>
   </div>
@@ -484,7 +484,7 @@ def generate_portrait_presentation_doc():
     </div>
 
     <div class="page-footer">
-      <span>Bureau of V.A.N.I-xAI &bull; National Children's Science Congress (NCSC)</span>
+      <span>Bureau of V.A.N.I-xAI &bull; Sovereign AI Initiative</span>
       <span>PM SHRI KV NO.1 AFS Chakeri Kanpur</span>
     </div>
   </div>
@@ -534,7 +534,7 @@ def generate_portrait_presentation_doc():
     </div>
 
     <div class="page-footer">
-      <span>Bureau of V.A.N.I-xAI &bull; National Children's Science Congress (NCSC)</span>
+      <span>Bureau of V.A.N.I-xAI &bull; Sovereign AI Initiative</span>
       <span>PM SHRI KV NO.1 AFS Chakeri Kanpur</span>
     </div>
   </div>
@@ -627,7 +627,7 @@ def generate_portrait_presentation_doc():
     </table>
 
     <div class="page-footer">
-      <span>Bureau of V.A.N.I-xAI &bull; National Children's Science Congress (NCSC)</span>
+      <span>Bureau of V.A.N.I-xAI &bull; Sovereign AI Initiative</span>
       <span>PM SHRI KV NO.1 AFS Chakeri Kanpur</span>
     </div>
   </div>
@@ -730,7 +730,7 @@ def generate_portrait_presentation_doc():
     </div>
 
     <div class="page-footer">
-      <span>Bureau of V.A.N.I-xAI &bull; National Children's Science Congress (NCSC)</span>
+      <span>Bureau of V.A.N.I-xAI &bull; Sovereign AI Initiative</span>
       <span>PM SHRI KV NO.1 AFS Chakeri Kanpur</span>
     </div>
   </div>
@@ -762,10 +762,10 @@ def generate_pdfs_and_images():
         print(f"[SUCCESS] Portrait Presentation PDF generated: {output_portrait_pdf}")
         page1.close()
 
-        # 2. Synchronize VANI_xAI_NCSC_Project_Report.pdf
+        # 2. Synchronize VANI_xAI_Project_Report.pdf
         page2 = browser.new_page()
         page2.set_content(generate_portrait_presentation_doc(), wait_until="networkidle")
-        output_report_pdf = "VANI_xAI_NCSC_Project_Report.pdf"
+        output_report_pdf = "VANI_xAI_Project_Report.pdf"
         page2.pdf(
             path=output_report_pdf,
             format="A4",

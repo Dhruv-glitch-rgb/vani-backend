@@ -1,19 +1,15 @@
-NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27
-PROJECT ABSTRACT & REGISTRATION DETAILS
+PROJECT ABSTRACT & TECHNICAL SPECIFICATIONS
 
 PROJECT TITLE:
 V.A.N.I-xAI (Vāṇī Adhyātmik Navīn Intellect) — Sovereign Asymmetric AI Ecosystem 
 for Democratized & Socratic Learning
 
 PARENT INNOVATION CELL: Bureau Of V.A.N.I-xAI (BoVxAi)
-FOCAL THEME: Science, Technology and Innovation for a Sustainable Future
-SUB-THEME: Information, Communication & Digital Technologies for Education, 
-           Societal Development and Grassroots Empowerment
+DOMAIN: Information, Communication & Digital Technologies for Education, 
+        Societal Development and Grassroots Empowerment
 INSTITUTION: PM SHRI KENDRIYA VIDYALAYA NO. 1 AFS CHAKERI, KANPUR (U.P.)
 
-CHILD SCIENTISTS / TEAM MEMBERS:
-1. STUDENT 1 (Team Lead): DHRUV SAGAR (Class 10th)
-2. STUDENT 2 (Co-Researcher): TANISHKA SRIVASTAVA (Class 10th)
+INNOVATOR / LEAD DEVELOPER: DHRUV SAGAR (Class 10th)
 
 DEPLOYMENT STATUS: Live, Operational & Cloud-Deployed at https://vani-nzdrsr.web.app/
 

@@ -4670,29 +4670,200 @@ body.light-theme .hero-ai-sandbox {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Ultra-Clean Cards & Glassmorphism */
-body.dark-mode .hud-card, 
+/* Ultra-Clean High-Contrast Cards & Glassmorphism */
+.hud-card:not(.cyber-terminal-card):not(.cockpit-preview-hud), 
+.bento-item,
+.comparison-table-wrapper,
+.cockpit-wrapper {
+    background: #ffffff !important;
+    border: 1px solid rgba(226, 232, 240, 0.95) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07) !important;
+    color: #0f172a !important;
+}
+
+/* CLI Terminal & Preview HUD are ALWAYS dark tech displays */
+.cyber-terminal-card, 
+.cockpit-preview-hud {
+    background: #0b0f19 !important;
+    border: 1px solid #1e293b !important;
+    border-radius: 20px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3) !important;
+    color: #f8fafc !important;
+}
+
+/* Dark Mode Overrides */
+body.dark-mode, body.dark-theme {
+    background: #090d16 !important;
+    color: #f8fafc !important;
+}
+
+body.dark-mode .hud-card:not(.cyber-terminal-card):not(.cockpit-preview-hud), 
 body.dark-mode .bento-item, 
-body.dark-mode .cyber-terminal-card, 
 body.dark-mode .comparison-table-wrapper, 
 body.dark-mode .cockpit-wrapper,
-body.dark-theme .hud-card, 
+body.dark-theme .hud-card:not(.cyber-terminal-card):not(.cockpit-preview-hud), 
 body.dark-theme .bento-item, 
-body.dark-theme .cyber-terminal-card, 
 body.dark-theme .comparison-table-wrapper, 
-body.dark-theme .cockpit-wrapper,
-.hud-card, .bento-item {
-    background: rgba(15, 20, 42, 0.72) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-    border: 1px solid rgba(255, 215, 0, 0.22) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45) !important;
+body.dark-theme .cockpit-wrapper {
+    background: #111827 !important;
+    border: 1px solid rgba(255, 215, 0, 0.25) !important;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6) !important;
     color: #f8fafc !important;
+}
+
+/* All Headings across landing page */
+.bento-body h3,
+.bento-item h3,
+.hud-card h1, .hud-card h2, .hud-card h3, .hud-card h4,
+.cockpit-module-info h3 {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+}
+
+body.dark-mode .bento-body h3,
+body.dark-mode .bento-item h3,
+body.dark-mode .hud-card h1, body.dark-mode .hud-card h2, body.dark-mode .hud-card h3, body.dark-mode .hud-card h4,
+body.dark-mode .cockpit-module-info h3,
+body.dark-theme .bento-body h3,
+body.dark-theme .bento-item h3,
+body.dark-theme .hud-card h1, body.dark-theme .hud-card h2, body.dark-theme .hud-card h3, body.dark-theme .hud-card h4,
+body.dark-theme .cockpit-module-info h3 {
+    color: #ffffff !important;
+}
+
+/* All Paragraphs across landing page */
+.bento-body p,
+.bento-item p,
+.hud-card:not(.cyber-terminal-card) p,
+.cockpit-module-info p,
+.hero-desc {
+    color: #334155 !important;
+    font-weight: 500 !important;
+    line-height: 1.65 !important;
+}
+
+body.dark-mode .bento-body p,
+body.dark-mode .bento-item p,
+body.dark-mode .hud-card:not(.cyber-terminal-card) p,
+body.dark-mode .cockpit-module-info p,
+body.dark-mode .hero-desc,
+body.dark-theme .bento-body p,
+body.dark-theme .bento-item p,
+body.dark-theme .hud-card:not(.cyber-terminal-card) p,
+body.dark-theme .cockpit-module-info p,
+body.dark-theme .hero-desc {
+    color: #cbd5e1 !important;
+}
+
+.section-header p,
+.section-subtitle {
+    color: #334155 !important;
+    font-weight: 500 !important;
+    font-size: 1.05rem !important;
+    line-height: 1.7 !important;
+}
+
+body.dark-mode .section-header p,
+body.dark-mode .section-subtitle,
+body.dark-theme .section-header p,
+body.dark-theme .section-subtitle {
+    color: #cbd5e1 !important;
 }
 
 .hud-card::before, .hud-card::after {
     display: none !important; /* Remove noisy legacy reticle corners */
+}
+
+/* Multi-Column Footer Styling & High Contrast */
+.landing-footer {
+    width: calc(100% - 48px);
+    max-width: 1300px;
+    margin: 50px auto 0;
+    padding: 48px 32px 32px;
+    border-radius: 28px 28px 0 0 !important;
+    border-bottom: none !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.04) !important;
+    text-align: center;
+}
+
+body.dark-mode .landing-footer,
+body.dark-theme .landing-footer {
+    background: rgba(15, 23, 42, 0.96) !important;
+    border-color: rgba(255, 215, 0, 0.2) !important;
+    box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.6) !important;
+}
+
+.landing-footer .footer-brand-title {
+    color: #0f172a !important;
+}
+
+body.dark-mode .landing-footer .footer-brand-title,
+body.dark-theme .landing-footer .footer-brand-title {
+    color: #f8fafc !important;
+}
+
+.landing-footer .footer-brand p {
+    color: #334155 !important;
+    font-size: 0.9rem !important;
+    line-height: 1.65 !important;
+}
+
+body.dark-mode .landing-footer .footer-brand p,
+body.dark-theme .landing-footer .footer-brand p {
+    color: #94a3b8 !important;
+}
+
+.landing-footer .footer-col h4 {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 0.92rem !important;
+    letter-spacing: 1px !important;
+}
+
+body.dark-mode .landing-footer .footer-col h4,
+body.dark-theme .landing-footer .footer-col h4 {
+    color: #f8fafc !important;
+}
+
+.landing-footer .footer-col ul li a {
+    color: #334155 !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.landing-footer .footer-col ul li a:hover {
+    color: #0284c7 !important;
+    transform: translateX(4px);
+}
+
+body.dark-mode .landing-footer .footer-col ul li a,
+body.dark-theme .landing-footer .footer-col ul li a {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode .landing-footer .footer-col ul li a:hover,
+body.dark-theme .landing-footer .footer-col ul li a:hover {
+    color: #38bdf8 !important;
+}
+
+.landing-footer .footer-bottom-bar {
+    border-top: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+    font-size: 0.85rem !important;
+    padding-top: 24px;
+}
+
+body.dark-mode .landing-footer .footer-bottom-bar,
+body.dark-theme .landing-footer .footer-bottom-bar {
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+    color: #94a3b8 !important;
 }
 
 /* Saffron Gold Buttons */
@@ -4712,6 +4883,199 @@ body.dark-theme .cockpit-wrapper,
     transform: translateY(-2px) scale(1.02) !important;
     box-shadow: 0 10px 30px rgba(255, 153, 51, 0.5) !important;
 }
+
+/* ==========================================================================
+   VANI-xAI VIBRANT & ATTRACTIVE COLORFUL LANDING PAGE SYSTEM
+   ========================================================================== */
+
+/* Ambient Glowing Background Orbs */
+.ambient-orbs-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.20;
+    animation: floatOrb 18s ease-in-out infinite alternate;
+}
+
+.ambient-orb-saffron {
+    top: -100px;
+    left: -100px;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, #ff7e5f 0%, #f59e0b 100%);
+}
+
+.ambient-orb-purple {
+    top: 15%;
+    right: -120px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #8b5cf6 0%, #7c3aed 100%);
+    animation-delay: -5s;
+}
+
+.ambient-orb-cyan {
+    bottom: 20%;
+    left: -100px;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, #06b6d4 0%, #0284c7 100%);
+    animation-delay: -10s;
+}
+
+.ambient-orb-emerald {
+    bottom: -120px;
+    right: 5%;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, #10b981 0%, #059669 100%);
+    animation-delay: -14s;
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(40px, 50px) scale(1.1); }
+    100% { transform: translate(-30px, 30px) scale(0.95); }
+}
+
+/* Enhanced Bento Matrix Grid Accent Bars */
+.bento-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-accent-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+}
+
+.bento-accent-cyan { background: linear-gradient(90deg, #06b6d4, #0284c7); }
+.bento-accent-purple { background: linear-gradient(90deg, #a855f7, #7c3aed); }
+.bento-accent-emerald { background: linear-gradient(90deg, #10b981, #059669); }
+.bento-accent-rose { background: linear-gradient(90deg, #f43f5e, #e11d48); }
+.bento-accent-gold { background: linear-gradient(90deg, #f59e0b, #d97706); }
+
+/* Enhanced Quick Chips */
+.sandbox-quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.sandbox-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #f8fafc;
+    color: #334155;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.sandbox-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.sandbox-chip.chip-speech { background: #f5f3ff; color: #7c3aed; border-color: #ddd6fe; }
+.sandbox-chip.chip-search { background: #f0f9ff; color: #0284c7; border-color: #bae6fd; }
+.sandbox-chip.chip-swarm { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+.sandbox-chip.chip-lock { background: #fff1f2; color: #e11d48; border-color: #fecdd3; }
+.sandbox-chip.chip-mentor { background: #fffbeb; color: #d97706; border-color: #fde68a; }
+
+/* Enhanced Telemetry Ribbon Cards */
+.cyber-telemetry-ribbon {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 1300px;
+    margin: 20px auto;
+    padding: 0 24px;
+}
+
+@media (max-width: 900px) {
+    .cyber-telemetry-ribbon {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.telemetry-item {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+    transition: all 0.25s ease;
+}
+
+.telemetry-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.telemetry-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.telemetry-icon-box.cyan { background: #e0f2fe; color: #0284c7; }
+.telemetry-icon-box.purple { background: #f3e8ff; color: #7c3aed; }
+.telemetry-icon-box.emerald { background: #d1fae5; color: #059669; }
+.telemetry-icon-box.gold { background: #fef3c7; color: #d97706; }
+
+.telemetry-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.telemetry-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.telemetry-val {
+    font-size: 1rem;
+    font-weight: 800;
+    font-family: 'Orbitron', sans-serif;
+}
+
 
 
 

@@ -3,7 +3,7 @@ from playwright.sync_api import sync_playwright
 
 def render_full_report_pdf():
     input_html = os.path.abspath("project_report_light.html")
-    output_pdf = os.path.abspath("VANI_xAI_NCSC_Project_Report_Light.pdf")
+    output_pdf = os.path.abspath("VANI_xAI_Project_Report_Light.pdf")
     
     print(f"Rendering {input_html} -> {output_pdf}...")
     with sync_playwright() as p:

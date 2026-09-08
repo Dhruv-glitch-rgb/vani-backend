@@ -197,7 +197,7 @@ def render_brand_assets():
         100% Free &bull; Zero E-Waste &bull; Socratic Mentorship
       </div>
       <div style="background: rgba(56, 189, 248, 0.15); border: 2px solid #38BDF8; color: #38BDF8; font-weight: 800; font-size: 16px; padding: 10px 30px; border-radius: 30px; letter-spacing: 1px;">
-        NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27
+        BUREAU OF V.A.N.I-xAI (BoVxAi) 2026-27
       </div>
     </div>
   </div>

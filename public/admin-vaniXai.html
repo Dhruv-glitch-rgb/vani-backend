@@ -469,9 +469,14 @@
                 <img src="vani_logo.jpg" alt="Logo">
                 <h1>V.A.N.I-xAI ADMIN PANEL_@0419</h1>
             </div>
-            <button class="btn-back" onclick="window.location.href='./ai4consol.html'">
-                <i class="fa-solid fa-satellite-dish"></i> Return to Console
-            </button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-back" onclick="window.location.href='./ai4consol.html'">
+                    <i class="fa-solid fa-satellite-dish"></i> Return to Console
+                </button>
+                <button class="btn-back" id="btn-signout-admin" onclick="signOutAdmin()" style="border-color: rgba(239, 68, 68, 0.4); color: #ef4444; background: rgba(239, 68, 68, 0.08);">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                </button>
+            </div>
         </header>
 
         <main class="data-panel glass-panel">
@@ -1157,6 +1162,20 @@
       }
     });
   })();
+
+  function signOutAdmin() {
+    if (confirm("Are you sure you want to sign out of Admin Panel?")) {
+      if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().signOut().then(() => {
+          window.location.href = './auth-vani-xai.html';
+        }).catch(() => {
+          window.location.href = './auth-vani-xai.html';
+        });
+      } else {
+        window.location.href = './auth-vani-xai.html';
+      }
+    }
+  }
 </script>
 
 </body>

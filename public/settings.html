@@ -419,6 +419,9 @@
                 <button class="nav-cta-btn animate-hover-scale" onclick="window.location.href='./ai4consol.html'">
                     <i class="fa-solid fa-arrow-left"></i> Console
                 </button>
+                <button id="btn-signout-settings" onclick="handleUserSignOut()" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; font-weight: bold; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35); cursor: pointer;" title="Sign Out of V.A.N.I-xAI">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                </button>
             </div>
         </nav>
 
@@ -464,6 +467,12 @@
                 <button class="save-all-btn animate-hover-scale" id="saveSettingsBtn">
                     <i class="fa-solid fa-floppy-disk"></i> Save Preferences
                 </button>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.06);">
+                    <button class="tab-item" id="btn-signout-sidebar" onclick="handleUserSignOut()" style="color: #ef4444; width: 100%; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.08); font-weight: 700; cursor: pointer;">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Log Out Account</span>
+                    </button>
+                </div>
             </aside>
 
             <!-- Settings Content Panes -->
@@ -495,6 +504,9 @@
                                 </button>
                                 <button class="nav-cta-btn animate-hover-scale" id="btnChangePin" style="font-size: 0.8rem; padding: 7px 14px; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #ef4444;">
                                     <i class="fa-solid fa-key"></i> Reset PIN
+                                </button>
+                                <button class="nav-cta-btn animate-hover-scale" id="btn-signout-large" onclick="handleUserSignOut()" style="font-size: 0.8rem; padding: 8px 14px; background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; border: none; font-weight: 700; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); cursor: pointer;" title="Sign Out of V.A.N.I-xAI">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Log Out / Sign Out
                                 </button>
                             </div>
                         </div>
@@ -1358,6 +1370,86 @@
             }
 
             showToast("Preferences & Settings Saved Successfully!");
+        });
+    </script>
+
+    <!-- Firebase SDK & Sign Out Handler -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Sign Out Handler Function
+        function handleUserSignOut() {
+            if (confirm("Are you sure you want to sign out of V.A.N.I-xAI?")) {
+                sessionStorage.removeItem('pin_verified');
+                localStorage.removeItem('vani_session_token');
+                if (typeof auth !== 'undefined' && auth) {
+                    auth.signOut().finally(() => {
+                        window.location.href = './auth-vani-xai.html';
+                    });
+                } else {
+                    window.location.href = './auth-vani-xai.html';
+                }
+            }
+        }
+
+        // Attach listeners to all signout buttons on settings page
+        ['btn-signout-settings', 'btn-signout-large', 'btn-signout-sidebar'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleUserSignOut();
+                });
+            }
+        });
+
+        // Load profile info if logged in
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const nameEl = document.getElementById('profileName');
+                const emailEl = document.getElementById('profileEmail');
+                const vaniIdEl = document.getElementById('profileVaniId');
+                const adminBtn = document.getElementById('settings-admin-btn');
+                
+                if (nameEl) nameEl.textContent = user.displayName || user.email.split('@')[0];
+                if (emailEl) emailEl.textContent = user.email;
+
+                if (user.email === 'official.vani.xai76@gmail.com' && adminBtn) {
+                    adminBtn.style.display = 'inline-flex';
+                }
+
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.name && nameEl) nameEl.textContent = data.name;
+                        if (data.vaniId && vaniIdEl) {
+                            vaniIdEl.querySelector('span').textContent = data.vaniId;
+                            vaniIdEl.style.display = 'block';
+                        }
+                        if (data.isAdmin === true && adminBtn) {
+                            adminBtn.style.display = 'inline-flex';
+                        }
+                    }
+                } catch(e) {
+                    console.warn("User profile fetch error:", e);
+                }
+            }
         });
     </script>
 </body>

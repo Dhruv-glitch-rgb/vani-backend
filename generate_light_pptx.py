@@ -80,7 +80,7 @@ def build_light_presentation():
         footer_box = slide.shapes.add_textbox(Inches(0.8), Inches(7.0), Inches(11.733), Inches(0.35))
         tf_f = footer_box.text_frame
         p_f = tf_f.paragraphs[0]
-        p_f.text = f"V.A.N.I - xAI | Bureau Of V.A.N.I-xAI (BoVxAi) | National Children's Science Congress (NCSC) | Slide {slide_num:02d}"
+        p_f.text = f"V.A.N.I - xAI | Bureau Of V.A.N.I-xAI (BoVxAi) | Sovereign AI Initiative | Slide {slide_num:02d}"
         p_f.font.name = "Segoe UI"
         p_f.font.size = Pt(10)
         p_f.font.color.rgb = TEXT_MUTED
@@ -105,7 +105,7 @@ def build_light_presentation():
     tf_hero.word_wrap = True
 
     p0 = tf_hero.paragraphs[0]
-    p0.text = "🏆 NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27"
+    p0.text = "🚀 BUREAU OF V.A.N.I-xAI (BoVxAi) 2026-27"
     p0.font.name = "Segoe UI"
     p0.font.size = Pt(11.5)
     p0.font.bold = True
@@ -790,7 +790,7 @@ def build_light_presentation():
     # =========================================================================
     s12 = prs.slides.add_slide(blank_layout)
     set_slide_background(s12)
-    add_slide_header(s12, "Future Scope & Vision 2030", "Roadmap: From School Innovation to National Utility", "Structured scale-up strategy for NCSC & National Digital Education Missions", ACCENT_GOLD)
+    add_slide_header(s12, "Future Scope & Vision 2030", "Roadmap: From School Innovation to National Utility", "Structured scale-up strategy for National Digital Education Missions", ACCENT_GOLD)
 
     phases = [
         ("Phase 1: School Pilot (2026)", 
@@ -857,7 +857,7 @@ def build_light_presentation():
     p_ban.alignment = PP_ALIGN.CENTER
 
     p_ban2 = tf_ban.add_paragraph()
-    p_ban2.text = "Thank you, Respected Jury Members & NCSC Mentors | Ready to Empower Every Indian Student"
+    p_ban2.text = "Thank you, Mentors & Evaluators | Ready to Empower Every Indian Student"
     p_ban2.font.name = "Segoe UI"
     p_ban2.font.size = Pt(11.5)
     p_ban2.font.bold = True
@@ -867,7 +867,7 @@ def build_light_presentation():
 
     add_slide_footer(s12, 12)
 
-    output_filename = "VANI_xAI_NCSC_2026_Light.pptx"
+    output_filename = "VANI_xAI_2026_Light.pptx"
     prs.save(output_filename)
     print(f"Successfully generated 100% Light UI PPTX: {output_filename}")
     return output_filename

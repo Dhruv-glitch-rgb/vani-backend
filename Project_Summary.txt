@@ -3,11 +3,9 @@ PROJECT SUMMARY: V.A.N.I-xAI (Bureau Of V.A.N.I-xAI - BoVxAi)
 VĀṆĪ ADHYĀTMIK NAVĪN INTELLECT & BRIDGE OF VOICE
 ======================================================================
 
-PROGRAMME: NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27
-FOCAL THEME: Science, Technology and Innovation for a Sustainable Future
-SUB-THEME: Information, Communication & Digital Technologies for Education, 
-           Societal Development and Grassroots Empowerment
-CHILD SCIENTIST / INNOVATOR: Dhruv Sagar
+DOMAIN: Information, Communication & Digital Technologies for Education, 
+        Societal Development and Grassroots Empowerment
+INNOVATOR / LEAD DEVELOPER: Dhruv Sagar
 CLASS: 10th
 INSTITUTION: PM SHRI KENDRIYA VIDYALAYA NO. 1 AFS CHAKERI, KANPUR (UP)
 STUDENT UID: 1001049893
@@ -179,7 +177,7 @@ KEY EMPIRICAL OBSERVATIONS:
 ======================================================================
 7. ENVIRONMENTAL SUSTAINABILITY & 100% ZERO E-WASTE MODEL
 ======================================================================
-In accordance with NCSC environmental priorities and national green technology goals:
+In accordance with environmental sustainability priorities and national green technology goals:
 
 1. ZERO PHYSICAL MANUFACTURING:
    As a 100% cloud-native software solution, V.A.N.I-xAI requires zero plastic 
@@ -196,7 +194,7 @@ In accordance with NCSC environmental priorities and national green technology g
    session records eliminate paper consumption from printed study guides.
 
 ======================================================================
-8. ALIGNMENT WITH NATIONAL EDUCATION POLICY (NEP 2020) & NCSC THEMES
+8. ALIGNMENT WITH NATIONAL EDUCATION POLICY (NEP 2020)
 ======================================================================
 - NEP 2020 PRINCIPLES: Transitions students from passive rote learning to active, 
   inquiry-driven exploration and conceptual mastery.
@@ -235,7 +233,7 @@ pedagogical workflows are fully operational and ready for jury demonstration.
 
 SUBMITTED BY:
 Dhruv Sagar (Class 10th)
-Child Scientist / Innovator
+Lead Innovator & Developer
 PM SHRI KENDRIYA VIDYALAYA NO. 1 AFS CHAKERI, KANPUR (UP)
-National Children's Science Congress (NCSC) 2026-27
+Bureau Of V.A.N.I-xAI (BoVxAi)
 ======================================================================

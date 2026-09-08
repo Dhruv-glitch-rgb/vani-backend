@@ -919,14 +919,28 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // Sign out buttons
-    const signoutBtns = [document.getElementById('btn-signout'), document.getElementById('btn-signout-large')];
+    const signoutBtns = document.querySelectorAll('#btn-signout, #btn-signout-large, #btn-signout-settings, #btn-signout-sidebar, #btn-signout-admin, #btn-signout-pin, .signout-action');
     signoutBtns.forEach(btn => {
         if (btn) {
-            btn.addEventListener('click', () => {
-                if (typeof auth !== 'undefined') {
-                    auth.signOut().then(() => {
-                        window.location.href = './index.html';
-                    });
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm("Are you sure you want to sign out of V.A.N.I-xAI?")) {
+                    if (typeof auth !== 'undefined' && auth.signOut) {
+                        auth.signOut().then(() => {
+                            localStorage.removeItem('vani_session_token');
+                            window.location.href = './auth-vani-xai.html';
+                        }).catch(err => {
+                            console.error("Sign out error:", err);
+                            window.location.href = './auth-vani-xai.html';
+                        });
+                    } else if (typeof firebase !== 'undefined' && firebase.auth) {
+                        firebase.auth().signOut().then(() => {
+                            localStorage.removeItem('vani_session_token');
+                            window.location.href = './auth-vani-xai.html';
+                        });
+                    } else {
+                        window.location.href = './auth-vani-xai.html';
+                    }
                 }
             });
         }
@@ -1417,7 +1431,10 @@ window.executeHeroQuickChip = function(type) {
         typewriterEffect(output, "<span style='color: var(--cyber-emerald); font-weight:700;'>[SWARM MESH SCANNER]</span><br>3 Neural Nodes Discovered: Workstation-Alpha [Windows 11], Companion [Android 14], Cloud-Hub [Active]. Ready for P2P Handoff.");
     } else if (type === 'lockdown') {
         if (input) input.value = "arm intruder biometric trap";
-        typewriterEffect(output, "<span style='color: var(--cyber-pink); font-weight:700;'>[BIOMETRIC TRAP ARMED]</span><br>Intruder Trap primed. PIN Lockdown &amp; silent camera snapshot triggers available in Control Center.");
+        typewriterEffect(output, "<span style='color: #e11d48; font-weight:700;'>[BIOMETRIC TRAP ARMED]</span><br>Intruder Trap primed. PIN Lockdown &amp; silent camera snapshot triggers available in Control Center.");
+    } else if (type === 'mentor') {
+        if (input) input.value = "How do I solve kinetic energy derivation?";
+        typewriterEffect(output, "<span style='color: #d97706; font-weight:700;'>[NEP 2020 SOCRATIC MENTOR]</span><br>🎓 <strong>Guided Scaffolding:</strong> Let's break it down! Work done = Force × Distance. Since Force = m × a, what is the expression for acceleration in terms of velocity and displacement?");
     }
 };
 

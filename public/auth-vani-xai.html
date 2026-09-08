@@ -360,16 +360,10 @@
 
         // Helper for logging & registering user in Firestore with PIN enforcement
         async function logActivityAndRedirect(msg, user) {
-            let hasPin = false;
             try {
                 if (user && typeof db !== 'undefined') {
                     const nameBase = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
                     const vaniId = `V.A.N.I-xAI-${nameBase.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase()}-2026`;
-                    
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    if (doc.exists && (doc.data().pin || doc.data().securityPin)) {
-                        hasPin = true;
-                    }
 
                     await Promise.all([
                         db.collection('logs').add({
@@ -387,11 +381,9 @@
                 }
             } catch (e) { console.error("Log/save user error", e); }
             
-            if (!hasPin) {
-                window.location.href = './pin-vaniXai.html';
-            } else {
-                window.location.href = './ai4consol.html';
-            }
+            // Clear previous verification state so user must verify PIN or create one
+            sessionStorage.removeItem('pin_verified');
+            window.location.href = './pin-vaniXai.html';
         }
 
         // Email Auth
@@ -432,17 +424,14 @@
                 });
         });
 
-        // Redirect if already logged in (Check PIN setup first)
+        // Redirect if already logged in (Always verify PIN first)
         auth.onAuthStateChanged(async user => {
             if (user && !loading.style.display.includes('flex')) {
-                try {
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    if (!doc.exists || (!doc.data().pin && !doc.data().securityPin)) {
-                        window.location.href = './pin-vaniXai.html';
-                        return;
-                    }
-                } catch (e) { console.warn("Pin check error:", e); }
-                window.location.href = './ai4consol.html';
+                if (sessionStorage.getItem('pin_verified') !== 'true') {
+                    window.location.href = './pin-vaniXai.html';
+                } else {
+                    window.location.href = './ai4consol.html';
+                }
             }
         });
     </script>

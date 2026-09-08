@@ -256,6 +256,12 @@
             </div>
 
             <div class="msg-text" id="status-msg"></div>
+
+            <div style="margin-top: 18px;">
+                <button id="btn-signout-pin" onclick="signOutFromPinPage()" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer;" title="Sign Out of this account">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out / Switch Account
+                </button>
+            </div>
         </div>
     </div>
 
@@ -292,6 +298,17 @@
         let maxPinLength = 8; // Default max
         const urlParams = new URLSearchParams(window.location.search);
         const action = urlParams.get('action');
+
+        function signOutFromPinPage() {
+            if (confirm("Are you sure you want to sign out?")) {
+                auth.signOut().then(() => {
+                    localStorage.removeItem('vani_session_token');
+                    window.location.href = '/auth-vani-xai.html';
+                }).catch(() => {
+                    window.location.href = '/auth-vani-xai.html';
+                });
+            }
+        }
 
         // Show/Hide Loading
         function setLoading(isLoading) {
@@ -418,7 +435,7 @@
                     }
 
                     await logActivity("Security PIN Verified");
-                    setTimeout(() => window.location.href = './ai4consol.html', 500);
+                    setTimeout(() => window.location.href = './login-loading-vaniXai.html', 500);
                 }
             } else {
                 failedAttempts++;
@@ -468,7 +485,7 @@
                 statusMsg.textContent = "Security PIN configured successfully.";
                 sessionStorage.setItem('pin_verified', 'true');
                 await logActivity("Security PIN Configured");
-                setTimeout(() => window.location.href = './ai4consol.html', 500);
+                setTimeout(() => window.location.href = './login-loading-vaniXai.html', 500);
             } catch (err) {
                 console.error(err);
                 statusMsg.textContent = "Error saving PIN. Please try again.";
@@ -568,41 +585,41 @@
                         }
 
                         if (data.pin) {
-                        expectedPin = doc.data().pin;
-                        maxPinLength = expectedPin.length;
+                            expectedPin = doc.data().pin;
+                            maxPinLength = expectedPin.length;
 
-                        if (action === 'reset') {
-                            // User wants to reset -> Reset Verify Mode
-                            mode = 'reset_verify';
-                            titleEl.textContent = 'Reset Security PIN';
-                            subtitleEl.textContent = 'Enter your CURRENT PIN to verify identity';
-                            drawDots(maxPinLength);
-                            setLoading(false);
-                            interactionArea.style.display = 'block';
-                            hiddenInput.focus();
-                        } else {
-                            // Normal Login -> Verify Mode
-                            mode = 'verify';
-                            titleEl.textContent = 'Enter Security PIN';
-                            subtitleEl.textContent = 'Please verify your identity to continue';
-                            
-                            const data = doc.data();
-                            failedAttempts = data.failedAttempts || 0;
-                            
-                            if (data.lockoutUntil) {
-                                const lockoutUntil = data.lockoutUntil.toDate();
-                                if (lockoutUntil > new Date()) {
-                                    startLockoutTimer(lockoutUntil);
-                                    drawDots(maxPinLength);
-                                    return; // Don't allow input yet
+                            if (action === 'reset') {
+                                // User wants to reset -> Reset Verify Mode
+                                mode = 'reset_verify';
+                                titleEl.textContent = 'Reset Security PIN';
+                                subtitleEl.textContent = 'Enter your CURRENT PIN to verify identity';
+                                drawDots(maxPinLength);
+                                setLoading(false);
+                                interactionArea.style.display = 'block';
+                                hiddenInput.focus();
+                            } else {
+                                // Normal Login -> Verify Mode
+                                mode = 'verify';
+                                titleEl.textContent = 'Enter Security PIN';
+                                subtitleEl.textContent = 'Please verify your identity to continue';
+                                
+                                const data = doc.data();
+                                failedAttempts = data.failedAttempts || 0;
+                                
+                                if (data.lockoutUntil) {
+                                    const lockoutUntil = data.lockoutUntil.toDate();
+                                    if (lockoutUntil > new Date()) {
+                                        startLockoutTimer(lockoutUntil);
+                                        drawDots(maxPinLength);
+                                        return; // Don't allow input yet
+                                    }
                                 }
+                                
+                                drawDots(maxPinLength);
+                                setLoading(false);
+                                interactionArea.style.display = 'block';
+                                hiddenInput.focus();
                             }
-                            
-                            drawDots(maxPinLength);
-                            setLoading(false);
-                            interactionArea.style.display = 'block';
-                            hiddenInput.focus();
-                        }
                         }
                     }
                     

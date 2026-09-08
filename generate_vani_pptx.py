@@ -77,7 +77,7 @@ def create_presentation():
     pill.line.width = Pt(1.5)
     tf_p = pill.text_frame
     p0 = tf_p.paragraphs[0]
-    p0.text = "🏆 NATIONAL CHILDREN'S SCIENCE CONGRESS (NCSC) 2026-27"
+    p0.text = "🚀 BUREAU OF V.A.N.I-xAI (BoVxAi) 2026-27"
     p0.font.size = Pt(13)
     p0.font.bold = True
     p0.font.color.rgb = ACCENT_GOLD
@@ -588,14 +588,14 @@ def create_presentation():
     p3.space_before = Pt(14)
 
     p4 = tf_end.add_paragraph()
-    p4.text = "Innovator: Dhruv Sagar (Class 10th) | PM SHRI KV NO.1 AFS Chakeri Kanpur\nNational Children's Science Congress (NCSC) | NCSTC, DST India"
+    p4.text = "Innovator: Dhruv Sagar (Class 10th) | PM SHRI KV NO.1 AFS Chakeri Kanpur\nBureau Of V.A.N.I-xAI (BoVxAi) | Sovereign AI Initiative"
     p4.font.size = Pt(13)
     p4.font.color.rgb = TEXT_MUTED
     p4.alignment = PP_ALIGN.CENTER
     p4.space_before = Pt(20)
 
     # Save presentation
-    output_path = "VANI_xAI_NCSC_2026.pptx"
+    output_path = "VANI_xAI_Presentation_2026.pptx"
     prs.save(output_path)
     print(f"Presentation generated successfully at: {output_path}")
 
