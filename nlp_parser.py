@@ -144,6 +144,19 @@ INSTANT_RESPONSES_MAP = {
     "im bored": "Let's fix that! 😄 We can chat, play a game, brainstorm ideas, or learn something new.",
     "i'm tired": "Sounds like you need a little break. 😌 Take some time to relax.",
     "im tired": "Sounds like you need a little break. 😌 Take some time to relax.",
+    "namaste": "Namaste! 🙏 Kaise hain aap? How can I assist you today?",
+    "kya kar rahi ho": "Aapke sawalon aur baaton ka intezaar kar rahi hoon! 😊 Bataiye, kya chal raha hai?",
+    "tum kaun ho": "Main V.A.N.I-xAI hoon, aapki sovereign digital companion aur AI mentor! ✨",
+    "kahan ho": "Main yahin hoon, aapki screen par! 😊 Always ready to chat.",
+    "kuch batao": "Zaroor! Kya aap science, technology, koi kahani ya casual baatein karna chahte hain? 🌸",
+    "theek hoon": "Yeh sunkar bahut accha laga! 🌸 Aaj kya explore karna chahte hain?",
+    "sab theek": "Haan ji, sab badiya! Aap bataiye aapka din kaisa jaa raha hai? 😊",
+    "kaisi ho": "Main bilkul theek aur fresh hoon! ✨ Aap bataiye, aap kaise hain?",
+    "aur batao": "Main toh nayi cheezein seekhne aur aapki help karne ke liye ready hoon! Aap bataiye, kya naya chal raha hai? 😊",
+    "kya haal hai": "Sab badiya aur mast! 😄 Aap suniye, kya haal chaal?",
+    "nice to meet you": "Nice to meet you too! Glad to have you here. ✨",
+    "tell me a joke": "Why did the computer catch a cold? Because it left its Windows open! 😄",
+    "ek joke sunao": "Teacher: Homework kyun nahi kiya? Chintu: Light chali gayi thi! Teacher: Toh candle jala lete! Chintu: Matchbox fridge mein tha aur fridge band tha! 😂",
     "help": "Of course! Tell me what you need help with."
 }
 

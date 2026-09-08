@@ -1,8 +1,8 @@
 {
-  "enabled": true,
+  "enabled": false,
   "url": "http://127.0.0.1:11434",
   "model": "qwen2.5:0.5b",
-  "mode": "local_first",
+  "mode": "cloud_first",
   "provider": "auto",
-  "timeout": 30
+  "timeout": 3
 }

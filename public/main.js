@@ -556,8 +556,8 @@ async function submitCommand(commandText) {
             headers['X-Local-Model'] = localModel;
         }
 
-        // Parallel execution: Race backend (Local/Cloud router) with client fallback
-        const backendTimeoutMs = localEnabled ? 20000 : 8000;
+        // Parallel execution: Race backend with client fallback (reduced from 20s to 4s for instant responsiveness)
+        const backendTimeoutMs = (localMode === 'local_only') ? 8000 : 4000;
         const backendPromise = new Promise(async (resolve, reject) => {
             const timer = setTimeout(() => reject(new Error("Backend timeout")), backendTimeoutMs);
             try {
@@ -1143,6 +1143,19 @@ const INSTANT_RESPONSES_MAP = {
     "im bored": "Let's fix that! 😄 We can chat, play a game, brainstorm ideas, or learn something new.",
     "i'm tired": "Sounds like you need a little break. 😌 Take some time to relax.",
     "im tired": "Sounds like you need a little break. 😌 Take some time to relax.",
+    "namaste": "Namaste! 🙏 Kaise hain aap? How can I assist you today?",
+    "kya kar rahi ho": "Aapke sawalon aur baaton ka intezaar kar rahi hoon! 😊 Bataiye, kya chal raha hai?",
+    "tum kaun ho": "Main V.A.N.I-xAI hoon, aapki sovereign digital companion aur AI mentor! ✨",
+    "kahan ho": "Main yahin hoon, aapki screen par! 😊 Always ready to chat.",
+    "kuch batao": "Zaroor! Kya aap science, technology, koi kahani ya casual baatein karna chahte hain? 🌸",
+    "theek hoon": "Yeh sunkar bahut accha laga! 🌸 Aaj kya explore karna chahte hain?",
+    "sab theek": "Haan ji, sab badiya! Aap bataiye aapka din kaisa jaa raha hai? 😊",
+    "kaisi ho": "Main bilkul theek aur fresh hoon! ✨ Aap bataiye, aap kaise hain?",
+    "aur batao": "Main toh nayi cheezein seekhne aur aapki help karne ke liye ready hoon! Aap bataiye, kya naya chal raha hai? 😊",
+    "kya haal hai": "Sab badiya aur mast! 😄 Aap suniye, kya haal chaal?",
+    "nice to meet you": "Nice to meet you too! Glad to have you here. ✨",
+    "tell me a joke": "Why did the computer catch a cold? Because it left its Windows open! 😄",
+    "ek joke sunao": "Teacher: Homework kyun nahi kiya? Chintu: Light chali gayi thi! Teacher: Toh candle jala lete! Chintu: Matchbox fridge mein tha aur fridge band tha! 😂",
     "help": "Of course! Tell me what you need help with."
 };
 
@@ -1174,9 +1187,13 @@ First analyze user intent:
 
 Return ONLY valid JSON matching {"action": "chat" | "saras_web_search" | "open_url", "message": "...", "query": "...", "url": "..."}`;
 
+    const abortCtrl = new AbortController();
+    const abortTimer = setTimeout(() => abortCtrl.abort(), 3800);
+
     try {
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
+            signal: abortCtrl.signal,
             headers: {
                 "Authorization": `Bearer ${keyToUse}`,
                 "Content-Type": "application/json",
@@ -1191,6 +1208,7 @@ Return ONLY valid JSON matching {"action": "chat" | "saras_web_search" | "open_u
                 ]
             })
         });
+        clearTimeout(abortTimer);
 
         if (res.ok) {
             const data = await res.json();

@@ -15,11 +15,10 @@ def log_router(msg):
 
 # Fastest free text/reasoning models (curated for lowest latency and zero cost)
 FAST_FREE_MODELS = [
-    "meta-llama/llama-3.3-70b-instruct:free",
-    "google/gemma-2-9b-it:free",
-    "qwen/qwen-2.5-7b-instruct:free",
-    "mistralai/mistral-7b-instruct:free",
-    "openrouter/free"
+    "openrouter/free",
+    "liquid/lfm-2.5-2.6b:free",
+    "dots-studio/dots-3-note-preview:free",
+    "nvidia/nemotron-3.5-lightning:free"
 ]
 
 # Free models that support Vision
@@ -300,7 +299,11 @@ def _call_single_model(model, current_key, messages, timeout, require_json):
     try:
         with urllib.request.urlopen(req, timeout=timeout) as response:
             data = json.loads(response.read().decode('utf-8'))
-            content = data['choices'][0]['message']['content'].strip()
+            msg_obj = data.get('choices', [{}])[0].get('message', {})
+            content = msg_obj.get('content') or msg_obj.get('reasoning') or ""
+            content = str(content).strip()
+            if not content:
+                raise Exception("Empty content returned by model")
             elapsed = time.time() - start_time
             log_router(f"Success with {model} in {elapsed:.2f}s")
             return content
@@ -418,12 +421,12 @@ def call_llm_with_fallback(messages, models=None, timeout_per_model=6, require_j
     is_local_enabled = local_cfg.get("enabled", True)
     local_mode = local_cfg.get("mode", "local_first")
     
-    # 1. LOCAL LLM ROUTING (Local First or Local Only)
-    if (is_local_enabled and local_mode in ["local_first", "local_only"]) or force_local:
+    # 1. LOCAL LLM ROUTING (Local Only or explicit Force Local)
+    if force_local or (is_local_enabled and local_mode == "local_only"):
         try:
             return _call_local_llm(
                 messages=messages,
-                timeout=local_cfg.get("timeout", 30),
+                timeout=min(local_cfg.get("timeout", 3), 5),
                 require_json=require_json,
                 model=preferred_local_model or local_cfg.get("model")
             )
