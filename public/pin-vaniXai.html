@@ -68,8 +68,8 @@
             position: relative;
             z-index: 10;
             width: 90%;
-            max-width: 420px;
-            padding: 44px 36px 36px;
+            max-width: 440px;
+            padding: 40px 32px 32px;
             text-align: center;
             background: rgba(255, 255, 255, 0.88) !important;
             border: 1.5px solid rgba(255, 255, 255, 0.95);
@@ -79,6 +79,7 @@
             -webkit-backdrop-filter: blur(28px);
             animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             overflow: hidden;
+            box-sizing: border-box;
         }
 
         .pin-container::before {
@@ -103,8 +104,8 @@
 
         /* Header */
         .auth-logo {
-            width: 76px;
-            margin-bottom: 16px;
+            width: 72px;
+            margin-bottom: 14px;
             border-radius: 20px;
             border: 2px solid rgba(2, 132, 199, 0.4);
             box-shadow: 0 8px 25px rgba(2, 132, 199, 0.25), 0 0 15px rgba(236, 72, 153, 0.2);
@@ -114,9 +115,9 @@
 
         h2 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.85rem;
+            font-size: 1.75rem;
             font-weight: 800;
-            margin-bottom: 6px;
+            margin: 0 0 6px 0;
             background: linear-gradient(135deg, #0284c7 0%, #7c3aed 50%, #db2777 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -125,9 +126,10 @@
 
         p.subtitle {
             color: #475569;
-            font-size: 0.92rem;
-            margin-bottom: 24px;
+            font-size: 0.9rem;
+            margin: 0 0 22px 0;
             font-weight: 500;
+            line-height: 1.4;
         }
 
         /* PIN Display Area */
@@ -135,7 +137,7 @@
             display: flex;
             justify-content: center;
             gap: 14px;
-            margin-bottom: 26px;
+            margin-bottom: 22px;
             min-height: 22px;
         }
 
@@ -176,27 +178,32 @@
             opacity: 0;
         }
 
-        /* Interactive NumPad (Mobile Only) */
+        /* Interactive NumPad */
         .numpad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
+            max-width: 320px;
+            margin: 0 auto;
         }
 
-        /* Hide NumPad on Desktop */
+        .desktop-hint {
+            display: none;
+            margin-top: 14px;
+            margin-bottom: 0;
+            color: #64748b;
+            font-size: 0.82rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+        }
+
         @media (min-width: 769px) {
             .numpad {
                 display: none;
             }
-            .pin-container::after {
-                content: "Please use your keyboard to enter the PIN";
+            .desktop-hint {
                 display: block;
-                margin-top: 20px;
-                color: #64748b;
-                font-size: 0.82rem;
-                font-family: 'Space Grotesk', sans-serif;
-                font-weight: 500;
             }
         }
 
@@ -205,7 +212,7 @@
             border: 1.5px solid #e2e8f0;
             border-radius: 16px;
             color: #0f172a;
-            font-size: 1.5rem;
+            font-size: 1.45rem;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             cursor: pointer;
@@ -243,15 +250,16 @@
         }
 
         .msg-text {
-            margin-top: 18px;
+            margin-top: 14px;
             min-height: 20px;
             font-size: 0.88rem;
             font-weight: 700;
             color: #0284c7;
+            transition: all 0.2s ease;
         }
         
         .msg-error {
-            color: #e11d48;
+            color: #e11d48 !important;
         }
 
         .loading-spinner {
@@ -266,6 +274,62 @@
         }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Dark mode overrides */
+        body.dark-mode {
+            --bg-main: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.9);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            background-color: var(--bg-main) !important;
+            color: var(--text-primary) !important;
+        }
+        body.dark-mode .pin-container {
+            background: rgba(15, 23, 42, 0.92) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5), 0 0 35px rgba(2, 132, 199, 0.2);
+        }
+        body.dark-mode p.subtitle, body.dark-mode .desktop-hint {
+            color: #94a3b8 !important;
+        }
+        body.dark-mode .num-btn {
+            background: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+        body.dark-mode .num-btn:hover {
+            border-color: #38bdf8 !important;
+            color: #38bdf8 !important;
+        }
+        body.dark-mode .num-btn.action {
+            background: #0f172a !important;
+            color: #94a3b8 !important;
+        }
+        body.dark-mode .pin-dot {
+            background: #334155;
+            border-color: #475569;
+        }
+        body.dark-mode #forgot-card-box {
+            background: rgba(30, 41, 59, 0.8) !important;
+            border-color: rgba(2, 132, 199, 0.35) !important;
+        }
+        body.dark-mode #forgot-email-badge {
+            background: rgba(15, 23, 42, 0.7) !important;
+            color: #cbd5e1 !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        body.dark-mode #forgot-account-pass {
+            background: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+        body.dark-mode #btn-verify-google {
+            background: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
 
     </style>
 </head>
@@ -286,22 +350,26 @@
 
         <!-- Length Selection Area -->
         <div id="length-selection-area" style="display: none; margin-bottom: 20px;">
-            <p style="margin-bottom: 15px; color: var(--accent-primary);">Choose PIN Length:</p>
-            <div style="display: flex; justify-content: center; gap: 15px;">
-                <button class="num-btn" style="font-size:1.2rem; width: 60px; height:60px;" onclick="selectPinLength(4)">4</button>
-                <button class="num-btn" style="font-size:1.2rem; width: 60px; height:60px;" onclick="selectPinLength(6)">6</button>
-                <button class="num-btn" style="font-size:1.2rem; width: 60px; height:60px;" onclick="selectPinLength(8)">8</button>
+            <p style="margin-bottom: 16px; color: var(--accent-primary); font-weight: 600; font-size: 0.95rem;">Select PIN Length:</p>
+            <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 18px;">
+                <button class="num-btn" style="font-size:1.2rem; width: 62px; height:62px;" onclick="selectPinLength(4)">4</button>
+                <button class="num-btn" style="font-size:1.2rem; width: 62px; height:62px;" onclick="selectPinLength(6)">6</button>
+                <button class="num-btn" style="font-size:1.2rem; width: 62px; height:62px;" onclick="selectPinLength(8)">8</button>
             </div>
+            <button id="btn-cancel-length" onclick="cancelLengthSelection()" style="background: none; border: none; color: #64748b; font-size: 0.84rem; font-weight: 600; cursor: pointer; display: none; padding: 6px 12px;">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
         </div>
 
+        <!-- Interactive PIN Area -->
         <div id="pin-interaction-area" style="display: none;">
             <!-- PIN Dots -->
             <div class="pin-display" id="pin-dots">
-                <!-- Dots will be generated via JS based on expected length -->
+                <!-- Dots generated dynamically via JS -->
             </div>
 
             <!-- Hidden input to capture keyboard events on Desktop -->
-            <input type="password" id="hidden-pin-input" inputmode="numeric" pattern="[0-9]*">
+            <input type="password" id="hidden-pin-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
 
             <!-- Mobile NumPad -->
             <div class="numpad" id="numpad">
@@ -314,18 +382,88 @@
                 <button class="num-btn" data-num="7">7</button>
                 <button class="num-btn" data-num="8">8</button>
                 <button class="num-btn" data-num="9">9</button>
-                <button class="num-btn action" id="btn-clear"><i class="fa-solid fa-xmark"></i></button>
+                <button class="num-btn action" id="btn-clear" title="Clear"><i class="fa-solid fa-xmark"></i></button>
                 <button class="num-btn" data-num="0">0</button>
-                <button class="num-btn action" id="btn-backspace"><i class="fa-solid fa-delete-left"></i></button>
+                <button class="num-btn action" id="btn-backspace" title="Delete"><i class="fa-solid fa-delete-left"></i></button>
             </div>
+
+            <p class="desktop-hint">Please use your keyboard to enter the PIN</p>
 
             <div class="msg-text" id="status-msg"></div>
 
-            <div style="margin-top: 18px;">
-                <button id="btn-signout-pin" onclick="signOutFromPinPage()" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(244, 63, 94, 0.15)); color: #e11d48; border: 1.2px solid rgba(244, 63, 94, 0.35); padding: 9px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.25s;" title="Sign Out of this account">
-                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out / Switch Account
+            <!-- Action & Recovery Navigation -->
+            <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                <button id="btn-forgot-pin" onclick="openForgotPinModal()" type="button" style="background: none; border: none; color: #0284c7; font-size: 0.88rem; font-weight: 600; cursor: pointer; padding: 5px 10px; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s;">
+                    <i class="fa-solid fa-circle-question"></i> Forgot PIN?
                 </button>
+
+                <div id="reset-action-buttons" style="display: flex; gap: 8px; justify-content: center; width: 100%; flex-wrap: wrap;">
+                    <button id="btn-back-to-settings" onclick="backToSettings()" type="button" style="display: none; background: rgba(2, 132, 199, 0.08); color: #0284c7; border: 1.2px solid rgba(2, 132, 199, 0.3); padding: 8px 16px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; cursor: pointer;">
+                        <i class="fa-solid fa-arrow-left"></i> Return to Settings
+                    </button>
+                    <button id="btn-signout-pin" onclick="signOutFromPinPage()" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(244, 63, 94, 0.15)); color: #e11d48; border: 1.2px solid rgba(244, 63, 94, 0.35); padding: 8px 16px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.25s;" title="Sign Out of this account">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sign Out / Switch Account
+                    </button>
+                </div>
             </div>
+        </div>
+
+        <!-- Identity Verification / Forgot PIN Area -->
+        <div id="forgot-pin-area" style="display: none; margin-top: 10px; text-align: left;">
+            <div id="forgot-card-box" style="background: rgba(2, 132, 199, 0.05); border: 1.5px solid rgba(2, 132, 199, 0.2); border-radius: 20px; padding: 22px; margin-bottom: 14px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, #0284c7, #7c3aed); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.05rem; flex-shrink: 0;">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.05rem; color: #0284c7; margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700;">Account Verification</h3>
+                        <p id="forgot-auth-subtitle" style="font-size: 0.82rem; color: #64748b; margin: 2px 0 0 0;">Verify your identity to reset your PIN</p>
+                    </div>
+                </div>
+
+                <div id="forgot-email-badge" style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 14px; padding: 6px 12px; background: rgba(255,255,255,0.8); border-radius: 8px; border: 1px solid #e2e8f0; word-break: break-all;">
+                    <i class="fa-regular fa-envelope" style="color: #0284c7; margin-right: 6px;"></i><span id="forgot-user-email">user@email.com</span>
+                </div>
+
+                <!-- For Password Accounts -->
+                <div id="forgot-password-box" style="display: none;">
+                    <div style="position: relative; margin-bottom: 12px;">
+                        <input type="password" id="forgot-account-pass" placeholder="Enter account password" 
+                            style="width: 100%; box-sizing: border-box; padding: 11px 40px 11px 12px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.9rem; outline: none; background: #ffffff; color: #0f172a;">
+                        <i class="fa-regular fa-eye-slash" id="toggle-forgot-pw" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; font-size: 0.95rem;"></i>
+                    </div>
+                    <button id="btn-verify-password" onclick="verifyPasswordForReset()" style="width: 100%; padding: 11px; background: linear-gradient(135deg, #0284c7, #7c3aed); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25); transition: opacity 0.2s;">
+                        Verify Password &amp; Reset PIN
+                    </button>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <a href="#" id="btn-send-reset-email" onclick="sendResetEmail(event)" style="font-size: 0.8rem; color: #0284c7; text-decoration: none; font-weight: 600;">
+                            <i class="fa-regular fa-paper-plane"></i> Send password reset link to email
+                        </a>
+                    </div>
+                </div>
+
+                <!-- For Google Accounts -->
+                <div id="forgot-google-box" style="display: none; text-align: center;">
+                    <p style="font-size: 0.84rem; color: #475569; margin: 0 0 14px 0; line-height: 1.4;">
+                        Your account is linked to Google. Confirm your Google login to reset your PIN.
+                    </p>
+                    <button id="btn-verify-google" onclick="verifyGoogleForReset()" style="width: 100%; padding: 11px; background: #ffffff; color: #1e293b; border: 1.5px solid #cbd5e1; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.06); transition: border-color 0.2s;">
+                        <svg width="18" height="18" viewBox="0 0 48 48">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                        </svg>
+                        Verify with Google
+                    </button>
+                </div>
+
+                <div id="forgot-status-msg" class="msg-text" style="margin-top: 10px; font-size: 0.82rem;"></div>
+            </div>
+
+            <button id="btn-cancel-forgot" onclick="closeForgotPinModal()" style="width: 100%; background: none; border: none; color: #64748b; font-size: 0.85rem; font-weight: 600; cursor: pointer; padding: 6px;">
+                <i class="fa-solid fa-arrow-left"></i> Cancel &amp; Return
+            </button>
         </div>
     </div>
 
@@ -350,16 +488,24 @@
         const titleEl = document.getElementById('pin-title');
         const subtitleEl = document.getElementById('pin-subtitle');
         const spinner = document.getElementById('loading-spinner');
+        const lengthSelectionArea = document.getElementById('length-selection-area');
         const interactionArea = document.getElementById('pin-interaction-area');
         const dotsContainer = document.getElementById('pin-dots');
         const statusMsg = document.getElementById('status-msg');
         const hiddenInput = document.getElementById('hidden-pin-input');
+        const forgotArea = document.getElementById('forgot-pin-area');
+        const btnForgotPin = document.getElementById('btn-forgot-pin');
+        const btnBackSettings = document.getElementById('btn-back-to-settings');
+        const btnCancelLength = document.getElementById('btn-cancel-length');
         
         let mode = 'check'; // 'check', 'setup', 'verify', 'reset_verify'
+        let setupStep = 'enter'; // 'enter', 'confirm'
         let currentUser = null;
         let expectedPin = null;
         let currentPin = '';
+        let newPinTemp = '';
         let maxPinLength = 8; // Default max
+        let hasExistingPin = false;
         const urlParams = new URLSearchParams(window.location.search);
         const action = urlParams.get('action');
 
@@ -367,6 +513,7 @@
             if (confirm("Are you sure you want to sign out?")) {
                 auth.signOut().then(() => {
                     localStorage.removeItem('vani_session_token');
+                    sessionStorage.removeItem('pin_verified');
                     window.location.href = '/auth-vani-xai.html';
                 }).catch(() => {
                     window.location.href = '/auth-vani-xai.html';
@@ -374,11 +521,21 @@
             }
         }
 
+        function backToSettings() {
+            window.location.href = './settings.html';
+        }
+
         // Show/Hide Loading
         function setLoading(isLoading) {
             spinner.style.display = isLoading ? 'block' : 'none';
-            interactionArea.style.display = isLoading ? 'none' : 'block';
-            if(!isLoading && !isLockedOut) hiddenInput.focus();
+            if (isLoading) {
+                interactionArea.style.display = 'none';
+                lengthSelectionArea.style.display = 'none';
+                forgotArea.style.display = 'none';
+            }
+            if (!isLoading && !isLockedOut && interactionArea.style.display !== 'none') {
+                hiddenInput.focus();
+            }
         }
         
         let failedAttempts = 0;
@@ -392,6 +549,7 @@
             dotsContainer.style.display = 'none';
             document.getElementById('numpad').style.display = 'none';
             hiddenInput.disabled = true;
+            btnForgotPin.style.display = 'inline-flex';
             
             clearInterval(lockoutTimerInterval);
             
@@ -411,7 +569,7 @@
                     hiddenInput.focus();
                 } else {
                     const secondsLeft = Math.ceil(diffMs / 1000);
-                    statusMsg.textContent = `Too many incorrect attempts. Try again in ${secondsLeft}s.`;
+                    statusMsg.textContent = `Too many incorrect attempts. Try again in ${secondsLeft}s or use Forgot PIN.`;
                     statusMsg.className = 'msg-text msg-error';
                 }
             };
@@ -423,7 +581,7 @@
         // Draw Dots
         function drawDots(length) {
             dotsContainer.innerHTML = '';
-            for(let i=0; i<length; i++) {
+            for(let i = 0; i < length; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'pin-dot';
                 dotsContainer.appendChild(dot);
@@ -441,15 +599,48 @@
                     dot.classList.remove('filled', 'error');
                 }
             });
-            hiddenInput.value = currentPin; // keep hidden input in sync
+            hiddenInput.value = currentPin;
 
-            // Auto-submit logic based on mode
+            // Auto-advance / submit logic based on mode
             if (mode === 'setup') {
-                if (currentPin.length === 4 || currentPin.length === 6 || currentPin.length === 8) {
-                    statusMsg.innerHTML = 'Press <b>Enter</b> to confirm, or continue typing.';
-                    statusMsg.className = 'msg-text';
-                } else {
-                    statusMsg.innerHTML = '';
+                if (setupStep === 'enter') {
+                    if (currentPin.length === maxPinLength) {
+                        newPinTemp = currentPin;
+                        setTimeout(() => {
+                            currentPin = '';
+                            setupStep = 'confirm';
+                            titleEl.textContent = 'Confirm Your PIN';
+                            subtitleEl.innerHTML = `Re-enter your <b>${maxPinLength}</b>-digit PIN to confirm`;
+                            statusMsg.textContent = '';
+                            statusMsg.className = 'msg-text';
+                            drawDots(maxPinLength);
+                            updateDots();
+                            hiddenInput.value = '';
+                            hiddenInput.focus();
+                        }, 200);
+                    }
+                } else if (setupStep === 'confirm') {
+                    if (currentPin.length === maxPinLength) {
+                        if (currentPin === newPinTemp) {
+                            savePin(currentPin);
+                        } else {
+                            statusMsg.textContent = "PINs do not match. Please try again.";
+                            statusMsg.className = 'msg-text msg-error';
+                            triggerError();
+                            setTimeout(() => {
+                                currentPin = '';
+                                newPinTemp = '';
+                                setupStep = 'enter';
+                                titleEl.textContent = (action === 'reset' || hasExistingPin) ? 'Create New PIN' : 'Create Security PIN';
+                                subtitleEl.innerHTML = `Set your <b>${maxPinLength}</b>-digit security PIN`;
+                                statusMsg.textContent = '';
+                                drawDots(maxPinLength);
+                                updateDots();
+                                hiddenInput.value = '';
+                                hiddenInput.focus();
+                            }, 600);
+                        }
+                    }
                 }
             } else if (mode === 'verify' || mode === 'reset_verify') {
                 if (currentPin.length === expectedPin.length) {
@@ -471,23 +662,37 @@
 
         async function logActivity(msg) {
             try {
-                await db.collection('logs').add({
-                    activity: msg,
-                    email: currentUser.email || 'Unknown',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                if (currentUser) {
+                    await db.collection('logs').add({
+                        activity: msg,
+                        email: currentUser.email || 'Unknown',
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
             } catch(e) { console.error("Logging error:", e); }
         }
 
         async function verifyPin() {
             if (currentPin === expectedPin) {
                 if (mode === 'reset_verify') {
-                    // Start Setup Mode
+                    // Transition smoothly to setup new PIN mode
                     mode = 'setup';
+                    setupStep = 'enter';
                     currentPin = '';
+                    newPinTemp = '';
                     hiddenInput.value = '';
                     statusMsg.textContent = '';
                     interactionArea.style.display = 'none';
+                    lengthSelectionArea.style.display = 'block';
+                    btnCancelLength.style.display = 'inline-block';
+                    titleEl.textContent = 'Setup New Security PIN';
+                    subtitleEl.innerHTML = 'Choose how long you want your new PIN to be:';
+
+                    if (failedAttempts > 0) {
+                        db.collection('users').doc(currentUser.uid).update({ failedAttempts: 0, lockoutUntil: firebase.firestore.FieldValue.delete() }).catch(console.error);
+                        failedAttempts = 0;
+                    }
+                    return;
                 } else {
                     statusMsg.textContent = "Access Granted.";
                     statusMsg.className = 'msg-text';
@@ -496,6 +701,7 @@
                     // Reset failed attempts on success
                     if (failedAttempts > 0) {
                         db.collection('users').doc(currentUser.uid).update({ failedAttempts: 0, lockoutUntil: firebase.firestore.FieldValue.delete() }).catch(console.error);
+                        failedAttempts = 0;
                     }
 
                     await logActivity("Security PIN Verified");
@@ -529,8 +735,9 @@
             }
         }
 
-        async function savePin() {
-            if (currentPin.length !== 4 && currentPin.length !== 6 && currentPin.length !== 8) {
+        async function savePin(pinToSave) {
+            const targetPin = pinToSave || currentPin;
+            if (targetPin.length !== 4 && targetPin.length !== 6 && targetPin.length !== 8) {
                 statusMsg.textContent = "PIN must be exactly 4, 6, or 8 digits.";
                 statusMsg.className = 'msg-text msg-error';
                 triggerError();
@@ -542,19 +749,211 @@
                 await db.collection('users').doc(currentUser.uid).set({
                     email: currentUser.email,
                     name: currentUser.displayName || currentUser.email.split('@')[0],
-                    pin: currentPin,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    pin: targetPin,
+                    failedAttempts: 0,
+                    lockoutUntil: firebase.firestore.FieldValue.delete(),
+                    pinUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
-                statusMsg.textContent = "Security PIN configured successfully.";
+                statusMsg.textContent = (action === 'reset' || hasExistingPin) ? "Security PIN reset successfully!" : "Security PIN configured successfully!";
+                statusMsg.className = 'msg-text';
                 sessionStorage.setItem('pin_verified', 'true');
-                await logActivity("Security PIN Configured");
-                setTimeout(() => window.location.href = './login-loading-vaniXai.html', 500);
+                await logActivity(action === 'reset' || hasExistingPin ? "Security PIN Reset Successfully" : "Security PIN Configured");
+                
+                setTimeout(() => {
+                    if (action === 'reset') {
+                        window.location.href = './settings.html';
+                    } else {
+                        window.location.href = './login-loading-vaniXai.html';
+                    }
+                }, 600);
             } catch (err) {
-                console.error(err);
+                console.error("Error saving PIN:", err);
                 statusMsg.textContent = "Error saving PIN. Please try again.";
+                statusMsg.className = 'msg-text msg-error';
                 setLoading(false);
             }
+        }
+
+        // --- Forgot PIN & Account Verification ---
+
+        function openForgotPinModal() {
+            interactionArea.style.display = 'none';
+            lengthSelectionArea.style.display = 'none';
+            forgotArea.style.display = 'block';
+            titleEl.textContent = 'Account Verification';
+            subtitleEl.textContent = 'Verify identity to reset your security PIN';
+            
+            const emailSpan = document.getElementById('forgot-user-email');
+            const passBox = document.getElementById('forgot-password-box');
+            const googleBox = document.getElementById('forgot-google-box');
+            const forgotMsg = document.getElementById('forgot-status-msg');
+            forgotMsg.textContent = '';
+            forgotMsg.className = 'msg-text';
+            
+            if (currentUser) {
+                emailSpan.textContent = currentUser.email || 'Current Account';
+                const isGoogle = currentUser.providerData && currentUser.providerData.some(p => p.providerId === 'google.com');
+                if (isGoogle) {
+                    googleBox.style.display = 'block';
+                    passBox.style.display = 'none';
+                } else {
+                    passBox.style.display = 'block';
+                    googleBox.style.display = 'none';
+                    const passInput = document.getElementById('forgot-account-pass');
+                    passInput.value = '';
+                    setTimeout(() => passInput.focus(), 200);
+                }
+            }
+        }
+
+        function closeForgotPinModal() {
+            forgotArea.style.display = 'none';
+            if (mode === 'setup') {
+                lengthSelectionArea.style.display = 'block';
+                titleEl.textContent = 'Setup Security PIN';
+                subtitleEl.innerHTML = 'Choose your PIN length:';
+            } else {
+                interactionArea.style.display = 'block';
+                if (mode === 'reset_verify') {
+                    titleEl.textContent = 'Reset Security PIN';
+                    subtitleEl.textContent = 'Enter your CURRENT PIN to verify identity';
+                } else {
+                    titleEl.textContent = 'Enter Security PIN';
+                    subtitleEl.textContent = 'Please verify your identity to continue';
+                }
+                if (!isLockedOut) hiddenInput.focus();
+            }
+        }
+
+        async function verifyPasswordForReset() {
+            const passInput = document.getElementById('forgot-account-pass');
+            const forgotMsg = document.getElementById('forgot-status-msg');
+            const pass = passInput.value.trim();
+            if (!pass) {
+                forgotMsg.textContent = 'Please enter your password.';
+                forgotMsg.className = 'msg-text msg-error';
+                return;
+            }
+
+            forgotMsg.textContent = 'Verifying password...';
+            forgotMsg.className = 'msg-text';
+            
+            try {
+                const cred = firebase.auth.EmailAuthProvider.credential(currentUser.email, pass);
+                await currentUser.reauthenticateWithCredential(cred);
+                
+                // Clear lockout & reset attempts
+                isLockedOut = false;
+                clearInterval(lockoutTimerInterval);
+                failedAttempts = 0;
+                await db.collection('users').doc(currentUser.uid).update({
+                    failedAttempts: 0,
+                    lockoutUntil: firebase.firestore.FieldValue.delete()
+                }).catch(console.error);
+
+                forgotMsg.textContent = 'Identity verified! Redirecting to PIN setup...';
+                await logActivity("Identity Verified for PIN Reset via Password");
+
+                setTimeout(() => {
+                    forgotArea.style.display = 'none';
+                    mode = 'setup';
+                    setupStep = 'enter';
+                    currentPin = '';
+                    newPinTemp = '';
+                    lengthSelectionArea.style.display = 'block';
+                    btnCancelLength.style.display = 'none';
+                    titleEl.textContent = 'Reset Security PIN';
+                    subtitleEl.innerHTML = 'Identity verified! Choose your new PIN length:';
+                }, 500);
+            } catch (err) {
+                console.error("Re-auth error:", err);
+                forgotMsg.textContent = err.code === 'auth/wrong-password' ? 'Incorrect password. Please try again.' : (err.message || 'Verification failed.');
+                forgotMsg.className = 'msg-text msg-error';
+            }
+        }
+
+        async function verifyGoogleForReset() {
+            const forgotMsg = document.getElementById('forgot-status-msg');
+            forgotMsg.textContent = 'Connecting to Google...';
+            forgotMsg.className = 'msg-text';
+
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                await currentUser.reauthenticateWithPopup(provider);
+
+                // Clear lockout & reset attempts
+                isLockedOut = false;
+                clearInterval(lockoutTimerInterval);
+                failedAttempts = 0;
+                await db.collection('users').doc(currentUser.uid).update({
+                    failedAttempts: 0,
+                    lockoutUntil: firebase.firestore.FieldValue.delete()
+                }).catch(console.error);
+
+                forgotMsg.textContent = 'Google verified! Redirecting to PIN setup...';
+                await logActivity("Identity Verified for PIN Reset via Google");
+
+                setTimeout(() => {
+                    forgotArea.style.display = 'none';
+                    mode = 'setup';
+                    setupStep = 'enter';
+                    currentPin = '';
+                    newPinTemp = '';
+                    lengthSelectionArea.style.display = 'block';
+                    btnCancelLength.style.display = 'none';
+                    titleEl.textContent = 'Reset Security PIN';
+                    subtitleEl.innerHTML = 'Identity verified! Choose your new PIN length:';
+                }, 500);
+            } catch (err) {
+                console.error("Google re-auth error:", err);
+                if (err.code !== 'auth/popup-closed-by-user') {
+                    forgotMsg.textContent = err.message || 'Google verification failed.';
+                    forgotMsg.className = 'msg-text msg-error';
+                } else {
+                    forgotMsg.textContent = '';
+                }
+            }
+        }
+
+        async function sendResetEmail(e) {
+            e.preventDefault();
+            const forgotMsg = document.getElementById('forgot-status-msg');
+            forgotMsg.textContent = 'Sending reset email...';
+            forgotMsg.className = 'msg-text';
+            try {
+                await auth.sendPasswordResetEmail(currentUser.email);
+                forgotMsg.textContent = `Password reset link sent to ${currentUser.email}. Check your inbox.`;
+                forgotMsg.className = 'msg-text';
+            } catch (err) {
+                console.error("Reset email error:", err);
+                forgotMsg.textContent = err.message || 'Failed to send reset email.';
+                forgotMsg.className = 'msg-text msg-error';
+            }
+        }
+
+        // Toggle Password Eye in Forgot PIN Modal
+        const toggleForgotPw = document.getElementById('toggle-forgot-pw');
+        if (toggleForgotPw) {
+            toggleForgotPw.addEventListener('click', () => {
+                const pInput = document.getElementById('forgot-account-pass');
+                if (pInput.type === 'password') {
+                    pInput.type = 'text';
+                    toggleForgotPw.classList.replace('fa-eye-slash', 'fa-eye');
+                } else {
+                    pInput.type = 'password';
+                    toggleForgotPw.classList.replace('fa-eye', 'fa-eye-slash');
+                }
+            });
+        }
+
+        const forgotPassInput = document.getElementById('forgot-account-pass');
+        if (forgotPassInput) {
+            forgotPassInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    verifyPasswordForReset();
+                }
+            });
         }
 
         // --- Event Listeners ---
@@ -591,30 +990,71 @@
         hiddenInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 if (mode === 'setup') {
-                    savePin();
+                    if (setupStep === 'enter' && currentPin.length === maxPinLength) {
+                        newPinTemp = currentPin;
+                        currentPin = '';
+                        setupStep = 'confirm';
+                        titleEl.textContent = 'Confirm New PIN';
+                        subtitleEl.innerHTML = `Re-enter your <b>${maxPinLength}</b>-digit PIN to confirm`;
+                        drawDots(maxPinLength);
+                        updateDots();
+                        hiddenInput.value = '';
+                    } else if (setupStep === 'confirm' && currentPin.length === maxPinLength) {
+                        if (currentPin === newPinTemp) {
+                            savePin(currentPin);
+                        } else {
+                            statusMsg.textContent = "PINs do not match. Please try again.";
+                            statusMsg.className = 'msg-text msg-error';
+                            triggerError();
+                        }
+                    }
                 } else if (mode === 'verify' || mode === 'reset_verify') {
                     if (currentPin.length > 0) verifyPin();
                 }
             }
         });
 
-        // Force focus on click anywhere
-        document.addEventListener('click', () => {
-            if (interactionArea.style.display !== 'none') {
-                hiddenInput.focus();
+        // Force focus on click anywhere when interaction area is active
+        document.addEventListener('click', (e) => {
+            if (interactionArea.style.display !== 'none' && !isLockedOut) {
+                if (!e.target.closest('#forgot-pin-area') && !e.target.closest('#btn-forgot-pin') && !e.target.closest('#btn-back-to-settings') && !e.target.closest('#btn-signout-pin')) {
+                    hiddenInput.focus();
+                }
             }
         });
 
-        const lengthSelectionArea = document.getElementById('length-selection-area');
-
         function selectPinLength(len) {
             maxPinLength = len;
+            currentPin = '';
+            newPinTemp = '';
+            setupStep = 'enter';
+            mode = 'setup';
             lengthSelectionArea.style.display = 'none';
             interactionArea.style.display = 'block';
-            titleEl.textContent = action === 'reset' ? 'Create New PIN' : 'Create Security PIN';
+            titleEl.textContent = (action === 'reset' || hasExistingPin) ? 'Create New PIN' : 'Create Security PIN';
             subtitleEl.innerHTML = `Set your <b>${len}</b> digit security PIN`;
+            statusMsg.textContent = '';
+            statusMsg.className = 'msg-text';
             drawDots(len);
+            updateDots();
+            hiddenInput.value = '';
             hiddenInput.focus();
+        }
+
+        function cancelLengthSelection() {
+            lengthSelectionArea.style.display = 'none';
+            if (action === 'reset' && hasExistingPin) {
+                mode = 'reset_verify';
+                titleEl.textContent = 'Reset Security PIN';
+                subtitleEl.textContent = 'Enter your CURRENT PIN to verify identity';
+                interactionArea.style.display = 'block';
+                currentPin = '';
+                drawDots(expectedPin.length);
+                updateDots();
+                hiddenInput.focus();
+            } else {
+                window.location.href = './settings.html';
+            }
         }
 
         // --- Main Auth Flow ---
@@ -649,6 +1089,7 @@
                         }
 
                         if (data.pin) {
+                            hasExistingPin = true;
                             expectedPin = doc.data().pin;
                             maxPinLength = expectedPin.length;
 
@@ -657,6 +1098,8 @@
                                 mode = 'reset_verify';
                                 titleEl.textContent = 'Reset Security PIN';
                                 subtitleEl.textContent = 'Enter your CURRENT PIN to verify identity';
+                                btnBackSettings.style.display = 'inline-block';
+                                btnForgotPin.style.display = 'inline-flex';
                                 drawDots(maxPinLength);
                                 setLoading(false);
                                 interactionArea.style.display = 'block';
@@ -666,8 +1109,8 @@
                                 mode = 'verify';
                                 titleEl.textContent = 'Enter Security PIN';
                                 subtitleEl.textContent = 'Please verify your identity to continue';
+                                btnForgotPin.style.display = 'inline-flex';
                                 
-                                const data = doc.data();
                                 failedAttempts = data.failedAttempts || 0;
                                 
                                 if (data.lockoutUntil) {
@@ -675,7 +1118,7 @@
                                     if (lockoutUntil > new Date()) {
                                         startLockoutTimer(lockoutUntil);
                                         drawDots(maxPinLength);
-                                        return; // Don't allow input yet
+                                        return;
                                     }
                                 }
                                 
@@ -689,9 +1132,12 @@
                     
                     if (!doc.exists || !doc.data().pin) {
                         // User has no PIN -> Setup Mode (Show Length Selection First)
+                        hasExistingPin = false;
                         mode = 'setup';
+                        setupStep = 'enter';
                         titleEl.textContent = 'Setup Security PIN';
                         subtitleEl.innerHTML = 'First, select how long you want your PIN to be.';
+                        btnForgotPin.style.display = 'none';
                         setLoading(false);
                         interactionArea.style.display = 'none';
                         lengthSelectionArea.style.display = 'block';
@@ -730,17 +1176,6 @@
   }
   .dark-mode-toggle-btn:hover {
     transform: scale(1.1);
-  }
-  /* Dark mode overrides */
-  body.dark-mode {
-    --bg-main: #0f172a;
-    --panel-bg: rgba(30, 41, 59, 0.85);
-    --panel-border: rgba(255, 255, 255, 0.1);
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #64748b;
-    background-color: var(--bg-main);
-    color: var(--text-primary);
   }
 </style>
 <button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
