@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vani-xai-cache-v2026-q2'; // Fresh cache version
+const CACHE_NAME = 'vani-xai-cache-v2026-q3'; // Fresh cache version
 const urlsToCache = [
   '/',
   '/index.html',

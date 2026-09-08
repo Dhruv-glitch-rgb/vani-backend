@@ -36,30 +36,52 @@ async function sendVaniEmail(params) {
     }
     
     // Ensure initialized
-    emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+    try {
+        emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+    } catch (e) {
+        console.warn("emailjs.init error:", e);
+    }
 
-    // Build comprehensive parameters to match any template placeholders
+    const recipient = (params.email || params.to_email || params.user_email || params.recipient || params.recipient_email || '').trim();
+    if (!recipient) {
+        throw new Error("Recipient email address is missing.");
+    }
+
+    const userName = params.to_name || params.userName || params.user_name || params.name || (recipient.split('@')[0]) || 'Valued User';
+    const activationKey = params.activation_key || params.activationKey || params.key || params.passcode || '';
+
+    // Build comprehensive parameters to match any template placeholders in EmailJS dashboard
     const payload = {
-        to_name: params.to_name || params.userName || params.name || 'VANI-xAI User',
-        from_name: params.from_name || 'VANI-xAI Team',
-        to_email: params.to_email || params.user_email || params.email || '',
-        user_email: params.user_email || params.to_email || params.email || '',
-        email: params.email || params.user_email || params.to_email || '',
-        reply_to: params.reply_to || params.user_email || 'official.vanixai.india@gmail.com',
-        subject: params.subject || 'Notification from VANI-xAI',
+        to_name: userName,
+        user_name: userName,
+        name: userName,
+        from_name: params.from_name || 'Bureau of V.A.N.I-xAI',
+        to_email: recipient,
+        user_email: recipient,
+        email: recipient,
+        recipient: recipient,
+        recipient_email: recipient,
+        reply_to: params.reply_to || 'official.vanixai.india@gmail.com',
+        subject: params.subject || `Welcome to V.A.N.I-xAI! Activation Key: ${activationKey}`,
         message: params.message || '',
+        welcome_message: params.welcome_message || params.message || '',
+        activation_key: activationKey,
+        key: activationKey,
+        passcode: activationKey,
+        otp: activationKey,
         vani_id: params.vani_id || params.vaniId || '',
-        plan_name: params.plan_name || params.planName || '',
+        plan_name: params.plan_name || params.planName || 'Sovereign Clearance',
         expire_date: params.expire_date || params.expireDate || '',
-        activation_key: params.activation_key || params.activationKey || '',
-        key: params.key || params.activation_key || params.activationKey || '',
         contact_number: params.contact_number || params.phone || '',
-        timestamp: new Date().toLocaleString()
+        support_email: 'official.vanixai.india@gmail.com',
+        timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
     };
 
-    return await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, payload);
+    console.log("[EmailJS] Dispatching email to:", recipient, "with key:", activationKey);
+    return await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, payload, EMAILJS_CONFIG.PUBLIC_KEY);
 }
 
 if (typeof window !== 'undefined') {
     window.sendVaniEmail = sendVaniEmail;
 }
+

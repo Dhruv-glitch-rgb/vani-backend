@@ -210,6 +210,35 @@
             word-break: break-all;
         }
 
+        .mini-resend-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: var(--accent-primary);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        .mini-resend-btn:hover {
+            background: #f0f9ff;
+            border-color: #0284c7;
+            transform: rotate(45deg);
+        }
+
+        .mini-resend-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* Form Controls */
         .input-group {
             text-align: left;
@@ -459,15 +488,20 @@
         </div>
 
         <!-- Dispatched Email Notice Card -->
-        <div class="email-notice-card">
-            <div class="email-notice-icon">
+        <div class="email-notice-card" id="emailNoticeCard">
+            <div class="email-notice-icon" id="emailNoticeIcon">
                 <i class="fa-solid fa-envelope-open-text"></i>
             </div>
             <div class="email-notice-text">
-                <div class="email-notice-title">Activation Key Dispatched</div>
+                <div class="email-notice-title" id="emailNoticeTitle">Checking Mail Delivery...</div>
                 <div class="email-notice-recipient" id="displayUserEmail">Loading recipient email...</div>
-                <div style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">Check your inbox or spam folder for your welcome message.</div>
+                <div id="emailNoticeSub" style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">
+                    Contacting Bureau mail service to deliver your welcome key...
+                </div>
             </div>
+            <button type="button" onclick="handleResendKey()" class="mini-resend-btn" id="btnMiniResend" title="Resend Email Now">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
         </div>
 
         <!-- Key Input Form -->
@@ -557,6 +591,12 @@
         const btnResend = document.getElementById('btnResend');
         const statusEl = document.getElementById('statusFeedback');
 
+        const btnMiniResend = document.getElementById('btnMiniResend');
+        const emailNoticeCard = document.getElementById('emailNoticeCard');
+        const emailNoticeIcon = document.getElementById('emailNoticeIcon');
+        const emailNoticeTitle = document.getElementById('emailNoticeTitle');
+        const emailNoticeSub = document.getElementById('emailNoticeSub');
+
         // Helper: Generate BoVxAi Activation Key in format: V.A.N.I-xAI-{first 4 letters of name}-{4 random digits}
         function generateBoVKey(userName) {
             let letters = (userName || 'USER').toUpperCase().replace(/[^A-Z]/g, '');
@@ -590,6 +630,74 @@
             statusEl.style.display = 'flex';
         }
 
+        // Update notice card UI
+        function updateEmailNotice(state, email, errorMsg) {
+            if (displayEmail) displayEmail.textContent = email || 'your account email';
+            if (!emailNoticeCard || !emailNoticeIcon || !emailNoticeTitle || !emailNoticeSub) return;
+
+            if (state === 'sending') {
+                emailNoticeCard.style.borderColor = '#bae6fd';
+                emailNoticeCard.style.background = '#f0f9ff';
+                emailNoticeIcon.style.background = '#0284c7';
+                emailNoticeIcon.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                emailNoticeTitle.innerHTML = 'Sending Activation Email...';
+                emailNoticeSub.textContent = 'Contacting Bureau mail service to deliver your welcome key...';
+            } else if (state === 'success') {
+                emailNoticeCard.style.borderColor = '#bbf7d0';
+                emailNoticeCard.style.background = '#f0fdf4';
+                emailNoticeIcon.style.background = '#10b981';
+                emailNoticeIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                emailNoticeTitle.innerHTML = 'Activation Key Dispatched';
+                emailNoticeSub.innerHTML = 'Official welcome message & key sent! <b>Check inbox and spam folder</b>.';
+            } else if (state === 'error') {
+                emailNoticeCard.style.borderColor = '#fecaca';
+                emailNoticeCard.style.background = '#fef2f2';
+                emailNoticeIcon.style.background = '#ef4444';
+                emailNoticeIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                emailNoticeTitle.innerHTML = 'Email Delivery Notice';
+                emailNoticeSub.innerHTML = (errorMsg ? errorMsg + '. ' : '') + 'Click <b>Resend Email</b> to retry.';
+            }
+        }
+
+        // Email Dispatch helper with comprehensive parameter set
+        async function sendActivationEmail(toEmail, userName, key) {
+            if (!toEmail) throw new Error("No user email provided.");
+            return await sendVaniEmail({
+                to_name: userName || 'User',
+                user_name: userName || 'User',
+                name: userName || 'User',
+                to_email: toEmail,
+                user_email: toEmail,
+                email: toEmail,
+                recipient: toEmail,
+                recipient_email: toEmail,
+                activation_key: key,
+                key: key,
+                passcode: key,
+                otp: key,
+                subject: `Welcome to V.A.N.I-xAI! Your Activation Key: ${key}`,
+                message: `Welcome to the Bureau of V.A.N.I-xAI!\n\nYour account has been registered. Below is your official Sovereign Activation Key:\n\n🔑 YOUR ACTIVATION KEY:\n${key}\n\nPlease paste this key into the verification page to complete activation, after which you will set up your secure PIN.\n\nSupport: official.vanixai.india@gmail.com\nBureau of V.A.N.I-xAI Sovereign Intelligence`
+            });
+        }
+
+        // Dispatch with live status feedback
+        async function dispatchEmailWithStatus(user, name, key, isResend = false) {
+            updateEmailNotice('sending', user.email);
+            showStatus('info', (isResend ? 'Resending' : 'Sending') + ' activation key to ' + user.email + '...');
+
+            try {
+                await sendActivationEmail(user.email, name, key);
+                sessionStorage.setItem('vani_activation_email_sent_' + user.uid + '_' + key, 'true');
+                updateEmailNotice('success', user.email);
+                showStatus('success', 'Activation key delivered to ' + user.email + '! Check your inbox or spam folder.');
+            } catch (err) {
+                console.error("EmailJS dispatch error:", err);
+                const reason = err.text || err.message || (typeof err === 'string' ? err : 'Network or delivery issue');
+                updateEmailNotice('error', user.email, reason);
+                showStatus('error', 'Unable to send email to ' + user.email + ' (' + reason + '). Please click "Resend Email" below.');
+            }
+        }
+
         // Auth state watcher
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
@@ -614,10 +722,11 @@
                     return;
                 }
 
-                // If user doesn't have a pending key generated yet, generate and send one!
+                const name = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+
+                // If user doesn't have a pending key generated yet, generate and save
                 if (!userData.pendingActivationKey) {
                     loaderText.textContent = "Generating your sovereign activation key...";
-                    const name = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
                     pendingKey = generateBoVKey(name);
 
                     // Save to Firestore
@@ -628,22 +737,24 @@
                         pendingActivationAt: firebase.firestore.FieldValue.serverTimestamp(),
                         isActivated: false
                     }, { merge: true });
-
-                    // Dispatch welcome email via EmailJS
-                    loaderText.textContent = "Dispatching welcome email & key to " + user.email + "...";
-                    try {
-                        await sendActivationEmail(user.email, name, pendingKey);
-                        showStatus('info', 'A fresh activation key was sent to your email inbox.');
-                    } catch (emailErr) {
-                        console.error("Auto email dispatch error:", emailErr);
-                        showStatus('error', 'Generated key but failed to send email: ' + (emailErr.text || emailErr.message || 'Please click Resend.'));
-                    }
                 } else {
                     pendingKey = userData.pendingActivationKey;
                 }
 
-                // Hide loader
+                // Hide loader backdrop immediately so UI is interactive
                 loader.style.display = 'none';
+
+                // Check if activation email was already sent in this browser session
+                const sessionKey = 'vani_activation_email_sent_' + user.uid + '_' + pendingKey;
+                const wasSent = sessionStorage.getItem(sessionKey) === 'true';
+
+                if (wasSent) {
+                    updateEmailNotice('success', user.email);
+                    showStatus('info', 'Welcome email was sent to ' + user.email + '. Please check your inbox or spam folder.');
+                } else {
+                    // Automatically dispatch activation email now
+                    await dispatchEmailWithStatus(user, name, pendingKey, false);
+                }
 
             } catch (err) {
                 console.error("Activation initialization error:", err);
@@ -651,20 +762,6 @@
                 showStatus('error', 'Error connecting to Bureau database: ' + err.message);
             }
         });
-
-        // Email Dispatch helper
-        async function sendActivationEmail(toEmail, userName, key) {
-            return await sendVaniEmail({
-                to_name: userName || 'User',
-                user_name: userName || 'User',
-                to_email: toEmail,
-                user_email: toEmail,
-                activation_key: key,
-                key: key,
-                subject: `Welcome to V.A.N.I-xAI! Your Activation Key: ${key}`,
-                message: `Welcome to the Bureau of V.A.N.I-xAI!\n\nYour account has been registered. Below is your official Sovereign Activation Key:\n\n🔑 YOUR ACTIVATION KEY:\n${key}\n\nPlease paste this key into the verification page to complete activation, after which you will set up your secure PIN.\n\nSupport: official.vanixai.india@gmail.com\nBureau of V.A.N.I-xAI Sovereign Intelligence`
-            });
-        }
 
         // Verification handler
         async function handleVerifyKey(e) {
@@ -726,6 +823,7 @@
             if (!currentUser || cooldownSeconds > 0) return;
 
             btnResend.disabled = true;
+            if (btnMiniResend) btnMiniResend.disabled = true;
             btnResend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
 
             try {
@@ -738,8 +836,8 @@
                     pendingActivationAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
-                await sendActivationEmail(currentUser.email, name, pendingKey);
-                showStatus('success', 'A new activation key has been dispatched to ' + currentUser.email);
+                // Dispatch email with live visual feedback
+                await dispatchEmailWithStatus(currentUser, name, pendingKey, true);
 
                 // Start cooldown
                 cooldownSeconds = 30;
@@ -749,6 +847,7 @@
                     if (cooldownSeconds <= 0) {
                         clearInterval(cooldownTimer);
                         btnResend.disabled = false;
+                        if (btnMiniResend) btnMiniResend.disabled = false;
                         btnResend.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Resend Email';
                     } else {
                         btnResend.innerHTML = `<i class="fa-solid fa-clock"></i> Resend (${cooldownSeconds}s)`;
@@ -758,6 +857,7 @@
             } catch (err) {
                 console.error("Resend error:", err);
                 btnResend.disabled = false;
+                if (btnMiniResend) btnMiniResend.disabled = false;
                 btnResend.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Resend Email';
                 showStatus('error', 'Failed to resend key: ' + (err.text || err.message || 'Please try again.'));
             }

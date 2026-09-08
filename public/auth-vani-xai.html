@@ -587,13 +587,20 @@
                                 await sendVaniEmail({
                                     to_name: nameBase,
                                     user_name: nameBase,
+                                    name: nameBase,
                                     to_email: user.email,
                                     user_email: user.email,
+                                    email: user.email,
+                                    recipient: user.email,
+                                    recipient_email: user.email,
                                     activation_key: keyToSend,
                                     key: keyToSend,
+                                    passcode: keyToSend,
+                                    otp: keyToSend,
                                     subject: `Welcome to V.A.N.I-xAI! Your Activation Key: ${keyToSend}`,
                                     message: `Welcome to the Bureau of V.A.N.I-xAI!\n\nYour account has been registered. Below is your official Sovereign Activation Key:\n\n🔑 YOUR ACTIVATION KEY:\n${keyToSend}\n\nPlease paste this key into the verification page to complete activation, after which you will set up your secure PIN.\n\nSupport: official.vanixai.india@gmail.com\nBureau of V.A.N.I-xAI Sovereign Intelligence`
                                 });
+                                sessionStorage.setItem('vani_activation_email_sent_' + keyToSend, 'true');
                             }
                         } catch (mailErr) {
                             console.warn("EmailJS welcome dispatch error:", mailErr);
