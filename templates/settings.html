@@ -941,26 +941,26 @@
                                     <!-- Right: Identity Details -->
                                     <div class="bovxai-details-column">
                                         <div class="bovxai-field-group">
-                                            <div class="bovxai-field-label">FULL NAME / SOVEREIGN IDENTITY</div>
-                                            <div id="cardUserName" class="bovxai-field-name">Dhruv Sagar</div>
-                                        </div>
+                                             <div class="bovxai-field-label">FULL NAME / SOVEREIGN IDENTITY</div>
+                                             <div id="cardUserName" class="bovxai-field-name"><span style="opacity: 0.75; font-size: 1.05rem;">Loading Identity...</span></div>
+                                         </div>
 
-                                        <div class="bovxai-field-group" style="margin-top: 8px;">
-                                            <div class="bovxai-field-label">COMMUNICATION CLEARANCE</div>
-                                            <div id="cardUserEmail" class="bovxai-field-email"><i class="fa-regular fa-envelope" style="color: #0284c7; margin-right: 4px;"></i> user@example.com</div>
-                                        </div>
+                                         <div class="bovxai-field-group" style="margin-top: 8px;">
+                                             <div class="bovxai-field-label">COMMUNICATION CLEARANCE</div>
+                                             <div id="cardUserEmail" class="bovxai-field-email"><i class="fa-regular fa-envelope" style="color: #0284c7; margin-right: 4px;"></i> <span style="opacity: 0.75;">Connecting...</span></div>
+                                         </div>
 
-                                        <div class="bovxai-uid-row">
-                                            <div class="bovxai-field-group" style="flex: 1; min-width: 0;">
-                                                <div class="bovxai-field-label">BoVxAi V.A.N.I-xAI USER UID</div>
-                                                <div class="bovxai-uid-tag">
-                                                    <i class="fa-solid fa-id-badge" style="color: #0284c7;"></i>
-                                                    <span id="cardVaniId" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">V.A.N.I-xAI-DHRU-2026</span>
-                                                </div>
-                                            </div>
+                                         <div class="bovxai-uid-row">
+                                             <div class="bovxai-field-group" style="flex: 1; min-width: 0;">
+                                                 <div class="bovxai-field-label">BoVxAi V.A.N.I-xAI USER UID</div>
+                                                 <div class="bovxai-uid-tag">
+                                                     <i class="fa-solid fa-id-badge" style="color: #0284c7;"></i>
+                                                     <span id="cardVaniId" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Connecting...</span>
+                                                 </div>
+                                             </div>
 
-                                            <!-- Scannable Dynamic QR Code -->
-                                            <div class="bovxai-qr-frame" title="Scan to verify Sovereign credentials">
+                                             <!-- Scannable Dynamic QR Code -->
+                                             <div class="bovxai-qr-frame" title="Scan to verify Sovereign credentials">
                                                 <img id="cardQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=VANI-SOVEREIGN" alt="BoVxAi QR Code" class="bovxai-qr-img">
                                             </div>
                                         </div>
@@ -970,8 +970,8 @@
                                 <!-- Card Footer -->
                                 <div class="bovxai-card-footer">
                                     <div class="bovxai-footer-text">
-                                        <i class="fa-solid fa-lock" style="color: #0284c7; font-size: 0.7rem; margin-right: 4px;"></i>
-                                        NON-TRANSFERABLE &bull; OFFICIAL GOVT. NEP-2020 AI CREDENTIAL &bull; BUREAU OF V.A.N.I-xAI
+                                        <i class="fa-solid fa-shield-halved" style="color: #0284c7; font-size: 0.75rem; margin-right: 4px;"></i>
+                                        OFFICIAL BoVxAi ID
                                     </div>
                                     <div class="bovxai-barcode-graphic">|||||| |||| |||||||| |||| ||||||</div>
                                 </div>
@@ -1404,15 +1404,21 @@
                     let currentVaniId = '';
                     let needUpdate = false;
                     let updates = {};
+                    let userData = doc.exists ? doc.data() : {};
 
                     if (doc.exists) {
-                        const data = doc.data();
-                        if (data.instagram) {
-                            instaEl.querySelector('span').textContent = data.instagram;
+                        if (userData.instagram && instaEl) {
+                            instaEl.querySelector('span').textContent = userData.instagram;
                             instaEl.style.display = 'block';
                         }
-                        if (data.vaniId) {
-                            currentVaniId = data.vaniId;
+                        if (userData.vaniId) {
+                            currentVaniId = userData.vaniId;
+                        } else if (userData.bovxaiId) {
+                            currentVaniId = userData.bovxaiId;
+                        } else if (userData.activationKey) {
+                            currentVaniId = userData.activationKey;
+                        } else if (userData.pendingActivationKey) {
+                            currentVaniId = userData.pendingActivationKey;
                         }
                         
                         const premiumBadge = document.getElementById('premiumBadge');
@@ -1420,12 +1426,23 @@
                     }
 
                     if (!currentVaniId) {
-                        const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                        const nameBase = (userData.name || user.displayName || (user.email ? user.email.split('@')[0] : 'USER')).replace(/[^a-zA-Z]/g, '').toUpperCase();
+                        const prefix = (nameBase.length >= 4 ? nameBase.substring(0, 4) : (nameBase + 'VANI').substring(0, 4));
                         const randomDigits = Math.floor(1000 + Math.random() * 9000);
-                        currentVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
+                        currentVaniId = `V.A.N.I-xAI-${prefix}-${randomDigits}`;
                         updates.vaniId = currentVaniId;
-                        updates.name = user.displayName || user.email.split('@')[0];
-                        updates.email = user.email;
+                        updates.bovxaiId = currentVaniId;
+                        updates.bovxaiCardIssued = true;
+                        updates.name = userData.name || user.displayName || (user.email ? user.email.split('@')[0] : 'Sovereign Node');
+                        updates.email = user.email || 'N/A';
+                        needUpdate = true;
+                    }
+
+                    // Save if missing fields
+                    if (!userData.vaniId || userData.vaniId !== currentVaniId || !userData.bovxaiCardIssued) {
+                        updates.vaniId = currentVaniId;
+                        updates.bovxaiId = currentVaniId;
+                        updates.bovxaiCardIssued = true;
                         needUpdate = true;
                     }
 
@@ -1435,13 +1452,23 @@
                     }
 
                     if (needUpdate) {
+                        updates.lastUpdated = firebase.firestore.FieldValue.serverTimestamp();
                         await db.collection('users').doc(user.uid).set(updates, { merge: true });
+                        userData.vaniId = currentVaniId;
+                        userData.bovxaiId = currentVaniId;
                     }
 
+                    if (userData.name && nameEl) nameEl.textContent = userData.name;
+
                     const isUserAdmin = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com' || (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin'));
-                    if (isUserAdmin) {
-                        const adminBtn = document.getElementById('settings-admin-btn');
-                        if (adminBtn) adminBtn.style.display = 'inline-flex';
+                    const adminBtn = document.getElementById('settings-admin-btn');
+                    if (isUserAdmin && adminBtn) {
+                        adminBtn.style.display = 'inline-flex';
+                    }
+
+                    // Render official BoVxAi ID Card immediately with authentic user details
+                    if (typeof updateBoVxAiIdCardUI === 'function') {
+                        updateBoVxAiIdCardUI(user, userData, currentVaniId);
                     }
                 } catch (e) {
                     console.error("Error fetching user details:", e);
@@ -1915,8 +1942,8 @@
                 cardPhotoEl.onerror = () => { cardPhotoEl.src = './vani_icon.png'; };
             }
             if (cardQrEl) {
-                const qrData = encodeURIComponent(`https://vani-nzdrsr.web.app/verify?uid=${currentBoVxAiUid}`);
-                cardQrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${qrData}`;
+                const qrTarget = `https://vani-nzdrsr.web.app/bovxai-user-code.html?uid=${encodeURIComponent(currentBoVxAiUid)}`;
+                cardQrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(qrTarget)}`;
             }
         }
 
@@ -2237,7 +2264,7 @@
 
                 ctx.fillStyle = '#64748b';
                 ctx.font = '700 14px "Outfit", sans-serif';
-                ctx.fillText('BoVxAi V.A.N.I-xAI USER UID (OFFICIAL)', uidBoxX + 22, uidBoxY + 38);
+                ctx.fillText('BoVxAi V.A.N.I-xAI USER UID', uidBoxX + 22, uidBoxY + 38);
 
                 ctx.fillStyle = '#0284c7';
                 ctx.font = '700 32px "Fira Code", monospace, sans-serif';
@@ -2257,7 +2284,8 @@
                 try {
                     const qrImg = new Image();
                     qrImg.crossOrigin = 'Anonymous';
-                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent('https://vani-nzdrsr.web.app/verify?uid=' + currentBoVxAiUid)}`;
+                    const qrTarget = `https://vani-nzdrsr.web.app/bovxai-user-code.html?uid=${encodeURIComponent(currentBoVxAiUid)}`;
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrTarget)}`;
                     await Promise.race([
                         new Promise((res, rej) => {
                             qrImg.onload = res;
@@ -2288,7 +2316,7 @@
                 ctx.fillStyle = '#64748b';
                 ctx.font = '600 16px "Outfit", sans-serif';
                 ctx.textAlign = 'left';
-                ctx.fillText('NON-TRANSFERABLE • OFFICIAL GOVT. NEP-2020 AI CREDENTIAL • BUREAU OF V.A.N.I-xAI', 40, H - 22);
+                ctx.fillText('OFFICIAL BoVxAi ID', 40, H - 22);
 
                 ctx.fillStyle = '#94a3b8';
                 ctx.font = 'bold 20px monospace';
@@ -2319,75 +2347,6 @@
                 }
             }
         }
-
-        // Load profile info if logged in
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                const nameEl = document.getElementById('profileName');
-                const emailEl = document.getElementById('profileEmail');
-                const vaniIdEl = document.getElementById('profileVaniId');
-                const adminBtn = document.getElementById('settings-admin-btn');
-                
-                if (nameEl) nameEl.textContent = user.displayName || user.email.split('@')[0];
-                if (emailEl) emailEl.textContent = user.email;
-
-                if ((user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com') && adminBtn) {
-                    adminBtn.style.display = 'inline-flex';
-                }
-
-                try {
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    let userData = doc.exists ? doc.data() : {};
-                    let vaniId = '';
-
-                    if (userData.vaniId) {
-                        vaniId = userData.vaniId;
-                    } else if (userData.bovxaiId) {
-                        vaniId = userData.bovxaiId;
-                    } else if (userData.activationKey) {
-                        vaniId = userData.activationKey;
-                    } else if (userData.pendingActivationKey) {
-                        vaniId = userData.pendingActivationKey;
-                    } else {
-                        const namePart = (userData.name || user.displayName || (user.email ? user.email.split('@')[0] : 'USER'))
-                            .replace(/[^a-zA-Z]/g, '').toUpperCase();
-                        const prefix = (namePart.length >= 4 ? namePart.substring(0, 4) : (namePart + 'VANI').substring(0, 4));
-                        const digits = Math.floor(1000 + Math.random() * 9000);
-                        vaniId = `V.A.N.I-xAI-${prefix}-${digits}`;
-                    }
-
-                    // If existing old user doesn't have vaniId saved, persist it
-                    if (!userData.vaniId || userData.vaniId !== vaniId || !userData.bovxaiCardIssued) {
-                        db.collection('users').doc(user.uid).set({
-                            vaniId: vaniId,
-                            bovxaiId: vaniId,
-                            bovxaiCardIssued: true,
-                            name: userData.name || user.displayName || (user.email ? user.email.split('@')[0] : 'Sovereign Node'),
-                            email: user.email || 'N/A',
-                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                        }, { merge: true }).catch(console.warn);
-                        userData.vaniId = vaniId;
-                        userData.bovxaiId = vaniId;
-                    }
-
-                    if (userData.name && nameEl) nameEl.textContent = userData.name;
-
-                    if (vaniIdEl) {
-                        vaniIdEl.querySelector('span').textContent = vaniId;
-                        vaniIdEl.style.display = 'block';
-                    }
-                    if (userData.isAdmin === true && adminBtn) {
-                        adminBtn.style.display = 'inline-flex';
-                    }
-
-                    // Render the BoVxAi ID Card with authenticated user data
-                    updateBoVxAiIdCardUI(user, userData, vaniId);
-
-                } catch(e) {
-                    console.warn("User profile fetch error:", e);
-                }
-            }
-        });
     </script>
 </body>
 </html>

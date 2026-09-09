@@ -2075,8 +2075,8 @@
                     </div>
                     <div class="bovxai-card-footer">
                         <div class="bovxai-footer-text">
-                            <i class="fa-solid fa-lock" style="color:#0284c7; font-size:0.7rem; margin-right:4px;"></i>
-                            NON-TRANSFERABLE &bull; OFFICIAL GOVT. NEP-2020 AI CREDENTIAL &bull; BUREAU OF V.A.N.I-xAI
+                            <i class="fa-solid fa-shield-halved" style="color:#0284c7; font-size:0.75rem; margin-right:4px;"></i>
+                            OFFICIAL BoVxAi ID
                         </div>
                         <div class="bovxai-barcode-graphic">|||||| |||| |||||||| |||| ||||||</div>
                     </div>
@@ -2316,7 +2316,7 @@
                 photoEl.onerror = () => { photoEl.src = './vani_icon.png'; };
             }
             if (qrEl) {
-                qrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent('https://vani-nzdrsr.web.app/verify?uid=' + vaniId)}`;
+                qrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent('https://vani-nzdrsr.web.app/bovxai-user-code.html?uid=' + vaniId)}`;
             }
 
             modal.style.display = 'flex';
@@ -2588,7 +2588,7 @@
 
                 ctx.fillStyle = '#64748b';
                 ctx.font = '700 14px "Outfit", sans-serif';
-                ctx.fillText('BoVxAi V.A.N.I-xAI USER UID (OFFICIAL)', uidBoxX + 22, uidBoxY + 38);
+                ctx.fillText('BoVxAi V.A.N.I-xAI USER UID', uidBoxX + 22, uidBoxY + 38);
 
                 ctx.fillStyle = '#0284c7';
                 ctx.font = '700 32px "Fira Code", monospace, sans-serif';
@@ -2607,7 +2607,8 @@
                 try {
                     const qrImg = new Image();
                     qrImg.crossOrigin = 'Anonymous';
-                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent('https://vani-nzdrsr.web.app/verify?uid=' + currentBoVxAiUid)}`;
+                    const qrTarget = `https://vani-nzdrsr.web.app/bovxai-user-code.html?uid=${encodeURIComponent(currentBoVxAiUid)}`;
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrTarget)}`;
                     await Promise.race([
                         new Promise((res, rej) => {
                             qrImg.onload = res;
@@ -2637,7 +2638,7 @@
                 ctx.fillStyle = '#64748b';
                 ctx.font = '600 16px "Outfit", sans-serif';
                 ctx.textAlign = 'left';
-                ctx.fillText('NON-TRANSFERABLE • OFFICIAL GOVT. NEP-2020 AI CREDENTIAL • BUREAU OF V.A.N.I-xAI', 40, H - 22);
+                ctx.fillText('OFFICIAL BoVxAi ID', 40, H - 22);
 
                 ctx.fillStyle = '#94a3b8';
                 ctx.font = 'bold 20px monospace';

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>BoVxAi Admin QR Scanner | Bureau Of V.A.N.I-xAI</title>
+    
+    <!-- Meta & Branding -->
+    <meta name="theme-color" content="#030712">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" href="vani_icon.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- HTML5 QR Code Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #030712;
+            --bg-secondary: #0b1329;
+            --bg-card: rgba(15, 23, 42, 0.85);
+            --border-glow: rgba(6, 182, 212, 0.35);
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.18), transparent 45%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.12), transparent 40%);
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        }
+
+        /* Top Sovereign App Bar */
+        .app-header {
+            width: 100%;
+            max-width: 500px;
+            padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(3, 7, 18, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.05rem;
+            transition: all 0.2s ease;
+        }
+        .header-back-btn:active {
+            transform: scale(0.93);
+            background: rgba(6, 182, 212, 0.2);
+            border-color: var(--accent-cyan);
+        }
+
+        .header-title-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: contain;
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+        }
+
+        .header-text h1 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ffffff, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-text p {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .admin-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: #fbbf24;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Main Mobile Container */
+        .scanner-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Viewfinder Card */
+        .viewfinder-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-glow);
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45), 0 0 25px rgba(6, 182, 212, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .viewfinder-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #f97316, #06b6d4, #10b981);
+        }
+
+        /* Scanner Frame Layout */
+        .camera-viewport {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 340px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000000;
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #qr-reader {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        #qr-reader video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 18px !important;
+        }
+
+        #qr-reader__scan_region {
+            border: none !important;
+        }
+
+        /* Corner Reticles */
+        .corner-reticle {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-color: #00f0ff;
+            border-style: solid;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .corner-reticle.tl { top: 12px; left: 12px; border-width: 3.5px 0 0 3.5px; border-top-left-radius: 8px; }
+        .corner-reticle.tr { top: 12px; right: 12px; border-width: 3.5px 3.5px 0 0; border-top-right-radius: 8px; }
+        .corner-reticle.bl { bottom: 12px; left: 12px; border-width: 0 0 3.5px 3.5px; border-bottom-left-radius: 8px; }
+        .corner-reticle.br { bottom: 12px; right: 12px; border-width: 0 3.5px 3.5px 0; border-bottom-right-radius: 8px; }
+
+        /* Animated Laser Scanline */
+        .laser-scanline {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2.5px;
+            background: linear-gradient(90deg, transparent, #00f0ff, #38bdf8, #00f0ff, transparent);
+            box-shadow: 0 0 14px #00f0ff, 0 0 25px rgba(6, 182, 212, 0.7);
+            z-index: 8;
+            animation: scanLaser 2.4s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes scanLaser {
+            0% { top: 6%; opacity: 0.2; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 92%; opacity: 0.2; }
+        }
+
+        /* Viewfinder Instructions */
+        .scanner-instruction {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            font-weight: 600;
+            text-align: center;
+        }
+        .scanner-instruction i {
+            color: var(--accent-cyan);
+            font-size: 0.95rem;
+            animation: pulseIcon 1.5s infinite;
+        }
+
+        @keyframes pulseIcon {
+            0%, 100% { opacity: 0.5; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* Camera Controls Toolbar */
+        .controls-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+            width: 100%;
+        }
+
+        .tool-btn {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #e2e8f0;
+            padding: 9px 15px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tool-btn:active {
+            transform: scale(0.94);
+            background: rgba(6, 182, 212, 0.25);
+            border-color: var(--accent-cyan);
+            color: #fff;
+        }
+        .tool-btn.active {
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #00f0ff;
+            color: #00f0ff;
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.35);
+        }
+
+        /* Fallback Card: Manual UID & File Upload */
+        .secondary-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .section-header h3 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-header h3 i {
+            color: var(--accent-cyan);
+        }
+
+        /* Manual Input Box */
+        .manual-input-box {
+            display: flex;
+            gap: 8px;
+        }
+
+        .uid-input {
+            flex: 1;
+            background: rgba(3, 7, 18, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.14);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .uid-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+        }
+        .uid-input::placeholder {
+            color: #475569;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+        }
+
+        .verify-submit-btn {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            border: none;
+            border-radius: 14px;
+            padding: 0 18px;
+            color: #fff;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .verify-submit-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Upload Image Option */
+        .file-upload-block {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .file-upload-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .file-upload-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+            padding: 7px 12px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .file-upload-btn:active {
+            background: rgba(6, 182, 212, 0.2);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Toast Popup */
+        .scan-toast {
+            position: fixed;
+            bottom: calc(25px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(15, 23, 42, 0.95);
+            border: 1.5px solid var(--accent-emerald);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.35);
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            color: #ecfdf5;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 90%;
+            text-align: center;
+        }
+        .scan-toast.active {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Error Banner */
+        .camera-error-banner {
+            display: none;
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            color: #fda4af;
+            border-radius: 16px;
+            padding: 14px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            text-align: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* Sovereign Watermark Footer */
+        .footer-stamp {
+            margin-top: auto;
+            padding: 18px 0 8px;
+            text-align: center;
+            font-size: 0.72rem;
+            color: #64748b;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Bar -->
+    <header class="app-header">
+        <a href="admin-vaniXai.html" class="header-back-btn" title="Back to Admin Console">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div class="header-title-block">
+            <img src="Bureau_Of_VANI_xAI_Official_Logo.png" alt="BoVxAi Seal" class="header-logo" onerror="this.src='vani_icon.png'">
+            <div class="header-text">
+                <h1>BoVxAi QR SCANNER</h1>
+                <p>Official Admin Verifier</p>
+            </div>
+        </div>
+        <div class="admin-pill">
+            <i class="fa-solid fa-shield-halved"></i> ADMIN
+        </div>
+    </header>
+
+    <!-- Main Scanner Container -->
+    <main class="scanner-container">
+
+        <!-- Live Camera Viewfinder Card -->
+        <section class="viewfinder-card">
+            <div class="camera-viewport" id="cameraViewport">
+                <!-- Laser Line -->
+                <div class="laser-scanline" id="scanline"></div>
+
+                <!-- 4 Corner Reticles -->
+                <div class="corner-reticle tl"></div>
+                <div class="corner-reticle tr"></div>
+                <div class="corner-reticle bl"></div>
+                <div class="corner-reticle br"></div>
+
+                <!-- HTML5 QR Reader Target -->
+                <div id="qr-reader"></div>
+            </div>
+
+            <!-- Instruction Tag -->
+            <div class="scanner-instruction" id="scanInstruction">
+                <i class="fa-solid fa-expand"></i>
+                <span>Align Sovereign QR Code within frame</span>
+            </div>
+
+            <!-- Camera Controls (Flip / Torch) -->
+            <div class="controls-toolbar">
+                <button type="button" class="tool-btn" id="btnSwitchCamera" title="Switch between Front and Back camera">
+                    <i class="fa-solid fa-camera-rotate"></i> Flip Camera
+                </button>
+                <button type="button" class="tool-btn" id="btnTorch" title="Toggle Flashlight / Torch">
+                    <i class="fa-solid fa-bolt"></i> Flashlight
+                </button>
+            </div>
+
+            <!-- Camera Error Warning (if permission denied) -->
+            <div class="camera-error-banner" id="cameraErrorBanner">
+                <i class="fa-solid fa-triangle-exclamation" style="margin-right: 5px;"></i>
+                Camera access blocked or unsupported. Use the manual UID lookup or upload a QR image below.
+            </div>
+        </section>
+
+        <!-- Secondary: Manual Lookup & File Upload -->
+        <section class="secondary-card">
+            <div class="section-header">
+                <h3><i class="fa-solid fa-keyboard"></i> Manual UID Verification</h3>
+            </div>
+            <form id="manualVerifyForm" class="manual-input-box" onsubmit="handleManualSubmit(event)">
+                <input 
+                    type="text" 
+                    id="manualUidInput" 
+                    class="uid-input" 
+                    placeholder="e.g. V.A.N.I-xAI-DHRU-2026" 
+                    autocomplete="off" 
+                    autocapitalize="characters"
+                    spellcheck="false"
+                    required
+                >
+                <button type="submit" class="verify-submit-btn">
+                    Verify <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="file-upload-block">
+                <span class="file-upload-label"><i class="fa-regular fa-image" style="margin-right: 4px;"></i> Have a screenshot/photo?</span>
+                <label class="file-upload-btn">
+                    <i class="fa-solid fa-upload"></i> Upload Image
+                    <input type="file" id="qrFileInput" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">
+                </label>
+            </div>
+        </section>
+
+        <!-- Sovereign Seal Footer -->
+        <footer class="footer-stamp">
+            OFFICIAL BoVxAi SECURITY VERIFIER &bull; BHARAT
+        </footer>
+
+    </main>
+
+    <!-- Scan Toast -->
+    <div class="scan-toast" id="scanToast">
+        <i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1.15rem;"></i>
+        <span id="scanToastText">BoVxAi Identity Detected! Redirecting...</span>
+    </div>
+
+    <!-- Scanner Script Logic -->
+    <script>
+        let html5QrCode = null;
+        let currentFacingMode = "environment"; // default back camera
+        let isTorchOn = false;
+        let isProcessingScan = false;
+        let availableCameras = [];
+        let currentCameraIndex = 0;
+
+        // Web Audio Synthesizer Beep
+        function playBeepTone() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 pitch
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
+            } catch (e) {
+                console.warn("WebAudio disabled or blocked:", e);
+            }
+        }
+
+        // Show Toast Popup
+        function showToast(msg) {
+            const toast = document.getElementById('scanToast');
+            const toastText = document.getElementById('scanToastText');
+            if (toast && toastText) {
+                toastText.textContent = msg;
+                toast.classList.add('active');
+                setTimeout(() => {
+                    toast.classList.remove('active');
+                }, 3500);
+            }
+        }
+
+        // Extract clean UID from URL or raw string
+        function extractCleanUid(rawText) {
+            if (!rawText) return '';
+            let cleaned = rawText.trim();
+            
+            // If full URL scanned
+            if (cleaned.startsWith('http://') || cleaned.startsWith('https://') || cleaned.includes('bovxai-user-code') || cleaned.includes('verify')) {
+                try {
+                    const parsedUrl = new URL(cleaned);
+                    const uidParam = parsedUrl.searchParams.get('uid') || 
+                                     parsedUrl.searchParams.get('vaniId') || 
+                                     parsedUrl.searchParams.get('id') || 
+                                     parsedUrl.searchParams.get('key');
+                    if (uidParam) return uidParam.trim();
+                } catch (err) {
+                    // Fallback regex match for ?uid=...
+                    const match = cleaned.match(/[?&]uid=([^&#]+)/i);
+                    if (match && match[1]) return decodeURIComponent(match[1]).trim();
+                }
+            }
+            return cleaned;
+        }
+
+        // Core QR Scan Handler
+        function onScanSuccess(decodedText, decodedResult) {
+            if (isProcessingScan) return;
+            isProcessingScan = true;
+
+            playBeepTone();
+            if (navigator.vibrate) {
+                navigator.vibrate([70, 40, 70]);
+            }
+
+            const cleanUid = extractCleanUid(decodedText);
+            showToast("QR Verified! Redirecting to credentials...");
+
+            // Pause camera
+            try {
+                if (html5QrCode) {
+                    html5QrCode.pause(true);
+                }
+            } catch (e) {}
+
+            // Immediate redirection to bovxai-user-code.html
+            setTimeout(() => {
+                window.location.href = `bovxai-user-code.html?uid=${encodeURIComponent(cleanUid)}`;
+            }, 650);
+        }
+
+        function onScanFailure(error) {
+            // Passive scan frame failure - do not flood console
+        }
+
+        // Initialize Camera
+        async function startCameraScanner() {
+            const errorBanner = document.getElementById('cameraErrorBanner');
+            if (errorBanner) errorBanner.style.display = 'none';
+
+            try {
+                html5QrCode = new Html5Qrcode("qr-reader");
+
+                const config = {
+                    fps: 15,
+                    qrbox: function(viewfinderWidth, viewfinderHeight) {
+                        const minEdgePercentage = 0.78;
+                        const minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+                        const qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+                        return { width: qrboxSize, height: qrboxSize };
+                    },
+                    aspectRatio: 1.0,
+                    showTorchButtonIfSupported: false
+                };
+
+                // Discover available cameras
+                try {
+                    availableCameras = await Html5Qrcode.getCameras();
+                } catch (camErr) {
+                    console.warn("getCameras fallback:", camErr);
+                }
+
+                if (availableCameras && availableCameras.length > 0) {
+                    // Prefer back camera
+                    let backCam = availableCameras.find(c => c.label.toLowerCase().includes('back') || c.label.toLowerCase().includes('rear') || c.label.toLowerCase().includes('environment'));
+                    let selectedCamId = backCam ? backCam.id : availableCameras[0].id;
+                    currentCameraIndex = availableCameras.findIndex(c => c.id === selectedCamId);
+                    
+                    await html5QrCode.start(
+                        selectedCamId,
+                        config,
+                        onScanSuccess,
+                        onScanFailure
+                    );
+                } else {
+                    // Fallback facingMode
+                    await html5QrCode.start(
+                        { facingMode: currentFacingMode },
+                        config,
+                        onScanSuccess,
+                        onScanFailure
+                    );
+                }
+
+                console.log("Scanner active");
+
+            } catch (err) {
+                console.error("Camera startup failed:", err);
+                if (errorBanner) {
+                    errorBanner.style.display = 'block';
+                    errorBanner.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="margin-right: 5px;"></i> Camera Error: ${err.message || 'Permission denied'}. Please allow camera permissions or enter UID below.`;
+                }
+            }
+        }
+
+        // Switch Camera (Front/Back)
+        document.getElementById('btnSwitchCamera').addEventListener('click', async () => {
+            if (!html5QrCode) return;
+            try {
+                await html5QrCode.stop();
+                if (availableCameras && availableCameras.length > 1) {
+                    currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
+                    const nextCamId = availableCameras[currentCameraIndex].id;
+                    await html5QrCode.start(
+                        nextCamId,
+                        { fps: 15, aspectRatio: 1.0 },
+                        onScanSuccess,
+                        onScanFailure
+                    );
+                } else {
+                    currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
+                    await html5QrCode.start(
+                        { facingMode: currentFacingMode },
+                        { fps: 15, aspectRatio: 1.0 },
+                        onScanSuccess,
+                        onScanFailure
+                    );
+                }
+                showToast("Camera toggled");
+            } catch (e) {
+                console.warn("Camera switch error:", e);
+            }
+        });
+
+        // Toggle Flashlight (Torch)
+        document.getElementById('btnTorch').addEventListener('click', async () => {
+            if (!html5QrCode) return;
+            const torchBtn = document.getElementById('btnTorch');
+            try {
+                isTorchOn = !isTorchOn;
+                await html5QrCode.applyVideoConstraints({
+                    advanced: [{ torch: isTorchOn }]
+                });
+                if (torchBtn) {
+                    torchBtn.classList.toggle('active', isTorchOn);
+                    torchBtn.innerHTML = isTorchOn 
+                        ? '<i class="fa-solid fa-bolt" style="color:#00f0ff;"></i> Torch ON' 
+                        : '<i class="fa-solid fa-bolt"></i> Flashlight';
+                }
+            } catch (e) {
+                console.warn("Torch not supported on this device/camera:", e);
+                showToast("Flashlight unsupported on this camera");
+            }
+        });
+
+        // Handle Manual Input Submit
+        function handleManualSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('manualUidInput');
+            if (!input || !input.value.trim()) return;
+
+            const cleanUid = extractCleanUid(input.value);
+            playBeepTone();
+            showToast("Verifying UID...");
+            setTimeout(() => {
+                window.location.href = `bovxai-user-code.html?uid=${encodeURIComponent(cleanUid)}`;
+            }, 300);
+        }
+
+        // Handle Image File Upload Scan
+        async function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showToast("Analyzing QR image...");
+            try {
+                const scanner = html5QrCode || new Html5Qrcode("qr-reader");
+                const decodedText = await scanner.scanFile(file, true);
+                onScanSuccess(decodedText, null);
+            } catch (err) {
+                console.error("Image scan failed:", err);
+                alert("Could not detect a valid QR Code in this image. Please try another image or enter the UID manually.");
+            }
+        }
+
+        // Start on load
+        window.addEventListener('DOMContentLoaded', () => {
+            startCameraScanner();
+        });
+
+        // Clean up on page exit
+        window.addEventListener('beforeunload', () => {
+            if (html5QrCode) {
+                try { html5QrCode.stop(); } catch(e) {}
+            }
+        });
+    </script>
+</body>
+</html>

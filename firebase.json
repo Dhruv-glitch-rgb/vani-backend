@@ -237,6 +237,22 @@
         "destination": "/ai4.html"
       },
       {
+        "source": "/check-user-code",
+        "destination": "/check-user-code.html"
+      },
+      {
+        "source": "/check-user-code/**",
+        "destination": "/check-user-code.html"
+      },
+      {
+        "source": "/bovxai-user-code",
+        "destination": "/bovxai-user-code.html"
+      },
+      {
+        "source": "/bovxai-user-code/**",
+        "destination": "/bovxai-user-code.html"
+      },
+      {
         "source": "/*/blocked-by-vani-xai0419",
         "destination": "/blocked.html"
       },
