@@ -764,6 +764,7 @@
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+        const auth = firebase.auth();
         const db = firebase.firestore();
 
         // Extract query params
@@ -841,53 +842,86 @@
                 }
 
                 // 2. Query by vaniId
-                const vaniSnap = await db.collection('users').where('vaniId', '==', targetUid).limit(1).get();
-                if (!vaniSnap.empty) {
-                    const doc = vaniSnap.docs[0];
-                    showRealUser(doc.data(), doc.id, targetUid);
-                    return;
+                try {
+                    const vaniSnap = await db.collection('users').where('vaniId', '==', targetUid).limit(1).get();
+                    if (!vaniSnap.empty) {
+                        const doc = vaniSnap.docs[0];
+                        showRealUser(doc.data(), doc.id, targetUid);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("vaniId query fallback:", e);
                 }
 
                 // 3. Query by bovxaiId
-                const bovxaiSnap = await db.collection('users').where('bovxaiId', '==', targetUid).limit(1).get();
-                if (!bovxaiSnap.empty) {
-                    const doc = bovxaiSnap.docs[0];
-                    showRealUser(doc.data(), doc.id, targetUid);
-                    return;
+                try {
+                    const bovxaiSnap = await db.collection('users').where('bovxaiId', '==', targetUid).limit(1).get();
+                    if (!bovxaiSnap.empty) {
+                        const doc = bovxaiSnap.docs[0];
+                        showRealUser(doc.data(), doc.id, targetUid);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("bovxaiId query fallback:", e);
                 }
 
                 // 4. Query by activationKey
-                const keySnap = await db.collection('users').where('activationKey', '==', targetUid).limit(1).get();
-                if (!keySnap.empty) {
-                    const doc = keySnap.docs[0];
-                    showRealUser(doc.data(), doc.id, targetUid);
-                    return;
+                try {
+                    const keySnap = await db.collection('users').where('activationKey', '==', targetUid).limit(1).get();
+                    if (!keySnap.empty) {
+                        const doc = keySnap.docs[0];
+                        showRealUser(doc.data(), doc.id, targetUid);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("activationKey query fallback:", e);
                 }
 
-                // 5. Query by email
-                const emailSnap = await db.collection('users').where('email', '==', targetUid).limit(1).get();
-                if (!emailSnap.empty) {
-                    const doc = emailSnap.docs[0];
-                    showRealUser(doc.data(), doc.id, targetUid);
-                    return;
+                // 5. Query by pendingActivationKey
+                try {
+                    const pKeySnap = await db.collection('users').where('pendingActivationKey', '==', targetUid).limit(1).get();
+                    if (!pKeySnap.empty) {
+                        const doc = pKeySnap.docs[0];
+                        showRealUser(doc.data(), doc.id, targetUid);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("pendingActivationKey query fallback:", e);
                 }
 
-                // 6. Deep Scan if partial case differences
-                const allUsersSnap = await db.collection('users').limit(100).get();
-                if (!allUsersSnap.empty) {
-                    const cleanLower = targetUid.toLowerCase();
-                    for (const doc of allUsersSnap.docs) {
-                        const data = doc.data();
-                        if (
-                            (data.vaniId && data.vaniId.toLowerCase() === cleanLower) ||
-                            (data.bovxaiId && data.bovxaiId.toLowerCase() === cleanLower) ||
-                            (data.activationKey && data.activationKey.toLowerCase() === cleanLower) ||
-                            (doc.id.toLowerCase() === cleanLower)
-                        ) {
-                            showRealUser(data, doc.id, targetUid);
-                            return;
+                // 6. Query by email
+                try {
+                    const emailSnap = await db.collection('users').where('email', '==', targetUid).limit(1).get();
+                    if (!emailSnap.empty) {
+                        const doc = emailSnap.docs[0];
+                        showRealUser(doc.data(), doc.id, targetUid);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("email query fallback:", e);
+                }
+
+                // 7. Case-Insensitive Deep Scan
+                try {
+                    const allUsersSnap = await db.collection('users').limit(150).get();
+                    if (!allUsersSnap.empty) {
+                        const cleanLower = targetUid.toLowerCase().trim();
+                        for (const doc of allUsersSnap.docs) {
+                            const data = doc.data();
+                            if (
+                                (data.vaniId && data.vaniId.toLowerCase().trim() === cleanLower) ||
+                                (data.bovxaiId && data.bovxaiId.toLowerCase().trim() === cleanLower) ||
+                                (data.activationKey && data.activationKey.toLowerCase().trim() === cleanLower) ||
+                                (data.pendingActivationKey && data.pendingActivationKey.toLowerCase().trim() === cleanLower) ||
+                                (doc.id.toLowerCase().trim() === cleanLower)
+                            ) {
+                                showRealUser(data, doc.id, targetUid);
+                                return;
+                            }
                         }
                     }
+                } catch (e) {
+                    console.warn("Deep scan fallback:", e);
                 }
 
                 // If no record found across all checks -> FAKE USER
@@ -899,8 +933,29 @@
             }
         }
 
+        let hasInitiated = false;
+        async function runVerificationFlow() {
+            if (hasInitiated) return;
+            hasInitiated = true;
+
+            // Ensure auth state is available (sign in anonymously if unauthenticated)
+            if (!auth.currentUser) {
+                try {
+                    await auth.signInAnonymously();
+                } catch (e) {
+                    console.warn("Anonymous auth info:", e.message);
+                }
+            }
+
+            await verifyUserRecord();
+        }
+
+        auth.onAuthStateChanged(() => {
+            runVerificationFlow();
+        });
+
         window.addEventListener('DOMContentLoaded', () => {
-            verifyUserRecord();
+            setTimeout(runVerificationFlow, 350);
         });
     </script>
 </body>

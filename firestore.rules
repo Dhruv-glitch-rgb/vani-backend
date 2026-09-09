@@ -1,7 +1,13 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write access to all collections for authenticated users
+    // Allow read on users collection so QR code verification can authenticate real users
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Allow read/write access to all other collections for authenticated users
     match /{document=**} {
       allow read, write: if request.auth != null;
     }
