@@ -609,7 +609,7 @@
                         setTimeout(() => {
                             currentPin = '';
                             setupStep = 'confirm';
-                            titleEl.textContent = 'Confirm New PIN';
+                            titleEl.textContent = 'Confirm Your PIN';
                             subtitleEl.innerHTML = `Re-enter your <b>${maxPinLength}</b>-digit PIN to confirm`;
                             statusMsg.textContent = '';
                             statusMsg.className = 'msg-text';
@@ -697,6 +697,7 @@
                     statusMsg.textContent = "Access Granted.";
                     statusMsg.className = 'msg-text';
                     sessionStorage.setItem('pin_verified', 'true');
+                    sessionStorage.setItem('bovxai_trigger_id_card', 'true');
                     
                     // Reset failed attempts on success
                     if (failedAttempts > 0) {
@@ -864,7 +865,7 @@
                     lengthSelectionArea.style.display = 'block';
                     btnCancelLength.style.display = 'none';
                     titleEl.textContent = 'Reset Security PIN';
-                    subtitleEl.innerHTML = 'Identity verified! Choose new PIN length:';
+                    subtitleEl.innerHTML = 'Identity verified! Choose your new PIN length:';
                 }, 500);
             } catch (err) {
                 console.error("Re-auth error:", err);
@@ -903,7 +904,7 @@
                     lengthSelectionArea.style.display = 'block';
                     btnCancelLength.style.display = 'none';
                     titleEl.textContent = 'Reset Security PIN';
-                    subtitleEl.innerHTML = 'Identity verified! Choose new PIN length:';
+                    subtitleEl.innerHTML = 'Identity verified! Choose your new PIN length:';
                 }, 500);
             } catch (err) {
                 console.error("Google re-auth error:", err);

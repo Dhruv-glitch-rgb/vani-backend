@@ -397,11 +397,13 @@
         const progressBar = document.getElementById('progress-bar');
         const statusText = document.getElementById('status-text');
 
-        // Elegant boot sequence messages
+        // Elegant boot sequence messages including BoVxAi Sovereign ID Card generation
         const messages = [
             "Establishing secure neural link",
             "Verifying biometric clearance",
             "Synchronizing global data nodes",
+            "Generating BoVxAi Sovereign ID Card...",
+            "Finalizing Bureau of V.A.N.I-xAI Credentials...",
             "Initializing PyAutoGUI subsystem",
             "Mounting ADB telemetry protocols",
             "Engaging OpenRouter AI matrix",
@@ -443,6 +445,9 @@
                     if (currentStep >= totalSteps) {
                         clearInterval(interval);
                         sessionStorage.setItem('pin_verified', 'true');
+                        // Set trigger flag so BoVxAi ID Card modal generates and appears immediately in console
+                        sessionStorage.setItem('bovxai_trigger_id_card', 'true');
+                        sessionStorage.removeItem('bovxai_id_card_shown_' + user.uid);
                         setTimeout(() => {
                             window.location.href = './ai4consol.html';
                         }, 500);

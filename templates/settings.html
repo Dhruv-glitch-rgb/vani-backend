@@ -415,6 +415,325 @@
         /* Cropper Container */
         .img-container { max-height: 400px; width: 100%; margin-bottom: 20px; background: #000; }
         .img-container img { max-width: 100%; }
+
+        /* --- BoVxAi Sovereign ID Card Light & Colorful Styling --- */
+        .bovxai-id-card-element {
+            width: 100%;
+            max-width: 580px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 35%, #faf5ff 70%, #fffbeb 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(2, 132, 199, 0.35);
+            box-shadow: 0 20px 50px rgba(2, 132, 199, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.8) inset, 0 8px 24px rgba(99, 102, 241, 0.08);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            color: #0f172a;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bovxai-id-card-element:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 26px 60px rgba(2, 132, 199, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+        }
+
+        .bovxai-id-card-element::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(2, 132, 199, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(2, 132, 199, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(2, 132, 199, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bovxai-card-spectrum {
+            height: 5px;
+            width: 100%;
+            background: linear-gradient(90deg, #f97316 0%, #fb923c 25%, #ffffff 50%, #0284c7 75%, #10b981 100%);
+            position: relative;
+            z-index: 3;
+        }
+
+        .bovxai-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px 10px 20px;
+            position: relative;
+            z-index: 2;
+            border-bottom: 1px dashed rgba(2, 132, 199, 0.18);
+        }
+
+        .bovxai-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bovxai-card-logo {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(2, 132, 199, 0.25));
+        }
+
+        .bovxai-card-title {
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: 0.8px;
+            color: #0f172a;
+            line-height: 1.15;
+        }
+
+        .bovxai-card-subtitle {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #0284c7;
+            letter-spacing: 0.2px;
+            margin-top: 2px;
+        }
+
+        .bovxai-hologram-seal {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.9), rgba(224, 242, 254, 0.9));
+            border: 1px solid rgba(245, 158, 11, 0.45);
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #b45309;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
+        }
+
+        .bovxai-card-body {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 16px 20px;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .bovxai-avatar-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bovxai-photo-frame {
+            position: relative;
+            width: 86px;
+            height: 86px;
+            border-radius: 16px;
+            padding: 3px;
+            background: linear-gradient(135deg, #0284c7, #ec4899, #f59e0b);
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.22);
+        }
+
+        .bovxai-card-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 13px;
+            object-fit: cover;
+            background: #ffffff;
+            display: block;
+        }
+
+        .bovxai-photo-badge {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            background: #ffffff;
+            border-radius: 50%;
+            color: #0284c7;
+            font-size: 0.95rem;
+            display: flex;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .bovxai-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #ecfdf5;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #065f46;
+            font-size: 0.62rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: statusPulse 1.8s infinite;
+        }
+
+        @keyframes statusPulse {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 6px #10b981; }
+            100% { transform: scale(0.9); opacity: 0.7; }
+        }
+
+        .bovxai-details-column {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bovxai-field-group {
+            margin-bottom: 2px;
+        }
+
+        .bovxai-field-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.6px;
+        }
+
+        .bovxai-field-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bovxai-field-email {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #334155;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bovxai-uid-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.75);
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .bovxai-uid-tag {
+            font-family: 'Fira Code', monospace, sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #0369a1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .bovxai-qr-frame {
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            border: 1px solid rgba(2, 132, 199, 0.25);
+            border-radius: 8px;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+
+        .bovxai-qr-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .bovxai-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background: rgba(241, 245, 249, 0.65);
+            border-top: 1px solid rgba(2, 132, 199, 0.12);
+            position: relative;
+            z-index: 2;
+        }
+
+        .bovxai-footer-text {
+            font-size: 0.58rem;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: 0.3px;
+        }
+
+        .bovxai-barcode-graphic {
+            font-family: monospace;
+            letter-spacing: 2px;
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .bovxai-card-body {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .bovxai-avatar-column {
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-between;
+            }
+            .bovxai-uid-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #bovxai-id-card, #bovxai-id-card * {
+                visibility: visible;
+            }
+            #bovxai-id-card {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 85.6mm;
+                max-width: none;
+                box-shadow: none;
+                border: 1.5px solid #0284c7;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
     </style>
 </head>
 
@@ -531,6 +850,131 @@
                                 <button class="nav-cta-btn animate-hover-scale" id="btn-signout-large" onclick="handleUserSignOut()" style="font-size: 0.82rem; padding: 9px 16px; background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff !important; border: none; font-weight: 700; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); cursor: pointer; border-radius: 999px;" title="Sign Out of V.A.N.I-xAI">
                                     <i class="fa-solid fa-right-from-bracket"></i> Log Out / Sign Out
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bureau Of V.A.N.I-xAI (BoVxAi) Sovereign ID Card Module -->
+                    <div class="setting-card bovxai-id-card-wrapper" style="margin-top: 24px; padding: 24px; background: #ffffff; border-radius: 24px; border: 1.5px solid rgba(2, 132, 199, 0.22); box-shadow: 0 12px 36px rgba(2, 132, 199, 0.08);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; border-bottom: 1.5px solid rgba(2, 132, 199, 0.1); padding-bottom: 16px;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #0284c7, #6366f1); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
+                                        <i class="fa-solid fa-id-card"></i>
+                                    </div>
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                                            Bureau Of V.A.N.I-xAI (BoVxAi) ID Card
+                                            <span style="font-size: 0.7rem; background: linear-gradient(135deg, #f59e0b, #ea580c); color: #fff; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Official Pass</span>
+                                        </h3>
+                                        <p style="margin: 2px 0 0 0; font-size: 0.85rem; color: #64748b;">Official Sovereign Intelligence Node credential with high-resolution download.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button id="btnDownloadBoVxAiId" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #ffffff !important; border: none; font-weight: 700; padding: 10px 18px; border-radius: 12px; font-size: 0.88rem; box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35); cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-download"></i>
+                                    <span>Download ID Card (HD PNG)</span>
+                                </button>
+                                <button id="btnPrintBoVxAiId" class="nav-cta-btn animate-hover-scale" style="background: #f0fdf4; color: #16a34a !important; border: 1.5px solid rgba(22, 163, 74, 0.3); font-weight: 700; padding: 10px 16px; border-radius: 12px; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-print"></i>
+                                    <span>Print</span>
+                                </button>
+                                <button id="btnCopyBoVxAiUid" class="nav-cta-btn animate-hover-scale" style="background: #f8fafc; color: #475569 !important; border: 1.5px solid #cbd5e1; font-weight: 700; padding: 10px 16px; border-radius: 12px; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span>Copy UID</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Live Card Visual Container (Light, Colorful, Standard ID Card Ratio) -->
+                        <div style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
+                            <div id="bovxai-id-card" class="bovxai-id-card-element">
+                                <!-- Spectrum Ribbon -->
+                                <div class="bovxai-card-spectrum"></div>
+
+                                <!-- Card Header -->
+                                <div class="bovxai-card-header">
+                                    <div class="bovxai-header-left">
+                                        <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" alt="BoVxAi Logo" class="bovxai-card-logo" onerror="this.src='./vani_icon.png'">
+                                        <div>
+                                            <div class="bovxai-card-title">BUREAU OF V.A.N.I-xAI</div>
+                                            <div class="bovxai-card-subtitle">Sovereign Artificial Intelligence Innovation Cell &bull; Bharat</div>
+                                        </div>
+                                    </div>
+                                    <div class="bovxai-header-right">
+                                        <div class="bovxai-hologram-seal">
+                                            <span class="holo-star"><i class="fa-solid fa-shield-halved"></i></span>
+                                            <span class="holo-text">COHORT 2026-27</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card Body -->
+                                <div class="bovxai-card-body">
+                                    <!-- Left: Profile Avatar & Smartcard Chip -->
+                                    <div class="bovxai-avatar-column">
+                                        <div class="bovxai-photo-frame">
+                                            <img id="cardUserPhoto" src="vani_icon.png" alt="User Photo" class="bovxai-card-photo" crossorigin="anonymous">
+                                            <div class="bovxai-photo-badge" title="Verified Sovereign Node"><i class="fa-solid fa-circle-check"></i></div>
+                                        </div>
+                                        <!-- Metallic Smartcard Chip SVG -->
+                                        <div class="bovxai-smart-chip" title="Cryptographic Telemetry Chip">
+                                            <svg width="42" height="32" viewBox="0 0 42 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="42" height="32" rx="5" fill="url(#chipGradSettings)" stroke="#b45309" stroke-width="0.8"/>
+                                                <path d="M0 16H14M28 16H42M14 6V26M28 6V26M14 11H28M14 21H28" stroke="#78350f" stroke-width="0.8" opacity="0.6"/>
+                                                <rect x="18" y="11" width="6" height="10" rx="1.5" fill="#fef3c7" stroke="#b45309" stroke-width="0.6"/>
+                                                <defs>
+                                                    <linearGradient id="chipGradSettings" x1="0" y1="0" x2="42" y2="32" gradientUnits="userSpaceOnUse">
+                                                        <stop stop-color="#fef08a"/>
+                                                        <stop offset="0.5" stop-color="#facc15"/>
+                                                        <stop offset="1" stop-color="#ca8a04"/>
+                                                    </linearGradient>
+                                                </defs>
+                                            </svg>
+                                        </div>
+                                        <div class="bovxai-status-pill">
+                                            <span class="status-pulse-dot"></span> ACTIVE NODE
+                                        </div>
+                                    </div>
+
+                                    <!-- Right: Identity Details -->
+                                    <div class="bovxai-details-column">
+                                        <div class="bovxai-field-group">
+                                            <div class="bovxai-field-label">FULL NAME / SOVEREIGN IDENTITY</div>
+                                            <div id="cardUserName" class="bovxai-field-name">Dhruv Sagar</div>
+                                        </div>
+
+                                        <div class="bovxai-field-group" style="margin-top: 8px;">
+                                            <div class="bovxai-field-label">COMMUNICATION CLEARANCE</div>
+                                            <div id="cardUserEmail" class="bovxai-field-email"><i class="fa-regular fa-envelope" style="color: #0284c7; margin-right: 4px;"></i> user@example.com</div>
+                                        </div>
+
+                                        <div class="bovxai-uid-row">
+                                            <div class="bovxai-field-group" style="flex: 1; min-width: 0;">
+                                                <div class="bovxai-field-label">BoVxAi V.A.N.I-xAI USER UID</div>
+                                                <div class="bovxai-uid-tag">
+                                                    <i class="fa-solid fa-id-badge" style="color: #0284c7;"></i>
+                                                    <span id="cardVaniId" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">V.A.N.I-xAI-DHRU-2026</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Scannable Dynamic QR Code -->
+                                            <div class="bovxai-qr-frame" title="Scan to verify Sovereign credentials">
+                                                <img id="cardQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=VANI-SOVEREIGN" alt="BoVxAi QR Code" class="bovxai-qr-img">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card Footer -->
+                                <div class="bovxai-card-footer">
+                                    <div class="bovxai-footer-text">
+                                        <i class="fa-solid fa-lock" style="color: #0284c7; font-size: 0.7rem; margin-right: 4px;"></i>
+                                        NON-TRANSFERABLE &bull; OFFICIAL GOVT. NEP-2020 AI CREDENTIAL &bull; BUREAU OF V.A.N.I-xAI
+                                    </div>
+                                    <div class="bovxai-barcode-graphic">|||||| |||| |||||||| |||| ||||||</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1443,6 +1887,439 @@
             }
         });
 
+        // --- BoVxAi Sovereign ID Card Engine ---
+        let currentBoVxAiUser = null;
+        let currentBoVxAiData = {};
+        let currentBoVxAiUid = 'V.A.N.I-xAI-SOVEREIGN';
+
+        function updateBoVxAiIdCardUI(user, userData, vaniId) {
+            currentBoVxAiUser = user;
+            currentBoVxAiData = userData || {};
+            currentBoVxAiUid = vaniId || 'V.A.N.I-xAI-SOVEREIGN';
+
+            const name = (userData && userData.name) || (user && user.displayName) || (user && user.email ? user.email.split('@')[0] : 'Sovereign Node');
+            const email = (user && user.email) || (userData && userData.email) || 'sovereign@vani-xai.in';
+            const photo = (user && user.photoURL) || (userData && userData.photoURL) || './vani_icon.png';
+
+            const cardNameEl = document.getElementById('cardUserName');
+            const cardEmailEl = document.getElementById('cardUserEmail');
+            const cardVaniIdEl = document.getElementById('cardVaniId');
+            const cardPhotoEl = document.getElementById('cardUserPhoto');
+            const cardQrEl = document.getElementById('cardQrCode');
+
+            if (cardNameEl) cardNameEl.textContent = name;
+            if (cardEmailEl) cardEmailEl.innerHTML = `<i class="fa-regular fa-envelope" style="color: #0284c7; margin-right: 4px;"></i> ${email}`;
+            if (cardVaniIdEl) cardVaniIdEl.textContent = currentBoVxAiUid;
+            if (cardPhotoEl) {
+                cardPhotoEl.src = photo;
+                cardPhotoEl.onerror = () => { cardPhotoEl.src = './vani_icon.png'; };
+            }
+            if (cardQrEl) {
+                const qrData = encodeURIComponent(`https://vani-nzdrsr.web.app/verify?uid=${currentBoVxAiUid}`);
+                cardQrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${qrData}`;
+            }
+        }
+
+        // Attach ID card button handlers
+        const copyUidBtn = document.getElementById('btnCopyBoVxAiUid');
+        if (copyUidBtn) {
+            copyUidBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(currentBoVxAiUid).then(() => {
+                    if (typeof showToast === 'function') {
+                        showToast(`BoVxAi UID copied: ${currentBoVxAiUid}`);
+                    } else {
+                        alert(`BoVxAi UID copied: ${currentBoVxAiUid}`);
+                    }
+                }).catch(() => {
+                    prompt("Copy your BoVxAi UID:", currentBoVxAiUid);
+                });
+            });
+        }
+
+        const printBtn = document.getElementById('btnPrintBoVxAiId');
+        if (printBtn) {
+            printBtn.addEventListener('click', () => {
+                window.print();
+            });
+        }
+
+        const downloadBtn = document.getElementById('btnDownloadBoVxAiId');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', async () => {
+                await generateAndDownloadBoVxAiCardHD();
+            });
+        }
+
+        // High-Definition Canvas ID Card Generator (1280 x 800 px)
+        async function generateAndDownloadBoVxAiCardHD() {
+            const btn = document.getElementById('btnDownloadBoVxAiId');
+            const originalHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating HD Card...';
+            }
+
+            try {
+                const canvas = document.createElement('canvas');
+                const W = 1280;
+                const H = 800;
+                canvas.width = W;
+                canvas.height = H;
+                const ctx = canvas.getContext('2d');
+
+                // Helper: Rounded rectangle
+                function drawRoundedRect(ctx, x, y, width, height, radius) {
+                    ctx.beginPath();
+                    ctx.moveTo(x + radius, y);
+                    ctx.lineTo(x + width - radius, y);
+                    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                    ctx.lineTo(x + width, y + height - radius);
+                    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                    ctx.lineTo(x + radius, y + height);
+                    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                    ctx.lineTo(x, y + radius);
+                    ctx.quadraticCurveTo(x, y, x + radius, y);
+                    ctx.closePath();
+                }
+
+                // 1. Base Card Background (multi-stop gradient)
+                drawRoundedRect(ctx, 0, 0, W, H, 36);
+                ctx.clip();
+
+                const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+                bgGrad.addColorStop(0, '#ffffff');
+                bgGrad.addColorStop(0.35, '#f0f9ff');
+                bgGrad.addColorStop(0.70, '#faf5ff');
+                bgGrad.addColorStop(1, '#fffbeb');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, W, H);
+
+                // 2. Subtle Micro-Grid Pattern
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.05)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < W; x += 40) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, H);
+                    ctx.stroke();
+                }
+                for (let y = 0; y < H; y += 40) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(W, y);
+                    ctx.stroke();
+                }
+
+                // 3. Top Spectrum Ribbon (Indian/Sovereign theme)
+                const specGrad = ctx.createLinearGradient(0, 0, W, 0);
+                specGrad.addColorStop(0, '#f97316');
+                specGrad.addColorStop(0.25, '#fb923c');
+                specGrad.addColorStop(0.50, '#ffffff');
+                specGrad.addColorStop(0.75, '#0284c7');
+                specGrad.addColorStop(1, '#10b981');
+                ctx.fillStyle = specGrad;
+                ctx.fillRect(0, 0, W, 12);
+
+                // 4. Outer Border
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.45)';
+                ctx.lineWidth = 4;
+                drawRoundedRect(ctx, 2, 2, W - 4, H - 4, 36);
+                ctx.stroke();
+
+                // 5. Load BoVxAi Official Logo
+                try {
+                    const logoImg = new Image();
+                    await new Promise(resolve => {
+                        logoImg.onload = resolve;
+                        logoImg.onerror = () => {
+                            const fallbackLogo = new Image();
+                            fallbackLogo.onload = resolve;
+                            fallbackLogo.onerror = resolve;
+                            fallbackLogo.src = './vani_icon.png';
+                        };
+                        logoImg.src = './Bureau_Of_VANI_xAI_Official_Logo.png';
+                    });
+                    if (logoImg.naturalWidth || logoImg.width) {
+                        ctx.drawImage(logoImg, 50, 42, 90, 90);
+                    }
+                } catch(e) {
+                    console.warn("Logo draw fallback in settings:", e);
+                }
+
+                // 6. Header Typography
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '800 34px "Outfit", sans-serif';
+                ctx.fillText('BUREAU OF V.A.N.I-xAI', 160, 80);
+
+                ctx.fillStyle = '#0284c7';
+                ctx.font = '600 18px "Outfit", sans-serif';
+                ctx.fillText('Sovereign Artificial Intelligence Innovation Cell • Bharat', 160, 112);
+
+                // 7. Header Cohort Pill Badge
+                const pillX = 990;
+                const pillY = 55;
+                drawRoundedRect(ctx, pillX, pillY, 230, 48, 24);
+                ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#b45309';
+                ctx.font = '700 18px "Outfit", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('★ COHORT 2026-27', pillX + 115, pillY + 31);
+
+                // 8. Dashed Separator
+                ctx.setLineDash([8, 8]);
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.25)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(50, 155);
+                ctx.lineTo(W - 50, 155);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // 9. Profile Photo Frame & User Image
+                const photoX = 60;
+                const photoY = 190;
+                const photoSize = 190;
+
+                // Photo frame outer gradient
+                drawRoundedRect(ctx, photoX, photoY, photoSize, photoSize, 28);
+                const photoGrad = ctx.createLinearGradient(photoX, photoY, photoX + photoSize, photoY + photoSize);
+                photoGrad.addColorStop(0, '#0284c7');
+                photoGrad.addColorStop(0.5, '#ec4899');
+                photoGrad.addColorStop(1, '#f59e0b');
+                ctx.fillStyle = photoGrad;
+                ctx.fill();
+
+                // Inner white padding
+                drawRoundedRect(ctx, photoX + 4, photoY + 4, photoSize - 8, photoSize - 8, 24);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+
+                // Try drawing user avatar safely
+                const userName = (currentBoVxAiData.name) || (currentBoVxAiUser && currentBoVxAiUser.displayName) || 'Sovereign Node';
+                let photoDrawn = false;
+
+                const userPhotoUrl = (currentBoVxAiUser && currentBoVxAiUser.photoURL) || (currentBoVxAiData && currentBoVxAiData.photoURL);
+                if (userPhotoUrl) {
+                    try {
+                        const uImg = new Image();
+                        uImg.crossOrigin = 'Anonymous';
+                        await new Promise((res, rej) => {
+                            uImg.onload = res;
+                            uImg.onerror = rej;
+                            uImg.src = userPhotoUrl;
+                        });
+                        ctx.save();
+                        drawRoundedRect(ctx, photoX + 6, photoY + 6, photoSize - 12, photoSize - 12, 22);
+                        ctx.clip();
+                        ctx.drawImage(uImg, photoX + 6, photoY + 6, photoSize - 12, photoSize - 12);
+                        ctx.restore();
+                        photoDrawn = true;
+                    } catch (corsErr) {
+                        console.warn("Avatar CORS blocked for canvas, rendering vector initial badge:", corsErr);
+                    }
+                }
+
+                if (!photoDrawn) {
+                    // Stylized vector avatar
+                    ctx.save();
+                    drawRoundedRect(ctx, photoX + 6, photoY + 6, photoSize - 12, photoSize - 12, 22);
+                    ctx.clip();
+                    const avGrad = ctx.createLinearGradient(photoX, photoY, photoX + photoSize, photoY + photoSize);
+                    avGrad.addColorStop(0, '#0284c7');
+                    avGrad.addColorStop(1, '#6366f1');
+                    ctx.fillStyle = avGrad;
+                    ctx.fillRect(photoX + 6, photoY + 6, photoSize - 12, photoSize - 12);
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '800 68px "Outfit", sans-serif';
+                    ctx.textAlign = 'center';
+                    const initial = (userName.charAt(0) || 'V').toUpperCase();
+                    ctx.fillText(initial, photoX + (photoSize / 2), photoY + (photoSize / 2) + 24);
+                    ctx.restore();
+                }
+
+                // Verified Check Badge on Photo
+                ctx.beginPath();
+                ctx.arc(photoX + photoSize - 10, photoY + photoSize - 10, 18, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(photoX + photoSize - 10, photoY + photoSize - 10, 15, 0, Math.PI * 2);
+                ctx.fillStyle = '#0284c7';
+                ctx.fill();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '700 16px "Outfit", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('✓', photoX + photoSize - 10, photoY + photoSize - 4);
+
+                // 10. Gold Smartcard Chip Graphic
+                const chipX = 85;
+                const chipY = 410;
+                drawRoundedRect(ctx, chipX, chipY, 140, 95, 14);
+                const chipGrad = ctx.createLinearGradient(chipX, chipY, chipX + 140, chipY + 95);
+                chipGrad.addColorStop(0, '#fef08a');
+                chipGrad.addColorStop(0.5, '#facc15');
+                chipGrad.addColorStop(1, '#ca8a04');
+                ctx.fillStyle = chipGrad;
+                ctx.fill();
+                ctx.strokeStyle = '#b45309';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Chip interior lines
+                ctx.strokeStyle = '#78350f';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(chipX, chipY + 47); ctx.lineTo(chipX + 45, chipY + 47);
+                ctx.moveTo(chipX + 95, chipY + 47); ctx.lineTo(chipX + 140, chipY + 47);
+                ctx.moveTo(chipX + 45, chipY + 15); ctx.lineTo(chipX + 45, chipY + 80);
+                ctx.moveTo(chipX + 95, chipY + 15); ctx.lineTo(chipX + 95, chipY + 80);
+                ctx.stroke();
+
+                // 11. Status Badge
+                const statX = 75;
+                const statY = 530;
+                drawRoundedRect(ctx, statX, statY, 160, 36, 18);
+                ctx.fillStyle = '#ecfdf5';
+                ctx.fill();
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(statX + 22, statY + 18, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#10b981';
+                ctx.fill();
+                ctx.fillStyle = '#065f46';
+                ctx.font = '800 15px "Outfit", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText('ACTIVE NODE', statX + 38, statY + 24);
+
+                // 12. Main User Credentials Details
+                const detailX = 290;
+                ctx.textAlign = 'left';
+
+                // Label 1: Full Name
+                ctx.fillStyle = '#64748b';
+                ctx.font = '700 15px "Outfit", sans-serif';
+                ctx.fillText('FULL NAME / SOVEREIGN IDENTITY', detailX, 215);
+
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '800 38px "Outfit", sans-serif';
+                ctx.fillText(userName, detailX, 260);
+
+                // Label 2: Email
+                ctx.fillStyle = '#64748b';
+                ctx.font = '700 15px "Outfit", sans-serif';
+                ctx.fillText('COMMUNICATION CLEARANCE', detailX, 315);
+
+                const userEmail = (currentBoVxAiUser && currentBoVxAiUser.email) || 'user@vani-xai.in';
+                ctx.fillStyle = '#334155';
+                ctx.font = '600 24px "Outfit", sans-serif';
+                ctx.fillText(userEmail, detailX, 350);
+
+                // 13. BoVxAi UID Container Box
+                const uidBoxX = detailX;
+                const uidBoxY = 390;
+                const uidBoxW = 630;
+                const uidBoxH = 120;
+                drawRoundedRect(ctx, uidBoxX, uidBoxY, uidBoxW, uidBoxH, 18);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.35)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#64748b';
+                ctx.font = '700 14px "Outfit", sans-serif';
+                ctx.fillText('BoVxAi V.A.N.I-xAI USER UID (OFFICIAL)', uidBoxX + 22, uidBoxY + 38);
+
+                ctx.fillStyle = '#0284c7';
+                ctx.font = '700 32px "Fira Code", monospace, sans-serif';
+                ctx.fillText(currentBoVxAiUid, uidBoxX + 22, uidBoxY + 86);
+
+                // 14. Scannable QR Code Frame & Image
+                const qrX = 960;
+                const qrY = 370;
+                const qrSize = 160;
+                drawRoundedRect(ctx, qrX, qrY, qrSize, qrSize, 18);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.35)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                try {
+                    const qrImg = new Image();
+                    qrImg.crossOrigin = 'Anonymous';
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent('https://vani-nzdrsr.web.app/verify?uid=' + currentBoVxAiUid)}`;
+                    await Promise.race([
+                        new Promise((res, rej) => {
+                            qrImg.onload = res;
+                            qrImg.onerror = rej;
+                            qrImg.src = qrUrl;
+                        }),
+                        new Promise((_, rej) => setTimeout(() => rej(new Error("QR Timeout")), 2500))
+                    ]);
+                    ctx.drawImage(qrImg, qrX + 10, qrY + 10, qrSize - 20, qrSize - 20);
+                } catch (qrErr) {
+                    console.warn("QR code direct load fallback:", qrErr);
+                    ctx.fillStyle = '#0284c7';
+                    ctx.font = '600 16px "Outfit", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('BoVxAi QR', qrX + 80, qrY + 85);
+                }
+
+                // 15. Card Footer
+                ctx.fillStyle = 'rgba(241, 245, 249, 0.85)';
+                ctx.fillRect(0, H - 55, W, 55);
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.2)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, H - 55);
+                ctx.lineTo(W, H - 55);
+                ctx.stroke();
+
+                ctx.fillStyle = '#64748b';
+                ctx.font = '600 16px "Outfit", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText('NON-TRANSFERABLE • OFFICIAL GOVT. NEP-2020 AI CREDENTIAL • BUREAU OF V.A.N.I-xAI', 40, H - 22);
+
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = 'bold 20px monospace';
+                ctx.textAlign = 'right';
+                ctx.fillText('|||||| |||| |||||||| |||| ||||||', W - 40, H - 22);
+
+                // 16. Trigger Instant PNG Download
+                canvas.toBlob((blob) => {
+                    if (!blob) throw new Error("Canvas blob conversion failed");
+                    const url = URL.createObjectURL(blob);
+                    const safeUid = currentBoVxAiUid.replace(/[^a-zA-Z0-9_-]/g, '_');
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `BoVxAi_ID_Card_${safeUid}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                }, 'image/png');
+
+            } catch (err) {
+                console.error("Error generating HD ID Card:", err);
+                alert("Failed to export ID Card image: " + err.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            }
+        }
+
         // Load profile info if logged in
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -1460,17 +2337,52 @@
 
                 try {
                     const doc = await db.collection('users').doc(user.uid).get();
-                    if (doc.exists) {
-                        const data = doc.data();
-                        if (data.name && nameEl) nameEl.textContent = data.name;
-                        if (data.vaniId && vaniIdEl) {
-                            vaniIdEl.querySelector('span').textContent = data.vaniId;
-                            vaniIdEl.style.display = 'block';
-                        }
-                        if (data.isAdmin === true && adminBtn) {
-                            adminBtn.style.display = 'inline-flex';
-                        }
+                    let userData = doc.exists ? doc.data() : {};
+                    let vaniId = '';
+
+                    if (userData.vaniId) {
+                        vaniId = userData.vaniId;
+                    } else if (userData.bovxaiId) {
+                        vaniId = userData.bovxaiId;
+                    } else if (userData.activationKey) {
+                        vaniId = userData.activationKey;
+                    } else if (userData.pendingActivationKey) {
+                        vaniId = userData.pendingActivationKey;
+                    } else {
+                        const namePart = (userData.name || user.displayName || (user.email ? user.email.split('@')[0] : 'USER'))
+                            .replace(/[^a-zA-Z]/g, '').toUpperCase();
+                        const prefix = (namePart.length >= 4 ? namePart.substring(0, 4) : (namePart + 'VANI').substring(0, 4));
+                        const digits = Math.floor(1000 + Math.random() * 9000);
+                        vaniId = `V.A.N.I-xAI-${prefix}-${digits}`;
                     }
+
+                    // If existing old user doesn't have vaniId saved, persist it
+                    if (!userData.vaniId || userData.vaniId !== vaniId || !userData.bovxaiCardIssued) {
+                        db.collection('users').doc(user.uid).set({
+                            vaniId: vaniId,
+                            bovxaiId: vaniId,
+                            bovxaiCardIssued: true,
+                            name: userData.name || user.displayName || (user.email ? user.email.split('@')[0] : 'Sovereign Node'),
+                            email: user.email || 'N/A',
+                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true }).catch(console.warn);
+                        userData.vaniId = vaniId;
+                        userData.bovxaiId = vaniId;
+                    }
+
+                    if (userData.name && nameEl) nameEl.textContent = userData.name;
+
+                    if (vaniIdEl) {
+                        vaniIdEl.querySelector('span').textContent = vaniId;
+                        vaniIdEl.style.display = 'block';
+                    }
+                    if (userData.isAdmin === true && adminBtn) {
+                        adminBtn.style.display = 'inline-flex';
+                    }
+
+                    // Render the BoVxAi ID Card with authenticated user data
+                    updateBoVxAiIdCardUI(user, userData, vaniId);
+
                 } catch(e) {
                     console.warn("User profile fetch error:", e);
                 }

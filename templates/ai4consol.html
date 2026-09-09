@@ -575,6 +575,298 @@
             display: block;
         }
 
+        .sidebar-idcard-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 6px 10px;
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.08), rgba(99, 102, 241, 0.08));
+            border: 1px solid rgba(2, 132, 199, 0.28);
+            border-radius: 8px;
+            color: #0284c7;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-idcard-btn:hover {
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.16), rgba(99, 102, 241, 0.16));
+            border-color: #0284c7;
+            transform: translateY(-1px);
+        }
+
+        body.dark-mode .sidebar-idcard-btn {
+            background: rgba(2, 132, 199, 0.15);
+            border-color: rgba(2, 132, 199, 0.4);
+            color: #38bdf8;
+        }
+
+        /* --- BoVxAi Sovereign ID Card Light & Colorful Styling --- */
+        .bovxai-id-card-element {
+            width: 100%;
+            max-width: 580px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 35%, #faf5ff 70%, #fffbeb 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(2, 132, 199, 0.35);
+            box-shadow: 0 20px 50px rgba(2, 132, 199, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.8) inset, 0 8px 24px rgba(99, 102, 241, 0.08);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            color: #0f172a;
+            text-align: left;
+        }
+
+        .bovxai-id-card-element::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(2, 132, 199, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(2, 132, 199, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(2, 132, 199, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bovxai-card-spectrum {
+            height: 5px;
+            width: 100%;
+            background: linear-gradient(90deg, #f97316 0%, #fb923c 25%, #ffffff 50%, #0284c7 75%, #10b981 100%);
+            position: relative;
+            z-index: 3;
+        }
+
+        .bovxai-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px 10px 20px;
+            position: relative;
+            z-index: 2;
+            border-bottom: 1px dashed rgba(2, 132, 199, 0.18);
+        }
+
+        .bovxai-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bovxai-card-logo {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(2, 132, 199, 0.25));
+        }
+
+        .bovxai-card-title {
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: 0.8px;
+            color: #0f172a;
+            line-height: 1.15;
+        }
+
+        .bovxai-card-subtitle {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #0284c7;
+            letter-spacing: 0.2px;
+            margin-top: 2px;
+        }
+
+        .bovxai-hologram-seal {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.9), rgba(224, 242, 254, 0.9));
+            border: 1px solid rgba(245, 158, 11, 0.45);
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #b45309;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
+        }
+
+        .bovxai-card-body {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 16px 20px;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .bovxai-avatar-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bovxai-photo-frame {
+            position: relative;
+            width: 86px;
+            height: 86px;
+            border-radius: 16px;
+            padding: 3px;
+            background: linear-gradient(135deg, #0284c7, #ec4899, #f59e0b);
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.22);
+        }
+
+        .bovxai-card-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 13px;
+            object-fit: cover;
+            background: #ffffff;
+            display: block;
+        }
+
+        .bovxai-photo-badge {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            background: #ffffff;
+            border-radius: 50%;
+            color: #0284c7;
+            font-size: 0.95rem;
+            display: flex;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .bovxai-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #ecfdf5;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #065f46;
+            font-size: 0.62rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.5px;
+        }
+
+        .bovxai-details-column {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bovxai-field-group {
+            margin-bottom: 2px;
+        }
+
+        .bovxai-field-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.6px;
+        }
+
+        .bovxai-field-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bovxai-field-email {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #334155;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bovxai-uid-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.75);
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .bovxai-uid-tag {
+            font-family: 'Fira Code', monospace, sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #0369a1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .bovxai-qr-frame {
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            border: 1px solid rgba(2, 132, 199, 0.25);
+            border-radius: 8px;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+
+        .bovxai-qr-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .bovxai-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background: rgba(241, 245, 249, 0.65);
+            border-top: 1px solid rgba(2, 132, 199, 0.12);
+            position: relative;
+            z-index: 2;
+        }
+
+        .bovxai-footer-text {
+            font-size: 0.58rem;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: 0.3px;
+        }
+
+        .bovxai-barcode-graphic {
+            font-family: monospace;
+            letter-spacing: 2px;
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
         /* Sidebar Sign Out Button */
         .sidebar-signout-btn {
             width: 100%;
@@ -1487,13 +1779,17 @@
                 <!-- Student Profile & Sovereignty Telemetry Footer -->
                 <div class="sidebar-footer">
                     <a href="./settings.html" class="sidebar-user-card" title="Click to view Profile &amp; Settings">
-                        <div class="user-avatar-dot">DS</div>
+                        <div class="user-avatar-dot" id="sidebar-user-avatar">DS</div>
                         <div class="user-card-info" style="flex: 1; min-width: 0;">
-                            <span class="user-card-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Dhruv Sagar</span>
+                            <span class="user-card-name" id="sidebar-user-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Dhruv Sagar</span>
                             <span class="user-card-id" id="sidebar-uid-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">V.A.N.I-SOVEREIGN</span>
                         </div>
                         <i class="fa-solid fa-gear" style="color: var(--console-text-muted); font-size: 0.75rem;"></i>
                     </a>
+                    <button id="sidebar-idcard-btn" class="sidebar-idcard-btn" title="View BoVxAi Sovereign ID Card" onclick="openBoVxAiIdCardModal()">
+                        <i class="fa-solid fa-id-card"></i>
+                        <span>BoVxAi ID Card</span>
+                    </button>
                     <button id="btn-signout-sidebar" class="sidebar-signout-btn" title="Sign Out of V.A.N.I-xAI" onclick="openCustomLogoutModal()">
                         <div class="power-vid-container" style="width: 20px; height: 20px; border-color: rgba(244, 63, 94, 0.4);">
                             <video src="./Logout.mp4" autoplay loop muted playsinline class="power-video-elem"></video>
@@ -1699,7 +1995,110 @@
         </div>
     </div>
 
-    <!-- Firebase SDK (Modular v9 Compat) -->
+    <!-- BoVxAi Sovereign ID Card Modal Overlay (Light & Colorful UI) -->
+    <div id="bovxai-idcard-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.85); backdrop-filter:blur(12px); z-index:999999; justify-content:center; align-items:center; padding:16px; box-sizing:border-box;">
+        <div style="width:100%; max-width:640px; background:#ffffff; border-radius:24px; padding:24px; box-shadow:0 25px 70px rgba(0,0,0,0.4); border:1.5px solid rgba(2,132,199,0.3); display:flex; flex-direction:column; gap:16px; animation:slideUpFade 0.4s ease forwards;">
+            <!-- Modal Header -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                <div>
+                    <div style="font-size:1.25rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                        <span>🎉 BoVxAi Sovereign ID Card Generated!</span>
+                    </div>
+                    <p style="margin:4px 0 0 0; color:#64748b; font-size:0.85rem;">Official credentials issued by Bureau Of V.A.N.I-xAI (BoVxAi)</p>
+                </div>
+                <button onclick="closeBoVxAiIdCardModal()" style="border:none; background:#f1f5f9; border-radius:50%; width:32px; height:32px; cursor:pointer; font-weight:bold; color:#64748b; display:flex; align-items:center; justify-content:center;">✕</button>
+            </div>
+
+            <!-- Card Visual Container -->
+            <div style="display:flex; justify-content:center; align-items:center; width:100%;">
+                <div id="modal-bovxai-id-card" class="bovxai-id-card-element" style="max-width:560px; width:100%;">
+                    <div class="bovxai-card-spectrum"></div>
+                    <div class="bovxai-card-header">
+                        <div class="bovxai-header-left">
+                            <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" alt="BoVxAi Logo" class="bovxai-card-logo" onerror="this.src='./vani_icon.png'">
+                            <div>
+                                <div class="bovxai-card-title">BUREAU OF V.A.N.I-xAI</div>
+                                <div class="bovxai-card-subtitle">Sovereign Artificial Intelligence Innovation Cell &bull; Bharat</div>
+                            </div>
+                        </div>
+                        <div class="bovxai-header-right">
+                            <div class="bovxai-hologram-seal">
+                                <span class="holo-star"><i class="fa-solid fa-shield-halved"></i></span>
+                                <span class="holo-text">COHORT 2026-27</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bovxai-card-body">
+                        <div class="bovxai-avatar-column">
+                            <div class="bovxai-photo-frame">
+                                <img id="modalCardUserPhoto" src="./vani_icon.png" alt="User Photo" class="bovxai-card-photo" crossorigin="anonymous">
+                                <div class="bovxai-photo-badge"><i class="fa-solid fa-circle-check"></i></div>
+                            </div>
+                            <div class="bovxai-smart-chip">
+                                <svg width="42" height="32" viewBox="0 0 42 32" fill="none">
+                                    <rect width="42" height="32" rx="5" fill="url(#chipGradModal)" stroke="#b45309" stroke-width="0.8"/>
+                                    <path d="M0 16H14M28 16H42M14 6V26M28 6V26M14 11H28M14 21H28" stroke="#78350f" stroke-width="0.8" opacity="0.6"/>
+                                    <rect x="18" y="11" width="6" height="10" rx="1.5" fill="#fef3c7" stroke="#b45309" stroke-width="0.6"/>
+                                    <defs>
+                                        <linearGradient id="chipGradModal" x1="0" y1="0" x2="42" y2="32" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#fef08a"/><stop offset="0.5" stop-color="#facc15"/><stop offset="1" stop-color="#ca8a04"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="bovxai-status-pill">
+                                <span class="status-pulse-dot"></span> ACTIVE NODE
+                            </div>
+                        </div>
+                        <div class="bovxai-details-column">
+                            <div class="bovxai-field-group">
+                                <div class="bovxai-field-label">FULL NAME / SOVEREIGN IDENTITY</div>
+                                <div id="modalCardUserName" class="bovxai-field-name">Sovereign Node</div>
+                            </div>
+                            <div class="bovxai-field-group" style="margin-top: 8px;">
+                                <div class="bovxai-field-label">COMMUNICATION CLEARANCE</div>
+                                <div id="modalCardUserEmail" class="bovxai-field-email"><i class="fa-regular fa-envelope" style="color:#0284c7; margin-right:4px;"></i> user@vani-xai.in</div>
+                            </div>
+                            <div class="bovxai-uid-row">
+                                <div class="bovxai-field-group" style="flex:1; min-width:0;">
+                                    <div class="bovxai-field-label">BoVxAi V.A.N.I-xAI USER UID</div>
+                                    <div class="bovxai-uid-tag">
+                                        <i class="fa-solid fa-id-badge" style="color:#0284c7;"></i>
+                                        <span id="modalCardVaniId" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">V.A.N.I-xAI-DHRU-2026</span>
+                                    </div>
+                                </div>
+                                <div class="bovxai-qr-frame">
+                                    <img id="modalCardQrCode" src="" alt="BoVxAi QR Code" class="bovxai-qr-img">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bovxai-card-footer">
+                        <div class="bovxai-footer-text">
+                            <i class="fa-solid fa-lock" style="color:#0284c7; font-size:0.7rem; margin-right:4px;"></i>
+                            NON-TRANSFERABLE &bull; OFFICIAL GOVT. NEP-2020 AI CREDENTIAL &bull; BUREAU OF V.A.N.I-xAI
+                        </div>
+                        <div class="bovxai-barcode-graphic">|||||| |||| |||||||| |||| ||||||</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Actions -->
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:8px;">
+                <a href="./settings.html" style="font-size:0.85rem; color:#0284c7; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-sliders"></i> Open Settings Panel
+                </a>
+                <div style="display:flex; gap:10px;">
+                    <button id="btnModalDownloadId" onclick="downloadBoVxAiIdCardFromModal()" class="nav-cta-btn" style="background:linear-gradient(135deg, #0284c7, #2563eb); color:#fff !important; border:none; padding:10px 18px; border-radius:12px; font-size:0.88rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(2,132,199,0.35);">
+                        <i class="fa-solid fa-download"></i> Download HD ID Card (PNG)
+                    </button>
+                    <button onclick="closeBoVxAiIdCardModal()" class="nav-cta-btn" style="background:#f1f5f9; color:#475569 !important; border:1px solid #cbd5e1; padding:10px 18px; border-radius:12px; font-size:0.88rem; font-weight:700; cursor:pointer;">
+                        Enter Console <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
@@ -1757,14 +2156,40 @@
                     return;
                 }
 
-                let vaniId = `V.A.N.I-xAI-${(user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase()}-2026`;
-                let isUserAdmin = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
-
-                if (userDoc.exists) {
-                    const data = userDoc.data();
-                    if (data.vaniId) vaniId = data.vaniId;
-                    if (data.isAdmin === true || data.role === 'admin') isUserAdmin = true;
+                // Resolve official BoVxAi UID for BOTH new and existing old users
+                let vaniId = '';
+                if (userData.vaniId) {
+                    vaniId = userData.vaniId;
+                } else if (userData.bovxaiId) {
+                    vaniId = userData.bovxaiId;
+                } else if (userData.activationKey) {
+                    vaniId = userData.activationKey;
+                } else if (userData.pendingActivationKey) {
+                    vaniId = userData.pendingActivationKey;
+                } else {
+                    const namePart = (userData.name || user.displayName || (user.email ? user.email.split('@')[0] : 'USER'))
+                        .replace(/[^a-zA-Z]/g, '').toUpperCase();
+                    const prefix = (namePart.length >= 4 ? namePart.substring(0, 4) : (namePart + 'VANI').substring(0, 4));
+                    const digits = Math.floor(1000 + Math.random() * 9000);
+                    vaniId = `V.A.N.I-xAI-${prefix}-${digits}`;
                 }
+
+                // If existing old user doesn't have vaniId or card generated in Firestore, persist it now!
+                if (!userData.vaniId || userData.vaniId !== vaniId || !userData.bovxaiCardIssued) {
+                    db.collection('users').doc(user.uid).set({
+                        vaniId: vaniId,
+                        bovxaiId: vaniId,
+                        bovxaiCardIssued: true,
+                        name: userData.name || user.displayName || (user.email ? user.email.split('@')[0] : 'Sovereign Node'),
+                        email: user.email || 'N/A',
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true }).catch(console.warn);
+                    userData.vaniId = vaniId;
+                    userData.bovxaiId = vaniId;
+                }
+
+                let isUserAdmin = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
+                if (userData.isAdmin === true || userData.role === 'admin') isUserAdmin = true;
 
                 // If Admin, expose Admin Control Center in Header, Sidebar, and Popover
                 if (isUserAdmin) {
@@ -1779,7 +2204,39 @@
                 const headerUid = document.getElementById('header-vani-id-text');
                 const sidebarUid = document.getElementById('sidebar-uid-text');
                 if (headerUid) headerUid.textContent = vaniId;
-                if (sidebarUid) sidebarUid.innerHTML = `${vaniId} <i class="fa-regular fa-copy"></i>`;
+                if (sidebarUid) {
+                    sidebarUid.innerHTML = `${vaniId} <i class="fa-regular fa-copy" style="margin-left:4px; font-size:0.75rem;" title="Click to copy BoVxAi UID"></i>`;
+                    sidebarUid.onclick = function(ev) { ev.preventDefault(); ev.stopPropagation(); window.copySidebarUID(); };
+                }
+
+                // Populate sidebar user avatar and name dynamically
+                const displayName = (userData && userData.name) || user.displayName || (user.email ? user.email.split('@')[0] : 'Sovereign Node');
+                const sidebarName = document.getElementById('sidebar-user-name');
+                const sidebarAvatar = document.getElementById('sidebar-user-avatar');
+                if (sidebarName) sidebarName.textContent = displayName;
+                if (sidebarAvatar) {
+                    const initials = displayName.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'V';
+                    sidebarAvatar.textContent = initials;
+                }
+
+                // Cache credentials for ID Card Modal
+                window.currentConsoleUser = user;
+                window.currentConsoleUserData = userData;
+                window.currentConsoleVaniId = vaniId;
+
+                // After full login OR first visit of existing old user: automatically generate & present BoVxAi ID Card Modal
+                const justLoggedIn = sessionStorage.getItem('bovxai_trigger_id_card') === 'true';
+                const cardPresentedLocal = localStorage.getItem('bovxai_card_presented_' + user.uid);
+                const sessionShownKey = 'bovxai_id_card_shown_' + user.uid;
+
+                if (justLoggedIn || !cardPresentedLocal || !sessionStorage.getItem(sessionShownKey)) {
+                    sessionStorage.removeItem('bovxai_trigger_id_card');
+                    sessionStorage.setItem(sessionShownKey, 'true');
+                    localStorage.setItem('bovxai_card_presented_' + user.uid, 'true');
+                    setTimeout(() => {
+                        openBoVxAiIdCardModal();
+                    }, 800);
+                }
 
                 // Initialize Real-time Push Notification Listener
                 initPushNotificationSystem();
@@ -1787,6 +2244,430 @@
                 console.warn("User profile fetch error:", e);
             }
         });
+
+        // Copy Sidebar UID Helper
+        window.copySidebarUID = function() {
+            const uid = window.currentConsoleVaniId || (document.getElementById('sidebar-uid-text')?.textContent || '').trim();
+            if (navigator.clipboard && uid) {
+                navigator.clipboard.writeText(uid).then(() => {
+                    const el = document.getElementById('sidebar-uid-text');
+                    if (el) {
+                        const orig = el.innerHTML;
+                        el.innerHTML = `<span style="color:#10b981; font-weight:700;">Copied! ✓</span>`;
+                        setTimeout(() => { el.innerHTML = orig; }, 1500);
+                    }
+                });
+            }
+        };
+
+        // --- BoVxAi Sovereign ID Card Modal Handlers ---
+        async function openBoVxAiIdCardModal(force) {
+            const modal = document.getElementById('bovxai-idcard-modal');
+            if (!modal) return;
+
+            let user = window.currentConsoleUser || auth.currentUser;
+            let userData = window.currentConsoleUserData || {};
+            let vaniId = window.currentConsoleVaniId;
+
+            // Ensure authenticated user data is available
+            if (!user && auth.currentUser) {
+                user = auth.currentUser;
+            }
+
+            if (user && (!vaniId || Object.keys(userData).length === 0)) {
+                try {
+                    const snap = await db.collection('users').doc(user.uid).get();
+                    if (snap.exists) {
+                        userData = snap.data();
+                        vaniId = userData.vaniId || userData.bovxaiId || userData.activationKey || userData.pendingActivationKey;
+                    }
+                } catch (e) {
+                    console.warn("User data fetch fallback in modal:", e);
+                }
+            }
+
+            if (!vaniId) {
+                const namePart = (userData.name || (user && user.displayName) || (user && user.email ? user.email.split('@')[0] : 'USER'))
+                    .replace(/[^a-zA-Z]/g, '').toUpperCase();
+                const prefix = (namePart.length >= 4 ? namePart.substring(0, 4) : (namePart + 'VANI').substring(0, 4));
+                const digits = Math.floor(1000 + Math.random() * 9000);
+                vaniId = `V.A.N.I-xAI-${prefix}-${digits}`;
+            }
+
+            window.currentConsoleUser = user;
+            window.currentConsoleUserData = userData;
+            window.currentConsoleVaniId = vaniId;
+
+            const name = (userData && userData.name) || (user && user.displayName) || (user && user.email ? user.email.split('@')[0] : 'Sovereign Node');
+            const email = (user && user.email) || (userData && userData.email) || 'sovereign@vani-xai.in';
+            const photo = (user && user.photoURL) || (userData && userData.photoURL) || './vani_icon.png';
+
+            const nameEl = document.getElementById('modalCardUserName');
+            const emailEl = document.getElementById('modalCardUserEmail');
+            const vaniIdEl = document.getElementById('modalCardVaniId');
+            const photoEl = document.getElementById('modalCardUserPhoto');
+            const qrEl = document.getElementById('modalCardQrCode');
+
+            if (nameEl) nameEl.textContent = name;
+            if (emailEl) emailEl.innerHTML = `<i class="fa-regular fa-envelope" style="color:#0284c7; margin-right:4px;"></i> ${email}`;
+            if (vaniIdEl) vaniIdEl.textContent = vaniId;
+            if (photoEl) {
+                photoEl.src = photo;
+                photoEl.onerror = () => { photoEl.src = './vani_icon.png'; };
+            }
+            if (qrEl) {
+                qrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent('https://vani-nzdrsr.web.app/verify?uid=' + vaniId)}`;
+            }
+
+            modal.style.display = 'flex';
+        }
+        window.openBoVxAiIdCardModal = openBoVxAiIdCardModal;
+
+        function closeBoVxAiIdCardModal() {
+            const modal = document.getElementById('bovxai-idcard-modal');
+            if (modal) modal.style.display = 'none';
+        }
+        window.closeBoVxAiIdCardModal = closeBoVxAiIdCardModal;
+
+        async function downloadBoVxAiIdCardFromModal() {
+            const btn = document.getElementById('btnModalDownloadId');
+            const originalHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating HD Card...';
+            }
+
+            try {
+                const user = window.currentConsoleUser || auth.currentUser;
+                const userData = window.currentConsoleUserData || {};
+                const currentBoVxAiUid = window.currentConsoleVaniId || 'V.A.N.I-xAI-SOVEREIGN';
+                const userName = (userData && userData.name) || (user && user.displayName) || 'Sovereign Node';
+                const userEmail = (user && user.email) || 'user@vani-xai.in';
+
+                const canvas = document.createElement('canvas');
+                const W = 1280;
+                const H = 800;
+                canvas.width = W;
+                canvas.height = H;
+                const ctx = canvas.getContext('2d');
+
+                function drawRoundedRect(ctx, x, y, width, height, radius) {
+                    ctx.beginPath();
+                    ctx.moveTo(x + radius, y);
+                    ctx.lineTo(x + width - radius, y);
+                    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                    ctx.lineTo(x + width, y + height - radius);
+                    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                    ctx.lineTo(x + radius, y + height);
+                    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                    ctx.lineTo(x, y + radius);
+                    ctx.quadraticCurveTo(x, y, x + radius, y);
+                    ctx.closePath();
+                }
+
+                drawRoundedRect(ctx, 0, 0, W, H, 36);
+                ctx.clip();
+
+                const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+                bgGrad.addColorStop(0, '#ffffff');
+                bgGrad.addColorStop(0.35, '#f0f9ff');
+                bgGrad.addColorStop(0.70, '#faf5ff');
+                bgGrad.addColorStop(1, '#fffbeb');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, W, H);
+
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.05)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < W; x += 40) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+                }
+                for (let y = 0; y < H; y += 40) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+                }
+
+                const specGrad = ctx.createLinearGradient(0, 0, W, 0);
+                specGrad.addColorStop(0, '#f97316');
+                specGrad.addColorStop(0.25, '#fb923c');
+                specGrad.addColorStop(0.50, '#ffffff');
+                specGrad.addColorStop(0.75, '#0284c7');
+                specGrad.addColorStop(1, '#10b981');
+                ctx.fillStyle = specGrad;
+                ctx.fillRect(0, 0, W, 12);
+
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.45)';
+                ctx.lineWidth = 4;
+                drawRoundedRect(ctx, 2, 2, W - 4, H - 4, 36);
+                try {
+                    const logoImg = new Image();
+                    await new Promise(resolve => {
+                        logoImg.onload = resolve;
+                        logoImg.onerror = () => {
+                            const fallbackLogo = new Image();
+                            fallbackLogo.onload = resolve;
+                            fallbackLogo.onerror = resolve;
+                            fallbackLogo.src = './vani_icon.png';
+                        };
+                        logoImg.src = './Bureau_Of_VANI_xAI_Official_Logo.png';
+                    });
+                    if (logoImg.naturalWidth || logoImg.width) {
+                        ctx.drawImage(logoImg, 50, 42, 90, 90);
+                    }
+                } catch(e) {
+                    console.warn("Logo draw fallback:", e);
+                }
+
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '800 34px "Outfit", sans-serif';
+                ctx.fillText('BUREAU OF V.A.N.I-xAI', 160, 80);
+
+                ctx.fillStyle = '#0284c7';
+                ctx.font = '600 18px "Outfit", sans-serif';
+                ctx.fillText('Sovereign Artificial Intelligence Innovation Cell • Bharat', 160, 112);
+
+                const pillX = 990;
+                const pillY = 55;
+                drawRoundedRect(ctx, pillX, pillY, 230, 48, 24);
+                ctx.fillStyle = 'rgba(254, 243, 199, 0.95)';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#b45309';
+                ctx.font = '700 18px "Outfit", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('★ COHORT 2026-27', pillX + 115, pillY + 31);
+
+                ctx.setLineDash([8, 8]);
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.25)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(50, 155);
+                ctx.lineTo(W - 50, 155);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                const photoX = 60;
+                const photoY = 190;
+                const photoSize = 190;
+
+                drawRoundedRect(ctx, photoX, photoY, photoSize, photoSize, 28);
+                const photoGrad = ctx.createLinearGradient(photoX, photoY, photoX + photoSize, photoY + photoSize);
+                photoGrad.addColorStop(0, '#0284c7');
+                photoGrad.addColorStop(0.5, '#ec4899');
+                photoGrad.addColorStop(1, '#f59e0b');
+                ctx.fillStyle = photoGrad;
+                ctx.fill();
+
+                drawRoundedRect(ctx, photoX + 4, photoY + 4, photoSize - 8, photoSize - 8, 24);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+
+                let photoDrawn = false;
+                const userPhotoUrl = (user && user.photoURL) || (userData && userData.photoURL);
+                if (userPhotoUrl) {
+                    try {
+                        const uImg = new Image();
+                        uImg.crossOrigin = 'Anonymous';
+                        await new Promise((res, rej) => {
+                            uImg.onload = res;
+                            uImg.onerror = rej;
+                            uImg.src = userPhotoUrl;
+                        });
+                        ctx.save();
+                        drawRoundedRect(ctx, photoX + 6, photoY + 6, photoSize - 12, photoSize - 12, 22);
+                        ctx.clip();
+                        ctx.drawImage(uImg, photoX + 6, photoY + 6, photoSize - 12, photoSize - 12);
+                        ctx.restore();
+                        photoDrawn = true;
+                    } catch (corsErr) {
+                        console.warn("Avatar CORS fallback:", corsErr);
+                    }
+                }
+
+                if (!photoDrawn) {
+                    ctx.save();
+                    drawRoundedRect(ctx, photoX + 6, photoY + 6, photoSize - 12, photoSize - 12, 22);
+                    ctx.clip();
+                    const avGrad = ctx.createLinearGradient(photoX, photoY, photoX + photoSize, photoY + photoSize);
+                    avGrad.addColorStop(0, '#0284c7');
+                    avGrad.addColorStop(1, '#6366f1');
+                    ctx.fillStyle = avGrad;
+                    ctx.fillRect(photoX + 6, photoY + 6, photoSize - 12, photoSize - 12);
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '800 68px "Outfit", sans-serif';
+                    ctx.textAlign = 'center';
+                    const initial = (userName.charAt(0) || 'V').toUpperCase();
+                    ctx.fillText(initial, photoX + (photoSize / 2), photoY + (photoSize / 2) + 24);
+                    ctx.restore();
+                }
+
+                ctx.beginPath();
+                ctx.arc(photoX + photoSize - 10, photoY + photoSize - 10, 18, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(photoX + photoSize - 10, photoY + photoSize - 10, 15, 0, Math.PI * 2);
+                ctx.fillStyle = '#0284c7';
+                ctx.fill();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '700 16px "Outfit", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('✓', photoX + photoSize - 10, photoY + photoSize - 4);
+
+                const chipX = 85;
+                const chipY = 410;
+                drawRoundedRect(ctx, chipX, chipY, 140, 95, 14);
+                const chipGrad = ctx.createLinearGradient(chipX, chipY, chipX + 140, chipY + 95);
+                chipGrad.addColorStop(0, '#fef08a');
+                chipGrad.addColorStop(0.5, '#facc15');
+                chipGrad.addColorStop(1, '#ca8a04');
+                ctx.fillStyle = chipGrad;
+                ctx.fill();
+                ctx.strokeStyle = '#b45309';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.strokeStyle = '#78350f';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(chipX, chipY + 47); ctx.lineTo(chipX + 45, chipY + 47);
+                ctx.moveTo(chipX + 95, chipY + 47); ctx.lineTo(chipX + 140, chipY + 47);
+                ctx.moveTo(chipX + 45, chipY + 15); ctx.lineTo(chipX + 45, chipY + 80);
+                ctx.moveTo(chipX + 95, chipY + 15); ctx.lineTo(chipX + 95, chipY + 80);
+                ctx.stroke();
+
+                const statX = 75;
+                const statY = 530;
+                drawRoundedRect(ctx, statX, statY, 160, 36, 18);
+                ctx.fillStyle = '#ecfdf5';
+                ctx.fill();
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(statX + 22, statY + 18, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#10b981';
+                ctx.fill();
+                ctx.fillStyle = '#065f46';
+                ctx.font = '800 15px "Outfit", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText('ACTIVE NODE', statX + 38, statY + 24);
+
+                const detailX = 290;
+                ctx.textAlign = 'left';
+
+                ctx.fillStyle = '#64748b';
+                ctx.font = '700 15px "Outfit", sans-serif';
+                ctx.fillText('FULL NAME / SOVEREIGN IDENTITY', detailX, 215);
+
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '800 38px "Outfit", sans-serif';
+                ctx.fillText(userName, detailX, 260);
+
+                ctx.fillStyle = '#64748b';
+                ctx.font = '700 15px "Outfit", sans-serif';
+                ctx.fillText('COMMUNICATION CLEARANCE', detailX, 315);
+
+                ctx.fillStyle = '#334155';
+                ctx.font = '600 24px "Outfit", sans-serif';
+                ctx.fillText(userEmail, detailX, 350);
+
+                const uidBoxX = detailX;
+                const uidBoxY = 390;
+                const uidBoxW = 630;
+                const uidBoxH = 120;
+                drawRoundedRect(ctx, uidBoxX, uidBoxY, uidBoxW, uidBoxH, 18);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.35)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#64748b';
+                ctx.font = '700 14px "Outfit", sans-serif';
+                ctx.fillText('BoVxAi V.A.N.I-xAI USER UID (OFFICIAL)', uidBoxX + 22, uidBoxY + 38);
+
+                ctx.fillStyle = '#0284c7';
+                ctx.font = '700 32px "Fira Code", monospace, sans-serif';
+                ctx.fillText(currentBoVxAiUid, uidBoxX + 22, uidBoxY + 86);
+
+                const qrX = 960;
+                const qrY = 370;
+                const qrSize = 160;
+                drawRoundedRect(ctx, qrX, qrY, qrSize, qrSize, 18);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.35)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                try {
+                    const qrImg = new Image();
+                    qrImg.crossOrigin = 'Anonymous';
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent('https://vani-nzdrsr.web.app/verify?uid=' + currentBoVxAiUid)}`;
+                    await Promise.race([
+                        new Promise((res, rej) => {
+                            qrImg.onload = res;
+                            qrImg.onerror = rej;
+                            qrImg.src = qrUrl;
+                        }),
+                        new Promise((_, rej) => setTimeout(() => rej(new Error("QR Timeout")), 2500))
+                    ]);
+                    ctx.drawImage(qrImg, qrX + 10, qrY + 10, qrSize - 20, qrSize - 20);
+                } catch (qrErr) {
+                    console.warn("QR code fallback:", qrErr);
+                    ctx.fillStyle = '#0284c7';
+                    ctx.font = '600 16px "Outfit", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('BoVxAi QR', qrX + 80, qrY + 85);
+                }
+
+                ctx.fillStyle = 'rgba(241, 245, 249, 0.85)';
+                ctx.fillRect(0, H - 55, W, 55);
+                ctx.strokeStyle = 'rgba(2, 132, 199, 0.2)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, H - 55);
+                ctx.lineTo(W, H - 55);
+                ctx.stroke();
+
+                ctx.fillStyle = '#64748b';
+                ctx.font = '600 16px "Outfit", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText('NON-TRANSFERABLE • OFFICIAL GOVT. NEP-2020 AI CREDENTIAL • BUREAU OF V.A.N.I-xAI', 40, H - 22);
+
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = 'bold 20px monospace';
+                ctx.textAlign = 'right';
+                ctx.fillText('|||||| |||| |||||||| |||| ||||||', W - 40, H - 22);
+
+                canvas.toBlob((blob) => {
+                    if (!blob) throw new Error("Canvas blob conversion failed");
+                    const url = URL.createObjectURL(blob);
+                    const safeUid = currentBoVxAiUid.replace(/[^a-zA-Z0-9_-]/g, '_');
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `BoVxAi_ID_Card_${safeUid}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                }, 'image/png');
+
+            } catch (err) {
+                console.error("Error generating HD ID Card from modal:", err);
+                alert("Failed to export ID Card image: " + err.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            }
+        }
+        window.downloadBoVxAiIdCardFromModal = downloadBoVxAiIdCardFromModal;
 
         // Sovereign Custom Logout Modal Functions
         function openCustomLogoutModal() {

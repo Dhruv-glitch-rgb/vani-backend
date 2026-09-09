@@ -1420,9 +1420,15 @@
             filtered.forEach(data => {
                 const dateStr = formatTimestamp(data.createdAt || data.lastUpdated || data.timestamp);
                 const tr = document.createElement('tr');
-
                 const userUid = (data.uid || data.id || 'N/A').replace(/"/g, '&quot;');
-                const vaniIdStr = data.vaniId ? String(data.vaniId).replace(/"/g, '&quot;') : '';
+                let resolvedBoVId = data.vaniId || data.bovxaiId || data.activationKey || data.pendingActivationKey || '';
+                if (!resolvedBoVId && userUid !== 'N/A') {
+                    const namePart = (data.name || data.displayName || (data.email ? data.email.split('@')[0] : 'USER')).replace(/[^a-zA-Z]/g, '').toUpperCase();
+                    const prefix = (namePart.length >= 4 ? namePart.substring(0, 4) : (namePart + 'VANI').substring(0, 4));
+                    const digits = Math.floor(1000 + (Math.abs(stringHashCode(userUid)) % 9000));
+                    resolvedBoVId = `V.A.N.I-xAI-${prefix}-${digits}`;
+                }
+                const vaniIdStr = resolvedBoVId ? String(resolvedBoVId).replace(/"/g, '&quot;') : '';
                 const safeName = (data.name || data.displayName || (data.email ? data.email.split('@')[0] : 'Sovereign Node')).replace(/"/g, '&quot;');
                 const safeEmail = (data.email || 'N/A').replace(/"/g, '&quot;');
                 const safePin = (data.pin ? String(data.pin) : (data.securityPin ? String(data.securityPin) : 'NOT SET')).replace(/"/g, '&quot;');
@@ -1472,7 +1478,7 @@
                             <span>${userUid}</span>
                             <i class="fa-regular fa-copy" onclick="navigator.clipboard.writeText('${userUid}'); alert('User UID copied: ${userUid}');" title="Copy UID"></i>
                         </div>
-                        ${vaniIdStr ? `<div class="vani-id-sub"><i class="fa-solid fa-id-badge"></i> ${vaniIdStr}</div>` : ''}
+                        ${vaniIdStr ? `<div class="vani-id-sub" style="cursor:pointer;" onclick="navigator.clipboard.writeText('${vaniIdStr}'); alert('BoVxAi UID copied: ${vaniIdStr}');" title="Click to copy BoVxAi UID"><i class="fa-solid fa-id-badge" style="color:#0284c7;"></i> ${vaniIdStr} <i class="fa-regular fa-copy" style="font-size:0.7rem; opacity:0.8;"></i></div>` : ''}
                     </td>
                     <td data-label="Identity">
                         <div class="user-identity-cell">
@@ -1696,71 +1702,7 @@
             link.click();
             document.body.removeChild(link);
         }
-    </script>
-
-<!-- Dark Mode Toggle Snippet -->
-<style>
-  .dark-mode-toggle-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: var(--accent-indigo, #FF9933);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s, transform 0.2s;
-  }
-  .dark-mode-toggle-btn:hover {
-    transform: scale(1.1);
-  }
-  /* Dark mode overrides */
-  body.dark-mode {
-    --bg-main: #000 url('/inxv_bg.jpg') no-repeat center center fixed;
-    --panel-bg: rgba(20, 10, 10, 0.85);
-    --panel-border: rgba(234, 88, 12, 0.3);
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    --white-glow: #ffffff;
-    --navy-blue: #93c5fd;
-    background: var(--bg-main);
-    background-size: cover !important;
-    color: var(--text-primary);
-  }
-  body.dark-mode .btn-back {
-      background: rgba(0,0,0,0.7);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
-  }
-  body.dark-mode .btn-back:hover {
-      background: rgba(234, 88, 12, 0.2);
-  }
-  body.dark-mode .search-input, body.dark-mode .sort-select {
-      background: rgba(0,0,0,0.7);
-      color: #fff;
-      border-color: rgba(255,255,255,0.2);
-  }
-</style>
-<button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
-  <span id="darkModeIcon">🌙</span>
-</button>
-<script>
-  (function() {
-    const toggleBtn = document.getElementById('darkModeToggle');
-    const body = document.body;
-    const icon = document.getElementById('darkModeIcon');
     
-    // Check local storage for theme preference
-        }
 
         async function submitBan() {
             const id = document.getElementById('banUserId').value;
