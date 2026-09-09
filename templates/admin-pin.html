@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Bureau Quantum Security PIN Gateway | Bureau Of V.A.N.I-xAI</title>
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --cyber-bg: #f4f7fc;
+            --cyber-panel: rgba(255, 255, 255, 0.92);
+            --neon-cyan: #0284c7;
+            --neon-sky: #0ea5e9;
+            --neon-purple: #7c3aed;
+            --neon-magenta: #db2777;
+            --neon-emerald: #059669;
+            --neon-amber: #d97706;
+            --neon-rose: #e11d48;
+            --text-main: #0f172a;
+            --text-dim: #475569;
+            --terminal-bg: #030712;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--cyber-bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px 16px;
+        }
+
+        /* --- Colorful Ambient Floating Lights --- */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.45;
+            animation: floatGlow 14s infinite alternate ease-in-out;
+        }
+        .glow-1 { top: -10%; left: -8%; width: 480px; height: 480px; background: radial-gradient(circle, #fcd34d 0%, rgba(245, 158, 11, 0.35) 50%, transparent 70%); }
+        .glow-2 { top: 15%; right: -10%; width: 520px; height: 520px; background: radial-gradient(circle, #38bdf8 0%, rgba(2, 132, 199, 0.35) 50%, transparent 70%); animation-delay: -3.5s; }
+        .glow-3 { bottom: 5%; left: 8%; width: 500px; height: 500px; background: radial-gradient(circle, #f472b6 0%, rgba(236, 72, 153, 0.3) 50%, transparent 70%); animation-delay: -7s; }
+        .glow-4 { bottom: -12%; right: 10%; width: 460px; height: 460px; background: radial-gradient(circle, #34d399 0%, rgba(16, 185, 129, 0.3) 50%, transparent 70%); animation-delay: -10s; }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(35px, 25px) scale(1.08); }
+            100% { transform: translate(-30px, -20px) scale(0.95); }
+        }
+
+        /* --- Cyber Grid & Laser Scan Overlay --- */
+        .cyber-grid-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+            background-size: 34px 34px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .cyber-laser-beam {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0284c7, #10b981, #f59e0b, #db2777, transparent);
+            box-shadow: 0 0 16px rgba(14, 165, 233, 0.6);
+            opacity: 0.6;
+            z-index: 3;
+            animation: scanLaser 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanLaser {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* --- Main Hacker PIN Card Container --- */
+        .pin-vault-card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            background: var(--cyber-panel);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 28px;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 
+                0 20px 50px rgba(14, 165, 233, 0.12),
+                0 8px 24px rgba(124, 58, 237, 0.08),
+                0 0 0 1px rgba(14, 165, 233, 0.15);
+            padding: 32px 28px 26px;
+            overflow: hidden;
+            animation: vaultIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes vaultIn {
+            0% { opacity: 0; transform: translateY(24px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Top Prismatic Rainbow Ribbon */
+        .pin-vault-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f43f5e, #ec4899, #a855f7, #3b82f6, #06b6d4, #10b981, #f59e0b);
+            background-size: 200% 100%;
+            animation: rainbowShift 3.5s linear infinite;
+        }
+
+        @keyframes rainbowShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        /* --- Header Badge & Emblem --- */
+        .vault-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 22px;
+            width: 100%;
+        }
+
+        .emblem-wrapper {
+            position: relative;
+            width: 74px;
+            height: 74px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .emblem-ring {
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0284c7, #10b981, #f59e0b, #db2777);
+            animation: rotateRing 8s linear infinite;
+            opacity: 0.85;
+            filter: blur(0.5px);
+        }
+
+        @keyframes rotateRing {
+            100% { transform: rotate(360deg); }
+        }
+
+        .emblem-core {
+            position: relative;
+            z-index: 2;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            border: 2px solid #ffffff;
+            overflow: hidden;
+        }
+
+        .emblem-core img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .clearance-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(124, 58, 237, 0.12));
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1.2px;
+            color: #0284c7;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .clearance-pill .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #0284c7;
+            box-shadow: 0 0 8px #0284c7;
+            animation: pulseDot 1.4s infinite alternate;
+        }
+
+        @keyframes pulseDot {
+            0% { opacity: 0.4; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .vault-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.3px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .vault-subtitle {
+            font-size: 0.82rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .target-gate-badge {
+            margin-top: 8px;
+            padding: 5px 12px;
+            background: rgba(241, 245, 249, 0.85);
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            color: #475569;
+            font-family: 'Fira Code', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- Admin Active Identity Chip --- */
+        .admin-id-chip {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .admin-id-chip .user-info {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+        }
+
+        .admin-id-chip img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid #0284c7;
+            object-fit: cover;
+        }
+
+        .admin-id-chip .user-text {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .admin-id-chip .user-email {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .admin-id-chip .user-role {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #059669;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Cyber Terminal Log Bar --- */
+        .terminal-readout {
+            width: 100%;
+            background: #0f172a;
+            color: #38bdf8;
+            border-radius: 12px;
+            padding: 9px 14px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            overflow: hidden;
+        }
+
+        .terminal-readout .prompt-symbol {
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .terminal-readout .status-text {
+            color: #f1f5f9;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .terminal-readout.error {
+            background: #450a0a;
+            border-color: #f43f5e;
+            color: #fda4af;
+        }
+
+        .terminal-readout.error .status-text {
+            color: #fecdd3;
+        }
+
+        .terminal-readout.success {
+            background: #022c22;
+            border-color: #10b981;
+            color: #6ee7b7;
+        }
+
+        .terminal-readout.success .status-text {
+            color: #a7f3d0;
+        }
+
+        /* --- PIN Dots Indicator Display --- */
+        .pin-indicators-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .pin-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .pin-dot.filled {
+            background: linear-gradient(135deg, #0284c7, #7c3aed);
+            border-color: #0284c7;
+            transform: scale(1.18);
+            box-shadow: 0 0 14px rgba(2, 132, 199, 0.55), 0 0 6px rgba(124, 58, 237, 0.4);
+        }
+
+        .pin-dot.error {
+            background: #f43f5e !important;
+            border-color: #f43f5e !important;
+            box-shadow: 0 0 14px rgba(244, 63, 94, 0.6) !important;
+            animation: shakeDots 0.4s ease-in-out;
+        }
+
+        .pin-dot.success {
+            background: #10b981 !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.7) !important;
+            animation: pulseSuccess 0.4s ease-in-out;
+        }
+
+        @keyframes shakeDots {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes pulseSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.35); }
+            100% { transform: scale(1.15); }
+        }
+
+        /* --- Holographic Numeric Keypad --- */
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 20px;
+        }
+
+        .key-btn {
+            height: 60px;
+            background: #ffffff;
+            border: 1.5px solid rgba(226, 232, 240, 0.95);
+            border-radius: 18px;
+            font-size: 1.45rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: #0f172a;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .key-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.2), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .key-btn:hover {
+            border-color: #0284c7;
+            background: #f8faff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.15);
+        }
+
+        .key-btn:hover::after {
+            opacity: 1;
+        }
+
+        .key-btn:active, .key-btn.pressed {
+            transform: scale(0.94);
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(124, 58, 237, 0.15));
+            border-color: #0284c7;
+            box-shadow: 0 0 12px rgba(2, 132, 199, 0.35);
+        }
+
+        .key-btn.action-clear {
+            color: #e11d48;
+            font-size: 1.15rem;
+            background: #fff1f2;
+            border-color: #fecdd3;
+        }
+
+        .key-btn.action-clear:hover {
+            background: #ffe4e6;
+            border-color: #f43f5e;
+            box-shadow: 0 6px 16px rgba(244, 63, 94, 0.18);
+        }
+
+        .key-btn.action-submit {
+            color: #ffffff;
+            background: linear-gradient(135deg, #0284c7, #0ea5e9);
+            border-color: transparent;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+        }
+
+        .key-btn.action-submit:hover {
+            background: linear-gradient(135deg, #0369a1, #0284c7);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+        }
+
+        /* --- Footer Quick Links --- */
+        .vault-footer-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding-top: 12px;
+            border-top: 1px dashed #e2e8f0;
+            font-size: 0.8rem;
+        }
+
+        .vault-footer-link {
+            color: #64748b;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .vault-footer-link:hover {
+            color: #0284c7;
+        }
+
+        /* --- Access Blocked / Sign In Required Modal --- */
+        .auth-gate-banner {
+            display: none;
+            width: 100%;
+            background: #fef2f2;
+            border: 1.5px solid #f87171;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        .auth-gate-banner h4 {
+            color: #991b1b;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .auth-gate-banner p {
+            color: #b91c1c;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .auth-signin-btn {
+            background: linear-gradient(135deg, #e11d48, #be123c);
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(225, 29, 72, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Mesh Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+    <div class="ambient-glow glow-4"></div>
+
+    <!-- Cyber Grid & Laser Scanline -->
+    <div class="cyber-grid-overlay"></div>
+    <div class="cyber-laser-beam"></div>
+
+    <!-- Main PIN Vault Terminal Card -->
+    <main class="pin-vault-card" id="pinVaultCard">
+        
+        <!-- Header -->
+        <header class="vault-header">
+            <div class="emblem-wrapper">
+                <div class="emblem-ring"></div>
+                <div class="emblem-core">
+                    <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" alt="Bureau Emblem" onerror="this.src='./vani_icon.png'">
+                </div>
+            </div>
+
+            <div class="clearance-pill">
+                <span class="pulse-dot"></span>
+                <span>SECURITY CLEARANCE: LEVEL 5</span>
+            </div>
+
+            <h1 class="vault-title">
+                <span>Bureau PIN Gateway</span>
+                <i class="fa-solid fa-shield-halved" style="color: #0284c7; font-size: 1.1rem;"></i>
+            </h1>
+
+            <p class="vault-subtitle">Bureau Of V.A.N.I-xAI &bull; Cryptographic Vault</p>
+
+            <div class="target-gate-badge" id="targetGateBadge">
+                <i class="fa-solid fa-crosshairs" style="color: #0284c7;"></i>
+                <span id="targetGateName">TARGET: Master Admin Command</span>
+            </div>
+        </header>
+
+        <!-- Unauthorized / Sign-In Required Notification -->
+        <div class="auth-gate-banner" id="authGateBanner">
+            <h4 id="authGateTitle"><i class="fa-solid fa-triangle-exclamation"></i> Admin Clearance Required</h4>
+            <p id="authGateDesc">You must authenticate with an official Bureau Administrator identity to enter this gateway.</p>
+            <button class="auth-signin-btn" id="authSignInBtn" onclick="window.location.href='./auth-vani-xai.html'">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Continue
+            </button>
+        </div>
+
+        <!-- Authenticated Admin Identity Chip -->
+        <div class="admin-id-chip" id="adminIdChip" style="display: none;">
+            <div class="user-info">
+                <img id="adminChipAvatar" src="./vani_icon.png" alt="Admin Avatar">
+                <div class="user-text">
+                    <span class="user-email" id="adminChipEmail">official.vanixai.india@gmail.com</span>
+                    <span class="user-role"><i class="fa-solid fa-circle-check" style="font-size: 0.65rem;"></i> Bureau Root Administrator</span>
+                </div>
+            </div>
+            <div style="font-size: 0.85rem; color: #0284c7;">
+                <i class="fa-solid fa-fingerprint"></i>
+            </div>
+        </div>
+
+        <!-- Terminal Output Readout -->
+        <div class="terminal-readout" id="terminalReadout">
+            <span class="prompt-symbol">root@bovxai:~#</span>
+            <span class="status-text" id="terminalStatus">Awaiting Master Security PIN...</span>
+        </div>
+
+        <!-- PIN Dots (4 positions default, auto adapts) -->
+        <div class="pin-indicators-row" id="pinIndicatorsRow">
+            <div class="pin-dot" data-index="0"></div>
+            <div class="pin-dot" data-index="1"></div>
+            <div class="pin-dot" data-index="2"></div>
+            <div class="pin-dot" data-index="3"></div>
+        </div>
+
+        <!-- Numeric Holographic Keypad -->
+        <div class="keypad-grid" id="keypadGrid">
+            <button type="button" class="key-btn" data-key="1">1</button>
+            <button type="button" class="key-btn" data-key="2">2</button>
+            <button type="button" class="key-btn" data-key="3">3</button>
+
+            <button type="button" class="key-btn" data-key="4">4</button>
+            <button type="button" class="key-btn" data-key="5">5</button>
+            <button type="button" class="key-btn" data-key="6">6</button>
+
+            <button type="button" class="key-btn" data-key="7">7</button>
+            <button type="button" class="key-btn" data-key="8">8</button>
+            <button type="button" class="key-btn" data-key="9">9</button>
+
+            <button type="button" class="key-btn action-clear" id="keyClear" title="Clear / Backspace">
+                <i class="fa-solid fa-delete-left"></i>
+            </button>
+            <button type="button" class="key-btn" data-key="0">0</button>
+            <button type="button" class="key-btn action-submit" id="keySubmit" title="Verify PIN">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Footer Actions -->
+        <footer class="vault-footer-actions">
+            <a href="./ai4consol.html" class="vault-footer-link">
+                <i class="fa-solid fa-house"></i> Return to Console
+            </a>
+            <span style="color: #94a3b8; font-size: 0.72rem; font-family: 'Fira Code', monospace;">BoVxAi SEC-L5</span>
+        </footer>
+
+    </main>
+
+    <!-- Core Security & PIN Logic -->
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // State variables
+        let enteredPin = "";
+        let expectedPin = "0419"; // Sovereign default fallback
+        let targetUrl = "admin-vaniXai.html";
+        let isProcessing = false;
+        let isUserAdmin = false;
+        let currentAdminUser = null;
+
+        // Parse query params for redirect target
+        (function parseRedirect() {
+            const params = new URLSearchParams(window.location.search);
+            const redirect = params.get('redirect');
+            const targetBadge = document.getElementById('targetGateName');
+            
+            if (redirect) {
+                targetUrl = redirect;
+                if (redirect.includes('check-user-code')) {
+                    if (targetBadge) targetBadge.textContent = "TARGET: BoVxAi QR Security Scanner";
+                } else if (redirect.includes('admin-vaniXai') || redirect.includes('admin')) {
+                    if (targetBadge) targetBadge.textContent = "TARGET: Sovereign Admin Command";
+                } else {
+                    if (targetBadge) targetBadge.textContent = `TARGET: ${redirect}`;
+                }
+            } else {
+                targetUrl = "admin-vaniXai.html";
+            }
+        })();
+
+        // Web Audio Synthesizer Sounds
+        function playKeyTone(freq = 880) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.13);
+            } catch (e) {}
+        }
+
+        function playSuccessChime() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.22);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + idx * 0.08);
+                    osc.stop(ctx.currentTime + idx * 0.08 + 0.23);
+                });
+            } catch (e) {}
+        }
+
+        function playErrorBuzz() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(110, ctx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.22, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.26);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.28);
+            } catch (e) {}
+        }
+
+        // Haptic feedback
+        function triggerHaptic(pattern = [40]) {
+            if (navigator.vibrate) {
+                try { navigator.vibrate(pattern); } catch (e) {}
+            }
+        }
+
+        // Fetch Master PIN from Firestore
+        async function loadMasterPin() {
+            try {
+                const doc = await db.collection('system_config').doc('admin_pin').get();
+                if (doc.exists && doc.data().pin) {
+                    expectedPin = String(doc.data().pin).trim();
+                    console.log("Master PIN loaded from Firestore");
+                } else {
+                    expectedPin = "0419";
+                    // Initialize document if not present
+                    db.collection('system_config').doc('admin_pin').set({
+                        pin: "0419",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedBy: "system_init"
+                    }, { merge: true }).catch(() => {});
+                }
+            } catch (err) {
+                console.warn("Could not load Firestore PIN, using fallback:", err);
+                expectedPin = "0419";
+            }
+        }
+
+        // Admin Auth Check
+        auth.onAuthStateChanged(async user => {
+            currentAdminUser = user;
+            const authBanner = document.getElementById('authGateBanner');
+            const adminChip = document.getElementById('adminIdChip');
+            const adminAvatar = document.getElementById('adminChipAvatar');
+            const adminEmail = document.getElementById('adminChipEmail');
+
+            if (!user) {
+                isUserAdmin = false;
+                if (authBanner) authBanner.style.display = 'block';
+                if (adminChip) adminChip.style.display = 'none';
+                updateTerminal("AUTHENTICATION_REQUIRED // PLEASE_SIGN_IN", "error");
+                return;
+            }
+
+            // Check admin authorization
+            const isOfficialEmail = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
+            let hasAdminDoc = false;
+
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    if (data.isAdmin === true || data.role === 'admin') {
+                        hasAdminDoc = true;
+                    }
+                }
+            } catch (err) {
+                console.warn("User doc admin check:", err);
+            }
+
+            if (isOfficialEmail || hasAdminDoc) {
+                isUserAdmin = true;
+                if (authBanner) authBanner.style.display = 'none';
+                if (adminChip) {
+                    adminChip.style.display = 'flex';
+                    if (adminEmail) adminEmail.textContent = user.email || 'Admin';
+                    if (adminAvatar) adminAvatar.src = user.photoURL || './vani_icon.png';
+                }
+                updateTerminal("ROOT_ADMIN_VERIFIED // ENTER_SECURITY_PIN", "default");
+                loadMasterPin();
+            } else {
+                isUserAdmin = false;
+                if (authBanner) {
+                    authBanner.style.display = 'block';
+                    const bannerTitle = document.getElementById('authGateTitle');
+                    const bannerDesc = document.getElementById('authGateDesc');
+                    const signInBtn = document.getElementById('authSignInBtn');
+                    if (bannerTitle) bannerTitle.innerHTML = `<i class="fa-solid fa-hand"></i> Access Denied`;
+                    if (bannerDesc) bannerDesc.textContent = `Identity ${user.email} is not authorized for Bureau Root Administration.`;
+                    if (signInBtn) {
+                        signInBtn.innerHTML = `<i class="fa-solid fa-arrow-right-to-bracket"></i> Switch Account`;
+                    }
+                }
+                if (adminChip) adminChip.style.display = 'none';
+                updateTerminal("ACCESS_DENIED // UNAUTHORIZED_IDENTITY", "error");
+            }
+        });
+
+        // Update Terminal Display
+        function updateTerminal(msg, type = "default") {
+            const readout = document.getElementById('terminalReadout');
+            const statusText = document.getElementById('terminalStatus');
+            if (!readout || !statusText) return;
+
+            readout.classList.remove('error', 'success');
+            if (type === 'error') readout.classList.add('error');
+            if (type === 'success') readout.classList.add('success');
+
+            statusText.textContent = msg;
+        }
+
+        // Update PIN dots UI
+        function updatePinDotsUI(status = "") {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.remove('filled', 'error', 'success');
+                if (status === 'error') {
+                    dot.classList.add('error');
+                } else if (status === 'success') {
+                    dot.classList.add('success');
+                } else if (idx < enteredPin.length) {
+                    dot.classList.add('filled');
+                }
+            });
+        }
+
+        // Handle numeric input
+        function handleInputDigit(digit) {
+            if (isProcessing) return;
+            if (!currentAdminUser) {
+                playErrorBuzz();
+                updateTerminal("SIGN_IN_REQUIRED // CANNOT_INPUT", "error");
+                return;
+            }
+            if (!isUserAdmin) {
+                playErrorBuzz();
+                updateTerminal("UNAUTHORIZED_IDENTITY // ACCESS_LOCKED", "error");
+                return;
+            }
+
+            if (enteredPin.length < 8) {
+                enteredPin += digit;
+                const noteFreq = 440 + (parseInt(digit) * 55); // Synthesizer frequency
+                playKeyTone(noteFreq);
+                triggerHaptic([30]);
+                updatePinDotsUI();
+                updateTerminal(`CAPTURING_PIN_BYTE [${enteredPin.length}]...`, "default");
+
+                // Auto submit if reached 4 digits and matches
+                if (enteredPin.length === expectedPin.length) {
+                    setTimeout(verifyPin, 150);
+                }
+            }
+        }
+
+        // Handle Clear / Backspace
+        function handleClear() {
+            if (isProcessing) return;
+            if (enteredPin.length > 0) {
+                enteredPin = enteredPin.slice(0, -1);
+                playKeyTone(350);
+                triggerHaptic([20]);
+                updatePinDotsUI();
+                updateTerminal(enteredPin.length > 0 ? `DELETED_DIGIT [${enteredPin.length}]` : "Awaiting Master Security PIN...", "default");
+            }
+        }
+
+        // Verify Entered PIN
+        async function verifyPin() {
+            if (isProcessing) return;
+            if (!isUserAdmin) {
+                playErrorBuzz();
+                updateTerminal("ACCESS_DENIED // UNAUTHORIZED", "error");
+                return;
+            }
+
+            if (!enteredPin) {
+                updateTerminal("PLEASE_ENTER_PIN", "error");
+                return;
+            }
+
+            isProcessing = true;
+            updateTerminal("VALIDATING_QUANTUM_HASH...", "default");
+
+            // Check against expected PIN
+            if (enteredPin === expectedPin) {
+                // PIN IS VALID!
+                playSuccessChime();
+                triggerHaptic([60, 40, 60]);
+                updatePinDotsUI("success");
+                updateTerminal("ACCESS_GRANTED // DECRYPTING_GATEWAY...", "success");
+
+                // Save authorization session
+                sessionStorage.setItem('bovxai_admin_pin_verified', 'true');
+                sessionStorage.setItem('bovxai_admin_pin_timestamp', Date.now().toString());
+
+                // Audit log in Firestore
+                try {
+                    db.collection('logs').add({
+                        activity: `Admin PIN Gateway Authorized for ${targetUrl}`,
+                        email: currentAdminUser ? currentAdminUser.email : 'Admin',
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    }).catch(() => {});
+                } catch(e) {}
+
+                // Redirect to target
+                setTimeout(() => {
+                    window.location.replace(targetUrl);
+                }, 600);
+
+            } else {
+                // INCORRECT PIN
+                playErrorBuzz();
+                triggerHaptic([100, 50, 100]);
+                updatePinDotsUI("error");
+                updateTerminal("INVALID_PIN // ATTEMPT_RECORDED", "error");
+
+                // Shaking card animation
+                const card = document.getElementById('pinVaultCard');
+                if (card) {
+                    card.style.animation = 'none';
+                    card.offsetHeight; // trigger reflow
+                    card.style.animation = 'shakeDots 0.4s ease-in-out';
+                }
+
+                setTimeout(() => {
+                    enteredPin = "";
+                    updatePinDotsUI();
+                    isProcessing = false;
+                    updateTerminal("Awaiting Master Security PIN...", "default");
+                }, 900);
+            }
+        }
+
+        // Attach Keypad Event Listeners
+        document.querySelectorAll('.key-btn[data-key]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const key = btn.getAttribute('data-key');
+                handleInputDigit(key);
+            });
+        });
+
+        document.getElementById('keyClear').addEventListener('click', handleClear);
+        document.getElementById('keySubmit').addEventListener('click', verifyPin);
+
+        // Physical Keyboard Support
+        window.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9') {
+                handleInputDigit(e.key);
+                highlightVirtualKey(e.key);
+            } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                handleClear();
+                highlightVirtualKey('clear');
+            } else if (e.key === 'Enter') {
+                verifyPin();
+                highlightVirtualKey('submit');
+            } else if (e.key === 'Escape') {
+                enteredPin = "";
+                updatePinDotsUI();
+                updateTerminal("PIN_BUFFER_PURGED", "default");
+            }
+        });
+
+        function highlightVirtualKey(key) {
+            let targetBtn = null;
+            if (key === 'clear') targetBtn = document.getElementById('keyClear');
+            else if (key === 'submit') targetBtn = document.getElementById('keySubmit');
+            else targetBtn = document.querySelector(`.key-btn[data-key="${key}"]`);
+
+            if (targetBtn) {
+                targetBtn.classList.add('pressed');
+                setTimeout(() => targetBtn.classList.remove('pressed'), 140);
+            }
+        }
+    </script>
+</body>
+</html>

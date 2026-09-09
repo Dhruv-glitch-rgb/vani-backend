@@ -481,8 +481,13 @@
                 <p>Official Admin Verifier</p>
             </div>
         </div>
-        <div class="admin-pill">
-            <i class="fa-solid fa-shield-halved"></i> ADMIN
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <button type="button" onclick="lockSession()" class="admin-pill" style="cursor: pointer; border: 1px solid rgba(244, 63, 94, 0.4); background: rgba(244, 63, 94, 0.15); color: #f43f5e;" title="Lock Admin Session">
+                <i class="fa-solid fa-lock"></i> Lock
+            </button>
+            <div class="admin-pill">
+                <i class="fa-solid fa-shield-halved"></i> ADMIN
+            </div>
         </div>
     </header>
 
@@ -805,8 +810,62 @@
             }
         }
 
-        // Start on load
-        window.addEventListener('DOMContentLoaded', () => {
+        // Security Gate: Master PIN + Admin Auth Enforced
+        const isPinVerified = sessionStorage.getItem('bovxai_admin_pin_verified') === 'true';
+        if (!isPinVerified) {
+            window.location.replace('admin-pin.html?redirect=check-user-code.html');
+        }
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function lockSession() {
+            sessionStorage.removeItem('bovxai_admin_pin_verified');
+            window.location.replace('admin-pin.html?redirect=check-user-code.html');
+        }
+
+        // Verify Admin Authorization before camera starts
+        auth.onAuthStateChanged(async user => {
+            if (!user) {
+                window.location.replace('admin-pin.html?redirect=check-user-code.html');
+                return;
+            }
+            const isOfficialEmail = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
+            let isAdmin = isOfficialEmail;
+
+            if (!isAdmin) {
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        const data = userDoc.data();
+                        if (data.isAdmin === true || data.role === 'admin') {
+                            isAdmin = true;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Admin verification check error:", e);
+                }
+            }
+
+            if (!isAdmin) {
+                alert("Access Denied: Only Bureau Administrators can access the QR Security Scanner.");
+                window.location.replace('ai4consol.html');
+                return;
+            }
+
+            // Both Master PIN and Admin Auth Verified: start scanner
             startCameraScanner();
         });
 

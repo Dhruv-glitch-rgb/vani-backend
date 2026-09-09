@@ -989,6 +989,12 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="btn-console-back" onclick="openChangePinModal()" title="Manage Master Security PIN" style="border-color: rgba(245, 158, 11, 0.4); color: #d97706;">
+                    <i class="fa-solid fa-key"></i> Master PIN
+                </button>
+                <button class="btn-console-back" onclick="window.location.href='./check-user-code.html'" title="Open QR Code Security Scanner" style="border-color: rgba(6, 182, 212, 0.4); color: #0284c7;">
+                    <i class="fa-solid fa-qrcode"></i> Scan QR
+                </button>
                 <button class="btn-console-back" onclick="window.location.href='./ai4consol.html'" title="Return to Sovereign Console">
                     <i class="fa-solid fa-satellite-dish"></i> Console Deck
                 </button>
@@ -1057,6 +1063,7 @@
                 </div>
                 <div class="jewel-btn-row">
                     <button class="btn-jewel scan" onclick="window.location.href='/check-user-code.html'" style="background: rgba(6, 182, 212, 0.2); border-color: rgba(6, 182, 212, 0.5); color: #38bdf8;"><i class="fa-solid fa-qrcode"></i> Scan BoVxAi QR</button>
+                    <button class="btn-jewel pin-btn" onclick="openChangePinModal()" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.5); color: #d97706;"><i class="fa-solid fa-key"></i> Security PIN</button>
                     <button class="btn-jewel notif" onclick="openDispatchNotificationModal()"><i class="fa-solid fa-bullhorn"></i> Push Alert</button>
                     <button class="btn-jewel portal" onclick="window.location.href='/invx-subusers.html'"><i class="fa-solid fa-users"></i> InAixVAi Portal</button>
                     <button class="btn-jewel premium" onclick="window.location.href='/admin-premium-requests.html'"><i class="fa-solid fa-file-invoice-dollar"></i> Premium Requests</button>
@@ -1196,6 +1203,50 @@
         </div>
     </div>
 
+    <!-- Change Master Security PIN Modal -->
+    <div class="modal-overlay" id="changePinModal" onclick="if(event.target === this) closeModal('changePinModal');">
+        <div class="custom-modal" style="max-width: 440px; border-color: rgba(245, 158, 11, 0.5); box-shadow: 0 0 35px rgba(245, 158, 11, 0.25);">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 14px;">
+                <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(245, 158, 11, 0.15); border: 2px solid #f59e0b; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #f59e0b;">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+            </div>
+            <h3 class="modal-title" style="color: #d97706; font-size: 1.4rem;">Master Security PIN</h3>
+            <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px; text-align: center;">
+                Configure the Master Security PIN required to unlock <strong>Admin HQ</strong> and the <strong>QR Scanner (check-user-code)</strong>.
+            </p>
+
+            <div style="background: rgba(241, 245, 249, 0.95); border: 1px dashed #cbd5e1; border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #334155; display: flex; justify-content: space-between; align-items: center;">
+                <span>ACTIVE STATUS:</span>
+                <span id="currentPinStatus" style="font-weight: 700; color: #059669;"><i class="fa-solid fa-lock"></i> ACTIVE</span>
+            </div>
+
+            <form onsubmit="submitChangePin(event)">
+                <div style="margin-bottom: 14px; text-align: left;">
+                    <label style="font-size: 0.75rem; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">CURRENT SECURITY PIN</label>
+                    <input type="password" id="currentMasterPinInput" class="modal-input" placeholder="Enter current PIN" required autocomplete="off" style="width: 100%; letter-spacing: 3px; font-family: 'Fira Code', monospace;">
+                </div>
+
+                <div style="margin-bottom: 14px; text-align: left;">
+                    <label style="font-size: 0.75rem; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">NEW SECURITY PIN (min 4 digits)</label>
+                    <input type="password" id="newMasterPinInput" class="modal-input" placeholder="Enter new PIN" required autocomplete="off" style="width: 100%; letter-spacing: 3px; font-family: 'Fira Code', monospace;">
+                </div>
+
+                <div style="margin-bottom: 18px; text-align: left;">
+                    <label style="font-size: 0.75rem; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">CONFIRM NEW SECURITY PIN</label>
+                    <input type="password" id="confirmMasterPinInput" class="modal-input" placeholder="Re-enter new PIN" required autocomplete="off" style="width: 100%; letter-spacing: 3px; font-family: 'Fira Code', monospace;">
+                </div>
+
+                <div class="modal-actions" style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="modal-btn cancel" onclick="closeModal('changePinModal')">Cancel</button>
+                    <button type="submit" class="modal-btn confirm" style="background: linear-gradient(135deg, #d97706, #b45309); color: #fff; border: none; font-weight: 700;">
+                        <i class="fa-solid fa-shield-check"></i> Save New PIN
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -1213,11 +1264,33 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Enforce Admin PIN Verification
+        const isPinVerified = sessionStorage.getItem('bovxai_admin_pin_verified') === 'true';
+        if (!isPinVerified) {
+            window.location.replace('admin-pin.html?redirect=admin-vaniXai.html');
+        }
 
-
-        // Enforce Admin Access
-        auth.onAuthStateChanged(user => {
+        // Enforce Admin Identity Access
+        auth.onAuthStateChanged(async user => {
             if (user) {
+                const isOfficial = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
+                let isAdmin = isOfficial;
+
+                if (!isAdmin) {
+                    try {
+                        const doc = await db.collection('users').doc(user.uid).get();
+                        if (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin')) {
+                            isAdmin = true;
+                        }
+                    } catch(e) {}
+                }
+
+                if (!isAdmin) {
+                    alert("Access Denied: Only Bureau Administrators can access the Sovereign Admin HQ.");
+                    window.location.href = './ai4consol.html';
+                    return;
+                }
+
                 // Access Granted for active session
                 const adminContent = document.getElementById('admin-content');
                 if (adminContent) adminContent.style.display = 'block';
@@ -1833,6 +1906,73 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        // --- Master Security PIN Management ---
+        async function openChangePinModal() {
+            document.getElementById('currentMasterPinInput').value = '';
+            document.getElementById('newMasterPinInput').value = '';
+            document.getElementById('confirmMasterPinInput').value = '';
+            
+            try {
+                const pinDoc = await db.collection('system_config').doc('admin_pin').get();
+                const statusEl = document.getElementById('currentPinStatus');
+                if (statusEl) {
+                    if (pinDoc.exists && pinDoc.data().pin) {
+                        statusEl.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b981;"></i> ACTIVE (${pinDoc.data().pin.length}-DIGIT)`;
+                    } else {
+                        statusEl.innerHTML = `<i class="fa-solid fa-shield-halved" style="color: #d97706;"></i> DEFAULT (0419)`;
+                    }
+                }
+            } catch(e) {
+                console.warn("Error fetching PIN status:", e);
+            }
+
+            document.getElementById('changePinModal').style.display = 'flex';
+        }
+
+        async function submitChangePin(e) {
+            e.preventDefault();
+            const curr = document.getElementById('currentMasterPinInput').value.trim();
+            const next = document.getElementById('newMasterPinInput').value.trim();
+            const conf = document.getElementById('confirmMasterPinInput').value.trim();
+
+            if (!curr) return alert("Please enter your current Master Security PIN.");
+            if (!next || next.length < 4) return alert("New Security PIN must be at least 4 characters.");
+            if (next !== conf) return alert("New Security PIN and Confirmation PIN do not match.");
+
+            try {
+                // Fetch active PIN
+                let realPin = "0419";
+                const pinDoc = await db.collection('system_config').doc('admin_pin').get();
+                if (pinDoc.exists && pinDoc.data().pin) {
+                    realPin = String(pinDoc.data().pin).trim();
+                }
+
+                if (curr !== realPin) {
+                    return alert("Incorrect Current PIN! Verification failed.");
+                }
+
+                // Update PIN in Firestore
+                await db.collection('system_config').doc('admin_pin').set({
+                    pin: next,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedBy: auth.currentUser ? auth.currentUser.email : 'Admin'
+                }, { merge: true });
+
+                // Log audit trail
+                await db.collection('logs').add({
+                    activity: "Master Security PIN updated by Administrator",
+                    email: auth.currentUser ? auth.currentUser.email : 'Admin',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                closeModal('changePinModal');
+                alert("✅ Master Security PIN successfully updated! The new PIN is now active for both Admin HQ and the check-user-code page.");
+            } catch(err) {
+                console.error("Error updating admin PIN:", err);
+                alert("Failed to update PIN: " + err.message);
+            }
         }
     </script>
 

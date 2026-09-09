@@ -238,6 +238,14 @@
         "destination": "/ai4.html"
       },
       {
+        "source": "/admin-pin",
+        "destination": "/admin-pin.html"
+      },
+      {
+        "source": "/admin-pin/**",
+        "destination": "/admin-pin.html"
+      },
+      {
         "source": "/check-user-code",
         "destination": "/check-user-code.html"
       },
