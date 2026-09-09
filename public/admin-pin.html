@@ -20,7 +20,7 @@
     <style>
         :root {
             --cyber-bg: #f4f7fc;
-            --cyber-panel: rgba(255, 255, 255, 0.92);
+            --cyber-panel: rgba(255, 255, 255, 0.94);
             --neon-cyan: #0284c7;
             --neon-sky: #0ea5e9;
             --neon-purple: #7c3aed;
@@ -30,7 +30,7 @@
             --neon-rose: #e11d48;
             --text-main: #0f172a;
             --text-dim: #475569;
-            --terminal-bg: #030712;
+            --terminal-bg: #090d16;
         }
 
         * {
@@ -52,28 +52,28 @@
             justify-content: center;
             position: relative;
             overflow-x: hidden;
-            padding: 20px 16px;
+            padding: 24px 20px;
         }
 
         /* --- Colorful Ambient Floating Lights --- */
         .ambient-glow {
             position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
+            filter: blur(110px);
             pointer-events: none;
             z-index: 1;
             opacity: 0.45;
             animation: floatGlow 14s infinite alternate ease-in-out;
         }
-        .glow-1 { top: -10%; left: -8%; width: 480px; height: 480px; background: radial-gradient(circle, #fcd34d 0%, rgba(245, 158, 11, 0.35) 50%, transparent 70%); }
-        .glow-2 { top: 15%; right: -10%; width: 520px; height: 520px; background: radial-gradient(circle, #38bdf8 0%, rgba(2, 132, 199, 0.35) 50%, transparent 70%); animation-delay: -3.5s; }
-        .glow-3 { bottom: 5%; left: 8%; width: 500px; height: 500px; background: radial-gradient(circle, #f472b6 0%, rgba(236, 72, 153, 0.3) 50%, transparent 70%); animation-delay: -7s; }
-        .glow-4 { bottom: -12%; right: 10%; width: 460px; height: 460px; background: radial-gradient(circle, #34d399 0%, rgba(16, 185, 129, 0.3) 50%, transparent 70%); animation-delay: -10s; }
+        .glow-1 { top: -10%; left: -6%; width: 540px; height: 540px; background: radial-gradient(circle, #fcd34d 0%, rgba(245, 158, 11, 0.35) 45%, transparent 70%); }
+        .glow-2 { top: 12%; right: -8%; width: 580px; height: 580px; background: radial-gradient(circle, #38bdf8 0%, rgba(2, 132, 199, 0.35) 45%, transparent 70%); animation-delay: -3.5s; }
+        .glow-3 { bottom: 2%; left: 10%; width: 520px; height: 520px; background: radial-gradient(circle, #f472b6 0%, rgba(236, 72, 153, 0.3) 45%, transparent 70%); animation-delay: -7s; }
+        .glow-4 { bottom: -10%; right: 12%; width: 500px; height: 500px; background: radial-gradient(circle, #34d399 0%, rgba(16, 185, 129, 0.3) 45%, transparent 70%); animation-delay: -10s; }
 
         @keyframes floatGlow {
             0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(35px, 25px) scale(1.08); }
-            100% { transform: translate(-30px, -20px) scale(0.95); }
+            50% { transform: translate(40px, 25px) scale(1.08); }
+            100% { transform: translate(-35px, -20px) scale(0.95); }
         }
 
         /* --- Cyber Grid & Laser Scan Overlay --- */
@@ -94,7 +94,7 @@
             height: 2px;
             background: linear-gradient(90deg, transparent, #0284c7, #10b981, #f59e0b, #db2777, transparent);
             box-shadow: 0 0 16px rgba(14, 165, 233, 0.6);
-            opacity: 0.6;
+            opacity: 0.65;
             z-index: 3;
             animation: scanLaser 6s ease-in-out infinite;
             pointer-events: none;
@@ -102,32 +102,31 @@
 
         @keyframes scanLaser {
             0% { top: 0%; opacity: 0; }
-            10% { opacity: 0.7; }
-            90% { opacity: 0.7; }
+            10% { opacity: 0.75; }
+            90% { opacity: 0.75; }
             100% { top: 100%; opacity: 0; }
         }
 
-        /* --- Main Hacker PIN Card Container --- */
+        /* --- Main Hacker PIN Console Card (Side-by-Side on Desktop/Tablet) --- */
         .pin-vault-card {
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 440px;
+            max-width: 900px;
             background: var(--cyber-panel);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 28px;
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-radius: 30px;
             border: 1.5px solid rgba(255, 255, 255, 0.95);
             box-shadow: 
-                0 20px 50px rgba(14, 165, 233, 0.12),
-                0 8px 24px rgba(124, 58, 237, 0.08),
-                0 0 0 1px rgba(14, 165, 233, 0.15);
-            padding: 32px 28px 26px;
+                0 25px 60px rgba(14, 165, 233, 0.14),
+                0 10px 30px rgba(124, 58, 237, 0.09),
+                0 0 0 1px rgba(14, 165, 233, 0.18);
+            padding: 34px 36px 24px;
             overflow: hidden;
             animation: vaultIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
         @keyframes vaultIn {
@@ -135,12 +134,12 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Top Prismatic Rainbow Ribbon */
+        /* Top Prismatic Rainbow Accent Ribbon */
         .pin-vault-card::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 4px;
+            height: 4.5px;
             background: linear-gradient(90deg, #f43f5e, #ec4899, #a855f7, #3b82f6, #06b6d4, #10b981, #f59e0b);
             background-size: 200% 100%;
             animation: rainbowShift 3.5s linear infinite;
@@ -151,20 +150,65 @@
             100% { background-position: 200% 0%; }
         }
 
-        /* --- Header Badge & Emblem --- */
+        /* --- Two Column Side-by-Side Flex Layout --- */
+        .vault-split-body {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 36px;
+            width: 100%;
+        }
+
+        /* Left Column: Red Box Content (Identity, Emblem, Badges, Terminal) */
+        .vault-info-col {
+            flex: 1.15;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Vertical Cyber Divider */
+        .vault-vertical-divider {
+            width: 1.5px;
+            background: linear-gradient(180deg, 
+                transparent, 
+                rgba(14, 165, 233, 0.4) 15%, 
+                rgba(124, 58, 237, 0.4) 50%, 
+                rgba(16, 185, 129, 0.4) 85%, 
+                transparent
+            );
+            align-self: stretch;
+            border-radius: 2px;
+        }
+
+        /* Right Column: Keypad & PIN Dots */
+        .vault-keypad-col {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Left Column Elements --- */
         .vault-header {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            margin-bottom: 22px;
+            margin-bottom: 16px;
             width: 100%;
         }
 
         .emblem-wrapper {
             position: relative;
-            width: 74px;
-            height: 74px;
+            width: 78px;
+            height: 78px;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -173,11 +217,11 @@
 
         .emblem-ring {
             position: absolute;
-            inset: -4px;
+            inset: -5px;
             border-radius: 50%;
             background: linear-gradient(135deg, #0284c7, #10b981, #f59e0b, #db2777);
             animation: rotateRing 8s linear infinite;
-            opacity: 0.85;
+            opacity: 0.9;
             filter: blur(0.5px);
         }
 
@@ -188,14 +232,14 @@
         .emblem-core {
             position: relative;
             z-index: 2;
-            width: 72px;
-            height: 72px;
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
             background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             border: 2px solid #ffffff;
             overflow: hidden;
         }
@@ -210,9 +254,9 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 12px;
+            padding: 4px 14px;
             background: linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(124, 58, 237, 0.12));
-            border: 1px solid rgba(14, 165, 233, 0.3);
+            border: 1px solid rgba(14, 165, 233, 0.35);
             border-radius: 20px;
             font-size: 0.72rem;
             font-weight: 800;
@@ -238,7 +282,7 @@
         }
 
         .vault-title {
-            font-size: 1.35rem;
+            font-size: 1.42rem;
             font-weight: 800;
             color: #0f172a;
             letter-spacing: -0.3px;
@@ -249,7 +293,7 @@
         }
 
         .vault-subtitle {
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             color: #64748b;
             font-weight: 500;
         }
@@ -257,7 +301,7 @@
         .target-gate-badge {
             margin-top: 8px;
             padding: 5px 12px;
-            background: rgba(241, 245, 249, 0.85);
+            background: rgba(241, 245, 249, 0.9);
             border: 1px dashed #cbd5e1;
             border-radius: 8px;
             font-size: 0.76rem;
@@ -272,26 +316,27 @@
         .admin-id-chip {
             width: 100%;
             background: #ffffff;
-            border: 1px solid rgba(14, 165, 233, 0.25);
-            border-radius: 12px;
-            padding: 8px 12px;
+            border: 1.5px solid rgba(14, 165, 233, 0.28);
+            border-radius: 14px;
+            padding: 9px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 18px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            margin-bottom: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
 
         .admin-id-chip .user-info {
             display: flex;
             align-items: center;
-            gap: 9px;
+            gap: 10px;
             min-width: 0;
+            text-align: left;
         }
 
         .admin-id-chip img {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 1.5px solid #0284c7;
             object-fit: cover;
@@ -304,7 +349,7 @@
         }
 
         .admin-id-chip .user-email {
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #0f172a;
             white-space: nowrap;
@@ -314,28 +359,54 @@
 
         .admin-id-chip .user-role {
             font-size: 0.68rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #059669;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        /* --- Cyber Terminal Log Bar --- */
+        /* --- Cyber Terminal Output Box --- */
         .terminal-readout {
             width: 100%;
-            background: #0f172a;
-            color: #38bdf8;
-            border-radius: 12px;
-            padding: 9px 14px;
+            background: var(--terminal-bg);
+            border-radius: 14px;
+            padding: 10px 14px;
             font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
+            font-size: 0.76rem;
+            margin-bottom: 14px;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(15, 23, 42, 0.06);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .terminal-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+            font-size: 0.68rem;
+            color: #64748b;
+        }
+
+        .terminal-meta-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        .terminal-main-row {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 18px;
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            overflow: hidden;
+            color: #38bdf8;
         }
 
         .terminal-readout .prompt-symbol {
@@ -351,10 +422,23 @@
             text-overflow: ellipsis;
         }
 
+        .cursor-blink {
+            display: inline-block;
+            color: #38bdf8;
+            animation: cursorBlink 1s infinite step-start;
+        }
+
+        @keyframes cursorBlink {
+            50% { opacity: 0; }
+        }
+
         .terminal-readout.error {
-            background: #450a0a;
+            background: #38070d;
             border-color: #f43f5e;
-            color: #fda4af;
+        }
+
+        .terminal-readout.error .prompt-symbol {
+            color: #f43f5e;
         }
 
         .terminal-readout.error .status-text {
@@ -362,32 +446,70 @@
         }
 
         .terminal-readout.success {
-            background: #022c22;
+            background: #04241a;
             border-color: #10b981;
-            color: #6ee7b7;
+        }
+
+        .terminal-readout.success .prompt-symbol {
+            color: #34d399;
         }
 
         .terminal-readout.success .status-text {
             color: #a7f3d0;
         }
 
-        /* --- PIN Dots Indicator Display --- */
+        /* Cyber Security Telemetry Badges */
+        .cyber-telemetry-tags {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .cyber-pill-tag {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.68rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(241, 245, 249, 0.9);
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        /* --- Right Column Keypad Header --- */
+        .keypad-header-tag {
+            font-size: 0.76rem;
+            font-weight: 800;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            color: #475569;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- PIN Dots Row --- */
         .pin-indicators-row {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 14px;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
 
         .pin-dot {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: #ffffff;
             border: 2px solid #cbd5e1;
             transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             position: relative;
         }
 
@@ -431,15 +553,15 @@
             gap: 12px;
             width: 100%;
             max-width: 320px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .key-btn {
-            height: 60px;
+            height: 58px;
             background: #ffffff;
             border: 1.5px solid rgba(226, 232, 240, 0.95);
             border-radius: 18px;
-            font-size: 1.45rem;
+            font-size: 1.42rem;
             font-weight: 700;
             font-family: 'Space Grotesk', sans-serif;
             color: #0f172a;
@@ -458,7 +580,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle, rgba(14, 165, 233, 0.2), transparent 70%);
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.22), transparent 70%);
             opacity: 0;
             transition: opacity 0.2s;
         }
@@ -507,13 +629,23 @@
             box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
         }
 
-        /* --- Footer Quick Links --- */
+        .keypad-tip {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-family: 'Fira Code', monospace;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- Footer Full Width Actions --- */
         .vault-footer-actions {
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            padding-top: 12px;
+            margin-top: 24px;
+            padding-top: 14px;
             border-top: 1px dashed #e2e8f0;
             font-size: 0.8rem;
         }
@@ -533,44 +665,66 @@
             color: #0284c7;
         }
 
-        /* --- Access Blocked / Sign In Required Modal --- */
+        /* --- Access Blocked / Sign In Required Banner --- */
         .auth-gate-banner {
             display: none;
             width: 100%;
             background: #fef2f2;
             border: 1.5px solid #f87171;
             border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 18px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
             text-align: center;
         }
 
         .auth-gate-banner h4 {
             color: #991b1b;
-            font-size: 0.95rem;
-            margin-bottom: 4px;
+            font-size: 0.92rem;
+            margin-bottom: 3px;
             font-weight: 700;
         }
 
         .auth-gate-banner p {
             color: #b91c1c;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
+            font-size: 0.78rem;
+            margin-bottom: 8px;
         }
 
         .auth-signin-btn {
             background: linear-gradient(135deg, #e11d48, #be123c);
             color: #ffffff;
             border: none;
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: 10px;
             font-weight: 700;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             box-shadow: 0 4px 10px rgba(225, 29, 72, 0.25);
+        }
+
+        /* --- Responsive Viewport Adaptations --- */
+        @media (max-width: 780px) {
+            body {
+                padding: 16px 12px;
+            }
+            .pin-vault-card {
+                max-width: 440px;
+                padding: 24px 20px 20px;
+                border-radius: 24px;
+            }
+            .vault-split-body {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .vault-vertical-divider {
+                display: none;
+            }
+            .vault-footer-actions {
+                margin-top: 16px;
+            }
         }
     </style>
 </head>
@@ -586,94 +740,130 @@
     <div class="cyber-grid-overlay"></div>
     <div class="cyber-laser-beam"></div>
 
-    <!-- Main PIN Vault Terminal Card -->
+    <!-- Main PIN Vault Terminal Card (Side-by-Side Console) -->
     <main class="pin-vault-card" id="pinVaultCard">
         
-        <!-- Header -->
-        <header class="vault-header">
-            <div class="emblem-wrapper">
-                <div class="emblem-ring"></div>
-                <div class="emblem-core">
-                    <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" alt="Bureau Emblem" onerror="this.src='./vani_icon.png'">
+        <div class="vault-split-body">
+            
+            <!-- LEFT COLUMN: Identity, Emblem, Clearance & Live Terminal -->
+            <section class="vault-info-col">
+                <header class="vault-header">
+                    <div class="emblem-wrapper">
+                        <div class="emblem-ring"></div>
+                        <div class="emblem-core">
+                            <img src="./Bureau_Of_VANI_xAI_Official_Logo.png" alt="Bureau Emblem" onerror="this.src='./vani_icon.png'">
+                        </div>
+                    </div>
+
+                    <div class="clearance-pill">
+                        <span class="pulse-dot"></span>
+                        <span>SECURITY CLEARANCE: LEVEL 5</span>
+                    </div>
+
+                    <h1 class="vault-title">
+                        <span>Bureau PIN Gateway</span>
+                        <i class="fa-solid fa-shield-halved" style="color: #0284c7; font-size: 1.1rem;"></i>
+                    </h1>
+
+                    <p class="vault-subtitle">Bureau Of V.A.N.I-xAI &bull; Cryptographic Vault</p>
+
+                    <div class="target-gate-badge" id="targetGateBadge">
+                        <i class="fa-solid fa-crosshairs" style="color: #0284c7;"></i>
+                        <span id="targetGateName">TARGET: Master Admin Command</span>
+                    </div>
+                </header>
+
+                <!-- Unauthorized / Sign-In Required Notification -->
+                <div class="auth-gate-banner" id="authGateBanner">
+                    <h4 id="authGateTitle"><i class="fa-solid fa-triangle-exclamation"></i> Admin Clearance Required</h4>
+                    <p id="authGateDesc">You must authenticate with an official Bureau Administrator identity to enter this gateway.</p>
+                    <button class="auth-signin-btn" id="authSignInBtn" onclick="window.location.href='./auth-vani-xai.html'">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Continue
+                    </button>
                 </div>
-            </div>
 
-            <div class="clearance-pill">
-                <span class="pulse-dot"></span>
-                <span>SECURITY CLEARANCE: LEVEL 5</span>
-            </div>
-
-            <h1 class="vault-title">
-                <span>Bureau PIN Gateway</span>
-                <i class="fa-solid fa-shield-halved" style="color: #0284c7; font-size: 1.1rem;"></i>
-            </h1>
-
-            <p class="vault-subtitle">Bureau Of V.A.N.I-xAI &bull; Cryptographic Vault</p>
-
-            <div class="target-gate-badge" id="targetGateBadge">
-                <i class="fa-solid fa-crosshairs" style="color: #0284c7;"></i>
-                <span id="targetGateName">TARGET: Master Admin Command</span>
-            </div>
-        </header>
-
-        <!-- Unauthorized / Sign-In Required Notification -->
-        <div class="auth-gate-banner" id="authGateBanner">
-            <h4 id="authGateTitle"><i class="fa-solid fa-triangle-exclamation"></i> Admin Clearance Required</h4>
-            <p id="authGateDesc">You must authenticate with an official Bureau Administrator identity to enter this gateway.</p>
-            <button class="auth-signin-btn" id="authSignInBtn" onclick="window.location.href='./auth-vani-xai.html'">
-                <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Continue
-            </button>
-        </div>
-
-        <!-- Authenticated Admin Identity Chip -->
-        <div class="admin-id-chip" id="adminIdChip" style="display: none;">
-            <div class="user-info">
-                <img id="adminChipAvatar" src="./vani_icon.png" alt="Admin Avatar">
-                <div class="user-text">
-                    <span class="user-email" id="adminChipEmail">official.vanixai.india@gmail.com</span>
-                    <span class="user-role"><i class="fa-solid fa-circle-check" style="font-size: 0.65rem;"></i> Bureau Root Administrator</span>
+                <!-- Authenticated Admin Identity Chip -->
+                <div class="admin-id-chip" id="adminIdChip" style="display: none;">
+                    <div class="user-info">
+                        <img id="adminChipAvatar" src="./vani_icon.png" alt="Admin Avatar">
+                        <div class="user-text">
+                            <span class="user-email" id="adminChipEmail">official.vanixai.india@gmail.com</span>
+                            <span class="user-role"><i class="fa-solid fa-circle-check" style="font-size: 0.65rem;"></i> Bureau Root Administrator</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #0284c7;">
+                        <i class="fa-solid fa-fingerprint"></i>
+                    </div>
                 </div>
-            </div>
-            <div style="font-size: 0.85rem; color: #0284c7;">
-                <i class="fa-solid fa-fingerprint"></i>
-            </div>
-        </div>
 
-        <!-- Terminal Output Readout -->
-        <div class="terminal-readout" id="terminalReadout">
-            <span class="prompt-symbol">root@bovxai:~#</span>
-            <span class="status-text" id="terminalStatus">Awaiting Master Security PIN...</span>
-        </div>
+                <!-- Terminal Output Readout -->
+                <div class="terminal-readout" id="terminalReadout">
+                    <div class="terminal-meta-row">
+                        <span class="terminal-meta-tag"><i class="fa-solid fa-terminal"></i> TELEMETRY_FEED // LEVEL-5</span>
+                        <span>PORT 443 // SHA-256</span>
+                    </div>
+                    <div class="terminal-main-row">
+                        <span class="prompt-symbol">root@bovxai:~#</span>
+                        <span class="status-text" id="terminalStatus">Awaiting Master Security PIN...</span>
+                        <span class="cursor-blink">_</span>
+                    </div>
+                </div>
 
-        <!-- PIN Dots (4 positions default, auto adapts) -->
-        <div class="pin-indicators-row" id="pinIndicatorsRow">
-            <div class="pin-dot" data-index="0"></div>
-            <div class="pin-dot" data-index="1"></div>
-            <div class="pin-dot" data-index="2"></div>
-            <div class="pin-dot" data-index="3"></div>
-        </div>
+                <!-- Cyber Telemetry Spec Badges -->
+                <div class="cyber-telemetry-tags">
+                    <span class="cyber-pill-tag"><i class="fa-solid fa-shield-virus" style="color: #0284c7;"></i> AES-256-GCM</span>
+                    <span class="cyber-pill-tag"><i class="fa-solid fa-microchip" style="color: #10b981;"></i> SOVEREIGN MESH</span>
+                    <span class="cyber-pill-tag"><i class="fa-solid fa-lock" style="color: #f59e0b;"></i> ARMED</span>
+                </div>
+            </section>
 
-        <!-- Numeric Holographic Keypad -->
-        <div class="keypad-grid" id="keypadGrid">
-            <button type="button" class="key-btn" data-key="1">1</button>
-            <button type="button" class="key-btn" data-key="2">2</button>
-            <button type="button" class="key-btn" data-key="3">3</button>
+            <!-- VERTICAL DIVIDER -->
+            <div class="vault-vertical-divider"></div>
 
-            <button type="button" class="key-btn" data-key="4">4</button>
-            <button type="button" class="key-btn" data-key="5">5</button>
-            <button type="button" class="key-btn" data-key="6">6</button>
+            <!-- RIGHT COLUMN: Tactile Keypad & PIN Dots -->
+            <section class="vault-keypad-col">
+                <div class="keypad-header-tag">
+                    <i class="fa-solid fa-key" style="color: #0284c7;"></i>
+                    <span>ENTER AUTHORIZATION CODE</span>
+                </div>
 
-            <button type="button" class="key-btn" data-key="7">7</button>
-            <button type="button" class="key-btn" data-key="8">8</button>
-            <button type="button" class="key-btn" data-key="9">9</button>
+                <!-- PIN Dots (4 positions default, auto adapts) -->
+                <div class="pin-indicators-row" id="pinIndicatorsRow">
+                    <div class="pin-dot" data-index="0"></div>
+                    <div class="pin-dot" data-index="1"></div>
+                    <div class="pin-dot" data-index="2"></div>
+                    <div class="pin-dot" data-index="3"></div>
+                </div>
 
-            <button type="button" class="key-btn action-clear" id="keyClear" title="Clear / Backspace">
-                <i class="fa-solid fa-delete-left"></i>
-            </button>
-            <button type="button" class="key-btn" data-key="0">0</button>
-            <button type="button" class="key-btn action-submit" id="keySubmit" title="Verify PIN">
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+                <!-- Numeric Holographic Keypad -->
+                <div class="keypad-grid" id="keypadGrid">
+                    <button type="button" class="key-btn" data-key="1">1</button>
+                    <button type="button" class="key-btn" data-key="2">2</button>
+                    <button type="button" class="key-btn" data-key="3">3</button>
+
+                    <button type="button" class="key-btn" data-key="4">4</button>
+                    <button type="button" class="key-btn" data-key="5">5</button>
+                    <button type="button" class="key-btn" data-key="6">6</button>
+
+                    <button type="button" class="key-btn" data-key="7">7</button>
+                    <button type="button" class="key-btn" data-key="8">8</button>
+                    <button type="button" class="key-btn" data-key="9">9</button>
+
+                    <button type="button" class="key-btn action-clear" id="keyClear" title="Clear / Backspace">
+                        <i class="fa-solid fa-delete-left"></i>
+                    </button>
+                    <button type="button" class="key-btn" data-key="0">0</button>
+                    <button type="button" class="key-btn action-submit" id="keySubmit" title="Verify PIN">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="keypad-tip">
+                    <i class="fa-regular fa-keyboard"></i>
+                    <span>Keyboard enabled (0-9, Backspace, Enter)</span>
+                </div>
+            </section>
+
         </div>
 
         <!-- Footer Actions -->
@@ -681,7 +871,9 @@
             <a href="./ai4consol.html" class="vault-footer-link">
                 <i class="fa-solid fa-house"></i> Return to Console
             </a>
-            <span style="color: #94a3b8; font-size: 0.72rem; font-family: 'Fira Code', monospace;">BoVxAi SEC-L5</span>
+            <span style="color: #94a3b8; font-size: 0.72rem; font-family: 'Fira Code', monospace;">
+                <i class="fa-solid fa-shield-halved" style="color: #0284c7; margin-right: 3px;"></i> BoVxAi SEC-L5 &bull; BHARAT
+            </span>
         </footer>
 
     </main>
