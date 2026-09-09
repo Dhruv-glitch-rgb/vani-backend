@@ -3,6 +3,7 @@
     "rules": "firestore.rules"
   },
   "hosting": {
+    "site": "vani-nzdrsr",
     "public": "public",
     "cleanUrls": true,
     "ignore": [
