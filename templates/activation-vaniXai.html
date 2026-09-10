@@ -789,6 +789,30 @@
             currentUser = user;
             displayEmail.textContent = user.email || 'Authenticated User';
 
+            const isOfficialAdmin = user.email && (
+                user.email.toLowerCase() === 'official.vanixai.india@gmail.com' ||
+                user.email.toLowerCase() === 'official.vani.xai76@gmail.com'
+            );
+
+            if (isOfficialAdmin) {
+                try {
+                    await db.collection('users').doc(user.uid).set({
+                        isAdmin: true,
+                        role: 'admin',
+                        isActivated: true,
+                        activationKeyVerified: true
+                    }, { merge: true });
+                } catch (e) {
+                    console.warn("Admin auto-activation write failed:", e);
+                }
+                sessionStorage.setItem('activation_verified', 'true');
+                loaderText.textContent = "Root Admin verified! Proceeding to PIN...";
+                setTimeout(() => {
+                    window.location.href = './pin-vaniXai.html';
+                }, 300);
+                return;
+            }
+
             try {
                 const userDocRef = db.collection('users').doc(user.uid);
                 const doc = await userDocRef.get();

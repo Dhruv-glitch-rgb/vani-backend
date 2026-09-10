@@ -842,7 +842,8 @@
                 window.location.replace('admin-pin.html?redirect=check-user-code.html');
                 return;
             }
-            const isOfficialEmail = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
+            const userEmail = (user.email || '').toLowerCase();
+            const isOfficialEmail = userEmail === 'official.vanixai.india@gmail.com' || userEmail === 'official.vani.xai76@gmail.com';
             let isAdmin = isOfficialEmail;
 
             if (!isAdmin) {

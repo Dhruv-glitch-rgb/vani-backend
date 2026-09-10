@@ -291,7 +291,12 @@
                 
                 // Set readonly fields
                 emailInput.value = user.email || 'No email provided';
-                nameInput.value = user.displayName || user.email.split('@')[0];
+                nameInput.value = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+
+                const isOfficialAdmin = user.email && (
+                    user.email.toLowerCase() === 'official.vanixai.india@gmail.com' ||
+                    user.email.toLowerCase() === 'official.vani.xai76@gmail.com'
+                );
 
                 // Check if user already provided details
                 try {
@@ -311,11 +316,28 @@
                         }
                     }
 
+                    // Automatically ensure official admin permissions are saved in Firestore
+                    if (isOfficialAdmin) {
+                        await db.collection('users').doc(user.uid).set({
+                            isAdmin: true,
+                            role: 'admin',
+                            isActivated: true,
+                            activationKeyVerified: true,
+                            email: user.email,
+                            name: user.displayName || user.email.split('@')[0],
+                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                    }
+
                     // Generate VANI ID if it doesn't exist
                     if (!currentVaniId) {
-                        const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
-                        const randomDigits = Math.floor(1000 + Math.random() * 9000);
-                        currentVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
+                        if (isOfficialAdmin) {
+                            currentVaniId = 'V.A.N.I-xAI-ADMIN-2026';
+                        } else {
+                            const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                            const randomDigits = Math.floor(1000 + Math.random() * 9000);
+                            currentVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
+                        }
                     }
                     vaniIdInput.value = currentVaniId;
 
@@ -345,14 +367,29 @@
             btnSpinner.style.display = 'block';
 
             try {
-                await db.collection('users').doc(currentUser.uid).set({
+                const userName = currentUser.displayName || currentUser.email.split('@')[0];
+                const isOfficialAdmin = currentUser.email && (
+                    currentUser.email.toLowerCase() === 'official.vanixai.india@gmail.com' ||
+                    currentUser.email.toLowerCase() === 'official.vani.xai76@gmail.com'
+                );
+
+                const savePayload = {
                     email: currentUser.email,
-                    name: currentUser.displayName || currentUser.email.split('@')[0],
+                    name: userName,
                     vaniId: vaniIdInput.value,
                     contactNumber: phone,
                     instagram: insta,
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                };
+
+                if (isOfficialAdmin) {
+                    savePayload.isAdmin = true;
+                    savePayload.role = 'admin';
+                    savePayload.isActivated = true;
+                    savePayload.activationKeyVerified = true;
+                }
+
+                await db.collection('users').doc(currentUser.uid).set(savePayload, { merge: true });
 
                 // Successfully saved, proceed to console
                 window.location.href = '/?launch=true';

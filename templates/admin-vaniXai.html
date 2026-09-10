@@ -1273,7 +1273,8 @@
         // Enforce Admin Identity Access
         auth.onAuthStateChanged(async user => {
             if (user) {
-                const isOfficial = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
+                const userEmail = (user.email || '').toLowerCase();
+                const isOfficial = userEmail === 'official.vanixai.india@gmail.com' || userEmail === 'official.vani.xai76@gmail.com';
                 let isAdmin = isOfficial;
 
                 if (!isAdmin) {

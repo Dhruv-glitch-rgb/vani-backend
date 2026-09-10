@@ -875,7 +875,8 @@ window.addEventListener('DOMContentLoaded', () => {
             if (user) {
                 authInstance = user;
                 // Admin Panel check
-                const isUserAdmin = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
+                const userEmail = (user.email || '').toLowerCase();
+                const isUserAdmin = userEmail === 'official.vanixai.india@gmail.com' || userEmail === 'official.vani.xai76@gmail.com';
                 if (isUserAdmin) {
                     const adminBtn = document.getElementById('admin-panel-btn');
                     const sidebarAdminBtn = document.getElementById('sidebar-admin-btn');

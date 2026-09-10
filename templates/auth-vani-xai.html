@@ -553,7 +553,24 @@
 
                     const userDocRef = db.collection('users').doc(user.uid);
                     const userDoc = await userDocRef.get();
-                    const userData = userDoc.exists ? userDoc.data() : {};
+                    const isOfficialAdmin = user.email && (
+                        user.email.toLowerCase() === 'official.vanixai.india@gmail.com' ||
+                        user.email.toLowerCase() === 'official.vani.xai76@gmail.com'
+                    );
+
+                    const userPayload = {
+                        name: nameBase,
+                        email: user.email || 'N/A',
+                        vaniId: isOfficialAdmin ? 'V.A.N.I-xAI-ADMIN-2026' : vaniId,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (isOfficialAdmin) {
+                        userPayload.isAdmin = true;
+                        userPayload.role = 'admin';
+                        userPayload.isActivated = true;
+                        userPayload.activationKeyVerified = true;
+                    }
 
                     await Promise.all([
                         db.collection('logs').add({
@@ -561,13 +578,14 @@
                             email: user.email || 'Unknown',
                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         }),
-                        userDocRef.set({
-                            name: nameBase,
-                            email: user.email || 'N/A',
-                            vaniId: vaniId,
-                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                        }, { merge: true })
+                        userDocRef.set(userPayload, { merge: true })
                     ]);
+
+                    if (isOfficialAdmin) {
+                        sessionStorage.setItem('activation_verified', 'true');
+                        window.location.href = './pin-vaniXai.html';
+                        return;
+                    }
 
                     // Check if user has completed sovereign activation
                     if (userData.isActivated !== true && userData.activationKeyVerified !== true) {
@@ -633,6 +651,31 @@
         // Redirect if already logged in (Always verify Activation & PIN first)
         auth.onAuthStateChanged(async user => {
             if (user && !loading.style.display.includes('flex')) {
+                const isOfficialAdmin = user.email && (
+                    user.email.toLowerCase() === 'official.vanixai.india@gmail.com' ||
+                    user.email.toLowerCase() === 'official.vani.xai76@gmail.com'
+                );
+
+                if (isOfficialAdmin) {
+                    try {
+                        await db.collection('users').doc(user.uid).set({
+                            isAdmin: true,
+                            role: 'admin',
+                            isActivated: true,
+                            activationKeyVerified: true
+                        }, { merge: true });
+                    } catch (e) {
+                        console.warn("Admin flag set error:", e);
+                    }
+                    sessionStorage.setItem('activation_verified', 'true');
+                    if (sessionStorage.getItem('pin_verified') !== 'true') {
+                        window.location.href = './pin-vaniXai.html';
+                    } else {
+                        window.location.href = './ai4consol.html';
+                    }
+                    return;
+                }
+
                 try {
                     const doc = await db.collection('users').doc(user.uid).get();
                     if (!doc.exists || (doc.data().isActivated !== true && doc.data().activationKeyVerified !== true)) {

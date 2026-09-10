@@ -1502,7 +1502,8 @@
 
                     if (userData.name && nameEl) nameEl.textContent = userData.name;
 
-                    const isUserAdmin = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com' || (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin'));
+                    const userEmail = (user.email || '').toLowerCase();
+                    const isUserAdmin = userEmail === 'official.vanixai.india@gmail.com' || userEmail === 'official.vani.xai76@gmail.com' || (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin'));
                     const adminBtn = document.getElementById('settings-admin-btn');
                     if (isUserAdmin && adminBtn) {
                         adminBtn.style.display = 'inline-flex';

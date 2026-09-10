@@ -1020,7 +1020,8 @@
             }
 
             // Check admin authorization
-            const isOfficialEmail = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
+            const userEmail = (user.email || '').toLowerCase();
+            const isOfficialEmail = userEmail === 'official.vanixai.india@gmail.com' || userEmail === 'official.vani.xai76@gmail.com';
             let hasAdminDoc = false;
 
             try {

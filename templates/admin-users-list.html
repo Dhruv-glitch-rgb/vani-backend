@@ -274,8 +274,25 @@
 
         let allUsers = [];
 
-        auth.onAuthStateChanged(user => {
+        auth.onAuthStateChanged(async user => {
             if (user) {
+                const userEmail = (user.email || '').toLowerCase();
+                let isAuthorized = (userEmail === 'official.vanixai.india@gmail.com' || userEmail === 'official.vani.xai76@gmail.com');
+                if (!isAuthorized) {
+                    try {
+                        const doc = await db.collection('users').doc(user.uid).get();
+                        if (doc.exists && (doc.data().isAdmin === true || doc.data().role === 'admin')) {
+                            isAuthorized = true;
+                        }
+                    } catch (e) {
+                        console.error("Admin check failed:", e);
+                    }
+                }
+                if (!isAuthorized) {
+                    alert("Unauthorized access. Admin privileges required.");
+                    window.location.href = './ai4consol.html';
+                    return;
+                }
                 const adminContent = document.getElementById('admin-content');
                 if (adminContent) adminContent.style.display = 'flex';
                 fetchUserDetails();

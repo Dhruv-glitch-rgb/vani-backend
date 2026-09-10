@@ -2424,12 +2424,30 @@
                 window.VaniFCM.init(user, { autoPrompt: true });
             }
 
+            const userEmail = (user.email || '').toLowerCase();
+            const isOfficialAdmin = userEmail === 'official.vanixai.india@gmail.com' || userEmail === 'official.vani.xai76@gmail.com';
+
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 const userData = userDoc.exists ? userDoc.data() : {};
 
+                if (isOfficialAdmin && (userData.isAdmin !== true || userData.role !== 'admin' || userData.isActivated !== true)) {
+                    await db.collection('users').doc(user.uid).set({
+                        isAdmin: true,
+                        role: 'admin',
+                        isActivated: true,
+                        activationKeyVerified: true,
+                        email: user.email,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                    userData.isAdmin = true;
+                    userData.role = 'admin';
+                    userData.isActivated = true;
+                    userData.activationKeyVerified = true;
+                }
+
                 // 1. Sovereign Activation check (All users, new and existing, must be activated)
-                if (userData.isActivated !== true && userData.activationKeyVerified !== true) {
+                if (!isOfficialAdmin && userData.isActivated !== true && userData.activationKeyVerified !== true) {
                     window.location.href = './activation-vaniXai.html';
                     return;
                 }
@@ -2461,7 +2479,7 @@
                         .replace(/[^a-zA-Z]/g, '').toUpperCase();
                     const prefix = (namePart.length >= 4 ? namePart.substring(0, 4) : (namePart + 'VANI').substring(0, 4));
                     const digits = Math.floor(1000 + Math.random() * 9000);
-                    vaniId = `V.A.N.I-xAI-${prefix}-${digits}`;
+                    vaniId = isOfficialAdmin ? 'V.A.N.I-xAI-ADMIN-2026' : `V.A.N.I-xAI-${prefix}-${digits}`;
                 }
 
                 // If existing old user doesn't have vaniId or card generated in Firestore, persist it now!
@@ -2478,8 +2496,7 @@
                     userData.bovxaiId = vaniId;
                 }
 
-                let isUserAdmin = user.email === 'official.vanixai.india@gmail.com' || user.email === 'official.vani.xai76@gmail.com';
-                if (userData.isAdmin === true || userData.role === 'admin') isUserAdmin = true;
+                let isUserAdmin = isOfficialAdmin || userData.isAdmin === true || userData.role === 'admin';
 
                 // If Admin, expose Admin Control Center in Header, Sidebar, and Popover
                 if (isUserAdmin) {
