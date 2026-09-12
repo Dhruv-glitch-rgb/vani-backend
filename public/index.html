@@ -246,6 +246,10 @@
                         // QUANTUM</span></span>
             </div>
             <div class="landing-nav-actions">
+                <div id="portal-user-badge" class="nav-status" style="background: rgba(6, 182, 212, 0.08); border-color: rgba(6, 182, 212, 0.25); color: #0284c7; cursor: pointer;" onclick="copyStudentUID()" title="Click to copy your V.A.N.I-xAI UID">
+                    <i class="fa-solid fa-id-badge" style="color: #06b6d4;"></i> <span id="header-vani-id-text" style="font-family: 'Fira Code', monospace; font-size: 0.76rem; font-weight: 700;">V.A.N.I-xAI</span>
+                </div>
+
                 <div class="nav-status" style="background: #ecfdf5; border-color: #a7f3d0; color: #059669;">
                     <span class="dot green pulse-dot"></span> Quantum Live
                 </div>
@@ -261,9 +265,16 @@
                 </button>
 
                 <a href="/quantum_beam" class="nav-cta-btn animate-hover-scale"
-                    style="background: linear-gradient(135deg, #06b6d4, #6366f1); color: #ffffff; text-decoration: none; font-weight: 700; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.35);">
+                    style="background: linear-gradient(135deg, #06b6d4, #6366f1); color: #ffffff; text-decoration: none; font-weight: 700; box-shadow: 0 4px 14px rgba(6, 182, 212, 0.35);"
+                    title="Quantum Beam Instant P2P File Drop">
                     <i class="fa-solid fa-bolt-lightning"></i> Quantum Beam
                 </a>
+
+                <button class="nav-cta-btn animate-hover-scale" onclick="openPortalBeamVaultModal()"
+                    style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #ffffff; border: none; font-weight: 700; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);"
+                    title="View & Download Received & Sent Files from Sovereign DB">
+                    <i class="fa-solid fa-box-archive"></i> Beam Files
+                </button>
 
                 <button id="pwa-install-btn" class="nav-cta-btn nav-btn-install animate-hover-scale"
                     title="Install Official V.A.N.I-xAI App">
@@ -346,6 +357,9 @@
                         </button>
                         <button class="sandbox-chip chip-beam" onclick="window.location.href='/quantum_beam'" style="border-color: #7dd3fc; background: #e0f2fe; color: #0284c7;">
                             <i class="fa-solid fa-bolt-lightning" style="color: #0284c7;"></i> ⚡ Quantum Beam Drop
+                        </button>
+                        <button class="sandbox-chip chip-vault" onclick="openPortalBeamVaultModal()" style="border-color: #a7f3d0; background: #ecfdf5; color: #059669;">
+                            <i class="fa-solid fa-box-archive" style="color: #10b981;"></i> 📥 Received &amp; Sent Files
                         </button>
                         <button class="sandbox-chip chip-lock" onclick="executeHeroQuickChip('lockdown')">
                             <i class="fa-solid fa-shield-halved" style="color: #e11d48;"></i> 🛡️ Intruder Biometrics
@@ -1071,7 +1085,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Auto-generate V.A.N.I-xAI ID if missing (All users enjoy Unlimited Free Access)
+        // Auto-generate V.A.N.I-xAI ID if missing and persist real user ID to Sovereign DB
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 try {
@@ -1088,11 +1102,37 @@
                             await db.collection('users').doc(user.uid).update({ vaniId: vaniId, isPremium: true });
                         }
                     }
+                    window.currentVaniUid = vaniId;
+                    localStorage.setItem('vani_user_uid', vaniId);
+                    localStorage.setItem('bovxai_last_uid', vaniId);
+
                     const headerUid = document.getElementById('header-vani-id-text');
                     if (headerUid) headerUid.textContent = vaniId;
+                    
+                    const vaultBadge = document.getElementById('portalVaultUidBadge');
+                    if (vaultBadge) vaultBadge.textContent = vaniId;
+                    
+                    const vaultPath = document.getElementById('portalVaultPath');
+                    if (vaultPath) vaultPath.textContent = `E:\\BoVxAi DB\\${vaniId}\\beam_media\\`;
+
+                    // Automatically provision real user folder in Sovereign DB E:\BoVxAi DB\<vaniId>\
+                    const endpoints = ['/api/storage/init-user', 'http://127.0.0.1:5000/api/storage/init-user'];
+                    for (const ep of endpoints) {
+                        try {
+                            await fetch(ep, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-Vani-UID': vaniId },
+                                body: JSON.stringify({ user_id: vaniId })
+                            });
+                            console.log("[BoVxAi DB] Sovereign storage active for real user:", vaniId);
+                            break;
+                        } catch (err) {}
+                    }
                 } catch (e) {
                     console.error("Error verifying user profile:", e);
                 }
+            } else {
+                window.currentVaniUid = localStorage.getItem('vani_user_uid') || '';
             }
         });
     </script>
@@ -1729,6 +1769,943 @@
         }
     </style>
 
+    <!-- Quantum Beam Sovereign Files & Vault Modal Overlay -->
+    <div id="portalBeamVaultModal" class="portal-vault-overlay" style="display: none;">
+        <div class="portal-vault-window">
+            <div class="portal-vault-header">
+                <div class="portal-vault-title-area">
+                    <div class="portal-vault-icon-badge">
+                        <i class="fa-solid fa-box-archive"></i>
+                    </div>
+                    <div>
+                        <div class="portal-vault-title">
+                            Quantum Beam Sovereign Files Vault
+                            <span class="vault-live-pill"><span class="dot green pulse-dot"></span> Sovereign DB Live</span>
+                        </div>
+                        <div class="portal-vault-subtitle">
+                            Storage Partition: <code id="portalVaultPath">E:\BoVxAi DB\&lt;USER_ID&gt;\beam_media\</code> &bull; Zero Cloud Upload
+                        </div>
+                    </div>
+                </div>
+                <div class="portal-vault-actions">
+                    <button class="portal-vault-btn" onclick="refreshPortalVaultFiles()" title="Refresh files from Sovereign Drive">
+                        <i class="fa-solid fa-rotate" id="portalRefreshIcon"></i> Refresh
+                    </button>
+                    <button class="portal-vault-btn" onclick="window.location.href='/quantum_beam'" title="Open Full Quantum Beam Portal (QR Scan, P2P Transfer)">
+                        <i class="fa-solid fa-bolt-lightning" style="color: #f59e0b;"></i> Beam Portal
+                    </button>
+                    <button class="portal-vault-btn close" onclick="closePortalBeamVaultModal()" title="Close Vault">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vault Info Bar -->
+            <div class="portal-vault-infobar">
+                <div class="infobar-item">
+                    <i class="fa-solid fa-id-card" style="color: #38bdf8;"></i>
+                    <span>Sovereign User: <strong id="portalVaultUidBadge" style="font-family:'Fira Code',monospace; color:#38bdf8;">Verified User</strong></span>
+                </div>
+                <div class="infobar-item">
+                    <i class="fa-solid fa-shield-halved" style="color: #34d399;"></i>
+                    <span>Download Policy: <strong style="color: #34d399;">On-Demand ONLY (User Initiated)</strong></span>
+                </div>
+                <div class="infobar-item" style="margin-left: auto;">
+                    <label for="portalDirectFileInput" class="portal-vault-upload-chip">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Drop / Send File to Vault
+                    </label>
+                    <input type="file" id="portalDirectFileInput" style="display: none;" onchange="portalHandleDirectFileUpload(event)">
+                </div>
+            </div>
+
+            <!-- Dual Tabs: Received Files & Sent Files -->
+            <div class="portal-vault-tabs">
+                <button id="portalVaultTabRec" class="portal-tab-btn active" onclick="switchPortalVaultTab('received')">
+                    <i class="fa-solid fa-inbox"></i> 📥 Received Files (<span id="portalVaultRecCount">0</span>)
+                </button>
+                <button id="portalVaultTabSent" class="portal-tab-btn" onclick="switchPortalVaultTab('sent')">
+                    <i class="fa-solid fa-paper-plane"></i> 📤 Sent Files (<span id="portalVaultSentCount">0</span>)
+                </button>
+            </div>
+
+            <!-- Modal Body (Grids) -->
+            <div class="portal-vault-body">
+                <!-- Received Files Grid -->
+                <div id="portalVaultReceivedGrid" class="portal-vault-grid">
+                    <div class="portal-vault-empty">
+                        <i class="fa-solid fa-inbox" style="font-size: 2.5rem; color: rgba(255, 255, 255, 0.2); margin-bottom: 12px;"></i>
+                        <p>No received files yet.<br>Files beamed to you will appear here with an on-demand download button.</p>
+                    </div>
+                </div>
+
+                <!-- Sent Files Grid -->
+                <div id="portalVaultSentGrid" class="portal-vault-grid" style="display: none;">
+                    <div class="portal-vault-empty">
+                        <i class="fa-solid fa-paper-plane" style="font-size: 2.5rem; color: rgba(255, 255, 255, 0.2); margin-bottom: 12px;"></i>
+                        <p>No sent files yet.<br>Files beamed to peers or dropped above will appear here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Preview Overlay inside Modal -->
+            <div id="portalVaultPreviewOverlay" class="portal-vault-preview-overlay" style="display: none;">
+                <div class="portal-vault-preview-box">
+                    <div class="preview-header">
+                        <span id="portalVaultPreviewName" class="preview-title">Media Preview</span>
+                        <button class="portal-vault-btn close" onclick="closePortalVaultPreview()"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div id="portalVaultPreviewContent" class="preview-content"></div>
+                </div>
+            </div>
+
+            <!-- Vault Footer -->
+            <div class="portal-vault-footer">
+                <span><i class="fa-solid fa-hard-drive" style="color: #38bdf8;"></i> Sovereign Disk Partition: <code>E:\BoVxAi DB</code> &bull; NEP 2020 Data Sovereignty</span>
+                <span style="color: #94a3b8;"><i class="fa-solid fa-circle-info" style="color: #10b981;"></i> Click <strong>Download</strong> on any item to save it directly to your device.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portal Beam Vault Styles -->
+    <style>
+        .portal-vault-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(2, 6, 23, 0.88);
+            backdrop-filter: blur(18px);
+            z-index: 10005;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .portal-vault-window {
+            width: 96vw;
+            max-width: 1280px;
+            height: 90vh;
+            background: #0f172a;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 45px rgba(6, 182, 212, 0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            animation: slideUpFade 0.3s ease-out;
+        }
+
+        .portal-vault-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: rgba(15, 23, 42, 0.96);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            gap: 16px;
+        }
+
+        .portal-vault-title-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .portal-vault-icon-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #34d399;
+            font-size: 1.3rem;
+        }
+
+        .portal-vault-title {
+            color: #ffffff;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vault-live-pill {
+            font-size: 0.7rem;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .portal-vault-subtitle {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+
+        .portal-vault-subtitle code {
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .portal-vault-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .portal-vault-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            padding: 8px 14px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .portal-vault-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .portal-vault-btn.close:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .portal-vault-infobar {
+            background: rgba(2, 6, 23, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            flex-wrap: wrap;
+        }
+
+        .infobar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .portal-vault-upload-chip {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .portal-vault-upload-chip:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(6, 182, 212, 0.35));
+            color: #ffffff;
+            border-color: #34d399;
+        }
+
+        .portal-vault-tabs {
+            display: flex;
+            gap: 12px;
+            padding: 12px 24px;
+            background: rgba(15, 23, 42, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .portal-tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .portal-tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .portal-tab-btn.active {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(99, 102, 241, 0.2));
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 4px 14px rgba(6, 182, 212, 0.2);
+        }
+
+        .portal-vault-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: #090e1a;
+            position: relative;
+        }
+
+        .portal-vault-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 18px;
+        }
+
+        .portal-vault-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .portal-file-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .portal-file-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(6, 182, 212, 0.15);
+        }
+
+        .pfc-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pfc-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .pfc-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pfc-name {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pfc-meta {
+            color: #94a3b8;
+            font-size: 0.74rem;
+            margin-top: 3px;
+        }
+
+        .pfc-path {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.68rem;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pfc-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 2px;
+        }
+
+        .btn-vault-download {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+            border: 1px solid rgba(16, 185, 129, 0.45);
+            color: #34d399;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-vault-download:hover {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-vault-preview {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-vault-preview:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .portal-vault-footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: #64748b;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .portal-vault-footer code {
+            color: #38bdf8;
+        }
+
+        /* In-Modal Preview Lightbox */
+        .portal-vault-preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .portal-vault-preview-box {
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            background: #0f172a;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            background: rgba(15, 23, 42, 0.98);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .preview-title {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-content {
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #020617;
+            overflow: auto;
+            max-height: calc(80vh - 60px);
+        }
+
+        .preview-content img, .preview-content video {
+            max-width: 100%;
+            max-height: 60vh;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .preview-content audio {
+            width: 100%;
+            max-width: 480px;
+        }
+    </style>
+
+    <!-- Portal Beam Vault Controller Script -->
+    <script>
+        (function() {
+            let portalReceivedFiles = [];
+            let portalSentFiles = [];
+            let portalVaultDb = null;
+            let currentPortalTab = 'received';
+
+            function getActiveVaniUid() {
+                let uid = window.currentVaniUid || localStorage.getItem('vani_user_uid') || localStorage.getItem('bovxai_last_uid') || '';
+                if (uid.includes('SOVEREIGN') || uid.includes('GUEST') || uid.includes('STUDENT') || uid.includes('TEST')) {
+                    uid = '';
+                }
+                return uid;
+            }
+
+            function openVaultIndexedDb() {
+                return new Promise((resolve) => {
+                    if (!window.indexedDB) return resolve(null);
+                    const req = window.indexedDB.open("BoVxAi_Vault_DB", 2);
+                    req.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains("received_files")) {
+                            db.createObjectStore("received_files", { keyPath: "id" });
+                        }
+                        if (!db.objectStoreNames.contains("sent_files")) {
+                            db.createObjectStore("sent_files", { keyPath: "id" });
+                        }
+                    };
+                    req.onsuccess = (e) => {
+                        portalVaultDb = e.target.result;
+                        resolve(portalVaultDb);
+                    };
+                    req.onerror = () => resolve(null);
+                });
+            }
+
+            function loadIndexedDbStore(storeName) {
+                return new Promise(async (resolve) => {
+                    if (!portalVaultDb) await openVaultIndexedDb();
+                    if (!portalVaultDb) return resolve([]);
+                    try {
+                        const tx = portalVaultDb.transaction(storeName, "readonly");
+                        const store = tx.objectStore(storeName);
+                        const req = store.getAll();
+                        req.onsuccess = () => {
+                            const files = req.result || [];
+                            const formatted = files.map(item => ({
+                                id: item.id || `rec_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+                                filename: item.filename,
+                                size_bytes: item.size_bytes || (item.blob ? item.blob.size : 0),
+                                fileType: item.fileType || 'application/octet-stream',
+                                timestamp: item.timestamp || 'Stored',
+                                stored_path: item.stored_path || `E:\\BoVxAi DB\\${getActiveVaniUid()}\\beam_media\\${item.filename}`,
+                                blobUrl: item.blob ? URL.createObjectURL(item.blob) : null,
+                                blob: item.blob
+                            }));
+                            resolve(formatted.reverse());
+                        };
+                        req.onerror = () => resolve([]);
+                    } catch (e) {
+                        resolve([]);
+                    }
+                });
+            }
+
+            function saveToIndexedDb(storeName, record, blob) {
+                return new Promise(async (resolve) => {
+                    if (!portalVaultDb) await openVaultIndexedDb();
+                    if (!portalVaultDb) return resolve();
+                    try {
+                        const tx = portalVaultDb.transaction(storeName, "readwrite");
+                        const store = tx.objectStore(storeName);
+                        store.put({
+                            id: record.id,
+                            filename: record.filename,
+                            size_bytes: record.size_bytes,
+                            fileType: record.fileType,
+                            timestamp: record.timestamp,
+                            stored_path: record.stored_path,
+                            blob: blob
+                        });
+                        tx.oncomplete = () => resolve();
+                        tx.onerror = () => resolve();
+                    } catch (e) {
+                        resolve();
+                    }
+                });
+            }
+
+            function formatBytes(bytes) {
+                if (!bytes || bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            function getFileIcon(filename) {
+                if (!filename) return 'fa-file';
+                const ext = filename.split('.').pop().toLowerCase();
+                const map = {
+                    png: 'fa-file-image', jpg: 'fa-file-image', jpeg: 'fa-file-image', gif: 'fa-file-image', webp: 'fa-file-image', svg: 'fa-file-image',
+                    mp4: 'fa-file-video', mkv: 'fa-file-video', webm: 'fa-file-video', avi: 'fa-file-video', mov: 'fa-file-video',
+                    mp3: 'fa-file-audio', wav: 'fa-file-audio', ogg: 'fa-file-audio', m4a: 'fa-file-audio',
+                    pdf: 'fa-file-pdf',
+                    zip: 'fa-file-zipper', rar: 'fa-file-zipper', '7z': 'fa-file-zipper', tar: 'fa-file-zipper', gz: 'fa-file-zipper',
+                    js: 'fa-file-code', html: 'fa-file-code', css: 'fa-file-code', py: 'fa-file-code', json: 'fa-file-code', txt: 'fa-file-lines'
+                };
+                return map[ext] || 'fa-file';
+            }
+
+            window.openPortalBeamVaultModal = function() {
+                const modal = document.getElementById('portalBeamVaultModal');
+                if (!modal) return;
+                modal.style.display = 'flex';
+
+                const uid = getActiveVaniUid();
+                const badge = document.getElementById('portalVaultUidBadge');
+                const pathElem = document.getElementById('portalVaultPath');
+                if (badge) badge.textContent = uid || 'V.A.N.I-xAI Sovereign User';
+                if (pathElem) pathElem.textContent = uid ? `E:\\BoVxAi DB\\${uid}\\beam_media\\` : `E:\\BoVxAi DB\\<USER_ID>\\beam_media\\`;
+
+                refreshPortalVaultFiles();
+            };
+
+            window.closePortalBeamVaultModal = function() {
+                const modal = document.getElementById('portalBeamVaultModal');
+                if (modal) modal.style.display = 'none';
+            };
+
+            window.switchPortalVaultTab = function(tabName) {
+                currentPortalTab = tabName;
+                const tabRec = document.getElementById('portalVaultTabRec');
+                const tabSent = document.getElementById('portalVaultTabSent');
+                const gridRec = document.getElementById('portalVaultReceivedGrid');
+                const gridSent = document.getElementById('portalVaultSentGrid');
+
+                if (tabName === 'sent') {
+                    if (tabRec) tabRec.classList.remove('active');
+                    if (tabSent) tabSent.classList.add('active');
+                    if (gridRec) gridRec.style.display = 'none';
+                    if (gridSent) gridSent.style.display = 'grid';
+                } else {
+                    if (tabRec) tabRec.classList.add('active');
+                    if (tabSent) tabSent.classList.remove('active');
+                    if (gridRec) gridRec.style.display = 'grid';
+                    if (gridSent) gridSent.style.display = 'none';
+                }
+            };
+
+            window.refreshPortalVaultFiles = async function() {
+                const icon = document.getElementById('portalRefreshIcon');
+                if (icon) icon.classList.add('fa-spin');
+
+                try {
+                    // 1. Load from IndexedDB
+                    const idbReceived = await loadIndexedDbStore("received_files");
+                    const idbSent = await loadIndexedDbStore("sent_files");
+
+                    portalReceivedFiles = [...idbReceived];
+                    portalSentFiles = [...idbSent];
+
+                    // 2. Fetch from backend E:\BoVxAi DB
+                    const uid = getActiveVaniUid();
+                    if (uid) {
+                        const endpoints = [
+                            `/api/storage/files/${encodeURIComponent(uid)}?category=beam_media`,
+                            `http://127.0.0.1:5000/api/storage/files/${encodeURIComponent(uid)}?category=beam_media`
+                        ];
+                        for (const ep of endpoints) {
+                            try {
+                                const resp = await fetch(ep, { headers: { 'X-Vani-UID': uid } });
+                                if (resp.ok) {
+                                    const data = await resp.json();
+                                    const serverFiles = (data.files && data.files.beam_media) || [];
+                                    serverFiles.forEach(sf => {
+                                        const exists = portalReceivedFiles.some(f => f.filename === sf.filename);
+                                        if (!exists) {
+                                            portalReceivedFiles.push({
+                                                id: `srv_${sf.filename}`,
+                                                filename: sf.filename,
+                                                size_bytes: sf.size_bytes,
+                                                fileType: 'application/octet-stream',
+                                                timestamp: sf.modified ? new Date(sf.modified).toLocaleTimeString() : 'Stored in DB',
+                                                stored_path: `E:\\BoVxAi DB\\${uid}\\beam_media\\${sf.filename}`,
+                                                serverUrl: sf.url || `/api/storage/media/${encodeURIComponent(uid)}/beam_media/${encodeURIComponent(sf.filename)}`
+                                            });
+                                        }
+                                    });
+                                    break;
+                                }
+                            } catch (err) {}
+                        }
+                    }
+
+                    renderPortalVaultGrid('received');
+                    renderPortalVaultGrid('sent');
+                } finally {
+                    if (icon) icon.classList.remove('fa-spin');
+                }
+            };
+
+            function renderPortalVaultGrid(type) {
+                const isSent = type === 'sent';
+                const files = isSent ? portalSentFiles : portalReceivedFiles;
+                const countElem = document.getElementById(isSent ? 'portalVaultSentCount' : 'portalVaultRecCount');
+                const gridElem = document.getElementById(isSent ? 'portalVaultSentGrid' : 'portalVaultReceivedGrid');
+
+                if (countElem) countElem.textContent = files.length.toString();
+                if (!gridElem) return;
+
+                if (files.length === 0) {
+                    gridElem.innerHTML = `
+                        <div class="portal-vault-empty">
+                            <i class="fa-solid ${isSent ? 'fa-paper-plane' : 'fa-inbox'}" style="font-size: 2.5rem; color: rgba(255, 255, 255, 0.15); margin-bottom: 12px;"></i>
+                            <p style="font-size: 0.9rem;">${isSent ? 'No files sent yet.<br>Drop a file using the button above or use Quantum Beam.' : 'No files received yet.<br>Beamed files will appear here with an on-demand download button.'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                gridElem.innerHTML = files.map((file, idx) => {
+                    const iconClass = getFileIcon(file.filename);
+                    const displaySize = formatBytes(file.size_bytes);
+                    const shortPath = file.stored_path || `E:\\BoVxAi DB\\${getActiveVaniUid()}\\beam_media\\${file.filename}`;
+                    const hasPreview = file.blobUrl || (file.filename && file.filename.match(/\.(png|jpg|jpeg|webp|gif|svg|mp4|webm|mp3|wav|ogg)$/i));
+
+                    return `
+                        <div class="portal-file-card" style="border-color: ${isSent ? 'rgba(16, 185, 129, 0.3)' : 'rgba(56, 189, 248, 0.3)'};">
+                            <div class="pfc-header">
+                                <div class="pfc-icon" style="color: ${isSent ? '#34d399' : '#38bdf8'}; background: ${isSent ? 'rgba(16, 185, 129, 0.15)' : 'rgba(56, 189, 248, 0.12)'};">
+                                    <i class="fa-solid ${iconClass}"></i>
+                                </div>
+                                <div class="pfc-info">
+                                    <div class="pfc-name" title="${file.filename}">${file.filename}</div>
+                                    <div class="pfc-meta">${displaySize} &bull; ${file.timestamp}</div>
+                                </div>
+                            </div>
+                            <div class="pfc-path" title="${shortPath}">
+                                <i class="fa-solid fa-hard-drive"></i> ${shortPath}
+                            </div>
+                            <div class="pfc-actions">
+                                <button class="btn-vault-download" onclick="portalDownloadFile('${file.id || idx}', '${type}')" title="Download on demand">
+                                    <i class="fa-solid fa-download"></i> Download
+                                </button>
+                                ${hasPreview ? `
+                                    <button class="btn-vault-preview" onclick="portalPreviewMedia('${file.id || idx}', '${type}')" title="Preview media">
+                                        <i class="fa-solid fa-eye"></i> View
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // CRITICAL: Files download ONLY when user explicitly triggers this on-demand function
+            window.portalDownloadFile = async function(fileId, type) {
+                const list = type === 'sent' ? portalSentFiles : portalReceivedFiles;
+                const file = list.find((f, i) => f.id === fileId || i.toString() === fileId);
+                if (!file) return;
+
+                let downloadUrl = file.blobUrl;
+                let revokeAfter = false;
+
+                if (!downloadUrl && file.serverUrl) {
+                    try {
+                        const resp = await fetch(file.serverUrl);
+                        if (resp.ok) {
+                            const blob = await resp.blob();
+                            downloadUrl = URL.createObjectURL(blob);
+                            revokeAfter = true;
+                        }
+                    } catch (e) {
+                        downloadUrl = file.serverUrl;
+                    }
+                }
+
+                if (!downloadUrl) {
+                    alert("Unable to fetch file data for download.");
+                    return;
+                }
+
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = file.filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                if (revokeAfter) {
+                    setTimeout(() => URL.revokeObjectURL(downloadUrl), 2000);
+                }
+            };
+
+            window.portalPreviewMedia = function(fileId, type) {
+                const list = type === 'sent' ? portalSentFiles : portalReceivedFiles;
+                const file = list.find((f, i) => f.id === fileId || i.toString() === fileId);
+                if (!file) return;
+
+                const url = file.blobUrl || file.serverUrl;
+                if (!url) return;
+
+                const overlay = document.getElementById('portalVaultPreviewOverlay');
+                const titleElem = document.getElementById('portalVaultPreviewName');
+                const contentElem = document.getElementById('portalVaultPreviewContent');
+                if (!overlay || !contentElem) return;
+
+                if (titleElem) titleElem.textContent = file.filename;
+
+                const ext = file.filename.split('.').pop().toLowerCase();
+                if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext)) {
+                    contentElem.innerHTML = `<img src="${url}" alt="${file.filename}">`;
+                } else if (['mp4', 'webm', 'mkv', 'mov'].includes(ext)) {
+                    contentElem.innerHTML = `<video src="${url}" controls autoplay></video>`;
+                } else if (['mp3', 'wav', 'ogg', 'm4a'].includes(ext)) {
+                    contentElem.innerHTML = `<audio src="${url}" controls autoplay></audio>`;
+                } else {
+                    window.open(url, '_blank');
+                    return;
+                }
+
+                overlay.style.display = 'flex';
+            };
+
+            window.closePortalVaultPreview = function() {
+                const overlay = document.getElementById('portalVaultPreviewOverlay');
+                const contentElem = document.getElementById('portalVaultPreviewContent');
+                if (contentElem) contentElem.innerHTML = '';
+                if (overlay) overlay.style.display = 'none';
+            };
+
+            // Direct upload / save from within portal modal to Sovereign DB E:\BoVxAi DB
+            window.portalHandleDirectFileUpload = async function(e) {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+
+                const uid = getActiveVaniUid();
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const recordId = `sent_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+                const storagePath = `E:\\BoVxAi DB\\${uid || 'REAL_USER'}\\beam_media\\${file.name}`;
+
+                // 1. Save in IndexedDB
+                const item = {
+                    id: recordId,
+                    filename: file.name,
+                    size_bytes: file.size,
+                    fileType: file.type || 'application/octet-stream',
+                    timestamp: timeStr,
+                    stored_path: storagePath,
+                    blobUrl: URL.createObjectURL(file),
+                    blob: file
+                };
+
+                await saveToIndexedDb("sent_files", item, file);
+                portalSentFiles.unshift(item);
+                renderPortalVaultGrid('sent');
+                switchPortalVaultTab('sent');
+
+                // 2. Upload to backend Sovereign Database E:\BoVxAi DB
+                if (uid) {
+                    const formData = new FormData();
+                    formData.append('user_id', uid);
+                    formData.append('category', 'beam_media');
+                    formData.append('filename', file.name);
+                    formData.append('file', file, file.name);
+
+                    const endpoints = ['/api/storage/upload', 'http://127.0.0.1:5000/api/storage/upload'];
+                    for (const ep of endpoints) {
+                        try {
+                            await fetch(ep, {
+                                method: 'POST',
+                                headers: { 'X-Vani-UID': uid },
+                                body: formData
+                            });
+                            console.log("[BoVxAi DB] Sent file saved to sovereign partition:", file.name);
+                            break;
+                        } catch (err) {}
+                    }
+                }
+
+                // Reset input
+                e.target.value = '';
+            };
+
+            // Close on Escape or click outside
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closePortalVaultPreview();
+                    closePortalBeamVaultModal();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                const modal = document.getElementById('portalBeamVaultModal');
+                if (modal && e.target === modal) {
+                    closePortalBeamVaultModal();
+                }
+                const preview = document.getElementById('portalVaultPreviewOverlay');
+                if (preview && e.target === preview) {
+                    closePortalVaultPreview();
+                }
+            });
+        })();
+    </script>
 </body>
 
 </html>

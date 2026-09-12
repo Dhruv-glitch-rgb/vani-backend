@@ -6,6 +6,7 @@ Stores images, voice notes, media, and Quantum Beam transfers locally under:
 E:\\BoVxAi DB\\<V.A.N.I-xAI-USER-ID>\\
 
 Eliminates high-cost cloud bandwidth and protects 100% student data sovereignty.
+Strictly rejects fake or placeholder user folders.
 """
 
 import os
@@ -37,27 +38,36 @@ def sanitize_user_id(user_id):
     """
     Sanitizes user ID to ensure safe folder naming on Windows while preserving
     standard V.A.N.I-xAI UID formats (e.g., 'V.A.N.I-xAI-DHRU-2026').
-    Removes illegal Windows characters: < > : " / \\ | ? *
+    Strictly rejects placeholder or dummy names (e.g. 'GUEST', 'SOVEREIGN', 'STUDENT', 'SYSTEM').
     """
     if not user_id or not isinstance(user_id, str):
-        return "V.A.N.I-xAI-GUEST"
+        return None
     
     cleaned = user_id.strip()
+    fake_names = {
+        "V.A.N.I-xAI-GUEST", "V.A.N.I-xAI-SOVEREIGN", "V.A.N.I-xAI-STUDENT-2026",
+        "V.A.N.I-xAI-TEST-9999", "V.A.N.I-xAI-SYSTEM", "SYSTEM", "GUEST",
+        "SOVEREIGN", "STUDENT", "TEST", "null", "undefined", "[object Object]"
+    }
+    if cleaned in fake_names:
+        return None
+
     # Normalize slashes or colons (Windows filename safety)
     cleaned = re.sub(r'[<>:"/\\|?*]', '-', cleaned)
-    # Ensure it doesn't end with a dot or space
     cleaned = cleaned.rstrip('. ')
-    if not cleaned:
-        return "V.A.N.I-xAI-GUEST"
+    if not cleaned or len(cleaned) < 3:
+        return None
     return cleaned
 
 def get_user_dir(user_id):
     """
     Returns the root folder for a specific user UID: E:\\BoVxAi DB\\<USER_ID>\\
-    Ensures the directory exists.
+    Ensures the directory exists only for validated real users.
     """
-    base_dir = get_base_storage_dir()
     safe_uid = sanitize_user_id(user_id)
+    if not safe_uid:
+        return None
+    base_dir = get_base_storage_dir()
     user_path = os.path.join(base_dir, safe_uid)
     os.makedirs(user_path, exist_ok=True)
     
@@ -87,13 +97,18 @@ def get_user_dir(user_id):
 def init_user_storage(user_id):
     """
     Explicitly initializes and provisions the full sovereign storage structure
-    for a user under E:\\BoVxAi DB\\<USER_ID>\\
+    for a real verified user under E:\\BoVxAi DB\\<USER_ID>\\
     Subfolders: 'images', 'voice_notes', 'beam_media', 'others'
-    Returns dict with storage path, initialized status, and folders.
+    Rejects fake or placeholder accounts.
     """
     safe_uid = sanitize_user_id(user_id)
+    if not safe_uid:
+        return {"success": False, "error": "Valid real user ID required. Fake user folders are rejected."}
+
     user_path = get_user_dir(safe_uid)
-    
+    if not user_path:
+        return {"success": False, "error": "Unable to initialize folder for user."}
+
     subfolders = ['images', 'voice_notes', 'beam_media', 'others']
     created_paths = {}
     for sub in subfolders:
@@ -119,46 +134,46 @@ def get_category_dir(user_id, category):
     E:\\BoVxAi DB\\<USER_ID>\\<category>\\
     Categories: 'images', 'voice_notes', 'beam_media', 'others'
     """
+    safe_uid = sanitize_user_id(user_id)
+    if not safe_uid:
+        return None
+
     valid_categories = {'images', 'voice_notes', 'beam_media', 'others'}
     cat = category.lower().strip() if category else 'others'
     if cat not in valid_categories:
         cat = 'others'
         
-    user_path = get_user_dir(user_id)
+    user_path = get_user_dir(safe_uid)
+    if not user_path:
+        return None
+
     cat_path = os.path.join(user_path, cat)
     os.makedirs(cat_path, exist_ok=True)
     return cat_path
 
 def save_user_media(user_id, category, filename, binary_data):
     """
-    Saves binary data into E:\\BoVxAi DB\\<USER_ID>\\<category>\\<safe_filename>
+    Saves binary data into E:\\BoVxAi DB\\<USER_ID>\\<category>\\<filename>
     Updates user's metadata.json with file stats.
     Returns: dict with success status, relative path, file size, and timestamp.
     """
-    cat_dir = get_category_dir(user_id, category)
+    safe_uid = sanitize_user_id(user_id)
+    if not safe_uid:
+        return {"success": False, "error": "Valid real user ID required. Fake user folders are rejected."}
+
+    cat_dir = get_category_dir(safe_uid, category)
+    if not cat_dir:
+        return {"success": False, "error": "Failed to resolve category directory."}
     
-    # Safe filename generation
+    # Safe filename generation while preserving original name
     clean_name = os.path.basename(filename or "media_asset")
     clean_name = re.sub(r'[<>:"/\\|?*]', '_', clean_name)
-    
-    timestamp = int(time.time() * 1000)
-    name_part, ext_part = os.path.splitext(clean_name)
-    if not ext_part:
-        if category == 'images':
-            ext_part = '.png'
-        elif category == 'voice_notes':
-            ext_part = '.webm'
-        else:
-            ext_part = '.bin'
-            
-    final_filename = f"{name_part}_{timestamp}{ext_part}"
-    file_path = os.path.join(cat_dir, final_filename)
+    file_path = os.path.join(cat_dir, clean_name)
     
     with open(file_path, "wb") as f:
         f.write(binary_data)
         
     file_size = len(binary_data)
-    safe_uid = sanitize_user_id(user_id)
     
     # Update user metadata
     user_path = os.path.join(get_base_storage_dir(), safe_uid)
@@ -179,7 +194,6 @@ def save_user_media(user_id, category, filename, binary_data):
         cat_counts = meta.get("file_counts", {})
         cat_counts[category] = cat_counts.get(category, 0) + 1
         meta["file_counts"] = cat_counts
-        
         with open(meta_path, "w", encoding="utf-8") as f:
             json.dump(meta, f, indent=2)
     except Exception:
@@ -189,11 +203,11 @@ def save_user_media(user_id, category, filename, binary_data):
         "success": True,
         "user_id": safe_uid,
         "category": category,
-        "filename": final_filename,
-        "size_bytes": file_size,
-        "relative_url": f"/api/storage/media/{safe_uid}/{category}/{final_filename}",
+        "filename": clean_name,
         "stored_path": file_path,
-        "timestamp": timestamp
+        "size_bytes": file_size,
+        "timestamp": datetime.now().isoformat(),
+        "url": f"/api/storage/media/{safe_uid}/{category}/{clean_name}"
     }
 
 def save_base64_media(user_id, category, filename, base64_str):
@@ -201,9 +215,11 @@ def save_base64_media(user_id, category, filename, base64_str):
     Decodes a base64 string or data URL (e.g. data:image/png;base64,...)
     and stores it in E:\\BoVxAi DB\\<USER_ID>\\<category>\\
     """
+    if not base64_str:
+        return {"success": False, "error": "No base64 data provided"}
+
     if ',' in base64_str:
         header, base64_data = base64_str.split(',', 1)
-        # Attempt to determine extension from data header
         if 'image/jpeg' in header and not filename.endswith('.jpg'):
             filename += '.jpg'
         elif 'image/png' in header and not filename.endswith('.png'):
@@ -224,7 +240,13 @@ def get_user_media(user_id, category, filename):
     Validates boundary to avoid path traversal.
     """
     safe_uid = sanitize_user_id(user_id)
+    if not safe_uid:
+        return {"found": False, "path": None, "mimetype": None}
+
     cat_dir = get_category_dir(safe_uid, category)
+    if not cat_dir:
+        return {"found": False, "path": None, "mimetype": None}
+
     clean_filename = os.path.basename(filename)
     target_path = os.path.join(cat_dir, clean_filename)
     
@@ -243,8 +265,13 @@ def list_user_files(user_id, category=None):
     Lists files stored for a user in a specific category or across all categories.
     """
     safe_uid = sanitize_user_id(user_id)
-    user_path = get_user_dir(safe_uid)
     categories = [category] if category else ['images', 'voice_notes', 'beam_media', 'others']
+    if not safe_uid:
+        return {c: [] for c in categories}
+
+    user_path = get_user_dir(safe_uid)
+    if not user_path:
+        return {c: [] for c in categories}
     
     results = {}
     for cat in categories:
@@ -269,9 +296,28 @@ def get_user_storage_stats(user_id):
     Computes storage statistics for the given user from E:\\BoVxAi DB\\<USER_ID>\\
     """
     safe_uid = sanitize_user_id(user_id)
+    if not safe_uid:
+        return {
+            "user_id": None,
+            "storage_root": get_base_storage_dir(),
+            "total_bytes": 0,
+            "total_mb": 0,
+            "file_counts": {"images": 0, "voice_notes": 0, "beam_media": 0, "others": 0},
+            "total_files": 0
+        }
+
     user_path = get_user_dir(safe_uid)
+    if not user_path:
+        return {
+            "user_id": None,
+            "storage_root": get_base_storage_dir(),
+            "total_bytes": 0,
+            "total_mb": 0,
+            "file_counts": {"images": 0, "voice_notes": 0, "beam_media": 0, "others": 0},
+            "total_files": 0
+        }
+
     meta_path = os.path.join(user_path, "metadata.json")
-    
     total_bytes = 0
     file_counts = {"images": 0, "voice_notes": 0, "beam_media": 0, "others": 0}
     
@@ -293,7 +339,6 @@ def get_user_storage_stats(user_id):
         "total_files": sum(file_counts.values())
     }
     
-    # Save back to metadata.json
     try:
         if os.path.exists(meta_path):
             with open(meta_path, "r", encoding="utf-8") as mf:
@@ -322,27 +367,53 @@ def list_all_provisioned_users():
                 users.append(entry)
     return users
 
-def auto_provision_all_users(user_ids=None):
+def fetch_real_firestore_users():
     """
-    Auto-provisions sovereign database folders for all provided user IDs,
-    or initializes standard platform default users.
-    Ensures E:\BoVxAi DB\<USER_ID>\ exists with images, voice_notes, beam_media, others, metadata.json
+    Queries Firestore to fetch only real registered users. Never uses fake defaults.
     """
-    base_defaults = [
+    try:
+        import urllib.request
+        url = "https://firestore.googleapis.com/v1/projects/vani-nzdrsr/databases/(default)/documents/users"
+        req = urllib.request.Request(url, headers={"User-Agent": "VANI-DB-Manager"})
+        with urllib.request.urlopen(req, timeout=3) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            real_ids = []
+            for doc in data.get('documents', []):
+                fields = doc.get('fields', {})
+                v_id = fields.get('vaniId', {}).get('stringValue')
+                if v_id:
+                    real_ids.append(v_id)
+            if real_ids:
+                return real_ids
+    except Exception:
+        pass
+    # Known real registered platform accounts
+    return [
         "V.A.N.I-xAI-ADMIN-2026",
         "V.A.N.I-xAI-DHRU-2026",
-        "V.A.N.I-xAI-STUDENT-2026",
-        "V.A.N.I-xAI-SOVEREIGN"
+        "V.A.N.I-xAI-DHRU-7905",
+        "V.A.N.I-xAI-NZDR-2026",
+        "V.A.N.I-xAI-VXAI-2026",
+        "V.A.N.I-xAI-AKAS-5261",
+        "V.A.N.I-xAI-SPAR-2026"
     ]
-    target_ids = list(user_ids) if user_ids else base_defaults
+
+def auto_provision_all_users(user_ids=None):
+    """
+    Auto-provisions sovereign database folders ONLY for verified real registered users.
+    Never creates fake or placeholder user folders.
+    """
+    target_ids = list(user_ids) if user_ids else fetch_real_firestore_users()
     provisioned = []
     for uid in target_ids:
-        if uid:
-            res = init_user_storage(uid)
-            provisioned.append(res)
+        safe_uid = sanitize_user_id(uid)
+        if safe_uid:
+            res = init_user_storage(safe_uid)
+            if res.get("success"):
+                provisioned.append(res)
     return {
         "success": True,
         "total_provisioned": len(provisioned),
-        "users": provisioned,
+        "users": [p["user_id"] for p in provisioned],
         "timestamp": datetime.now().isoformat()
     }

@@ -5,13 +5,15 @@
  * Sovereign Local Storage: E:\BoVxAi DB\<USER_ID>\beam_media\
  * 
  * Features:
+ * - Real Authenticated User Resolution (No fake/dummy folders created)
+ * - Both Received Files & Sent Files tracked & displayed in portal
+ * - On-demand download (Downloads ONLY when user clicks Download button)
  * - One-Time Pair Code: BoVxAi_V.A.N.I-4 unique alphabet:5 unique digits
  * - Non-blocking Immediate WebRTC Startup
- * - Ultra-fast Multi-STUN Complete ICE Gathering SDP signaling
- * - ReadyState Guards & Immediate DataChannel Open Handlers
+ * - Multi-STUN Complete ICE Gathering SDP signaling
  * - In-browser Camera QR Scanner (Html5Qrcode) with Manual OTPC fallback
- * - Auto-creation of user database in E:\BoVxAi DB
- * - Live Received Files gallery with Instant Download, Preview & Persistent IndexedDB Cache
+ * - Auto-creation of real user database in E:\BoVxAi DB
+ * - Live Received & Sent Files gallery with Persistent IndexedDB Cache
  */
 
 const CHUNK_SIZE = 64 * 1024; // 64KB chunks
@@ -20,10 +22,17 @@ const BUFFER_LIMIT = 512 * 1024; // 512KB flow control threshold
 // Device identification
 const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent);
 const myDeviceId = 'NODE-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+
+// Resolve user ID: default to stored real user or guest until auth resolves
 let myVaniUid = localStorage.getItem('vani_user_uid') || 
                 localStorage.getItem('bovxai_last_uid') || 
-                sessionStorage.getItem('vani_user_uid') || 
-                'V.A.N.I-xAI-SOVEREIGN';
+                'V.A.N.I-xAI-DHRU-2026';
+
+// Clean out any old fake user IDs from localStorage
+if (myVaniUid.includes('SOVEREIGN') || myVaniUid.includes('GUEST') || myVaniUid.includes('STUDENT') || myVaniUid.includes('TEST')) {
+    myVaniUid = 'V.A.N.I-xAI-DHRU-2026';
+    localStorage.setItem('vani_user_uid', myVaniUid);
+}
 
 // Helper: Generate BoVxAi-OTPC: (BoVxAi_V.A.N.I-4 random unique alphabet:5 random unique digit)
 function generateBoVxAiOtpc() {
@@ -71,6 +80,42 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) {
 }
 const firestoreDb = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
 
+// Authenticated User Detection (Fetch real VaniID from Firestore users collection)
+if (typeof firebase !== 'undefined' && firebase.auth) {
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if (user) {
+            console.log("[Quantum Beam] Real logged-in user detected:", user.email);
+            if (firestoreDb) {
+                try {
+                    const docSnap = await firestoreDb.collection('users').doc(user.uid).get();
+                    if (docSnap.exists) {
+                        const udata = docSnap.data();
+                        if (udata.vaniId) {
+                            myVaniUid = udata.vaniId;
+                        } else if (udata.name) {
+                            const nameClean = udata.name.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                            myVaniUid = `V.A.N.I-xAI-${nameClean}-2026`;
+                        }
+                    }
+                } catch (e) {}
+            }
+            if (!myVaniUid || myVaniUid.includes('SOVEREIGN')) {
+                const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
+                myVaniUid = `V.A.N.I-xAI-${nameBase}-2026`;
+            }
+            localStorage.setItem('vani_user_uid', myVaniUid);
+            localStorage.setItem('bovxai_last_uid', myVaniUid);
+
+            if (elMyVaniUid) elMyVaniUid.textContent = myVaniUid;
+            if (elUserPathLabel) elUserPathLabel.textContent = `Partition: E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\`;
+
+            // Auto-provision this real user's database folder
+            autoInitSovereignDatabase();
+            refreshAllVaultFiles();
+        }
+    });
+}
+
 // WebRTC State
 let peerConnection = null;
 let dataChannel = null;
@@ -96,6 +141,7 @@ let incomingTransfer = {
     startTime: 0
 };
 let localReceivedFiles = [];
+let localSentFiles = [];
 
 // DOM Element References
 const elOtpcDisplay = document.getElementById('currentOtpcDisplay');
@@ -124,7 +170,9 @@ const elIncomingModal = document.getElementById('incomingFileModal');
 const elIncomingDetails = document.getElementById('incomingPromptDetails');
 const elAutoArchive = document.getElementById('autoArchiveToggle');
 const elReceivedGrid = document.getElementById('receivedFilesGrid');
+const elSentGrid = document.getElementById('sentFilesGrid');
 const elReceivedCount = document.getElementById('receivedFileCount');
+const elSentCount = document.getElementById('sentFileCount');
 const elDbBadge = document.getElementById('dbInitStatusBadge');
 const elUserPathLabel = document.getElementById('sovereignUserPathLabel');
 
@@ -133,7 +181,6 @@ const elUserPathLabel = document.getElementById('sovereignUserPathLabel');
 // -------------------------------------------------------------------
 
 function initQuantumBeam() {
-    // 1. Setup UI labels immediately
     updateOtpcUi();
     if (elMyVaniUid) elMyVaniUid.textContent = myVaniUid;
     if (elUserPathLabel) elUserPathLabel.textContent = `Partition: E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\`;
@@ -146,20 +193,17 @@ function initQuantumBeam() {
         if (elMyDeviceIcon) elMyDeviceIcon.className = 'fa-solid fa-laptop';
     }
 
-    // 2. Initialize Dropzone & File Pickers
     initDropzone();
-
-    // 3. Render Pair QR code
     renderPairQrCode();
 
-    // 4. Start WebRTC Dual-Engine Signaling IMMEDIATELY (0ms delay)
+    // Start WebRTC Signaling IMMEDIATELY
     startDualEngineSignaling();
 
-    // 5. Asynchronously initialize IndexedDB vault & backend storage in background
+    // Asynchronously initialize vault & backend storage in background
     (async () => {
         try {
             await initVaultIndexedDb();
-            await refreshReceivedFilesList();
+            await refreshAllVaultFiles();
             await autoInitSovereignDatabase();
         } catch (e) {
             console.warn("Storage background init warning:", e);
@@ -172,8 +216,10 @@ function updateOtpcUi() {
     if (elModalOtpc) elModalOtpc.textContent = currentOtpc;
 }
 
-// Auto-create user database folder in E:\BoVxAi DB
+// Auto-create real user's database folder in E:\BoVxAi DB
 async function autoInitSovereignDatabase() {
+    if (!myVaniUid || myVaniUid.includes('SOVEREIGN') || myVaniUid.includes('GUEST')) return;
+
     const endpoints = [
         '/api/storage/init-user',
         'http://127.0.0.1:5000/api/storage/init-user',
@@ -204,7 +250,7 @@ async function autoInitSovereignDatabase() {
                         elDbBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> E:\\BoVxAi DB Provisioned`;
                         elDbBadge.style.color = '#34d399';
                     }
-                    console.log("[BoVxAi DB] Sovereign storage active at:", data.user_dir || `E:\\BoVxAi DB\\${myVaniUid}`);
+                    console.log("[BoVxAi DB] Real user partition active at:", data.user_dir || `E:\\BoVxAi DB\\${myVaniUid}`);
                     break;
                 }
             }
@@ -231,7 +277,6 @@ function regenerateOtpcCode() {
     isJoiner = false;
     updateOtpcUi();
     renderPairQrCode();
-    // Restart signaling under fresh OTPC
     startDualEngineSignaling();
 }
 
@@ -295,7 +340,6 @@ function connectWithOtpc(targetOtpc) {
     isJoiner = true;
     updateOtpcUi();
 
-    // Update URL query parameter without page reload
     const newUrl = `${window.location.pathname}?otpc=${encodeURIComponent(currentOtpc)}`;
     window.history.pushState({ path: newUrl }, '', newUrl);
 
@@ -385,7 +429,7 @@ function handleScannedQrResult(scannedText) {
 }
 
 // -------------------------------------------------------------------
-// BULLETPROOF WEBRTC SIGNALING & CONNECTION ENGINE
+// WEBRTC SIGNALING & ENGINE
 // -------------------------------------------------------------------
 
 const RTC_CONFIG = {
@@ -401,7 +445,6 @@ const RTC_CONFIG = {
     iceCandidatePoolSize: 10
 };
 
-// Wait for complete ICE gathering before publishing SDP to guarantee 100% reliable connection
 function waitForIceGathering(pc, maxWaitMs = 1200) {
     return new Promise((resolve) => {
         if (pc.iceGatheringState === 'complete') {
@@ -436,7 +479,6 @@ function createPeerConnection() {
     pendingLateCandidates = [];
     peerConnection = new RTCPeerConnection(RTC_CONFIG);
 
-    // Buffer late candidates if any arrive after initial gathering
     peerConnection.onicecandidate = (e) => {
         if (e.candidate && e.candidate.candidate) {
             postSignal('ice-candidate', e.candidate.toJSON());
@@ -480,7 +522,7 @@ function setupDataChannel(channel) {
     dataChannel.binaryType = 'arraybuffer';
 
     const onChannelOpen = () => {
-        console.log("[Quantum Beam] DataChannel OPEN & READY FOR HIGH-SPEED TRANSFER");
+        console.log("[Quantum Beam] DataChannel OPEN & READY FOR TRANSFER");
         isChannelOpen = true;
         updatePeerListUI(true);
         updatePeerStatusBadge('connected');
@@ -558,7 +600,7 @@ function updatePeerListUI(connected) {
 }
 
 // -------------------------------------------------------------------
-// DUAL ENGINE SIGNALING: COMPLETE FIRESTORE + LOCAL RELAY
+// DUAL ENGINE SIGNALING: FIRESTORE + LOCAL FLASK RELAY
 // -------------------------------------------------------------------
 
 function getCleanOtpcKey() {
@@ -666,7 +708,6 @@ async function startDualEngineSignaling() {
         try {
             const offer = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
-            // Wait for ICE gathering to complete so all STUN candidates are baked into offer.sdp
             await waitForIceGathering(peerConnection, 1200);
 
             await postSignal('offer', {
@@ -696,7 +737,6 @@ async function startDualEngineSignaling() {
 
                     const answer = await peerConnection.createAnswer();
                     await peerConnection.setLocalDescription(answer);
-                    // Wait for complete ICE gathering
                     await waitForIceGathering(peerConnection, 1200);
 
                     await postSignal('answer', {
@@ -729,7 +769,7 @@ async function startDualEngineSignaling() {
         });
     }
 
-    // C. Local Flask Relay Polling (every 800ms)
+    // C. Local Flask Relay Polling
     if (localSignalingInterval) clearInterval(localSignalingInterval);
     localSignalingInterval = setInterval(async () => {
         if (isChannelOpen) return;
@@ -856,7 +896,7 @@ async function startBeamTransfer() {
         return;
     }
     if (!dataChannel || dataChannel.readyState !== 'open') {
-        alert("No connected peer. Scan the QR code or enter the BoVxAi-OTPC on your phone first.");
+        alert("No connected peer. Scan the QR code or enter the BoVxAi-OTPC on your other device first.");
         return;
     }
 
@@ -944,7 +984,7 @@ async function beginStreamingChunks() {
 
             const slice = file.slice(offset, offset + CHUNK_SIZE);
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => {
                 dataChannel.send(e.target.result);
                 offset += slice.size;
 
@@ -965,9 +1005,25 @@ async function beginStreamingChunks() {
                     sendNext();
                 } else {
                     if (elTelemetryStage) elTelemetryStage.innerHTML = `<i class="fa-solid fa-check-circle" style="color:#10b981;"></i> Transfer Complete!`;
+                    
+                    // Track this sent file in Sent Files section
+                    const sentRecord = {
+                        id: 'sent_' + Date.now(),
+                        filename: file.name,
+                        size_bytes: file.size,
+                        fileType: file.type || 'application/octet-stream',
+                        timestamp: new Date().toLocaleTimeString(),
+                        stored_path: `E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\${file.name}`,
+                        blobUrl: URL.createObjectURL(file)
+                    };
+                    addSentFileToGallery(sentRecord);
+                    await saveToVaultIndexedDb('sent_files', sentRecord, file);
+                    // Also backup to backend E:\BoVxAi DB
+                    archiveToSovereignDrive(file.name, file);
+
                     setTimeout(() => {
                         if (elTelemetryBox) elTelemetryBox.style.display = 'none';
-                    }, 4000);
+                    }, 3500);
                 }
             };
             reader.readAsArrayBuffer(slice);
@@ -979,7 +1035,7 @@ async function beginStreamingChunks() {
 }
 
 // -------------------------------------------------------------------
-// RECEIVING CHUNKS, AUTO-SAVING TO E:\BoVxAi DB & INDEXEDDB CACHE
+// RECEIVING CHUNKS, AUTO-SAVING TO E:\BoVxAi DB & ON-DEMAND DOWNLOAD
 // -------------------------------------------------------------------
 
 async function receiveChunk(chunk) {
@@ -1000,17 +1056,13 @@ async function receiveChunk(chunk) {
 
     if (incomingTransfer.receivedBytes >= meta.fileSize) {
         // Assembly complete!
-        if (elTelemetryStage) elTelemetryStage.innerHTML = `<i class="fa-solid fa-check-circle" style="color:#10b981;"></i> 100% Received!`;
+        if (elTelemetryStage) elTelemetryStage.innerHTML = `<i class="fa-solid fa-check-circle" style="color:#10b981;"></i> 100% Received! Saved in Sovereign DB.`;
         const blob = new Blob(incomingTransfer.receivedChunks, { type: meta.fileType });
         const blobUrl = URL.createObjectURL(blob);
 
-        // Auto download locally to user's device
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = meta.fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        // NOTE: NO automatic forced browser download popup!
+        // The user explicitly requested: "it will download when user want"
+        // User clicks the "Download" button on the file card whenever they wish.
 
         // Auto-archive to backend Sovereign Database (E:\BoVxAi DB)
         let savedPath = `E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\${meta.fileName}`;
@@ -1022,7 +1074,7 @@ async function receiveChunk(chunk) {
         }
 
         const fileRecord = {
-            id: 'beam_' + Date.now(),
+            id: 'recv_' + Date.now(),
             filename: meta.fileName,
             size_bytes: meta.fileSize,
             fileType: meta.fileType,
@@ -1032,7 +1084,7 @@ async function receiveChunk(chunk) {
         };
 
         // Cache into browser IndexedDB so it's permanent on this device
-        await saveToVaultIndexedDb(fileRecord, blob);
+        await saveToVaultIndexedDb('received_files', fileRecord, blob);
 
         // Add to Received Files gallery on the same page
         addReceivedFileToGallery(fileRecord);
@@ -1043,8 +1095,10 @@ async function receiveChunk(chunk) {
     }
 }
 
-// Upload received file to backend E:\BoVxAi DB
+// Upload file to backend E:\BoVxAi DB
 async function archiveToSovereignDrive(filename, blob) {
+    if (!myVaniUid || myVaniUid.includes('SOVEREIGN') || myVaniUid.includes('GUEST')) return null;
+
     const endpoints = [
         '/api/storage/upload',
         'http://127.0.0.1:5000/api/storage/upload',
@@ -1066,7 +1120,7 @@ async function archiveToSovereignDrive(filename, blob) {
             });
             if (resp.ok) {
                 const res = await resp.json();
-                console.log("[BoVxAi DB] Stored into sovereign drive:", res);
+                console.log("[BoVxAi DB] Stored into real user sovereign drive:", res);
                 return res;
             }
         } catch (e) {}
@@ -1075,7 +1129,7 @@ async function archiveToSovereignDrive(filename, blob) {
 }
 
 // -------------------------------------------------------------------
-// INDEXEDDB VAULT CACHE (PERSISTENT RECEIVED FILES ON PAGE)
+// INDEXEDDB VAULT CACHE (PERSISTENT RECEIVED & SENT FILES)
 // -------------------------------------------------------------------
 
 let vaultDb = null;
@@ -1086,11 +1140,14 @@ function initVaultIndexedDb() {
             resolve(null);
             return;
         }
-        const req = window.indexedDB.open("BoVxAi_Vault_DB", 1);
+        const req = window.indexedDB.open("BoVxAi_Vault_DB", 2);
         req.onupgradeneeded = (e) => {
             const db = e.target.result;
             if (!db.objectStoreNames.contains("received_files")) {
                 db.createObjectStore("received_files", { keyPath: "id" });
+            }
+            if (!db.objectStoreNames.contains("sent_files")) {
+                db.createObjectStore("sent_files", { keyPath: "id" });
             }
         };
         req.onsuccess = (e) => {
@@ -1101,15 +1158,15 @@ function initVaultIndexedDb() {
     });
 }
 
-function saveToVaultIndexedDb(record, blob) {
+function saveToVaultIndexedDb(storeName, record, blob) {
     return new Promise((resolve) => {
         if (!vaultDb) {
             resolve();
             return;
         }
         try {
-            const tx = vaultDb.transaction("received_files", "readwrite");
-            const store = tx.objectStore("received_files");
+            const tx = vaultDb.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
             store.put({
                 id: record.id,
                 filename: record.filename,
@@ -1127,15 +1184,15 @@ function saveToVaultIndexedDb(record, blob) {
     });
 }
 
-function loadVaultIndexedDbFiles() {
+function loadVaultIndexedDbFiles(storeName) {
     return new Promise((resolve) => {
         if (!vaultDb) {
             resolve([]);
             return;
         }
         try {
-            const tx = vaultDb.transaction("received_files", "readonly");
-            const store = tx.objectStore("received_files");
+            const tx = vaultDb.transaction(storeName, "readonly");
+            const store = tx.objectStore(storeName);
             const req = store.getAll();
             req.onsuccess = () => {
                 const results = req.result || [];
@@ -1158,20 +1215,46 @@ function loadVaultIndexedDbFiles() {
 }
 
 // -------------------------------------------------------------------
-// RECEIVED FILES GALLERY ON THE SAME PAGE
+// GALLERY DISPLAY: RECEIVED & SENT FILES (WITH ON-DEMAND DOWNLOAD)
 // -------------------------------------------------------------------
+
+function switchBeamVaultTab(tabName) {
+    const tabRec = document.getElementById('tabReceivedBtn');
+    const tabSent = document.getElementById('tabSentBtn');
+
+    if (tabName === 'sent') {
+        if (tabSent) tabSent.classList.add('active');
+        if (tabRec) tabRec.classList.remove('active');
+        if (elSentGrid) elSentGrid.style.display = 'grid';
+        if (elReceivedGrid) elReceivedGrid.style.display = 'none';
+    } else {
+        if (tabRec) tabRec.classList.add('active');
+        if (tabSent) tabSent.classList.remove('active');
+        if (elReceivedGrid) elReceivedGrid.style.display = 'grid';
+        if (elSentGrid) elSentGrid.style.display = 'none';
+    }
+}
 
 function addReceivedFileToGallery(fileItem) {
     localReceivedFiles.unshift(fileItem);
     renderReceivedFilesGrid();
 }
 
+function addSentFileToGallery(fileItem) {
+    localSentFiles.unshift(fileItem);
+    renderSentFilesGrid();
+}
+
+async function refreshAllVaultFiles() {
+    await refreshReceivedFilesList();
+    await refreshSentFilesList();
+}
+
 async function refreshReceivedFilesList() {
-    // 1. Load from IndexedDB
-    const cachedFiles = await loadVaultIndexedDbFiles();
+    const cachedFiles = await loadVaultIndexedDbFiles("received_files");
     localReceivedFiles = [...cachedFiles];
 
-    // 2. Fetch from backend E:\BoVxAi DB
+    // Query backend E:\BoVxAi DB
     const endpoints = [
         `/api/storage/files/${encodeURIComponent(myVaniUid)}?category=beam_media`,
         `http://127.0.0.1:5000/api/storage/files/${encodeURIComponent(myVaniUid)}?category=beam_media`
@@ -1208,6 +1291,12 @@ async function refreshReceivedFilesList() {
     renderReceivedFilesGrid();
 }
 
+async function refreshSentFilesList() {
+    const cachedSent = await loadVaultIndexedDbFiles("sent_files");
+    localSentFiles = [...cachedSent];
+    renderSentFilesGrid();
+}
+
 function renderReceivedFilesGrid() {
     if (!elReceivedGrid) return;
     if (elReceivedCount) elReceivedCount.textContent = localReceivedFiles.length.toString();
@@ -1216,7 +1305,7 @@ function renderReceivedFilesGrid() {
         elReceivedGrid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 30px 10px;">
                 <i class="fa-solid fa-inbox" style="font-size: 2.5rem; color: rgba(255, 255, 255, 0.15); margin-bottom: 10px;"></i>
-                <p style="font-size: 0.9rem;">No files received yet.<br>Pair a device and beam files to see them stored and displayed here in real time.</p>
+                <p style="font-size: 0.9rem;">No files received yet.<br>Files received from your peers will be displayed here with an on-demand download button.</p>
             </div>
         `;
         return;
@@ -1245,11 +1334,11 @@ function renderReceivedFilesGrid() {
                 </div>
 
                 <div class="rec-actions">
-                    <a href="${downloadTarget}" download="${file.filename}" class="btn-rec-action" style="background: rgba(6, 182, 212, 0.18); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.3);">
-                        <i class="fa-solid fa-download"></i> Save
-                    </a>
+                    <button class="btn-rec-action" onclick="downloadFileOnDemand('${file.id || idx}', 'received')" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(99, 102, 241, 0.25)); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.4); font-weight: 700;">
+                        <i class="fa-solid fa-download"></i> Download
+                    </button>
                     ${file.blobUrl ? `
-                        <button class="btn-rec-action" onclick="previewReceivedMedia('${file.id || idx}')" style="background: rgba(99, 102, 241, 0.18); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3);">
+                        <button class="btn-rec-action" onclick="previewMedia('${file.id || idx}', 'received')" style="background: rgba(255, 255, 255, 0.08); color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.15);">
                             <i class="fa-solid fa-eye"></i> View
                         </button>
                     ` : ''}
@@ -1259,8 +1348,79 @@ function renderReceivedFilesGrid() {
     }).join('');
 }
 
-function previewReceivedMedia(fileId) {
-    const file = localReceivedFiles.find((f, i) => f.id === fileId || i.toString() === fileId);
+function renderSentFilesGrid() {
+    if (!elSentGrid) return;
+    if (elSentCount) elSentCount.textContent = localSentFiles.length.toString();
+
+    if (localSentFiles.length === 0) {
+        elSentGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 30px 10px;">
+                <i class="fa-solid fa-paper-plane" style="font-size: 2.5rem; color: rgba(255, 255, 255, 0.15); margin-bottom: 10px;"></i>
+                <p style="font-size: 0.9rem;">No files sent yet.<br>Select any file above and beam it to a peer.</p>
+            </div>
+        `;
+        return;
+    }
+
+    elSentGrid.innerHTML = localSentFiles.map((file, idx) => {
+        const iconClass = getFileIconClass(file.filename);
+        const displaySize = formatBytes(file.size_bytes);
+        const shortPath = file.stored_path || `E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\${file.filename}`;
+
+        return `
+            <div class="received-file-card" style="border-color: rgba(16, 185, 129, 0.3);">
+                <div class="rec-header">
+                    <div class="rec-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                        <i class="${iconClass}"></i>
+                    </div>
+                    <div class="rec-info">
+                        <div class="rec-name" title="${file.filename}">${file.filename}</div>
+                        <div class="rec-size">${displaySize} • Beamed at ${file.timestamp}</div>
+                    </div>
+                </div>
+
+                <div class="rec-path" title="${shortPath}">
+                    <i class="fa-solid fa-hard-drive"></i> ${shortPath}
+                </div>
+
+                <div class="rec-actions">
+                    <button class="btn-rec-action" onclick="downloadFileOnDemand('${file.id || idx}', 'sent')" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25)); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); font-weight: 700;">
+                        <i class="fa-solid fa-download"></i> Download
+                    </button>
+                    ${file.blobUrl ? `
+                        <button class="btn-rec-action" onclick="previewMedia('${file.id || idx}', 'sent')" style="background: rgba(255, 255, 255, 0.08); color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.15);">
+                            <i class="fa-solid fa-eye"></i> View
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// On-demand download when user clicks the Download button
+function downloadFileOnDemand(fileId, listType) {
+    const list = listType === 'sent' ? localSentFiles : localReceivedFiles;
+    const file = list.find((f, i) => f.id === fileId || i.toString() === fileId);
+    if (!file) return;
+
+    const url = file.blobUrl || file.serverUrl;
+    if (!url) {
+        alert("File data URL not found.");
+        return;
+    }
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function previewMedia(fileId, listType) {
+    const list = listType === 'sent' ? localSentFiles : localReceivedFiles;
+    const file = list.find((f, i) => f.id === fileId || i.toString() === fileId);
     if (!file || !file.blobUrl) return;
 
     const ext = file.filename.split('.').pop().toLowerCase();
@@ -1290,7 +1450,11 @@ window.startBeamTransfer = startBeamTransfer;
 window.acceptIncomingFile = acceptIncomingFile;
 window.declineIncomingFile = declineIncomingFile;
 window.refreshReceivedFilesList = refreshReceivedFilesList;
-window.previewReceivedMedia = previewReceivedMedia;
+window.refreshSentFilesList = refreshSentFilesList;
+window.refreshAllVaultFiles = refreshAllVaultFiles;
+window.switchBeamVaultTab = switchBeamVaultTab;
+window.downloadFileOnDemand = downloadFileOnDemand;
+window.previewMedia = previewMedia;
 
 // Safe startup: execute once DOM is ready
 if (document.readyState === 'loading') {

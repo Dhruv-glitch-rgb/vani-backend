@@ -819,6 +819,34 @@
             background: rgba(255, 255, 255, 0.18);
         }
 
+        /* Vault Tab Buttons */
+        .vault-tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-muted);
+            padding: 8px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .vault-tab-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .vault-tab-btn.active {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(99, 102, 241, 0.25));
+            border-color: var(--accent-cyan);
+            color: #38bdf8;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+        }
+
         /* Camera Scanner Styles */
         #camera-reader-viewport {
             width: 100%;
@@ -1006,27 +1034,40 @@
 
         </div>
 
-        <!-- Bottom: Received Files & Sovereign Archive Section -->
+        <!-- Bottom: Received & Sent Files Sovereign Archive Section -->
         <section class="received-files-card">
-            <div class="card-heading">
-                <h2>
-                    <i class="fa-solid fa-folder-open" style="color: var(--accent-emerald);"></i> 
-                    Received Files &amp; Sovereign Archive (<span id="receivedFileCount">0</span>)
-                </h2>
+            <div class="card-heading" style="flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="vault-tab-btn active" id="tabReceivedBtn" onclick="switchBeamVaultTab('received')">
+                        <i class="fa-solid fa-inbox"></i> Received Files (<span id="receivedFileCount">0</span>)
+                    </button>
+                    <button class="vault-tab-btn" id="tabSentBtn" onclick="switchBeamVaultTab('sent')">
+                        <i class="fa-solid fa-paper-plane"></i> Sent Files (<span id="sentFileCount">0</span>)
+                    </button>
+                </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;" id="dbInitStatusBadge">
                         <i class="fa-solid fa-circle-check"></i> E:\BoVxAi DB Ready
                     </span>
-                    <button class="header-btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="refreshReceivedFilesList()">
+                    <button class="header-btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="refreshAllVaultFiles()">
                         <i class="fa-solid fa-rotate"></i> Refresh
                     </button>
                 </div>
             </div>
 
+            <!-- Received Files Grid -->
             <div class="received-files-grid" id="receivedFilesGrid">
                 <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 30px 10px;">
                     <i class="fa-solid fa-inbox" style="font-size: 2.5rem; color: rgba(255, 255, 255, 0.15); margin-bottom: 10px;"></i>
-                    <p style="font-size: 0.9rem;">No files received yet.<br>Pair a device and beam files to see them stored and displayed here in real time.</p>
+                    <p style="font-size: 0.9rem;">No files received yet.<br>Pair a device and beam files to see them stored here. Download anytime on demand.</p>
+                </div>
+            </div>
+
+            <!-- Sent Files Grid -->
+            <div class="received-files-grid" id="sentFilesGrid" style="display: none;">
+                <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 30px 10px;">
+                    <i class="fa-solid fa-paper-plane" style="font-size: 2.5rem; color: rgba(255, 255, 255, 0.15); margin-bottom: 10px;"></i>
+                    <p style="font-size: 0.9rem;">No files sent yet.<br>Select any file above and beam it to your linked peer.</p>
                 </div>
             </div>
         </section>

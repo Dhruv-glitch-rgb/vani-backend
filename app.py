@@ -713,8 +713,9 @@ def handle_command():
     # Store assistant response in memory if it's a valid string message
     if success and isinstance(result_message, str) and result_message.strip():
         memory_manager.add_message('assistant', result_message)
-        # Voice agent logs/synthesizes response
-        voice_agent.speak(result_message)
+        # Voice agent logs/synthesizes response and archives to real user's sovereign partition
+        user_id = request.headers.get('X-Vani-UID') or data.get('user_id')
+        voice_agent.speak(result_message, user_id=user_id)
     
     response_data = {
         'success': success,

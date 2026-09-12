@@ -555,8 +555,13 @@ async function submitCommand(commandText) {
         if (localModel) {
             headers['X-Local-Model'] = localModel;
         }
-        const activeVaniUid = localStorage.getItem('vani_user_uid') || localStorage.getItem('bovxai_last_uid') || 'V.A.N.I-xAI-SOVEREIGN';
-        headers['X-Vani-UID'] = activeVaniUid;
+        let activeVaniUid = localStorage.getItem('vani_user_uid') || localStorage.getItem('bovxai_last_uid') || '';
+        if (activeVaniUid && (activeVaniUid.includes('SOVEREIGN') || activeVaniUid.includes('GUEST') || activeVaniUid.includes('STUDENT') || activeVaniUid.includes('TEST'))) {
+            activeVaniUid = '';
+        }
+        if (activeVaniUid) {
+            headers['X-Vani-UID'] = activeVaniUid;
+        }
 
         // Parallel execution: Race backend with client fallback (reduced from 20s to 4s for instant responsiveness)
         const backendTimeoutMs = (localMode === 'local_only') ? 8000 : 4000;
@@ -789,32 +794,50 @@ function intruderSnap() {
 }
 
 function captureAndUploadIntruder() {
-    if (!authInstance) return;
     const video = document.getElementById('hidden-camera');
     const canvas = document.getElementById('hidden-canvas');
-    if (!video.srcObject) return;
+    if (!video || !video.srcObject) return;
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    canvas.toBlob(blob => {
+    canvas.toBlob(async (blob) => {
         if (!blob) return;
-        // Upload to Firebase Storage
-        const storageRef = firebase.storage().ref();
-        const intruderRef = storageRef.child(`intruder_alerts/${authInstance.uid}/${new Date().getTime()}.jpg`);
-        intruderRef.put(blob).then(snapshot => {
-            console.log("Intruder photo uploaded secretly!");
-            // Log to Firestore
-            intruderRef.getDownloadURL().then(url => {
-                db.collection('intruder_alerts').add({
-                    userId: authInstance.uid,
-                    photoUrl: url,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            });
-        }).catch(e => console.error("Secret upload failed", e));
-    }, 'image/jpeg', 0.8);
+        let activeVaniUid = localStorage.getItem('vani_user_uid') || localStorage.getItem('bovxai_last_uid') || '';
+        if (!activeVaniUid || activeVaniUid.includes('SOVEREIGN') || activeVaniUid.includes('GUEST') || activeVaniUid.includes('STUDENT')) {
+            return;
+        }
+
+        const formData = new FormData();
+        const filename = `intruder_${Date.now()}.jpg`;
+        formData.append('user_id', activeVaniUid);
+        formData.append('category', 'images');
+        formData.append('filename', filename);
+        formData.append('file', blob, filename);
+
+        try {
+            const endpoints = [
+                '/api/storage/upload',
+                'http://127.0.0.1:5000/api/storage/upload'
+            ];
+            for (const ep of endpoints) {
+                try {
+                    await fetch(ep, {
+                        method: 'POST',
+                        headers: { 'X-Vani-UID': activeVaniUid },
+                        body: formData
+                    });
+                    console.log("[BoVxAi DB] Intruder alert snapshot saved to sovereign drive:", activeVaniUid);
+                    break;
+                } catch (err) {
+                    // Try fallback
+                }
+            }
+        } catch (e) {
+            console.error("Local sovereign storage upload error:", e);
+        }
+    }, 'image/jpeg', 0.85);
 }
 
 function unlockTerminal() {

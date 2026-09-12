@@ -56,17 +56,20 @@ def speak_async(text, user_id="V.A.N.I-xAI-SYSTEM"):
 
         if success:
             log_msg(f"Voice synthesized successfully: '{cleaned[:40]}...'")
-            # Optionally archive in E:\BoVxAi DB
-            try:
-                import bovxai_db_manager
-                with open(temp_file, 'rb') as af:
-                    bovxai_db_manager.save_user_media(user_id, 'voice_notes', 'assistant_response.mp3', af.read())
-            except Exception:
-                pass
+            # Archive in E:\BoVxAi DB for real verified user only (never create fake folders)
+            if user_id:
+                try:
+                    import bovxai_db_manager
+                    safe_uid = bovxai_db_manager.sanitize_user_id(user_id)
+                    if safe_uid:
+                        with open(temp_file, 'rb') as af:
+                            bovxai_db_manager.save_user_media(safe_uid, 'voice_notes', f'voice_{int(time.time())}.mp3', af.read())
+                except Exception:
+                    pass
     except Exception as e:
         log_msg(f"Speech synthesis error: {e}")
 
-def speak(text, user_id="V.A.N.I-xAI-SYSTEM"):
+def speak(text, user_id=None):
     t = threading.Thread(target=speak_async, args=(text, user_id), daemon=True)
     t.start()
 
