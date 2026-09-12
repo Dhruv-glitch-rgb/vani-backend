@@ -186,6 +186,18 @@
         "destination": "/quantum_connect.html"
       },
       {
+        "source": "/quantum_beam",
+        "destination": "/quantum_beam.html"
+      },
+      {
+        "source": "/quantum-beam",
+        "destination": "/quantum_beam.html"
+      },
+      {
+        "source": "/beam",
+        "destination": "/quantum_beam.html"
+      },
+      {
         "source": "/saras_web_search",
         "destination": "/saras_web_search.html"
       },

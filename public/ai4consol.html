@@ -1831,6 +1831,13 @@
                     <span>Mesh Sync</span>
                 </button>
 
+                <button class="header-btn" onclick="window.location.href='/quantum_beam'"
+                    style="background: #e0f2fe; border-color: #7dd3fc; color: #0284c7 !important;"
+                    title="Quantum Beam - Instant P2P File Drop to Phone & Devices">
+                    <i class="fa-solid fa-bolt-lightning" style="color: #0284c7;"></i>
+                    <span>Quantum Beam</span>
+                </button>
+
                 <button class="header-btn header-btn-search" onclick="openSarasWebSearchModal()"
                     title="Search with Saras Web Search">
                     <i class="fa-solid fa-globe"></i>
@@ -2124,6 +2131,14 @@
                     <div class="popover-card-text">
                         <h4>Saras.Radar</h4>
                         <p>Discover nearby devices &amp; neural nodes</p>
+                    </div>
+                </a>
+                <!-- Item: Quantum Beam Drop -->
+                <a href="/quantum_beam" class="feature-popover-card">
+                    <div class="popover-icon-box cyan"><i class="fa-solid fa-bolt-lightning"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Quantum Beam (P2P Drop)</h4>
+                        <p>Zero-cable AirDrop to phone &amp; direct E:\BoVxAi DB storage</p>
                     </div>
                 </a>
                 <!-- Item 2: Mesh Sync -->
@@ -2541,6 +2556,7 @@
                     }));
                     localStorage.setItem('bovxai_cached_id_' + user.uid, vaniId);
                     localStorage.setItem('bovxai_last_uid', vaniId);
+                    localStorage.setItem('vani_user_uid', vaniId);
                 } catch (e) {}
 
                 // After full login OR first visit of existing old user: automatically generate & present BoVxAi ID Card Modal

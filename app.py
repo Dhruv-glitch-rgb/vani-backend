@@ -19,6 +19,7 @@ import psutil
 import platform
 import time
 import logger
+import bovxai_db_manager
 
 # Setup flask app
 # Ensure template and static folders are loaded from public directory (single source of truth)
@@ -364,6 +365,13 @@ def quantum_radar_page():
 @app.route('/quantum-connect')
 def quantum_connect_page():
     return serve_page('quantum_connect.html', os.path.join('md', 'chat.md'))
+
+@app.route('/quantum_beam.html')
+@app.route('/quantum_beam')
+@app.route('/quantum-beam')
+@app.route('/beam')
+def quantum_beam_page():
+    return serve_page('quantum_beam.html', os.path.join('md', 'beam.md'))
 
 @app.route('/terms.html')
 @app.route('/terms')
@@ -814,6 +822,140 @@ def get_pull_status_endpoint():
         return api_error_response('METHOD_NOT_ALLOWED', f"The HTTP method {request.method} is not allowed for /api/local-llm/pull-status. Use GET.", 405, "Send a GET request to query model pull status.")
     import llm_router
     return jsonify(llm_router.PULL_STATUS)
+
+# ----------------------------------------------------
+# SOVEREIGN STORAGE ENGINE (E:\BoVxAi DB) ENDPOINTS
+# ----------------------------------------------------
+
+@app.route('/api/storage/upload', methods=['POST'])
+def upload_sovereign_media():
+    """
+    Saves high-bandwidth media (voice notes, images, beam transfers)
+    locally to E:\\BoVxAi DB\\<USER_ID>\\<category>\\
+    Eliminates reliance on external cloud storage.
+    """
+    try:
+        user_id = request.headers.get('X-Vani-UID') or request.form.get('user_id')
+        category = request.form.get('category') or 'others'
+        filename = request.form.get('filename') or 'upload_asset'
+        
+        # Check if sent via multipart/form-data file
+        if 'file' in request.files:
+            file_obj = request.files['file']
+            if not filename or filename == 'upload_asset':
+                filename = file_obj.filename or 'upload_asset'
+            binary_data = file_obj.read()
+            res = bovxai_db_manager.save_user_media(user_id, category, filename, binary_data)
+            return jsonify(res)
+            
+        # Check if sent via JSON payload (Base64)
+        json_data = request.get_json(silent=True) or {}
+        if not user_id:
+            user_id = json_data.get('user_id')
+        if category == 'others':
+            category = json_data.get('category', 'others')
+        if filename == 'upload_asset':
+            filename = json_data.get('filename', 'upload_asset')
+            
+        base64_str = json_data.get('base64_data') or json_data.get('data')
+        if base64_str:
+            res = bovxai_db_manager.save_base64_media(user_id, category, filename, base64_str)
+            return jsonify(res)
+            
+        return api_error_response('BAD_REQUEST', "No file or base64_data provided in request.", 400)
+    except Exception as e:
+        return api_error_response('INTERNAL_SERVER_ERROR', f"Storage write error: {str(e)}", 500)
+
+@app.route('/api/storage/media/<user_id>/<category>/<filename>', methods=['GET'])
+def get_sovereign_media(user_id, category, filename):
+    """
+    Serves stored media from E:\\BoVxAi DB\\<user_id>\\<category>\\<filename>
+    """
+    media_info = bovxai_db_manager.get_user_media(user_id, category, filename)
+    if not media_info.get('found'):
+        return api_error_response('NOT_FOUND', "Requested media asset was not found in sovereign storage.", 404)
+        
+    cat_dir = os.path.dirname(media_info['path'])
+    resp = send_from_directory(cat_dir, media_info['filename'], mimetype=media_info['mimetype'])
+    resp.headers['Cache-Control'] = 'public, max-age=86400'
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+@app.route('/api/storage/stats/<user_id>', methods=['GET'])
+def get_user_storage_stats_endpoint(user_id):
+    """
+    Returns total storage consumption and breakdown on E:\\BoVxAi DB for the user.
+    """
+    stats = bovxai_db_manager.get_user_storage_stats(user_id)
+    return jsonify(stats)
+
+@app.route('/api/storage/files/<user_id>', methods=['GET'])
+def list_user_storage_files_endpoint(user_id):
+    """
+    Lists stored media assets for the given user.
+    """
+    cat = request.args.get('category')
+    files = bovxai_db_manager.list_user_files(user_id, category=cat)
+    return jsonify({'success': True, 'user_id': user_id, 'files': files})
+
+# ----------------------------------------------------
+# QUANTUM BEAM LOCAL P2P SIGNALING (OFFLINE / LAN)
+# ----------------------------------------------------
+
+BEAM_SIGNALING_ROOMS = {}
+
+@app.route('/api/beam/signal', methods=['POST'])
+def post_beam_signal():
+    """
+    Relays WebRTC SDP Offer/Answer and ICE candidates for local P2P pairing.
+    """
+    data = request.get_json(silent=True) or {}
+    room_id = data.get('room_id')
+    sender_id = data.get('sender_id')
+    signal_type = data.get('type')
+    payload = data.get('payload')
+    
+    if not room_id or not sender_id or not payload:
+        return api_error_response('BAD_REQUEST', "Missing room_id, sender_id, or payload in signal.", 400)
+        
+    now = time.time()
+    if room_id not in BEAM_SIGNALING_ROOMS:
+        BEAM_SIGNALING_ROOMS[room_id] = {
+            'created_at': now,
+            'signals': deque(maxlen=50)
+        }
+        
+    BEAM_SIGNALING_ROOMS[room_id]['signals'].append({
+        'sender_id': sender_id,
+        'type': signal_type,
+        'payload': payload,
+        'timestamp': now
+    })
+    
+    # Prune rooms older than 30 minutes
+    expired = [rid for rid, rdata in BEAM_SIGNALING_ROOMS.items() if now - rdata['created_at'] > 1800]
+    for rid in expired:
+        BEAM_SIGNALING_ROOMS.pop(rid, None)
+        
+    return jsonify({'success': True})
+
+@app.route('/api/beam/signal/<room_id>', methods=['GET'])
+def get_beam_signals(room_id):
+    """
+    Fetches incoming signaling messages for a peer in a beam room.
+    """
+    peer_id = request.args.get('peer_id')
+    since = float(request.args.get('since', 0))
+    
+    room = BEAM_SIGNALING_ROOMS.get(room_id)
+    if not room:
+        return jsonify({'success': True, 'signals': []})
+        
+    new_signals = [
+        s for s in room['signals']
+        if s['sender_id'] != peer_id and s['timestamp'] > since
+    ]
+    return jsonify({'success': True, 'signals': new_signals, 'server_time': time.time()})
 
 # Catch-all file server for public assets
 @app.route('/<path:path>')

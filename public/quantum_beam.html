@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantum Beam | Zero-Cable Instant P2P File &amp; Media Drop - V.A.N.I-xAI</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Quantum Beam by V.A.N.I-xAI is an ultra-fast, zero-cable AirDrop-style P2P local file transfer engine running directly in browser via WebRTC DataChannels. No file limits, zero cloud upload, 100% private.">
+    <meta name="keywords" content="quantum beam, vani-xai airdrop, webpeer file drop, p2p file transfer, local wifi drop, zero cloud file transfer, bovxai">
+    <meta name="author" content="Dhruv Sagar - Bureau of V.A.N.I-xAI">
+    <link rel="canonical" href="https://vani-nzdrsr.web.app/quantum_beam">
+    <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QRious for lightweight, instant QR code rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #030712;
+            --panel-bg: rgba(15, 23, 42, 0.82);
+            --panel-border: rgba(99, 102, 241, 0.28);
+            --accent-cyan: #06b6d4;
+            --accent-indigo: #6366f1;
+            --accent-emerald: #10b981;
+            --accent-purple: #a855f7;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-deep) url('/inxv_bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Top Header */
+        .beam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 28px;
+            background: rgba(3, 7, 18, 0.88);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--panel-border);
+            z-index: 100;
+        }
+
+        .beam-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .beam-logo img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-cyan);
+            filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.6));
+        }
+
+        .beam-logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--text-main);
+            letter-spacing: 0.8px;
+        }
+
+        .beam-version-pill {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.65rem;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .header-btn:hover {
+            background: var(--accent-indigo);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+        }
+
+        /* Sovereign Storage Badge */
+        .sovereign-storage-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #34d399;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Main Workspace Container */
+        .beam-main {
+            display: flex;
+            flex: 1;
+            padding: 25px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            gap: 25px;
+        }
+
+        @media (max-width: 950px) {
+            .beam-main {
+                flex-direction: column;
+                padding: 16px;
+            }
+        }
+
+        /* Left Column: Radar Discovery & QR */
+        .beam-col-radar {
+            flex: 1.1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Right Column: Dropzone & Live Telemetry */
+        .beam-col-transfer {
+            flex: 1.4;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .beam-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 22px;
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+
+        .card-heading h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd5e1;
+        }
+
+        /* Radar Scanner Wave Animation */
+        .radar-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 25px 0;
+        }
+
+        .radar-disk {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(6, 182, 212, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+        }
+
+        .radar-pulse-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--accent-cyan);
+            animation: pulseWave 2.8s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .radar-pulse-ring:nth-child(2) {
+            animation-delay: 0.9s;
+        }
+        .radar-pulse-ring:nth-child(3) {
+            animation-delay: 1.8s;
+        }
+
+        @keyframes pulseWave {
+            0% { transform: scale(0.3); opacity: 0.9; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        .radar-center-hub {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.7);
+            z-index: 5;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .radar-center-hub:hover {
+            transform: scale(1.08);
+        }
+
+        .radar-center-hub i {
+            font-size: 1.6rem;
+            color: #fff;
+        }
+
+        .radar-status-caption {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* 6-Digit PIN & QR pairing container */
+        .beam-pairing-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px 18px;
+            gap: 15px;
+        }
+
+        .pin-box-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+        }
+
+        .beam-pin-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            letter-spacing: 2.5px;
+        }
+
+        .qr-button-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qr-toggle-btn {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--accent-indigo);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .qr-toggle-btn:hover {
+            background: var(--accent-indigo);
+        }
+
+        /* Connected Peers List */
+        .connected-peers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .peer-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 12px 16px;
+            transition: all 0.25s ease;
+        }
+
+        .peer-item:hover, .peer-item.active {
+            background: rgba(6, 182, 212, 0.12);
+            border-color: rgba(6, 182, 212, 0.4);
+            transform: translateX(4px);
+        }
+
+        .peer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .peer-avatar-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(99, 102, 241, 0.3));
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--accent-cyan);
+        }
+
+        .peer-name {
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--text-main);
+        }
+
+        .peer-uid {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .peer-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            box-shadow: 0 0 8px var(--accent-emerald);
+        }
+
+        /* Drag & Drop Dropzone */
+        .dropzone-container {
+            border: 2px dashed rgba(99, 102, 241, 0.45);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .dropzone-container:hover, .dropzone-container.drag-over {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.08);
+            transform: scale(1.01);
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.25);
+        }
+
+        .dropzone-icon {
+            font-size: 3.2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.5));
+            animation: floatIcon 3s infinite ease-in-out;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .dropzone-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .dropzone-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .dropzone-file-input {
+            display: none;
+        }
+
+        /* Selected File Card */
+        .selected-file-card {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-top: 15px;
+        }
+
+        .selected-file-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            overflow: hidden;
+        }
+
+        .selected-file-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+
+        .selected-file-size {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .send-beam-btn {
+            background: linear-gradient(135deg, #06b6d4, #6366f1);
+            border: none;
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 18px rgba(6, 182, 212, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .send-beam-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 24px rgba(6, 182, 212, 0.6);
+        }
+
+        /* Transfer Progress Telemetry */
+        .transfer-telemetry-box {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .telemetry-row-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .telemetry-stage {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .telemetry-speed {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #34d399;
+            font-weight: 700;
+        }
+
+        /* Progress Bar Track */
+        .progress-track {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #06b6d4, #6366f1, #34d399);
+            border-radius: 10px;
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.8);
+        }
+
+        .telemetry-meta-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Modal Overlays (QR Modal, Receive Modal) */
+        .beam-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .beam-modal-card {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 28px;
+            width: 90%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .qr-canvas-wrapper {
+            background: #ffffff;
+            padding: 14px;
+            border-radius: 16px;
+            display: inline-block;
+            margin: 18px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-modal-close {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-modal-close:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Header -->
+    <header class="beam-header">
+        <a href="/index.html" class="beam-logo" title="Bureau of V.A.N.I-xAI">
+            <img src="/vani_icon.png" alt="V.A.N.I-xAI Icon">
+            <span class="beam-logo-text">QUANTUM BEAM</span>
+            <span class="beam-version-pill">v2.6 P2P</span>
+        </a>
+
+        <div class="header-actions">
+            <div class="sovereign-storage-chip" title="Direct storage to E:\BoVxAi DB without public cloud upload">
+                <i class="fa-solid fa-hard-drive"></i> E:\BoVxAi DB Connected
+            </div>
+            <a href="/ai4consol.html" class="header-btn">
+                <i class="fa-solid fa-terminal"></i> Console
+            </a>
+            <a href="/quantum_radar" class="header-btn">
+                <i class="fa-solid fa-satellite-dish"></i> Radar
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="beam-main">
+        
+        <!-- Left: Radar & P2P Pairing -->
+        <section class="beam-col-radar">
+            <div class="beam-card">
+                <div class="card-heading">
+                    <h2><i class="fa-solid fa-tower-broadcast" style="color: var(--accent-cyan);"></i> Discovery Radar</h2>
+                    <span id="p2pStateBadge" style="font-size: 0.75rem; color: #34d399; font-weight: 700;">
+                        <i class="fa-solid fa-circle" style="font-size: 0.55rem; color: #10b981;"></i> Listening
+                    </span>
+                </div>
+
+                <!-- Radar Waves -->
+                <div class="radar-box">
+                    <div class="radar-disk">
+                        <div class="radar-pulse-ring"></div>
+                        <div class="radar-pulse-ring"></div>
+                        <div class="radar-pulse-ring"></div>
+                        <div class="radar-center-hub" id="myDeviceHub" title="Your Device Node">
+                            <i class="fa-solid fa-laptop" id="myDeviceIcon"></i>
+                        </div>
+                    </div>
+                    <div class="radar-status-caption">
+                        <span id="myDeviceLabel" style="font-weight: 700; color: #fff;">Desktop Station</span> &bull; 
+                        <span id="myVaniUidText" style="font-family: 'Fira Code', monospace; color: var(--accent-cyan);">V.A.N.I-xAI-SOVEREIGN</span>
+                    </div>
+                </div>
+
+                <!-- Quick PIN & QR Bar -->
+                <div class="beam-pairing-strip">
+                    <div>
+                        <div class="pin-box-label">Instant Quantum PIN</div>
+                        <div class="beam-pin-value" id="currentRoomPin">BEAM-2026</div>
+                    </div>
+                    <div class="qr-button-box">
+                        <button class="qr-toggle-btn" onclick="openQrModal()" title="Show QR Code for Phone Scan">
+                            <i class="fa-solid fa-qrcode"></i> Scan QR
+                        </button>
+                        <button class="qr-toggle-btn" onclick="enterManualPin()" title="Connect to another Device PIN">
+                            <i class="fa-solid fa-keyboard"></i> Join PIN
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Connected Nodes -->
+                <div style="margin-top: 20px;">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+                        Connected Peer Nodes (<span id="peerCount">0</span>)
+                    </div>
+                    <div class="connected-peers-list" id="connectedPeersList">
+                        <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px 10px;">
+                            <i class="fa-solid fa-satellite" style="font-size: 1.8rem; color: rgba(99, 102, 241, 0.35); margin-bottom: 8px;"></i>
+                            <p>No phone or device connected yet.<br>Scan the QR code or enter PIN from another device to start beaming files.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: Dropzone & File Transmitter -->
+        <section class="beam-col-transfer">
+            <div class="beam-card">
+                <div class="card-heading">
+                    <h2><i class="fa-solid fa-bolt-lightning" style="color: var(--accent-amber);"></i> Quantum Dropzone</h2>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">Zero Cloud Upload &bull; WebRTC Direct</span>
+                </div>
+
+                <!-- Dropzone Area -->
+                <div class="dropzone-container" id="dropzoneContainer" onclick="triggerFilePicker()">
+                    <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                    <div class="dropzone-title">Drag &amp; Drop Any File or Media Here</div>
+                    <div class="dropzone-sub">Photos, 4K Videos, PDFs, ZIP archives, Code files &bull; No size limit</div>
+                    <input type="file" id="filePickerInput" class="dropzone-file-input" onchange="handleFileChosen(this.files)">
+                </div>
+
+                <!-- Selected File Card -->
+                <div class="selected-file-card" id="selectedFileCard">
+                    <div class="selected-file-info">
+                        <i class="fa-solid fa-file-lines" style="font-size: 1.8rem; color: var(--accent-cyan);" id="selectedFileIcon"></i>
+                        <div>
+                            <div class="selected-file-name" id="selectedFileName">filename.zip</div>
+                            <div class="selected-file-size" id="selectedFileSize">0 MB</div>
+                        </div>
+                    </div>
+                    <button class="send-beam-btn" id="btnSendFile" onclick="startBeamTransfer()">
+                        <i class="fa-solid fa-paper-plane"></i> Beam to Peer
+                    </button>
+                </div>
+
+                <!-- Real-Time Transfer Telemetry -->
+                <div class="transfer-telemetry-box" id="transferTelemetryBox">
+                    <div class="telemetry-row-top">
+                        <div class="telemetry-stage" id="telemetryStageText">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i> Streaming Chunks...
+                        </div>
+                        <div class="telemetry-speed" id="telemetrySpeed">0.0 MB/s</div>
+                    </div>
+
+                    <div class="progress-track">
+                        <div class="progress-fill" id="telemetryProgressFill"></div>
+                    </div>
+
+                    <div class="telemetry-meta-row">
+                        <span id="telemetryTransferredBytes">0 MB / 0 MB</span>
+                        <span id="telemetryPercent">0%</span>
+                        <span id="telemetryEta">ETA: --</span>
+                    </div>
+                </div>
+
+                <!-- Sovereign Storage Archive Option -->
+                <div style="margin-top: 18px; padding: 14px 18px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 14px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-shield-halved" style="color: #34d399; font-size: 1.2rem;"></i>
+                        <div>
+                            <div style="font-size: 0.88rem; font-weight: 700; color: #fff;">Auto-Save to Sovereign Drive (E:\BoVxAi DB)</div>
+                            <div style="font-size: 0.74rem; color: var(--text-muted);">Incoming files automatically archive under your isolated User ID</div>
+                        </div>
+                    </div>
+                    <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                        <input type="checkbox" id="autoArchiveToggle" checked style="opacity: 0; width: 0; height: 0;">
+                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #059669; border-radius: 24px; transition: .3s;"></span>
+                    </label>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- QR Code Modal -->
+    <div class="beam-modal-backdrop" id="qrModalBackdrop">
+        <div class="beam-modal-card">
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Scan to Connect Phone</h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Open camera or QR scanner on your phone to instantly join this Quantum Beam room.</p>
+            
+            <div class="qr-canvas-wrapper">
+                <canvas id="qrCodeCanvas"></canvas>
+            </div>
+
+            <div style="font-family: 'Fira Code', monospace; font-size: 1.1rem; color: var(--accent-cyan); font-weight: 700; margin-bottom: 15px;">
+                PIN: <span id="modalPinValue">BEAM-2026</span>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeQrModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Incoming File Prompt Modal -->
+    <div class="beam-modal-backdrop" id="incomingFileModal">
+        <div class="beam-modal-card">
+            <i class="fa-solid fa-file-arrow-down" style="font-size: 3rem; color: var(--accent-cyan); margin-bottom: 12px;"></i>
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Incoming Beam File</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);" id="incomingPromptDetails">A peer wants to send you a file.</p>
+            
+            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+                <button class="btn-modal-close" style="background: rgba(244, 63, 94, 0.2); border-color: rgba(244, 63, 94, 0.4); color: #fda4af;" onclick="declineIncomingFile()">
+                    <i class="fa-solid fa-xmark"></i> Decline
+                </button>
+                <button class="send-beam-btn" onclick="acceptIncomingFile()">
+                    <i class="fa-solid fa-download"></i> Accept &amp; Receive
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quantum Beam Engine Script -->
+    <script src="/quantum_beam.js"></script>
+</body>
+</html>

@@ -555,6 +555,8 @@ async function submitCommand(commandText) {
         if (localModel) {
             headers['X-Local-Model'] = localModel;
         }
+        const activeVaniUid = localStorage.getItem('vani_user_uid') || localStorage.getItem('bovxai_last_uid') || 'V.A.N.I-xAI-SOVEREIGN';
+        headers['X-Vani-UID'] = activeVaniUid;
 
         // Parallel execution: Race backend with client fallback (reduced from 20s to 4s for instant responsiveness)
         const backendTimeoutMs = (localMode === 'local_only') ? 8000 : 4000;
