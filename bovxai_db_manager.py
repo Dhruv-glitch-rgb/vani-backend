@@ -308,3 +308,41 @@ def get_user_storage_stats(user_id):
         pass
         
     return stats
+
+def list_all_provisioned_users():
+    """
+    Returns a list of all user partitions provisioned under E:\BoVxAi DB\
+    """
+    base_dir = get_base_storage_dir()
+    users = []
+    if os.path.exists(base_dir):
+        for entry in os.listdir(base_dir):
+            full_p = os.path.join(base_dir, entry)
+            if os.path.isdir(full_p):
+                users.append(entry)
+    return users
+
+def auto_provision_all_users(user_ids=None):
+    """
+    Auto-provisions sovereign database folders for all provided user IDs,
+    or initializes standard platform default users.
+    Ensures E:\BoVxAi DB\<USER_ID>\ exists with images, voice_notes, beam_media, others, metadata.json
+    """
+    base_defaults = [
+        "V.A.N.I-xAI-ADMIN-2026",
+        "V.A.N.I-xAI-DHRU-2026",
+        "V.A.N.I-xAI-STUDENT-2026",
+        "V.A.N.I-xAI-SOVEREIGN"
+    ]
+    target_ids = list(user_ids) if user_ids else base_defaults
+    provisioned = []
+    for uid in target_ids:
+        if uid:
+            res = init_user_storage(uid)
+            provisioned.append(res)
+    return {
+        "success": True,
+        "total_provisioned": len(provisioned),
+        "users": provisioned,
+        "timestamp": datetime.now().isoformat()
+    }

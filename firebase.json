@@ -274,6 +274,22 @@
         "destination": "/bovxai-user-code.html"
       },
       {
+        "source": "/quantum_beam",
+        "destination": "/quantum_beam.html"
+      },
+      {
+        "source": "/quantum_beam/**",
+        "destination": "/quantum_beam.html"
+      },
+      {
+        "source": "/quantum-beam",
+        "destination": "/quantum_beam.html"
+      },
+      {
+        "source": "/quantum-beam/**",
+        "destination": "/quantum_beam.html"
+      },
+      {
         "source": "/*/blocked-by-vani-xai0419",
         "destination": "/blocked.html"
       },

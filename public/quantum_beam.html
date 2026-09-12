@@ -1066,7 +1066,20 @@
                 Starting camera...
             </div>
 
-            <button class="btn-modal-close" onclick="closeCameraScanModal()">Cancel</button>
+            <!-- Manual OTPC Fallback Input -->
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%;">
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; text-align: left;">
+                    <i class="fa-solid fa-keyboard" style="color: #fbbf24;"></i> Or Enter BoVxAi-OTPC Manually:
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="manualOtpcInput" placeholder="BoVxAi_V.A.N.I-XXXX:00000" style="flex: 1; background: rgba(3, 7, 18, 0.75); border: 1px solid var(--panel-border); border-radius: 8px; color: #38bdf8; padding: 8px 12px; font-family: 'Fira Code', monospace; font-size: 0.85rem; outline: none;">
+                    <button class="pair-action-btn" onclick="submitManualOtpc()" style="margin: 0; padding: 8px 14px; font-size: 0.8rem; background: linear-gradient(135deg, #06b6d4, #6366f1); color: #fff; border: none;">
+                        <i class="fa-solid fa-link"></i> Pair
+                    </button>
+                </div>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeCameraScanModal()" style="margin-top: 14px;">Close</button>
         </div>
     </div>
 

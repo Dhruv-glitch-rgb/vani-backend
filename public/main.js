@@ -902,6 +902,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                     initSpeechRecognition();
                 }
+                // Auto-provision sovereign database in E:\BoVxAi DB for all login users
+                autoProvisionUserDatabase(user);
+
                 if (shouldLaunch) {
                     // Auto-launch if authenticated and requested
                     landingPage.classList.add('hidden');
@@ -911,6 +914,35 @@ window.addEventListener('DOMContentLoaded', () => {
             } else {
                 authInstance = null;
             }
+        });
+    }
+
+    // Auto-create user's backend database partition in E:\BoVxAi DB for all login users
+    function autoProvisionUserDatabase(user) {
+        if (!user) return;
+        const nameBase = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+        const vaniId = `V.A.N.I-xAI-${nameBase.replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase()}-2026`;
+        localStorage.setItem('vani_user_uid', vaniId);
+        localStorage.setItem('bovxai_last_uid', vaniId);
+
+        const endpoints = ['/api/storage/init-user'];
+        if (typeof BACKEND_URL !== 'undefined' && BACKEND_URL) {
+            endpoints.push(`${BACKEND_URL}/api/storage/init-user`);
+        }
+
+        endpoints.forEach(ep => {
+            fetch(ep, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Vani-UID': vaniId
+                },
+                body: JSON.stringify({ user_id: vaniId, email: user.email, uid: user.uid })
+            }).then(r => r.json()).then(data => {
+                if (data && data.success) {
+                    console.log(`[BoVxAi DB] Sovereign database partition provisioned for: ${vaniId}`);
+                }
+            }).catch(() => {});
         });
     }
 

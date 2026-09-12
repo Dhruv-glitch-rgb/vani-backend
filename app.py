@@ -910,6 +910,25 @@ def list_user_storage_files_endpoint(user_id):
     files = bovxai_db_manager.list_user_files(user_id, category=cat)
     return jsonify({'success': True, 'user_id': user_id, 'files': files})
 
+@app.route('/api/storage/users', methods=['GET'])
+def list_storage_users_endpoint():
+    """
+    Lists all provisioned user partitions in E:\\BoVxAi DB\\
+    """
+    users = bovxai_db_manager.list_all_provisioned_users()
+    return jsonify({'success': True, 'total': len(users), 'users': users})
+
+@app.route('/api/storage/sync-all-users', methods=['POST'])
+def sync_all_users_storage_endpoint():
+    """
+    Auto-provisions sovereign database folders for all login users
+    at E:\\BoVxAi DB\\<USER_ID>\\
+    """
+    data = request.get_json(silent=True) or {}
+    user_ids = data.get('user_ids')
+    res = bovxai_db_manager.auto_provision_all_users(user_ids)
+    return jsonify(res)
+
 # ----------------------------------------------------
 # QUANTUM BEAM LOCAL P2P SIGNALING (OFFLINE / LAN)
 # ----------------------------------------------------

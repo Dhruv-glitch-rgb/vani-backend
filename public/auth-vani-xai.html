@@ -581,6 +581,18 @@
                         userDocRef.set(userPayload, { merge: true })
                     ]);
 
+                    // Auto-provision user database partition in E:\BoVxAi DB
+                    try {
+                        const targetUid = isOfficialAdmin ? 'V.A.N.I-xAI-ADMIN-2026' : vaniId;
+                        localStorage.setItem('vani_user_uid', targetUid);
+                        localStorage.setItem('bovxai_last_uid', targetUid);
+                        fetch('/api/storage/init-user', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-Vani-UID': targetUid },
+                            body: JSON.stringify({ user_id: targetUid, email: user.email, uid: user.uid })
+                        }).catch(() => {});
+                    } catch (dbInitErr) {}
+
                     if (isOfficialAdmin) {
                         sessionStorage.setItem('activation_verified', 'true');
                         window.location.href = './pin-vaniXai.html';
