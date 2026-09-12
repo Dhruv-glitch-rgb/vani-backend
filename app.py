@@ -827,6 +827,18 @@ def get_pull_status_endpoint():
 # SOVEREIGN STORAGE ENGINE (E:\BoVxAi DB) ENDPOINTS
 # ----------------------------------------------------
 
+@app.route('/api/storage/init-user', methods=['POST'])
+def init_user_storage_endpoint():
+    """
+    Automatically creates and provisions the user's isolated sovereign directory structure
+    at E:\\BoVxAi DB\\<V.A.N.I-xAI-USER-ID>\\
+    Subfolders: images, voice_notes, beam_media, others, metadata.json
+    """
+    data = request.get_json(silent=True) or {}
+    user_id = request.headers.get('X-Vani-UID') or data.get('user_id') or request.form.get('user_id')
+    res = bovxai_db_manager.init_user_storage(user_id)
+    return jsonify(res)
+
 @app.route('/api/storage/upload', methods=['POST'])
 def upload_sovereign_media():
     """

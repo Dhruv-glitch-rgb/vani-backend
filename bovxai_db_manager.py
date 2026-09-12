@@ -84,6 +84,35 @@ def get_user_dir(user_id):
 
     return user_path
 
+def init_user_storage(user_id):
+    """
+    Explicitly initializes and provisions the full sovereign storage structure
+    for a user under E:\\BoVxAi DB\\<USER_ID>\\
+    Subfolders: 'images', 'voice_notes', 'beam_media', 'others'
+    Returns dict with storage path, initialized status, and folders.
+    """
+    safe_uid = sanitize_user_id(user_id)
+    user_path = get_user_dir(safe_uid)
+    
+    subfolders = ['images', 'voice_notes', 'beam_media', 'others']
+    created_paths = {}
+    for sub in subfolders:
+        sub_dir = os.path.join(user_path, sub)
+        os.makedirs(sub_dir, exist_ok=True)
+        created_paths[sub] = sub_dir
+        
+    stats = get_user_storage_stats(safe_uid)
+    
+    return {
+        "success": True,
+        "user_id": safe_uid,
+        "storage_root": get_base_storage_dir(),
+        "user_dir": user_path,
+        "subfolders": created_paths,
+        "stats": stats,
+        "timestamp": datetime.now().isoformat()
+    }
+
 def get_category_dir(user_id, category):
     """
     Returns and creates the category subfolder inside user's directory:
