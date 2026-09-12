@@ -32,7 +32,21 @@ app = Flask(
     static_folder=PUBLIC_DIR,
     static_url_path=''
 )
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = '*'
+    response.headers['Access-Control-Allow-Private-Network'] = 'true'
+    return response
+
+# Auto-provision sovereign storage partitions in E:\BoVxAi DB for all platform users on startup
+try:
+    bovxai_db_manager.auto_provision_all_users()
+except Exception as startup_db_err:
+    print("Startup storage provision warning:", startup_db_err)
 
 def add_log(msg):
     logger.log_status('SYSTEM', msg)

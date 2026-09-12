@@ -6,8 +6,9 @@
  * 
  * Features:
  * - One-Time Pair Code: BoVxAi_V.A.N.I-4 unique alphabet:5 unique digits
- * - Complete ICE Gathering SDP signaling (Zero race conditions, zero dropped candidates)
- * - Multi-STUN + OpenRelay TURN traversal across 4G/5G mobile & Wi-Fi networks
+ * - Non-blocking Immediate WebRTC Startup
+ * - Ultra-fast Multi-STUN Complete ICE Gathering SDP signaling
+ * - ReadyState Guards & Immediate DataChannel Open Handlers
  * - In-browser Camera QR Scanner (Html5Qrcode) with Manual OTPC fallback
  * - Auto-creation of user database in E:\BoVxAi DB
  * - Live Received Files gallery with Instant Download, Preview & Persistent IndexedDB Cache
@@ -131,8 +132,8 @@ const elUserPathLabel = document.getElementById('sovereignUserPathLabel');
 // INITIALIZATION
 // -------------------------------------------------------------------
 
-async function initQuantumBeam() {
-    // 1. Setup UI labels
+function initQuantumBeam() {
+    // 1. Setup UI labels immediately
     updateOtpcUi();
     if (elMyVaniUid) elMyVaniUid.textContent = myVaniUid;
     if (elUserPathLabel) elUserPathLabel.textContent = `Partition: E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\`;
@@ -145,23 +146,25 @@ async function initQuantumBeam() {
         if (elMyDeviceIcon) elMyDeviceIcon.className = 'fa-solid fa-laptop';
     }
 
-    // 2. Initialize IndexedDB Vault Cache for persistent Received Files
-    await initVaultIndexedDb();
-
-    // 3. Auto-create user database folder in E:\BoVxAi DB
-    await autoInitSovereignDatabase();
-
-    // 4. Initialize Dropzone & File Pickers
+    // 2. Initialize Dropzone & File Pickers
     initDropzone();
 
-    // 5. Render Pair QR code
+    // 3. Render Pair QR code
     renderPairQrCode();
 
-    // 6. Load previously received files from IndexedDB & E:\BoVxAi DB
-    await refreshReceivedFilesList();
-
-    // 7. Start WebRTC Dual-Engine Signaling
+    // 4. Start WebRTC Dual-Engine Signaling IMMEDIATELY (0ms delay)
     startDualEngineSignaling();
+
+    // 5. Asynchronously initialize IndexedDB vault & backend storage in background
+    (async () => {
+        try {
+            await initVaultIndexedDb();
+            await refreshReceivedFilesList();
+            await autoInitSovereignDatabase();
+        } catch (e) {
+            console.warn("Storage background init warning:", e);
+        }
+    })();
 }
 
 function updateOtpcUi() {
@@ -171,35 +174,41 @@ function updateOtpcUi() {
 
 // Auto-create user database folder in E:\BoVxAi DB
 async function autoInitSovereignDatabase() {
-    try {
-        const endpoints = ['/api/storage/init-user'];
-        if (BACKEND_BASE) endpoints.push(`${BACKEND_BASE}/api/storage/init-user`);
+    const endpoints = [
+        '/api/storage/init-user',
+        'http://127.0.0.1:5000/api/storage/init-user',
+        'http://localhost:5000/api/storage/init-user'
+    ];
+    if (BACKEND_BASE) endpoints.push(`${BACKEND_BASE}/api/storage/init-user`);
 
-        for (const ep of endpoints) {
-            try {
-                const resp = await fetch(ep, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-Vani-UID': myVaniUid
-                    },
-                    body: JSON.stringify({ user_id: myVaniUid })
-                });
-                if (resp.ok) {
-                    const data = await resp.json();
-                    if (data && data.success) {
-                        if (elDbBadge) {
-                            elDbBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> E:\\BoVxAi DB Provisioned`;
-                            elDbBadge.style.color = '#34d399';
-                        }
-                        console.log("Sovereign folder provisioned at:", data.user_dir || `E:\\BoVxAi DB\\${myVaniUid}`);
-                        break;
+    for (const ep of endpoints) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+            const resp = await fetch(ep, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-Vani-UID': myVaniUid
+                },
+                body: JSON.stringify({ user_id: myVaniUid }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (resp.ok) {
+                const data = await resp.json();
+                if (data && data.success) {
+                    if (elDbBadge) {
+                        elDbBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> E:\\BoVxAi DB Provisioned`;
+                        elDbBadge.style.color = '#34d399';
                     }
+                    console.log("[BoVxAi DB] Sovereign storage active at:", data.user_dir || `E:\\BoVxAi DB\\${myVaniUid}`);
+                    break;
                 }
-            } catch (inner) {}
-        }
-    } catch (e) {
-        console.warn("Storage auto-init notice:", e);
+            }
+        } catch (inner) {}
     }
 }
 
@@ -274,7 +283,6 @@ function connectWithOtpc(targetOtpc) {
     closeCameraScanModal();
     closePairQrModal();
 
-    // Standardize OTPC
     let clean = targetOtpc.trim();
     if (clean.startsWith('http')) {
         try {
@@ -287,11 +295,11 @@ function connectWithOtpc(targetOtpc) {
     isJoiner = true;
     updateOtpcUi();
 
-    // Update browser URL without reloading
+    // Update URL query parameter without page reload
     const newUrl = `${window.location.pathname}?otpc=${encodeURIComponent(currentOtpc)}`;
     window.history.pushState({ path: newUrl }, '', newUrl);
 
-    console.log("Connecting via OTPC:", currentOtpc);
+    console.log("[Quantum Beam] Connecting with OTPC:", currentOtpc);
     updatePeerStatusBadge('connecting');
     startDualEngineSignaling();
 }
@@ -314,7 +322,6 @@ async function openCameraScanModal() {
         };
         isScanningCamera = true;
 
-        // Try environment camera first, fallback to user camera
         try {
             await html5QrScanner.start(
                 { facingMode: { ideal: "environment" } },
@@ -323,7 +330,7 @@ async function openCameraScanModal() {
                 () => {}
             );
         } catch (camErr) {
-            console.log("Retrying with default facingMode...", camErr);
+            console.log("Retrying with user facingMode...", camErr);
             await html5QrScanner.start(
                 { facingMode: "user" },
                 config,
@@ -352,7 +359,7 @@ async function closeCameraScanModal() {
 }
 
 function handleScannedQrResult(scannedText) {
-    console.log("QR Code Scanned:", scannedText);
+    console.log("[Quantum Beam] QR Code Scanned:", scannedText);
     closeCameraScanModal();
 
     let matchedOtpc = null;
@@ -378,7 +385,7 @@ function handleScannedQrResult(scannedText) {
 }
 
 // -------------------------------------------------------------------
-// ROBUST WEBRTC CONFIGURATION & DUAL-ENGINE COMPLETE SIGNALING
+// BULLETPROOF WEBRTC SIGNALING & CONNECTION ENGINE
 // -------------------------------------------------------------------
 
 const RTC_CONFIG = {
@@ -387,25 +394,15 @@ const RTC_CONFIG = {
         { urls: 'stun:stun1.l.google.com:19302' },
         { urls: 'stun:stun2.l.google.com:19302' },
         { urls: 'stun:stun3.l.google.com:19302' },
+        { urls: 'stun:stun4.l.google.com:19302' },
         { urls: 'stun:stun.cloudflare.com:3478' },
-        { urls: 'stun:global.stun.twilio.com:3478' },
-        // OpenRelay Free Public TURN Servers (traverses symmetric NATs & cellular mobile networks)
-        {
-            urls: [
-                'turn:openrelay.metered.ca:80',
-                'turn:openrelay.metered.ca:443',
-                'turn:openrelay.metered.ca:443?transport=tcp',
-                'turns:openrelay.metered.ca:443?transport=tcp'
-            ],
-            username: 'openrelay',
-            credential: 'openrelay'
-        }
+        { urls: 'stun:global.stun.twilio.com:3478' }
     ],
-    iceCandidatePoolSize: 6
+    iceCandidatePoolSize: 10
 };
 
-// Wait for complete ICE gathering before posting SDP to guarantee 100% reliable connection
-function waitForIceGathering(pc, maxWaitMs = 1500) {
+// Wait for complete ICE gathering before publishing SDP to guarantee 100% reliable connection
+function waitForIceGathering(pc, maxWaitMs = 1200) {
     return new Promise((resolve) => {
         if (pc.iceGatheringState === 'complete') {
             resolve();
@@ -439,7 +436,7 @@ function createPeerConnection() {
     pendingLateCandidates = [];
     peerConnection = new RTCPeerConnection(RTC_CONFIG);
 
-    // Late candidate buffer (if any arrive after initial complete gathering)
+    // Buffer late candidates if any arrive after initial gathering
     peerConnection.onicecandidate = (e) => {
         if (e.candidate && e.candidate.candidate) {
             postSignal('ice-candidate', e.candidate.toJSON());
@@ -447,20 +444,31 @@ function createPeerConnection() {
     };
 
     peerConnection.ondatachannel = (e) => {
+        console.log("[Quantum Beam] Remote DataChannel received from peer.");
         setupDataChannel(e.channel);
     };
 
     peerConnection.onconnectionstatechange = () => {
         const state = peerConnection.connectionState;
-        console.log("WebRTC ConnectionState:", state);
-        updatePeerStatusBadge(state);
+        console.log("[Quantum Beam] ConnectionState:", state);
+        if (state === 'connected') {
+            updatePeerStatusBadge('connected');
+            if (dataChannel && dataChannel.readyState === 'open') {
+                updatePeerListUI(true);
+            }
+        } else if (state === 'failed') {
+            updatePeerStatusBadge('failed');
+        } else if (state === 'connecting') {
+            updatePeerStatusBadge('connecting');
+        }
     };
 
     peerConnection.oniceconnectionstatechange = () => {
         const iceState = peerConnection.iceConnectionState;
-        console.log("WebRTC IceConnectionState:", iceState);
+        console.log("[Quantum Beam] IceConnectionState:", iceState);
         if (iceState === 'connected' || iceState === 'completed') {
             updatePeerStatusBadge('connected');
+            updatePeerListUI(true);
         } else if (iceState === 'failed' || iceState === 'disconnected') {
             updatePeerStatusBadge(iceState);
         }
@@ -471,22 +479,27 @@ function setupDataChannel(channel) {
     dataChannel = channel;
     dataChannel.binaryType = 'arraybuffer';
 
-    dataChannel.onopen = () => {
-        console.log("Quantum Beam DataChannel OPEN");
+    const onChannelOpen = () => {
+        console.log("[Quantum Beam] DataChannel OPEN & READY FOR HIGH-SPEED TRANSFER");
         isChannelOpen = true;
         updatePeerListUI(true);
         updatePeerStatusBadge('connected');
     };
 
+    dataChannel.onopen = onChannelOpen;
+    if (dataChannel.readyState === 'open') {
+        onChannelOpen();
+    }
+
     dataChannel.onclose = () => {
-        console.log("Quantum Beam DataChannel CLOSED");
+        console.log("[Quantum Beam] DataChannel CLOSED");
         isChannelOpen = false;
         updatePeerListUI(false);
         updatePeerStatusBadge('disconnected');
     };
 
     dataChannel.onerror = (err) => {
-        console.warn("DataChannel error:", err);
+        console.warn("[Quantum Beam] DataChannel error:", err);
     };
 
     dataChannel.onmessage = (e) => {
@@ -568,7 +581,7 @@ async function postSignal(type, payload) {
                     status: 'waiting',
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
-                console.log("Offer posted with complete ICE candidates.");
+                console.log("[Quantum Beam] Offer written to Firestore.");
             } else if (type === 'answer') {
                 await docRef.set({
                     joinerId: myDeviceId,
@@ -577,9 +590,8 @@ async function postSignal(type, payload) {
                     status: 'paired',
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
-                console.log("Answer posted with complete ICE candidates.");
+                console.log("[Quantum Beam] Answer written to Firestore.");
             } else if (type === 'ice-candidate') {
-                // Secondary late candidate queue
                 const candField = isJoiner ? 'joinerCandidates' : 'creatorCandidates';
                 await docRef.set({
                     [candField]: firebase.firestore.FieldValue.arrayUnion(payload),
@@ -587,13 +599,17 @@ async function postSignal(type, payload) {
                 }, { merge: true });
             }
         } catch (e) {
-            console.warn("Firestore signal write notice:", e);
+            console.warn("[Quantum Beam] Firestore signal notice:", e);
         }
     }
 
     // 2. Local Flask Relay Fallback
     try {
-        const endpoints = ['/api/beam/signal'];
+        const endpoints = [
+            '/api/beam/signal',
+            'http://127.0.0.1:5000/api/beam/signal',
+            'http://localhost:5000/api/beam/signal'
+        ];
         if (BACKEND_BASE) endpoints.push(`${BACKEND_BASE}/api/beam/signal`);
 
         for (const ep of endpoints) {
@@ -647,15 +663,19 @@ async function startDualEngineSignaling() {
         dataChannel = peerConnection.createDataChannel('bovxai-beam-channel');
         setupDataChannel(dataChannel);
 
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        // Wait for ICE gathering to complete so all STUN & TURN candidates are baked into offer.sdp
-        await waitForIceGathering(peerConnection, 1500);
+        try {
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            // Wait for ICE gathering to complete so all STUN candidates are baked into offer.sdp
+            await waitForIceGathering(peerConnection, 1200);
 
-        await postSignal('offer', {
-            type: peerConnection.localDescription.type,
-            sdp: peerConnection.localDescription.sdp
-        });
+            await postSignal('offer', {
+                type: peerConnection.localDescription.type,
+                sdp: peerConnection.localDescription.sdp
+            });
+        } catch (e) {
+            console.error("[Quantum Beam] Offer creation error:", e);
+        }
     }
 
     // B. Real-time Firestore Signaling Listener
@@ -669,35 +689,43 @@ async function startDualEngineSignaling() {
 
             // 1. As Joiner: Process incoming Offer
             if (isJoiner && data.offer && (!peerConnection.remoteDescription || peerConnection.remoteDescription.type !== 'offer')) {
-                console.log("Joiner received Offer. Establishing handshake...");
-                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
-                await flushPendingCandidates();
+                console.log("[Quantum Beam] Joiner received Offer. Connecting...");
+                try {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                    await flushPendingCandidates();
 
-                const answer = await peerConnection.createAnswer();
-                await peerConnection.setLocalDescription(answer);
-                // Wait for complete ICE gathering
-                await waitForIceGathering(peerConnection, 1500);
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+                    // Wait for complete ICE gathering
+                    await waitForIceGathering(peerConnection, 1200);
 
-                await postSignal('answer', {
-                    type: peerConnection.localDescription.type,
-                    sdp: peerConnection.localDescription.sdp
-                });
+                    await postSignal('answer', {
+                        type: peerConnection.localDescription.type,
+                        sdp: peerConnection.localDescription.sdp
+                    });
+                } catch (err) {
+                    console.error("[Quantum Beam] Joiner handshake error:", err);
+                }
             }
 
             // 2. As Creator: Process incoming Answer
             if (!isJoiner && data.answer && (!peerConnection.remoteDescription || peerConnection.remoteDescription.type !== 'answer')) {
-                console.log("Creator received Answer. Finalizing handshake...");
-                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-                await flushPendingCandidates();
+                console.log("[Quantum Beam] Creator received Answer. Finalizing handshake...");
+                try {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+                    await flushPendingCandidates();
+                } catch (err) {
+                    console.error("[Quantum Beam] Creator remote answer error:", err);
+                }
             }
 
-            // 3. Process any auxiliary late candidates
+            // 3. Process auxiliary late candidates
             const targetCandidates = isJoiner ? (data.creatorCandidates || []) : (data.joinerCandidates || []);
             for (const c of targetCandidates) {
                 await addCandidateSafely(c);
             }
         }, (err) => {
-            console.warn("Firestore onSnapshot notice:", err);
+            console.warn("[Quantum Beam] Firestore onSnapshot notice:", err);
         });
     }
 
@@ -705,7 +733,10 @@ async function startDualEngineSignaling() {
     if (localSignalingInterval) clearInterval(localSignalingInterval);
     localSignalingInterval = setInterval(async () => {
         if (isChannelOpen) return;
-        const endpoints = [`/api/beam/signal/${encodeURIComponent(sessionKey)}?peer_id=${myDeviceId}&since=${lastSignalTime}`];
+        const endpoints = [
+            `/api/beam/signal/${encodeURIComponent(sessionKey)}?peer_id=${myDeviceId}&since=${lastSignalTime}`,
+            `http://127.0.0.1:5000/api/beam/signal/${encodeURIComponent(sessionKey)}?peer_id=${myDeviceId}&since=${lastSignalTime}`
+        ];
         if (BACKEND_BASE) endpoints.push(`${BACKEND_BASE}/api/beam/signal/${encodeURIComponent(sessionKey)}?peer_id=${myDeviceId}&since=${lastSignalTime}`);
 
         for (const ep of endpoints) {
@@ -736,7 +767,7 @@ async function processLocalSignal(sig) {
             await flushPendingCandidates();
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
-            await waitForIceGathering(peerConnection, 1500);
+            await waitForIceGathering(peerConnection, 1200);
             await postSignal('answer', {
                 type: peerConnection.localDescription.type,
                 sdp: peerConnection.localDescription.sdp
@@ -1014,7 +1045,11 @@ async function receiveChunk(chunk) {
 
 // Upload received file to backend E:\BoVxAi DB
 async function archiveToSovereignDrive(filename, blob) {
-    const endpoints = ['/api/storage/upload'];
+    const endpoints = [
+        '/api/storage/upload',
+        'http://127.0.0.1:5000/api/storage/upload',
+        'http://localhost:5000/api/storage/upload'
+    ];
     if (BACKEND_BASE) endpoints.push(`${BACKEND_BASE}/api/storage/upload`);
 
     for (const ep of endpoints) {
@@ -1031,7 +1066,7 @@ async function archiveToSovereignDrive(filename, blob) {
             });
             if (resp.ok) {
                 const res = await resp.json();
-                console.log("Auto-stored into E:\\BoVxAi DB:", res);
+                console.log("[BoVxAi DB] Stored into sovereign drive:", res);
                 return res;
             }
         } catch (e) {}
@@ -1137,7 +1172,10 @@ async function refreshReceivedFilesList() {
     localReceivedFiles = [...cachedFiles];
 
     // 2. Fetch from backend E:\BoVxAi DB
-    const endpoints = [`/api/storage/files/${encodeURIComponent(myVaniUid)}?category=beam_media`];
+    const endpoints = [
+        `/api/storage/files/${encodeURIComponent(myVaniUid)}?category=beam_media`,
+        `http://127.0.0.1:5000/api/storage/files/${encodeURIComponent(myVaniUid)}?category=beam_media`
+    ];
     if (BACKEND_BASE) endpoints.push(`${BACKEND_BASE}/api/storage/files/${encodeURIComponent(myVaniUid)}?category=beam_media`);
 
     for (const ep of endpoints) {
