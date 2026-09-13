@@ -6,8 +6,8 @@
     <title>Quantum Beam | Zero-Cable Instant P2P File &amp; Media Drop - V.A.N.I-xAI</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Quantum Beam by V.A.N.I-xAI is an ultra-fast, zero-cable AirDrop-style P2P local file transfer engine running directly in browser via WebRTC DataChannels. No file limits, zero cloud upload, 100% private.">
-    <meta name="keywords" content="quantum beam, vani-xai airdrop, webpeer file drop, p2p file transfer, local wifi drop, zero cloud file transfer, bovxai, bovxai otpc">
+    <meta name="description" content="Quantum Beam by V.A.N.I-xAI is an ultra-fast, zero-cable AirDrop-style P2P local file & media drop engine running directly in browser via WebRTC DataChannels. Batch queue, instant quick notes, SHA-256 bit integrity, and sovereign auto-storage.">
+    <meta name="keywords" content="quantum beam, vani-xai airdrop, webpeer file drop, p2p file transfer, local wifi drop, zero cloud file transfer, bovxai, bovxai otpc, p2p notes">
     <meta name="author" content="Dhruv Sagar - Bureau of V.A.N.I-xAI">
     <link rel="canonical" href="https://vani-nzdrsr.web.app/quantum_beam">
     <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
@@ -31,7 +31,7 @@
     <style>
         :root {
             --bg-deep: #030712;
-            --panel-bg: rgba(15, 23, 42, 0.84);
+            --panel-bg: rgba(15, 23, 42, 0.86);
             --panel-border: rgba(99, 102, 241, 0.28);
             --accent-cyan: #06b6d4;
             --accent-indigo: #6366f1;
@@ -66,8 +66,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 14px 28px;
-            background: rgba(3, 7, 18, 0.9);
-            backdrop-filter: blur(16px);
+            background: rgba(3, 7, 18, 0.92);
+            backdrop-filter: blur(18px);
             border-bottom: 1px solid var(--panel-border);
             z-index: 100;
         }
@@ -117,7 +117,7 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--panel-border);
             color: var(--text-main);
-            padding: 8px 16px;
+            padding: 8px 15px;
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
@@ -134,6 +134,17 @@
             color: #fff;
             transform: translateY(-2px);
             box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+        }
+
+        .sound-toggle-btn.sound-off {
+            color: #94a3b8;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sound-toggle-btn.sound-on {
+            color: #38bdf8;
+            border-color: rgba(6, 182, 212, 0.45);
+            background: rgba(6, 182, 212, 0.12);
         }
 
         /* Sovereign Storage Badge */
@@ -173,6 +184,12 @@
             }
             .beam-main {
                 padding: 16px;
+            }
+            .beam-header {
+                padding: 12px 16px;
+            }
+            .beam-logo-text {
+                font-size: 1.05rem;
             }
         }
 
@@ -338,10 +355,10 @@
 
         .otpc-value {
             font-family: 'Fira Code', monospace;
-            font-size: 1.25rem;
+            font-size: 1.22rem;
             font-weight: 800;
             color: #38bdf8;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.4px;
             word-break: break-all;
         }
 
@@ -366,7 +383,7 @@
             border-color: var(--accent-indigo);
         }
 
-        /* Pairing Action Buttons (Scan QR, Show QR, Enter OTPC) */
+        /* Pairing Action Buttons */
         .pairing-buttons-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -469,11 +486,50 @@
             box-shadow: 0 0 8px var(--accent-emerald);
         }
 
+        /* Mode Switcher: Files vs Quick Note */
+        .drop-mode-switcher {
+            display: flex;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 4px;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .mode-tab-btn {
+            flex: 1;
+            padding: 9px 14px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .mode-tab-btn:hover {
+            color: #fff;
+        }
+
+        .mode-tab-btn.active {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(99, 102, 241, 0.4));
+            color: #38bdf8;
+            border: 1px solid rgba(6, 182, 212, 0.45);
+            box-shadow: 0 2px 10px rgba(6, 182, 212, 0.25);
+        }
+
         /* Drag & Drop Dropzone */
         .dropzone-container {
             border: 2px dashed rgba(99, 102, 241, 0.45);
             border-radius: 20px;
-            padding: 36px 20px;
+            padding: 34px 20px;
             text-align: center;
             background: rgba(15, 23, 42, 0.4);
             cursor: pointer;
@@ -489,16 +545,16 @@
         }
 
         .dropzone-icon {
-            font-size: 3rem;
+            font-size: 2.8rem;
             color: var(--accent-cyan);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.5));
             animation: floatIcon 3s infinite ease-in-out;
         }
 
         @keyframes floatIcon {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-7px); }
         }
 
         .dropzone-title {
@@ -509,7 +565,7 @@
         }
 
         .dropzone-sub {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
         }
 
@@ -517,39 +573,194 @@
             display: none;
         }
 
-        /* Selected File Card */
-        .selected-file-card {
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 16px;
-            padding: 14px 18px;
+        /* Batch Staging Queue Card */
+        .batch-queue-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1.5px solid rgba(6, 182, 212, 0.35);
+            border-radius: 18px;
+            padding: 16px;
             margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: fadeIn 0.2s ease;
         }
 
-        .selected-file-info {
+        .batch-queue-header {
             display: flex;
             align-items: center;
-            gap: 14px;
-            overflow: hidden;
+            justify-content: space-between;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .selected-file-name {
+        .batch-queue-title {
+            font-size: 0.88rem;
             font-weight: 700;
-            font-size: 0.95rem;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .batch-mini-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.74rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .batch-mini-btn:hover {
+            background: rgba(244, 63, 94, 0.2);
+            color: #fda4af;
+            border-color: rgba(244, 63, 94, 0.4);
+        }
+
+        .batch-files-list {
+            max-height: 210px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 4px;
+        }
+
+        .batch-files-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .batch-files-list::-webkit-scrollbar-thumb {
+            background: rgba(6, 182, 212, 0.4);
+            border-radius: 10px;
+        }
+
+        .batch-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            padding: 8px 12px;
+            transition: background 0.2s;
+        }
+
+        .batch-item-row:hover {
+            background: rgba(6, 182, 212, 0.08);
+        }
+
+        .batch-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .batch-item-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f1f5f9;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 250px;
         }
 
-        .selected-file-size {
-            font-size: 0.78rem;
+        .batch-item-meta {
+            font-size: 0.72rem;
             color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
         }
 
+        .batch-remove-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .batch-remove-btn:hover {
+            color: #f43f5e;
+            background: rgba(244, 63, 94, 0.15);
+        }
+
+        /* Quick Note Card */
+        .quick-note-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1.5px solid rgba(168, 85, 247, 0.35);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .note-top-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .note-title-input {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 8px 14px;
+            color: #fff;
+            font-size: 0.88rem;
+            outline: none;
+        }
+
+        .note-title-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+        }
+
+        .note-textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #f8fafc;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            resize: vertical;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        .note-textarea:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+        }
+
+        .note-bottom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .note-char-counter {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Send Beam Button */
         .send-beam-btn {
             background: linear-gradient(135deg, #06b6d4, #6366f1);
             border: none;
@@ -567,7 +778,7 @@
         }
 
         .send-beam-btn:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
             box-shadow: 0 6px 24px rgba(6, 182, 212, 0.6);
         }
 
@@ -576,11 +787,12 @@
             display: none;
             flex-direction: column;
             gap: 12px;
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(6, 182, 212, 0.35);
             border-radius: 18px;
             padding: 20px;
             margin-top: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .telemetry-row-top {
@@ -631,6 +843,17 @@
             font-family: 'Fira Code', monospace;
         }
 
+        .telemetry-batch-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.76rem;
+            color: #fbbf24;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'Fira Code', monospace;
+        }
+
         /* Received Files & Sovereign Archive Section */
         .received-files-card {
             background: var(--panel-bg);
@@ -642,16 +865,60 @@
             width: 100%;
         }
 
-        .received-files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            margin-top: 15px;
+        .vault-filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 14px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
         }
 
-        .received-file-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .vault-search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px 14px;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .vault-search-box i {
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+        }
+
+        .vault-search-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .vault-search-box button {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 2px 4px;
+        }
+
+        .received-files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .received-file-card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.09);
             border-radius: 16px;
             padding: 16px;
             display: flex;
@@ -660,19 +927,19 @@
             transition: all 0.25s ease;
         }
 
-        .received-file-item:hover {
+        .received-file-card:hover {
             background: rgba(6, 182, 212, 0.08);
             border-color: rgba(6, 182, 212, 0.35);
             transform: translateY(-2px);
         }
 
-        .received-file-header {
+        .rec-header {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .received-file-icon {
+        .rec-icon {
             width: 42px;
             height: 42px;
             border-radius: 10px;
@@ -686,12 +953,12 @@
             flex-shrink: 0;
         }
 
-        .received-file-meta {
+        .rec-info {
             overflow: hidden;
             flex: 1;
         }
 
-        .received-file-name {
+        .rec-name {
             font-size: 0.92rem;
             font-weight: 700;
             color: var(--text-main);
@@ -700,66 +967,92 @@
             text-overflow: ellipsis;
         }
 
-        .received-file-size {
-            font-size: 0.75rem;
+        .rec-size {
+            font-size: 0.74rem;
             color: var(--text-muted);
             margin-top: 2px;
+            font-family: 'Fira Code', monospace;
         }
 
-        .received-file-actions {
+        .rec-path {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.68rem;
+            color: #34d399;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 4px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hash-verified-chip {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.66rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 7px;
+            border-radius: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            width: fit-content;
+        }
+
+        .rec-actions {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
-        .file-action-btn {
+        .btn-rec-action {
             background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             color: #fff;
             padding: 6px 12px;
             border-radius: 8px;
             font-size: 0.76rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 5px;
             transition: all 0.2s;
         }
 
-        .file-action-btn:hover {
-            background: var(--accent-indigo);
-            border-color: var(--accent-indigo);
+        .btn-rec-action:hover {
+            transform: translateY(-1px);
         }
 
-        .file-action-btn.btn-save-db {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: rgba(16, 185, 129, 0.35);
-            color: #34d399;
-        }
-
-        .file-action-btn.btn-save-db:hover {
-            background: #059669;
-            color: #fff;
-        }
-
-        .sovereign-db-tag {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.68rem;
-            color: #34d399;
-            display: flex;
+        /* Vault Tab Buttons */
+        .vault-tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-muted);
+            padding: 8px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: inline-flex;
             align-items: center;
-            gap: 5px;
-            background: rgba(16, 185, 129, 0.1);
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            margin-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .vault-tab-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .vault-tab-btn.active {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(99, 102, 241, 0.25));
+            border-color: var(--accent-cyan);
+            color: #38bdf8;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
         }
 
         /* Modals */
@@ -770,11 +1063,12 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 10000;
+            padding: 16px;
         }
 
         .beam-modal-card {
@@ -783,7 +1077,7 @@
             border-radius: 24px;
             padding: 28px;
             width: 92%;
-            max-width: 450px;
+            max-width: 460px;
             text-align: center;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
             animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -819,32 +1113,154 @@
             background: rgba(255, 255, 255, 0.18);
         }
 
-        /* Vault Tab Buttons */
-        .vault-tab-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: var(--text-muted);
-            padding: 8px 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.88rem;
+        /* In-App Universal Media Preview Modal */
+        .beam-preview-card {
+            background: rgba(10, 15, 30, 0.98);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            border-radius: 22px;
+            width: 94%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .preview-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(3, 7, 18, 0.8);
+        }
+
+        .preview-file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+        }
+
+        .preview-file-info i {
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+        }
+
+        .preview-modal-filename {
             font-weight: 700;
-            display: inline-flex;
+            font-size: 1rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 480px;
+        }
+
+        .preview-modal-meta {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .preview-header-actions {
+            display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .preview-action-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
             transition: all 0.2s;
         }
 
-        .vault-tab-btn:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
+        .preview-action-btn:hover {
+            background: var(--accent-cyan);
+            color: #030712;
+            border-color: var(--accent-cyan);
         }
 
-        .vault-tab-btn.active {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(99, 102, 241, 0.25));
-            border-color: var(--accent-cyan);
+        .preview-body {
+            padding: 20px;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+            max-height: calc(90vh - 80px);
+            background: #000;
+        }
+
+        .preview-body img {
+            max-width: 100%;
+            max-height: 72vh;
+            border-radius: 10px;
+            object-fit: contain;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .preview-body video {
+            max-width: 100%;
+            max-height: 72vh;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .preview-body audio {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .preview-body iframe {
+            width: 100%;
+            height: 72vh;
+            border: none;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .preview-code-box {
+            width: 100%;
+            max-height: 70vh;
+            overflow: auto;
+            background: #030712;
             color: #38bdf8;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            padding: 16px;
+            border-radius: 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            text-align: left;
+        }
+
+        /* Note View Content */
+        .note-view-content {
+            background: rgba(3, 7, 18, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.88rem;
+            color: #f8fafc;
+            line-height: 1.6;
+            max-height: 380px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
 
         /* Camera Scanner Styles */
@@ -865,10 +1281,13 @@
         <a href="/index.html" class="beam-logo" title="Bureau of V.A.N.I-xAI">
             <img src="/vani_icon.png" alt="V.A.N.I-xAI Icon">
             <span class="beam-logo-text">QUANTUM BEAM</span>
-            <span class="beam-version-pill">v2.6 BoVxAi-OTPC</span>
+            <span class="beam-version-pill">v3.0 BoVxAi-OTPC</span>
         </a>
 
         <div class="header-actions">
+            <button class="header-btn sound-toggle-btn sound-on" id="beamSoundToggle" onclick="toggleBeamSound()" title="Toggle Web Audio Sound FX">
+                <i class="fa-solid fa-volume-high" id="beamSoundIcon"></i> Sound
+            </button>
             <div class="sovereign-storage-chip" id="sovereignChip" title="Sovereign drive auto-storage active">
                 <i class="fa-solid fa-hard-drive"></i> E:\BoVxAi DB Connected
             </div>
@@ -972,29 +1391,71 @@
                         <span style="font-size: 0.75rem; color: var(--text-muted);">Zero Cloud Upload &bull; WebRTC Direct</span>
                     </div>
 
-                    <!-- Dropzone Area -->
-                    <div class="dropzone-container" id="dropzoneContainer" onclick="triggerFilePicker()">
-                        <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
-                        <div class="dropzone-title">Drag &amp; Drop Any File or Media Here</div>
-                        <div class="dropzone-sub">Photos, 4K Videos, PDFs, ZIP archives, Code files &bull; No size limit</div>
-                        <input type="file" id="filePickerInput" class="dropzone-file-input" onchange="handleFileChosen(this.files)">
-                    </div>
-
-                    <!-- Selected File Card -->
-                    <div class="selected-file-card" id="selectedFileCard">
-                        <div class="selected-file-info">
-                            <i class="fa-solid fa-file-lines" style="font-size: 1.8rem; color: var(--accent-cyan);" id="selectedFileIcon"></i>
-                            <div>
-                                <div class="selected-file-name" id="selectedFileName">filename.zip</div>
-                                <div class="selected-file-size" id="selectedFileSize">0 MB</div>
-                            </div>
-                        </div>
-                        <button class="send-beam-btn" id="btnSendFile" onclick="startBeamTransfer()">
-                            <i class="fa-solid fa-paper-plane"></i> Beam to Peer
+                    <!-- Mode Switcher: Files vs Quick Note -->
+                    <div class="drop-mode-switcher">
+                        <button class="mode-tab-btn active" id="modeFileBtn" onclick="switchDropMode('files')">
+                            <i class="fa-solid fa-file-arrow-up"></i> Files &amp; Media
+                        </button>
+                        <button class="mode-tab-btn" id="modeNoteBtn" onclick="switchDropMode('note')">
+                            <i class="fa-solid fa-feather-pointed"></i> Quick Note / Prompt / URL
                         </button>
                     </div>
 
-                    <!-- Real-Time Transfer Telemetry -->
+                    <!-- FILE DROPZONE MODE -->
+                    <div id="fileModeContainer">
+                        <!-- Dropzone Area -->
+                        <div class="dropzone-container" id="dropzoneContainer" onclick="triggerFilePicker()">
+                            <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                            <div class="dropzone-title">Drag &amp; Drop Files or Media Here</div>
+                            <div class="dropzone-sub">Photos, 4K Videos, PDFs, ZIP archives, Code files &bull; Batch selection &amp; Ctrl+V paste supported</div>
+                            <input type="file" id="filePickerInput" class="dropzone-file-input" multiple onchange="handleFileChosen(this.files)">
+                        </div>
+
+                        <!-- Batch Staging Queue Card -->
+                        <div class="batch-queue-card" id="batchQueueCard" style="display: none;">
+                            <div class="batch-queue-header">
+                                <div class="batch-queue-title">
+                                    <i class="fa-solid fa-layer-group" style="color: var(--accent-cyan);"></i>
+                                    Staged Files (<span id="batchCountText">0</span>) &bull; <span id="batchTotalSizeText" style="color: var(--accent-emerald);">0 MB</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="batch-mini-btn" onclick="triggerFilePicker()" title="Add More Files">
+                                        <i class="fa-solid fa-plus"></i> Add More
+                                    </button>
+                                    <button class="batch-mini-btn" onclick="clearBatchQueue()" title="Clear Staged Queue">
+                                        <i class="fa-solid fa-trash-can"></i> Clear
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="batch-files-list" id="batchFilesList"></div>
+                            <div class="batch-actions-row">
+                                <button class="send-beam-btn" id="btnSendBatch" onclick="startBeamTransfer()" style="width: 100%; justify-content: center;">
+                                    <i class="fa-solid fa-paper-plane"></i> Beam <span id="btnBatchCountText">Files</span> to Peer (<span id="btnBatchTotalSizeText">0 MB</span>)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QUICK NOTE / TEXT MODE -->
+                    <div id="noteModeContainer" style="display: none;">
+                        <div class="quick-note-card" id="quickNoteCard">
+                            <div class="note-top-bar">
+                                <input type="text" id="quickNoteTitleInput" placeholder="Note Title / Label (e.g. Physics Derivation, VANI Prompt, Link)..." class="note-title-input">
+                                <button class="batch-mini-btn" onclick="pasteClipboardToNote()" title="Paste from Clipboard">
+                                    <i class="fa-solid fa-paste"></i> Paste
+                                </button>
+                            </div>
+                            <textarea id="quickNoteTextarea" class="note-textarea" placeholder="Type or paste prompts, math formulas, code snippets, or URLs to beam instantly to your peer's screen..."></textarea>
+                            <div class="note-bottom-bar">
+                                <div class="note-char-counter"><span id="noteCharCount">0</span> characters</div>
+                                <button class="send-beam-btn" onclick="sendQuickNote()">
+                                    <i class="fa-solid fa-bolt"></i> Beam Note to Peer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real-Time Transfer Telemetry HUD -->
                     <div class="transfer-telemetry-box" id="transferTelemetryBox">
                         <div class="telemetry-row-top">
                             <div class="telemetry-stage" id="telemetryStageText">
@@ -1011,6 +1472,11 @@
                             <span id="telemetryTransferredBytes">0 MB / 0 MB</span>
                             <span id="telemetryPercent">0%</span>
                             <span id="telemetryEta">ETA: --</span>
+                        </div>
+
+                        <div class="telemetry-batch-row" id="telemetryBatchRow" style="display: none;">
+                            <span id="telemetryBatchStage"><i class="fa-solid fa-layer-group"></i> File 1 of 1</span>
+                            <span id="telemetryShaBadge"><i class="fa-solid fa-shield-halved"></i> SHA-256 Verified</span>
                         </div>
                     </div>
 
@@ -1039,10 +1505,10 @@
             <div class="card-heading" style="flex-wrap: wrap; gap: 12px;">
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <button class="vault-tab-btn active" id="tabReceivedBtn" onclick="switchBeamVaultTab('received')">
-                        <i class="fa-solid fa-inbox"></i> Received Files (<span id="receivedFileCount">0</span>)
+                        <i class="fa-solid fa-inbox"></i> Received Vault (<span id="receivedFileCount">0</span>)
                     </button>
                     <button class="vault-tab-btn" id="tabSentBtn" onclick="switchBeamVaultTab('sent')">
-                        <i class="fa-solid fa-paper-plane"></i> Sent Files (<span id="sentFileCount">0</span>)
+                        <i class="fa-solid fa-paper-plane"></i> Sent Vault (<span id="sentFileCount">0</span>)
                     </button>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
@@ -1053,6 +1519,20 @@
                         <i class="fa-solid fa-rotate"></i> Refresh
                     </button>
                 </div>
+            </div>
+
+            <!-- Vault Search / Filter Bar -->
+            <div class="vault-filter-row">
+                <div class="vault-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="vaultSearchInput" placeholder="Filter vault files by name or extension (.pdf, .png, note)..." oninput="handleVaultSearch(this.value)">
+                    <button id="clearSearchBtn" onclick="clearVaultSearch()" style="display: none;" title="Clear Search">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <button class="header-btn" style="padding: 6px 12px; font-size: 0.75rem; color: #fda4af;" onclick="confirmClearVaultCache()" title="Clear Browser Cached Vault Files">
+                    <i class="fa-solid fa-trash-can"></i> Clear Cache
+                </button>
             </div>
 
             <!-- Received Files Grid -->
@@ -1121,6 +1601,49 @@
             </div>
 
             <button class="btn-modal-close" onclick="closeCameraScanModal()" style="margin-top: 14px;">Close</button>
+        </div>
+    </div>
+
+    <!-- Universal In-App Media Preview Modal -->
+    <div class="beam-modal-backdrop" id="mediaPreviewModal">
+        <div class="beam-preview-card">
+            <div class="preview-card-header">
+                <div class="preview-file-info">
+                    <i class="fa-solid fa-file" id="modalPreviewIcon"></i>
+                    <div>
+                        <div class="preview-modal-filename" id="modalPreviewFilename">file.ext</div>
+                        <div class="preview-modal-meta" id="modalPreviewMeta">0 MB &bull; SHA-256 Verified</div>
+                    </div>
+                </div>
+                <div class="preview-header-actions">
+                    <button class="preview-action-btn" id="modalDownloadBtn" title="Download File">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                    <button class="preview-action-btn" onclick="closeMediaPreview()" title="Close (Esc)">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="preview-body" id="modalPreviewBody">
+                <!-- Media dynamically inserted by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Note Full-View Modal -->
+    <div class="beam-modal-backdrop" id="quickNoteViewModal">
+        <div class="beam-modal-card" style="max-width: 600px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: #fff;" id="viewNoteTitle">Quick Note</h3>
+                <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'Fira Code', monospace;" id="viewNoteMeta">Just now</span>
+            </div>
+            <pre class="note-view-content" id="viewNoteContent"></pre>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+                <button class="send-beam-btn" onclick="copyViewedNoteText()" style="padding: 8px 18px; font-size: 0.85rem;">
+                    <i class="fa-regular fa-copy"></i> Copy to Clipboard
+                </button>
+                <button class="btn-modal-close" onclick="closeQuickNoteViewModal()" style="margin: 0;">Close</button>
+            </div>
         </div>
     </div>
 
