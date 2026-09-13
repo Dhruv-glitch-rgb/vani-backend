@@ -387,6 +387,12 @@ def quantum_connect_page():
 def quantum_beam_page():
     return serve_page('quantum_beam.html', os.path.join('md', 'beam.md'))
 
+@app.route('/more_bovxai.html')
+@app.route('/more_bovxai')
+@app.route('/more-bovxai')
+def more_bovxai_page():
+    return serve_page('more_bovxai.html', os.path.join('md', 'more_bovxai.md'))
+
 @app.route('/terms.html')
 @app.route('/terms')
 def terms_page():

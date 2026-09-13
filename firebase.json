@@ -198,6 +198,14 @@
         "destination": "/quantum_beam.html"
       },
       {
+        "source": "/more_bovxai",
+        "destination": "/more_bovxai.html"
+      },
+      {
+        "source": "/more-bovxai",
+        "destination": "/more_bovxai.html"
+      },
+      {
         "source": "/saras_web_search",
         "destination": "/saras_web_search.html"
       },
@@ -288,6 +296,14 @@
       {
         "source": "/quantum-beam/**",
         "destination": "/quantum_beam.html"
+      },
+      {
+        "source": "/more_bovxai",
+        "destination": "/more_bovxai.html"
+      },
+      {
+        "source": "/more_bovxai/**",
+        "destination": "/more_bovxai.html"
       },
       {
         "source": "/*/blocked-by-vani-xai0419",

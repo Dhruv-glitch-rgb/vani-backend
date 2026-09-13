@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>More BoVxAi | Advanced Multi-Modal AI Workspace - V.A.N.I-xAI</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="More BoVxAi by V.A.N.I-xAI: A state-of-the-art all-in-one AI workspace powered by GLM intelligence. Voice assistant, image generation, image analysis, document intelligence, YouTube AI summaries, long-term memory, translation, and OCR.">
+    <meta name="keywords" content="more bovxai, vani-xai, space-z ai, glm ai workspace, voice assistant, ai image generation, document intelligence, youtube ai summary, ai memory, ocr document analysis">
+    <meta name="author" content="Dhruv Sagar - Bureau of V.A.N.I-xAI">
+    <link rel="canonical" href="https://vani-nzdrsr.web.app/more_bovxai">
+    <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-deep: #030712;
+            --panel-bg: rgba(15, 23, 42, 0.88);
+            --panel-border: rgba(168, 85, 247, 0.28);
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --accent-indigo: #6366f1;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --header-height: 64px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.12) 0%, transparent 60%),
+                        radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+                        var(--bg-deep);
+        }
+
+        /* Top Navigation Header */
+        .workspace-header {
+            height: var(--header-height);
+            min-height: var(--header-height);
+            background: rgba(10, 15, 30, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-link img {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1.5px solid rgba(168, 85, 247, 0.5);
+            box-shadow: 0 0 14px rgba(168, 85, 247, 0.35);
+            object-fit: cover;
+        }
+
+        .brand-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.18rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff 25%, #c084fc 70%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .engine-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(168, 85, 247, 0.12);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            color: #d8b4fe;
+            font-weight: 600;
+        }
+
+        .engine-pill .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            animation: livePulse 2s infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.45; transform: scale(0.85); }
+        }
+
+        /* Features Ribbon Ticker */
+        .features-tray {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+            max-width: 44vw;
+            padding: 4px 6px;
+            scrollbar-width: none;
+        }
+
+        .features-tray::-webkit-scrollbar {
+            display: none;
+        }
+
+        .feature-chip {
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .feature-chip:hover {
+            background: rgba(168, 85, 247, 0.18);
+            border-color: rgba(168, 85, 247, 0.4);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .feature-chip i {
+            font-size: 0.75rem;
+            color: var(--accent-purple);
+        }
+
+        /* Header Actions */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.84rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-purple);
+            color: #fff;
+            border-color: var(--accent-purple);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(236, 72, 153, 0.25));
+            border-color: rgba(168, 85, 247, 0.45);
+            color: #f3e8ff;
+        }
+
+        .nav-btn.primary:hover {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: #fff;
+        }
+
+        .nav-btn.icon-only {
+            padding: 8px 12px;
+        }
+
+        /* Iframe Main Viewport */
+        .viewport-wrapper {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            height: calc(100vh - var(--header-height));
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .workspace-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            background: #ffffff;
+        }
+
+        /* Loader Overlay */
+        .frame-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 50;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .frame-loader.loaded {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .spinner-ring {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: 3px solid rgba(168, 85, 247, 0.2);
+            border-top-color: var(--accent-purple);
+            border-right-color: var(--accent-pink);
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .loader-sub {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Direct Launch Banner Fallback */
+        .fallback-bar {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 30px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            z-index: 60;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            opacity: 0.88;
+            transition: opacity 0.25s ease;
+        }
+
+        .fallback-bar:hover {
+            opacity: 1;
+        }
+
+        .fallback-bar a {
+            color: #d8b4fe;
+            text-decoration: underline;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Fullscreen Mode tweaks */
+        body.is-fullscreen .workspace-header {
+            display: none;
+        }
+
+        body.is-fullscreen .viewport-wrapper {
+            height: 100vh;
+        }
+
+        .exit-fullscreen-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 9999;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+
+        body.is-fullscreen .exit-fullscreen-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 900px) {
+            .features-tray {
+                display: none;
+            }
+            .engine-pill {
+                display: none;
+            }
+            .brand-text {
+                font-size: 1rem;
+            }
+            .workspace-header {
+                padding: 0 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Header -->
+    <header class="workspace-header" id="mainHeader">
+        <div class="header-left">
+            <a href="/ai4consol.html" class="brand-link" title="Return to V.A.N.I-xAI Console">
+                <img src="/vani_icon.png" alt="V.A.N.I-xAI Icon">
+                <span class="brand-text">MORE BoVxAi</span>
+            </a>
+            <div class="engine-pill" title="Live Next.js AI Engine hosted on Space-Z">
+                <span class="dot"></span>
+                <span>GLM · Space-Z AI</span>
+            </div>
+        </div>
+
+        <!-- 10 Modules Quick Tray -->
+        <div class="features-tray" title="10 Multi-Modal AI Modules Enabled">
+            <span class="feature-chip" title="Voice Assistant Module"><i class="fa-solid fa-microphone"></i> Voice Assistant</span>
+            <span class="feature-chip" title="Image Generation Module"><i class="fa-solid fa-wand-magic-sparkles"></i> Image Gen</span>
+            <span class="feature-chip" title="Vision & Image Analysis"><i class="fa-solid fa-eye"></i> Vision</span>
+            <span class="feature-chip" title="Document Intelligence"><i class="fa-solid fa-file-invoice"></i> Docs Intelligence</span>
+            <span class="feature-chip" title="YouTube Video AI Summaries"><i class="fa-brands fa-youtube" style="color: #ef4444;"></i> YouTube AI</span>
+            <span class="feature-chip" title="Persistent Long-Term Memory"><i class="fa-solid fa-brain"></i> Memory</span>
+            <span class="feature-chip" title="Translation & Writing Studio"><i class="fa-solid fa-language"></i> Translation</span>
+            <span class="feature-chip" title="OCR & Document Analysis"><i class="fa-solid fa-file-lines"></i> OCR</span>
+        </div>
+
+        <!-- Header Controls -->
+        <div class="header-right">
+            <button class="nav-btn icon-only" onclick="reloadFrame()" title="Reload Workspace (Alt+R)">
+                <i class="fa-solid fa-rotate-right" id="reloadIcon"></i>
+            </button>
+            <button class="nav-btn icon-only" onclick="toggleFullscreen()" title="Toggle Fullscreen Mode (F)">
+                <i class="fa-solid fa-expand" id="fsIcon"></i>
+            </button>
+            <a href="https://more-bovxai.space-z.ai" target="_blank" rel="noopener noreferrer" class="nav-btn primary" title="Open More BoVxAi in a separate tab">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <span class="btn-text">Open Full Tab</span>
+            </a>
+            <a href="/ai4consol.html" class="nav-btn" title="Back to V.A.N.I-xAI Main Console">
+                <i class="fa-solid fa-terminal"></i>
+                <span class="btn-text">Console</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Floating Exit Fullscreen Button -->
+    <button class="exit-fullscreen-btn" onclick="toggleFullscreen()">
+        <i class="fa-solid fa-compress"></i> Exit Fullscreen (Esc)
+    </button>
+
+    <!-- Main Viewport Area -->
+    <div class="viewport-wrapper">
+        <!-- Connecting Skeleton / Loader -->
+        <div class="frame-loader" id="frameLoader">
+            <div class="spinner-ring"></div>
+            <div class="loader-title">INITIALIZING MORE BoVxAi</div>
+            <div class="loader-sub">Connecting to Space-Z GLM Neural Cluster...</div>
+        </div>
+
+        <!-- Live Embedded Workspace -->
+        <iframe 
+            id="moreBovxaiFrame"
+            class="workspace-iframe"
+            src="https://more-bovxai.space-z.ai"
+            title="More BoVxAi AI Workspace"
+            allow="camera; microphone; clipboard-read; clipboard-write; fullscreen; display-capture"
+            loading="eager"
+            onload="onFrameLoaded()">
+        </iframe>
+
+        <!-- Fallback Bar -->
+        <div class="fallback-bar" id="fallbackBar">
+            <i class="fa-solid fa-circle-info" style="color: #c084fc;"></i>
+            <span>Connected to <strong>more-bovxai.space-z.ai</strong>. If frame is restricted,</span>
+            <a href="https://more-bovxai.space-z.ai" target="_blank" rel="noopener noreferrer">Launch Direct Workspace &rarr;</a>
+        </div>
+    </div>
+
+    <script>
+        const frame = document.getElementById('moreBovxaiFrame');
+        const loader = document.getElementById('frameLoader');
+        const reloadIcon = document.getElementById('reloadIcon');
+
+        function onFrameLoaded() {
+            // Dismiss loader with smooth transition
+            setTimeout(() => {
+                if (loader) loader.classList.add('loaded');
+            }, 300);
+        }
+
+        // Failsafe in case iframe load event is suppressed by cross-origin policies
+        setTimeout(() => {
+            if (loader && !loader.classList.contains('loaded')) {
+                loader.classList.add('loaded');
+            }
+        }, 3500);
+
+        function reloadFrame() {
+            if (!frame) return;
+            if (loader) loader.classList.remove('loaded');
+            if (reloadIcon) reloadIcon.classList.add('fa-spin');
+            frame.src = 'https://more-bovxai.space-z.ai?t=' + Date.now();
+            setTimeout(() => {
+                if (reloadIcon) reloadIcon.classList.remove('fa-spin');
+            }, 1200);
+        }
+
+        function toggleFullscreen() {
+            const isFs = document.body.classList.toggle('is-fullscreen');
+            const fsIcon = document.getElementById('fsIcon');
+            if (fsIcon) {
+                if (isFs) {
+                    fsIcon.classList.replace('fa-expand', 'fa-compress');
+                } else {
+                    fsIcon.classList.replace('fa-compress', 'fa-expand');
+                }
+            }
+
+            if (isFs) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                }
+            } else {
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                }
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.body.classList.contains('is-fullscreen')) {
+                toggleFullscreen();
+            }
+            if ((e.key === 'f' || e.key === 'F') && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+                toggleFullscreen();
+            }
+        });
+
+        // Listen for browser fullscreen exit (e.g. Esc pressed natively)
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement && document.body.classList.contains('is-fullscreen')) {
+                document.body.classList.remove('is-fullscreen');
+                const fsIcon = document.getElementById('fsIcon');
+                if (fsIcon) fsIcon.classList.replace('fa-compress', 'fa-expand');
+            }
+        });
+    </script>
+</body>
+</html>

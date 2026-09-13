@@ -592,6 +592,20 @@
             background: #f1f5f9;
         }
 
+        .sidebar-addon-btn.more-bovxai-addon i {
+            color: #a855f7;
+        }
+
+        .sidebar-addon-btn.more-bovxai-addon:hover {
+            border-color: #e9d5ff;
+            background: #faf5ff;
+        }
+
+        body.dark-mode .sidebar-addon-btn.more-bovxai-addon:hover {
+            border-color: rgba(168, 85, 247, 0.45);
+            background: rgba(168, 85, 247, 0.12);
+        }
+
         /* Prompt Explorer Chips */
         .quick-demo-chips {
             display: flex;
@@ -1983,6 +1997,11 @@
                         title="View & Download Received & Sent Files from Sovereign DB">
                         <i class="fa-solid fa-box-archive" style="color: #10b981;"></i>
                         <span>Beam Files</span>
+                    </button>
+                    <button class="sidebar-addon-btn more-bovxai-addon" onclick="window.location.href='/more_bovxai'"
+                        title="More BoVxAi - Advanced AI Suite (Voice, Image Gen, Vision, Docs, YouTube, Memory, Workspace)">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color: #a855f7;"></i>
+                        <span>More BoVxAi</span>
                     </button>
                     <button class="sidebar-addon-btn settings-addon" onclick="window.location.href='./settings.html'"
                         title="Open System &amp; Voice Settings">
