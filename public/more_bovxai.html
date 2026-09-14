@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Immediate Auto-Redirect Fallback -->
+    <meta http-equiv="refresh" content="0; url=https://more-bovxai.base44.app/">
     <title>More BoVxAi | Advanced Multi-Modal AI Workspace - V.A.N.I-xAI</title>
 
     <!-- SEO Meta Tags -->
@@ -21,8 +23,8 @@
     <style>
         :root {
             --bg-deep: #030712;
-            --panel-bg: rgba(15, 23, 42, 0.88);
-            --panel-border: rgba(168, 85, 247, 0.28);
+            --panel-bg: rgba(15, 23, 42, 0.82);
+            --panel-border: rgba(168, 85, 247, 0.32);
             --accent-purple: #a855f7;
             --accent-pink: #ec4899;
             --accent-indigo: #6366f1;
@@ -30,7 +32,7 @@
             --accent-emerald: #10b981;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --header-height: 64px;
+            --header-height: 66px;
         }
 
         * {
@@ -42,43 +44,39 @@
 
         html, body {
             width: 100%;
-            height: 100%;
+            min-height: 100vh;
             background-color: var(--bg-deep);
             color: var(--text-main);
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         body {
+            background: radial-gradient(circle at 50% 10%, rgba(168, 85, 247, 0.18) 0%, transparent 60%),
+                        radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+                        radial-gradient(circle at 15% 75%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                        var(--bg-deep);
             display: flex;
             flex-direction: column;
-            background: radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.12) 0%, transparent 60%),
-                        radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
-                        var(--bg-deep);
         }
 
         /* Top Navigation Header */
-        .workspace-header {
+        .portal-header {
             height: var(--header-height);
-            min-height: var(--header-height);
-            background: rgba(10, 15, 30, 0.92);
+            background: rgba(10, 15, 30, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--panel-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 24px;
             z-index: 100;
+            position: sticky;
+            top: 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .brand-link {
+        .header-brand {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -86,7 +84,7 @@
             color: inherit;
         }
 
-        .brand-link img {
+        .header-brand img {
             width: 38px;
             height: 38px;
             border-radius: 10px;
@@ -95,17 +93,17 @@
             object-fit: cover;
         }
 
-        .brand-text {
+        .brand-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.18rem;
+            font-size: 1.15rem;
             font-weight: 800;
             letter-spacing: 1px;
-            background: linear-gradient(135deg, #fff 25%, #c084fc 70%, #ec4899 100%);
+            background: linear-gradient(135deg, #ffffff 30%, #d8b4fe 75%, #f472b6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .engine-pill {
+        .engine-chip {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -119,65 +117,21 @@
             font-weight: 600;
         }
 
-        .engine-pill .dot {
+        .engine-chip .pulse-dot {
             width: 7px;
             height: 7px;
             border-radius: 50%;
             background-color: #10b981;
             box-shadow: 0 0 8px #10b981;
-            animation: livePulse 2s infinite;
+            animation: pulse 2s infinite;
         }
 
-        @keyframes livePulse {
+        @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.45; transform: scale(0.85); }
+            50% { opacity: 0.4; transform: scale(0.8); }
         }
 
-        /* Features Ribbon Ticker */
-        .features-tray {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            overflow-x: auto;
-            max-width: 44vw;
-            padding: 4px 6px;
-            scrollbar-width: none;
-        }
-
-        .features-tray::-webkit-scrollbar {
-            display: none;
-        }
-
-        .feature-chip {
-            white-space: nowrap;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.76rem;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #cbd5e1;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
-        .feature-chip:hover {
-            background: rgba(168, 85, 247, 0.18);
-            border-color: rgba(168, 85, 247, 0.4);
-            color: #fff;
-            transform: translateY(-1px);
-        }
-
-        .feature-chip i {
-            font-size: 0.75rem;
-            color: var(--accent-purple);
-        }
-
-        /* Header Actions */
-        .header-right {
+        .header-nav-actions {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -187,7 +141,7 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: var(--text-main);
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
@@ -203,172 +157,256 @@
             background: var(--accent-purple);
             color: #fff;
             border-color: var(--accent-purple);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
             box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
         }
 
-        .nav-btn.primary {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(236, 72, 153, 0.25));
-            border-color: rgba(168, 85, 247, 0.45);
-            color: #f3e8ff;
-        }
-
-        .nav-btn.primary:hover {
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            color: #fff;
-        }
-
-        .nav-btn.icon-only {
-            padding: 8px 12px;
-        }
-
-        /* Iframe Main Viewport */
-        .viewport-wrapper {
-            position: relative;
+        /* Main Gateway Container */
+        .gateway-main {
             flex: 1;
-            width: 100%;
-            height: calc(100vh - var(--header-height));
-            overflow: hidden;
-            background: #ffffff;
-        }
-
-        .workspace-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-            background: #ffffff;
-        }
-
-        /* Loader Overlay */
-        .frame-loader {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-deep);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 16px;
-            z-index: 50;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            padding: 40px 20px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
         }
 
-        .frame-loader.loaded {
-            opacity: 0;
-            visibility: hidden;
+        /* Quantum Gateway Pulse Hub */
+        .portal-hub {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .portal-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid transparent;
             pointer-events: none;
         }
 
-        .spinner-ring {
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            border: 3px solid rgba(168, 85, 247, 0.2);
-            border-top-color: var(--accent-purple);
-            border-right-color: var(--accent-pink);
-            animation: spin 0.9s linear infinite;
+        .ring-1 {
+            width: 120px;
+            height: 120px;
+            border-top: 2px solid var(--accent-purple);
+            border-bottom: 2px solid var(--accent-pink);
+            animation: rotateCw 6s linear infinite;
         }
 
-        @keyframes spin {
+        .ring-2 {
+            width: 95px;
+            height: 95px;
+            border-left: 2px solid var(--accent-cyan);
+            border-right: 2px solid var(--accent-indigo);
+            animation: rotateCcw 4s linear infinite;
+        }
+
+        .portal-core {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(236, 72, 153, 0.3));
+            backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(168, 85, 247, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+        }
+
+        .portal-core i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #fff, #d8b4fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes rotateCw {
+            from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
-        .loader-title {
+        @keyframes rotateCcw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        .hero-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            font-weight: 800;
             letter-spacing: 1px;
-            color: #fff;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ffffff 20%, #d8b4fe 65%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .loader-sub {
-            font-size: 0.84rem;
+        .hero-subtitle {
+            font-size: 1.05rem;
             color: var(--text-muted);
-            font-family: 'Fira Code', monospace;
+            max-width: 680px;
+            line-height: 1.6;
+            margin-bottom: 28px;
         }
 
-        /* Direct Launch Banner Fallback */
-        .fallback-bar {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(168, 85, 247, 0.35);
-            border-radius: 30px;
-            padding: 8px 18px;
+        /* Direct Launch Primary Button */
+        .launch-action-bar {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            z-index: 60;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            opacity: 0.88;
-            transition: opacity 0.25s ease;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 44px;
         }
 
-        .fallback-bar:hover {
-            opacity: 1;
-        }
-
-        .fallback-bar a {
-            color: #d8b4fe;
-            text-decoration: underline;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* Fullscreen Mode tweaks */
-        body.is-fullscreen .workspace-header {
-            display: none;
-        }
-
-        body.is-fullscreen .viewport-wrapper {
-            height: 100vh;
-        }
-
-        .exit-fullscreen-btn {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(168, 85, 247, 0.5);
-            color: #fff;
-            padding: 8px 14px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            z-index: 9999;
-            display: none;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        }
-
-        body.is-fullscreen .exit-fullscreen-btn {
+        .btn-launch-hero {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 16px 36px;
+            border-radius: 16px;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.45);
+            transition: all 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        @media (max-width: 900px) {
-            .features-tray {
+        .btn-launch-hero:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(168, 85, 247, 0.6);
+            color: #ffffff;
+        }
+
+        .btn-return-console {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.02rem;
+            padding: 15px 28px;
+            border-radius: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-return-console:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .redirect-timer-badge {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            color: #d8b4fe;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 10 Modules Feature Grid */
+        .modules-grid-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            width: 100%;
+        }
+
+        .module-card {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 20px 18px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .module-card:hover {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: rgba(168, 85, 247, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .mod-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .mod-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #f8fafc;
+        }
+
+        .mod-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.6rem;
+            }
+            .hero-subtitle {
+                font-size: 0.92rem;
+            }
+            .btn-launch-hero {
+                width: 100%;
+                justify-content: center;
+            }
+            .btn-return-console {
+                width: 100%;
+                justify-content: center;
+            }
+            .engine-chip {
                 display: none;
-            }
-            .engine-pill {
-                display: none;
-            }
-            .brand-text {
-                font-size: 1rem;
-            }
-            .workspace-header {
-                padding: 0 12px;
             }
         }
     </style>
@@ -376,151 +414,159 @@
 <body>
 
     <!-- Top Navigation Header -->
-    <header class="workspace-header" id="mainHeader">
-        <div class="header-left">
-            <a href="/ai4consol.html" class="brand-link" title="Return to V.A.N.I-xAI Console">
-                <img src="/vani_icon.png" alt="V.A.N.I-xAI Icon">
-                <span class="brand-text">MORE BoVxAi</span>
-            </a>
-            <div class="engine-pill" title="Live AI Engine hosted on Base44">
-                <span class="dot"></span>
-                <span>GLM · Base44 AI</span>
-            </div>
+    <header class="portal-header">
+        <a href="/ai4consol.html" class="header-brand" title="Return to V.A.N.I-xAI Console">
+            <img src="/vani_icon.png" alt="V.A.N.I-xAI Icon">
+            <span class="brand-title">MORE BoVxAi</span>
+        </a>
+
+        <div class="engine-chip" title="Base44 AI Autonomous Workspace">
+            <span class="pulse-dot"></span>
+            <span>GLM · Base44 AI Engine Online</span>
         </div>
 
-        <!-- 10 Modules Quick Tray -->
-        <div class="features-tray" title="10 Multi-Modal AI Modules Enabled">
-            <span class="feature-chip" title="Voice Assistant Module"><i class="fa-solid fa-microphone"></i> Voice Assistant</span>
-            <span class="feature-chip" title="Image Generation Module"><i class="fa-solid fa-wand-magic-sparkles"></i> Image Gen</span>
-            <span class="feature-chip" title="Vision & Image Analysis"><i class="fa-solid fa-eye"></i> Vision</span>
-            <span class="feature-chip" title="Document Intelligence"><i class="fa-solid fa-file-invoice"></i> Docs Intelligence</span>
-            <span class="feature-chip" title="YouTube Video AI Summaries"><i class="fa-brands fa-youtube" style="color: #ef4444;"></i> YouTube AI</span>
-            <span class="feature-chip" title="Persistent Long-Term Memory"><i class="fa-solid fa-brain"></i> Memory</span>
-            <span class="feature-chip" title="Translation & Writing Studio"><i class="fa-solid fa-language"></i> Translation</span>
-            <span class="feature-chip" title="OCR & Document Analysis"><i class="fa-solid fa-file-lines"></i> OCR</span>
-        </div>
-
-        <!-- Header Controls -->
-        <div class="header-right">
-            <button class="nav-btn icon-only" onclick="reloadFrame()" title="Reload Workspace (Alt+R)">
-                <i class="fa-solid fa-rotate-right" id="reloadIcon"></i>
-            </button>
-            <button class="nav-btn icon-only" onclick="toggleFullscreen()" title="Toggle Fullscreen Mode (F)">
-                <i class="fa-solid fa-expand" id="fsIcon"></i>
-            </button>
-            <a href="https://more-bovxai.base44.app/" target="_blank" rel="noopener noreferrer" class="nav-btn primary" title="Open More BoVxAi in a separate tab">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                <span class="btn-text">Open Full Tab</span>
+        <div class="header-nav-actions">
+            <a href="https://more-bovxai.base44.app/" target="_blank" rel="noopener noreferrer" class="nav-btn" style="background: rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.4); color: #e9d5ff;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Direct Link
             </a>
-            <a href="/ai4consol.html" class="nav-btn" title="Back to V.A.N.I-xAI Main Console">
-                <i class="fa-solid fa-terminal"></i>
-                <span class="btn-text">Console</span>
+            <a href="/ai4consol.html" class="nav-btn">
+                <i class="fa-solid fa-terminal"></i> Console
+            </a>
+            <a href="/quantum_beam" class="nav-btn">
+                <i class="fa-solid fa-bolt-lightning" style="color: #38bdf8;"></i> Beam
             </a>
         </div>
     </header>
 
-    <!-- Floating Exit Fullscreen Button -->
-    <button class="exit-fullscreen-btn" onclick="toggleFullscreen()">
-        <i class="fa-solid fa-compress"></i> Exit Fullscreen (Esc)
-    </button>
-
-    <!-- Main Viewport Area -->
-    <div class="viewport-wrapper">
-        <!-- Connecting Skeleton / Loader -->
-        <div class="frame-loader" id="frameLoader">
-            <div class="spinner-ring"></div>
-            <div class="loader-title">INITIALIZING MORE BoVxAi</div>
-            <div class="loader-sub">Connecting to Base44 GLM Neural Cluster...</div>
+    <!-- Main Gateway Content -->
+    <main class="gateway-main">
+        
+        <!-- Cybernetic Portal Rings -->
+        <div class="portal-hub">
+            <div class="portal-ring ring-1"></div>
+            <div class="portal-ring ring-2"></div>
+            <div class="portal-core">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
         </div>
 
-        <!-- Live Embedded Workspace -->
-        <iframe 
-            id="moreBovxaiFrame"
-            class="workspace-iframe"
-            src="https://more-bovxai.base44.app/"
-            title="More BoVxAi AI Workspace"
-            allow="camera; microphone; clipboard-read; clipboard-write; fullscreen; display-capture"
-            loading="eager"
-            onload="onFrameLoaded()">
-        </iframe>
+        <h1 class="hero-title">MORE BoVxAi WORKSPACE</h1>
+        <p class="hero-subtitle">
+            Welcome to the multi-modal AI intelligence suite powered by GLM on Base44. Experience sovereign voice synthesis, vision comprehension, enterprise document intelligence, YouTube AI summarization, and long-term memory.
+        </p>
 
-        <!-- Fallback Bar -->
-        <div class="fallback-bar" id="fallbackBar">
-            <i class="fa-solid fa-circle-info" style="color: #c084fc;"></i>
-            <span>Connected to <strong>more-bovxai.base44.app</strong>. If frame is restricted,</span>
-            <a href="https://more-bovxai.base44.app/" target="_blank" rel="noopener noreferrer">Launch Direct Workspace &rarr;</a>
+        <!-- Redirect Status Badge -->
+        <div class="redirect-timer-badge" id="redirectBadge">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            <span>Forwarding to <strong>more-bovxai.base44.app</strong>...</span>
         </div>
-    </div>
+
+        <!-- Launch Buttons -->
+        <div class="launch-action-bar">
+            <a href="https://more-bovxai.base44.app/" id="launchNowBtn" class="btn-launch-hero">
+                <i class="fa-solid fa-rocket"></i> Launch More BoVxAi Now
+            </a>
+            <a href="/ai4consol.html" class="btn-return-console">
+                <i class="fa-solid fa-terminal"></i> Return to Console
+            </a>
+        </div>
+
+        <!-- 10 Modules Showcase Grid -->
+        <div class="modules-grid-title">
+            <i class="fa-solid fa-cubes" style="color: var(--accent-purple);"></i> Included 10 Multi-Modal Modules
+        </div>
+
+        <div class="modules-grid">
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(244, 63, 94, 0.15); color: #f43f5e;">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <div class="mod-title">Voice Assistant</div>
+                <div class="mod-desc">Real-time acoustic speech synthesis and conversational natural voice interactions.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+                    <i class="fa-solid fa-image"></i>
+                </div>
+                <div class="mod-title">Image Generation</div>
+                <div class="mod-desc">High-resolution AI graphics synthesis from descriptive language prompts.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+                <div class="mod-title">Image Analysis</div>
+                <div class="mod-desc">Deep visual inspection, scene breakdown, and question answering on graphics.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </div>
+                <div class="mod-title">Document Intelligence</div>
+                <div class="mod-desc">Multi-page contextual extraction, semantic search, and summary analysis.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                    <i class="fa-brands fa-youtube"></i>
+                </div>
+                <div class="mod-title">YouTube Summaries</div>
+                <div class="mod-desc">Automated video transcript parsing and timestamped key takeaway extraction.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div class="mod-title">Long-Term Memory</div>
+                <div class="mod-desc">Continuous context retention and cross-session user preference recall.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+                    <i class="fa-solid fa-language"></i>
+                </div>
+                <div class="mod-title">Translation & Writing</div>
+                <div class="mod-desc">Fluent multi-lingual translations and structured academic/creative prose composition.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div class="mod-title">OCR & Doc Analysis</div>
+                <div class="mod-desc">High-precision optical character recognition from scans, receipts, and images.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <div class="mod-title">Personalized Chat</div>
+                <div class="mod-desc">Adaptive reasoning and conversational depth matching your exact preferences.</div>
+            </a>
+
+            <a href="https://more-bovxai.base44.app/" class="module-card">
+                <div class="mod-icon-box" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
+                    <i class="fa-solid fa-cubes"></i>
+                </div>
+                <div class="mod-title">Modern AI Workspace</div>
+                <div class="mod-desc">Frictionless unified dashboard with real-time reasoning and zero external lag.</div>
+            </a>
+        </div>
+
+    </main>
 
     <script>
-        const frame = document.getElementById('moreBovxaiFrame');
-        const loader = document.getElementById('frameLoader');
-        const reloadIcon = document.getElementById('reloadIcon');
-
-        function onFrameLoaded() {
-            // Dismiss loader with smooth transition
-            setTimeout(() => {
-                if (loader) loader.classList.add('loaded');
-            }, 300);
+        // Smooth immediate redirect to Base44 app
+        try {
+            window.location.replace('https://more-bovxai.base44.app/');
+        } catch (err) {
+            window.location.href = 'https://more-bovxai.base44.app/';
         }
-
-        // Failsafe in case iframe load event is suppressed by cross-origin policies
-        setTimeout(() => {
-            if (loader && !loader.classList.contains('loaded')) {
-                loader.classList.add('loaded');
-            }
-        }, 3500);
-
-        function reloadFrame() {
-            if (!frame) return;
-            if (loader) loader.classList.remove('loaded');
-            if (reloadIcon) reloadIcon.classList.add('fa-spin');
-            frame.src = 'https://more-bovxai.base44.app/?t=' + Date.now();
-            setTimeout(() => {
-                if (reloadIcon) reloadIcon.classList.remove('fa-spin');
-            }, 1200);
-        }
-
-        function toggleFullscreen() {
-            const isFs = document.body.classList.toggle('is-fullscreen');
-            const fsIcon = document.getElementById('fsIcon');
-            if (fsIcon) {
-                if (isFs) {
-                    fsIcon.classList.replace('fa-expand', 'fa-compress');
-                } else {
-                    fsIcon.classList.replace('fa-compress', 'fa-expand');
-                }
-            }
-
-            if (isFs) {
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen().catch(() => {});
-                }
-            } else {
-                if (document.fullscreenElement && document.exitFullscreen) {
-                    document.exitFullscreen().catch(() => {});
-                }
-            }
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.body.classList.contains('is-fullscreen')) {
-                toggleFullscreen();
-            }
-            if ((e.key === 'f' || e.key === 'F') && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-                toggleFullscreen();
-            }
-        });
-
-        // Listen for browser fullscreen exit (e.g. Esc pressed natively)
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement && document.body.classList.contains('is-fullscreen')) {
-                document.body.classList.remove('is-fullscreen');
-                const fsIcon = document.getElementById('fsIcon');
-                if (fsIcon) fsIcon.classList.replace('fa-compress', 'fa-expand');
-            }
-        });
     </script>
 </body>
 </html>
