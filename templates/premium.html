@@ -7,7 +7,7 @@
     
     <!-- SEO & Fast Search Reachability Meta Tags -->
     <meta name="description" content="VANI-xAI provides 100% free and unlimited AI capabilities: unlimited queries, high-speed Saras WebSearch, real-time voice agent, autonomous agents, and Swarm synchronization.">
-    <meta name="keywords" content="vani-xai free unlimited, vani ai access, VANI-xAI, Vani Adhyatmik Navin Intellect, free ai assistant">
+    <meta name="keywords" content="vani-xai free unlimited, vani ai access, VANI-xAI, Vani Adhyatmik Navin Intellect, free ai assistant, premium unlocked">
     <meta name="author" content="Dhruv Sagar - V.A.N.I-xAI">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://vani-nzdrsr.web.app/premium.html">
@@ -21,21 +21,26 @@
     <meta property="og:image" content="https://vani-nzdrsr.web.app/vani_logo.jpg">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --bg-color: #020617;
-            --surface-color: rgba(15, 23, 42, 0.75);
-            --border-color: rgba(255, 255, 255, 0.12);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-primary: #38bdf8;
-            --accent-indigo: #6366f1;
-            --accent-purple: #a855f7;
-            --accent-green: #10b981;
-            --accent-cyan: #06b6d4;
-            --saffron: #ea580c;
+            --font-main: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --gold-50: #fffbeb;
+            --gold-100: #fef3c7;
+            --gold-400: #fbbf24;
+            --gold-500: #f59e0b;
+            --gold-600: #d97706;
+            --gold-700: #b45309;
+            --ruby-500: #e11d48;
+            --ruby-600: #be123c;
+            --ruby-100: #ffe4e6;
+            --text-title: #78350f;
+            --text-body: #1e293b;
+            --text-muted: #64748b;
         }
 
         * {
@@ -43,105 +48,186 @@
         }
 
         body {
-            margin: 0;
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg-color) url('inxv_bg.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #fffbeb 0%, #fef2f2 35%, #fff7ed 70%, #f8fafc 100%) !important;
+            background-attachment: fixed !important;
+            color: var(--text-body) !important;
+            font-family: var(--font-body);
             min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.65;
             display: flex;
             flex-direction: column;
         }
 
+        /* Ambient Imperial Gold & Ruby Mesh Orbs */
+        .color-mesh {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+            animation: meshFloat 16s infinite alternate ease-in-out;
+        }
+        .blob-gold-1 { top: -6%; left: -6%; width: 550px; height: 550px; background: radial-gradient(circle, #fde68a 0%, rgba(245, 158, 11, 0.45) 45%, transparent 70%); }
+        .blob-ruby { top: 20%; right: -6%; width: 560px; height: 560px; background: radial-gradient(circle, #fecdd3 0%, rgba(225, 29, 72, 0.4) 45%, transparent 70%); animation-delay: -4s; }
+        .blob-amber { bottom: 12%; left: 8%; width: 520px; height: 520px; background: radial-gradient(circle, #fed7aa 0%, rgba(249, 115, 22, 0.38) 45%, transparent 70%); animation-delay: -8s; }
+        .blob-gold-2 { bottom: -8%; right: 10%; width: 500px; height: 500px; background: radial-gradient(circle, #fef08a 0%, rgba(234, 179, 8, 0.38) 45%, transparent 70%); animation-delay: -11s; }
+
+        @keyframes meshFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(25px, 20px) scale(1.05); }
+            100% { transform: translate(-20px, -15px) scale(0.97); }
+        }
+
+        /* Subtle Geometric Grid */
+        .color-grid-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(245, 158, 11, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245, 158, 11, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Running Imperial Gold & Ruby Top Accent Bar */
+        .gold-accent-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 4.5px;
+            background: linear-gradient(90deg, #f59e0b, #e11d48, #fbbf24, #be123c, #f59e0b);
+            background-size: 200% 100%;
+            animation: goldScroll 4s linear infinite;
+            z-index: 100;
+        }
+        @keyframes goldScroll {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
         /* Navbar */
         nav {
+            position: relative;
+            z-index: 50;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
-            background: rgba(2, 6, 23, 0.85);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            padding: 14px 36px;
+            max-width: 1140px;
+            width: calc(100% - 32px);
+            margin: 20px auto 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(245, 158, 11, 0.25);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1), 0 2px 10px rgba(0, 0, 0, 0.03);
         }
 
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             cursor: pointer;
+            text-decoration: none;
         }
-
         .logo-container img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 2px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+            transition: transform 0.3s ease;
         }
-
+        .logo-container:hover img {
+            transform: rotate(5deg) scale(1.08);
+        }
         .logo-container h1 {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.8rem;
+            font-family: var(--font-main);
+            font-size: 1.4rem;
             margin: 0;
-            background: linear-gradient(135deg, #38bdf8, #818cf8, #a855f7);
+            background: linear-gradient(135deg, #b45309 0%, #e11d48 50%, #d97706 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
         }
 
         .nav-links {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 9px 18px;
-            border-radius: 20px;
+            background: transparent;
+            border: 1.5px solid rgba(245, 158, 11, 0.3);
+            color: #475569;
+            padding: 8px 18px;
+            border-radius: 14px;
             cursor: pointer;
-            font-family: 'Outfit';
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s;
+            font-family: var(--font-main);
+            font-size: 0.92rem;
+            font-weight: 600;
+            transition: all 0.25s ease;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             text-decoration: none;
         }
-
         .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .nav-btn.primary {
-            background: linear-gradient(135deg, #10b981, #06b6d4);
-            border: none;
-            color: #fff;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .nav-btn.primary:hover {
-            opacity: 0.95;
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+            color: #b45309;
+            background: rgba(245, 158, 11, 0.12);
             transform: translateY(-2px);
+        }
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #f59e0b, #e11d48);
+            border: none;
+            color: #fff !important;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+        }
+        .nav-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(225, 29, 72, 0.4);
         }
 
         /* Main Container */
         .premium-container {
-            max-width: 1100px;
+            position: relative;
+            z-index: 10;
+            max-width: 1140px;
+            width: calc(100% - 32px);
             margin: 30px auto 60px auto;
-            padding: 0 20px;
+            padding: 50px 48px;
             text-align: center;
             flex: 1;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 2px solid rgba(245, 158, 11, 0.22);
+            border-radius: 32px;
+            box-shadow: 
+                0 25px 70px -15px rgba(245, 158, 11, 0.16),
+                0 0 45px rgba(225, 29, 72, 0.08);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .premium-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b, #e11d48, #fbbf24, #be123c, #f59e0b);
+            background-size: 200% 100%;
+            animation: goldScroll 4s linear infinite;
         }
 
         .hero-badge {
@@ -149,78 +235,96 @@
             align-items: center;
             gap: 8px;
             padding: 6px 16px;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            border-radius: 20px;
-            color: #34d399;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+            background: rgba(245, 158, 11, 0.14);
+            border: 1.5px solid rgba(245, 158, 11, 0.35);
+            border-radius: 999px;
+            color: #b45309;
+            font-family: var(--font-main);
+            font-size: 0.84rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
         }
 
         .premium-header h2 {
+            font-family: var(--font-main);
             font-size: 3.2rem;
-            margin: 0 0 15px 0;
-            background: linear-gradient(135deg, #34d399, #38bdf8, #818cf8);
+            margin: 0 0 14px 0;
+            background: linear-gradient(135deg, #b45309 0%, #e11d48 45%, #ea580c 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 800;
+            font-weight: 900;
             letter-spacing: -0.5px;
+            line-height: 1.15;
         }
 
         .premium-header p {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 700px;
+            font-size: 1.15rem;
+            color: #475569;
+            max-width: 720px;
             margin: 0 auto 35px auto;
-            line-height: 1.6;
+            line-height: 1.65;
+            font-weight: 500;
         }
 
         /* Active Plan Banner Card */
         .active-plan-card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(16, 185, 129, 0.35);
+            background: linear-gradient(135deg, #fffbeb, #ffffff, #fff1f2);
+            border: 2px solid rgba(245, 158, 11, 0.3);
             border-radius: 24px;
-            padding: 35px;
+            padding: 35px 40px;
             margin-bottom: 45px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.15);
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.12), 0 0 30px rgba(225, 29, 72, 0.08);
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             gap: 25px;
             text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .active-plan-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 6px;
+            background: linear-gradient(180deg, #f59e0b, #e11d48);
         }
 
         .plan-info-left h3 {
             margin: 0 0 8px 0;
-            font-size: 1.8rem;
-            color: #f8fafc;
+            font-family: var(--font-main);
+            font-size: 2rem;
+            color: #78350f;
             display: flex;
             align-items: center;
             gap: 12px;
+            font-weight: 800;
         }
 
         .plan-info-left p {
             margin: 0;
-            color: var(--text-secondary);
+            color: #475569;
             font-size: 1.05rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .status-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 12px;
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid var(--accent-green);
-            color: #34d399;
+            padding: 4px 14px;
+            background: rgba(245, 158, 11, 0.16);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #b45309;
             border-radius: 20px;
             font-size: 0.8rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .plan-cta-right {
@@ -230,16 +334,17 @@
         }
 
         .btn-launch-large {
-            background: linear-gradient(135deg, #10b981, #06b6d4);
-            color: #fff;
-            padding: 14px 28px;
-            border-radius: 14px;
-            font-size: 1.05rem;
-            font-weight: 700;
+            background: linear-gradient(135deg, #f59e0b, #e11d48);
+            color: #fff !important;
+            padding: 14px 30px;
+            border-radius: 16px;
+            font-family: var(--font-main);
+            font-size: 1.08rem;
+            font-weight: 800;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+            box-shadow: 0 6px 22px rgba(225, 29, 72, 0.35);
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -248,39 +353,38 @@
 
         .btn-launch-large:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
-            color: #fff;
+            box-shadow: 0 10px 28px rgba(225, 29, 72, 0.5);
         }
 
         /* Features Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
             gap: 22px;
             margin-bottom: 40px;
         }
 
         .feature-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 26px;
+            background: #ffffff;
+            border: 1.5px solid rgba(245, 158, 11, 0.22);
+            border-radius: 22px;
+            padding: 28px;
             text-align: left;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
         }
 
         .feature-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border-color: rgba(225, 29, 72, 0.4);
+            box-shadow: 0 14px 30px rgba(245, 158, 11, 0.12);
         }
 
         .feature-icon {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -290,59 +394,73 @@
         }
 
         .feature-card h4 {
-            font-size: 1.25rem;
+            font-family: var(--font-main);
+            font-size: 1.3rem;
             margin: 0 0 8px 0;
-            color: var(--text-primary);
+            color: #0f172a;
+            font-weight: 800;
         }
 
         .feature-card p {
             margin: 0;
-            color: var(--text-secondary);
+            color: #475569;
             font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .tag-unlimited {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 22px;
+            right: 22px;
+            font-family: var(--font-main);
             font-size: 0.75rem;
-            font-weight: 700;
-            padding: 3px 8px;
-            background: rgba(16, 185, 129, 0.15);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            font-weight: 800;
+            padding: 4px 10px;
+            background: rgba(245, 158, 11, 0.14);
+            color: #b45309;
+            border: 1px solid rgba(245, 158, 11, 0.35);
             border-radius: 8px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 25px 20px;
-            border-top: 1px solid var(--border-color);
-            background: rgba(2, 6, 23, 0.8);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            padding: 30px 20px;
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+            color: #64748b;
+            font-size: 0.92rem;
+            margin-top: auto;
+            position: relative;
+            z-index: 10;
         }
 
         footer a {
-            color: var(--accent-primary);
+            color: #b45309;
+            font-weight: 600;
             text-decoration: none;
+            transition: color 0.2s;
         }
 
         footer a:hover {
+            color: #e11d48;
             text-decoration: underline;
         }
 
         @media (max-width: 768px) {
             nav {
-                padding: 15px 20px;
+                padding: 12px 18px;
+            }
+            .premium-container {
+                padding: 32px 20px;
+                border-radius: 24px;
             }
             .premium-header h2 {
                 font-size: 2.2rem;
             }
             .active-plan-card {
+                padding: 24px 20px;
                 flex-direction: column;
                 align-items: flex-start;
             }
@@ -358,37 +476,45 @@
 </head>
 <body>
 
+    <!-- Ambient Imperial Gold & Ruby Mesh Blobs -->
+    <div class="color-mesh blob-gold-1"></div>
+    <div class="color-mesh blob-ruby"></div>
+    <div class="color-mesh blob-amber"></div>
+    <div class="color-mesh blob-gold-2"></div>
+    <div class="color-grid-overlay"></div>
+    <div class="gold-accent-bar"></div>
+
     <nav>
-        <div class="logo-container" onclick="window.location.href='/'">
+        <a href="/" class="logo-container">
             <img src="/vani_icon.png" alt="V.A.N.I-xAI">
             <h1>V.A.N.I-xAI</h1>
-        </div>
+        </a>
         <div class="nav-links">
+            <a href="/" class="nav-btn"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/about" class="nav-btn"><i class="fa-solid fa-circle-info"></i> About</a>
+            <a href="/faq" class="nav-btn"><i class="fa-solid fa-circle-question"></i> FAQs</a>
             <a href="/index.html?launch=true" class="nav-btn primary">
                 <i class="fa-solid fa-terminal"></i> Launch Console
-            </a>
-            <a href="/settings.html" class="nav-btn">
-                <i class="fa-solid fa-gear"></i> Settings
             </a>
         </div>
     </nav>
 
     <div class="premium-container">
         <div class="hero-badge">
-            <i class="fa-solid fa-infinity"></i> All Features Unlocked For Everyone
+            <i class="fa-solid fa-crown"></i> 100% Free &amp; Unlocked For Everyone
         </div>
 
         <div class="premium-header">
-            <h2>100% Free &amp; Unlimited Access</h2>
-            <p>Every feature in V.A.N.I-xAI is available with zero cost, zero subscriptions, and no daily query limits.</p>
+            <h2>Imperial Freedom: All Capabilities Unlocked</h2>
+            <p>Every single capability in V.A.N.I-xAI is provided completely free of charge with zero paywalls, zero recurring subscriptions, and unlimited daily query throughput.</p>
         </div>
 
         <!-- Active Plan Banner -->
         <div class="active-plan-card">
             <div class="plan-info-left">
-                <div class="status-pill"><i class="fa-solid fa-check-circle"></i> Active Lifetime Plan</div>
-                <h3 style="margin-top: 12px;">Unlimited Free Access <span style="font-size: 1.1rem; color: #34d399; font-weight: normal;">(Forever)</span></h3>
-                <p>You have full access to high-speed AI processing, real-time voice recognition, Saras.WebSearch, and Swarm synchronization without any paywalls.</p>
+                <div class="status-pill"><i class="fa-solid fa-certificate"></i> Active Lifetime Plan</div>
+                <h3 style="margin-top: 12px;">Unlimited Free Access <span style="font-size: 1.15rem; color: #b45309; font-weight: 600;">(Forever Free)</span></h3>
+                <p>Enjoy instant sub-second AI inference, low-latency live voice recognition, zero-tab Saras.WebSearch, and Swarm multi-device synchronization without any credit card or lock-in.</p>
             </div>
             <div class="plan-cta-right">
                 <a href="/index.html?launch=true" class="btn-launch-large">
@@ -401,63 +527,70 @@
         <div class="features-grid">
             <div class="feature-card">
                 <span class="tag-unlimited">Unlimited</span>
-                <div class="feature-icon" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+                <div class="feature-icon" style="background: rgba(245, 158, 11, 0.15); color: #d97706;">
                     <i class="fa-solid fa-comments"></i>
                 </div>
-                <h4>Unlimited AI Commands</h4>
-                <p>Chat freely with Jarvis-level AI intent recognition, reasoning, and system automation without daily caps.</p>
+                <h4>Unlimited AI Reasoning</h4>
+                <p>Chat freely with high-order reasoning, intent analysis, workflow automation, and mathematical parsing without query caps.</p>
             </div>
 
             <div class="feature-card">
                 <span class="tag-unlimited">Unlocked</span>
-                <div class="feature-icon" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+                <div class="feature-icon" style="background: rgba(225, 29, 72, 0.15); color: #e11d48;">
                     <i class="fa-solid fa-microphone-lines"></i>
                 </div>
                 <h4>Real-Time Voice Agent</h4>
-                <p>Natural speech recognition and audio speech synthesis for hands-free voice operations on any browser.</p>
+                <p>Natural speech recognition and audio voice synthesis for hands-free voice operations directly from your browser or workstation.</p>
             </div>
 
             <div class="feature-card">
                 <span class="tag-unlimited">Full Access</span>
-                <div class="feature-icon" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
+                <div class="feature-icon" style="background: rgba(2, 132, 199, 0.15); color: #0284c7;">
                     <i class="fa-solid fa-globe"></i>
                 </div>
                 <h4>Zero-Tab Saras.WebSearch</h4>
-                <p>Execute live Google and web searches embedded directly inside your workspace without opening external tabs.</p>
+                <p>Execute live web searches and deep queries embedded right inside your workspace without leaving or opening external tabs.</p>
             </div>
 
             <div class="feature-card">
                 <span class="tag-unlimited">Synced</span>
-                <div class="feature-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                <div class="feature-icon" style="background: rgba(124, 58, 237, 0.15); color: #7c3aed;">
                     <i class="fa-solid fa-network-wired"></i>
                 </div>
-                <h4>Swarm Device Synchronization</h4>
-                <p>Seamless cross-device clipboard sync, remote pairing, radar search, and instant mobile handoff.</p>
+                <h4>Swarm Device Sync</h4>
+                <p>Seamless cross-device clipboard sync, remote device pairing, Quantum Beam peer-to-peer file drops, and instant mobile handoff.</p>
             </div>
 
             <div class="feature-card">
                 <span class="tag-unlimited">Active</span>
-                <div class="feature-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                <div class="feature-icon" style="background: rgba(234, 88, 12, 0.15); color: #ea580c;">
                     <i class="fa-solid fa-eye"></i>
                 </div>
-                <h4>Vision &amp; Screen Analysis</h4>
-                <p>Analyze screenshots and desktop content with smart computer vision models in real time.</p>
+                <h4>Vision &amp; Desktop OCR</h4>
+                <p>Analyze screenshots, camera captures, and uploaded charts with high-precision computer vision models in real time.</p>
             </div>
 
             <div class="feature-card">
-                <span class="tag-unlimited">Private</span>
-                <div class="feature-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
-                    <i class="fa-solid fa-shield-halved"></i>
+                <span class="tag-unlimited">Sovereign</span>
+                <div class="feature-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;">
+                    <i class="fa-solid fa-hard-drive"></i>
                 </div>
-                <h4>Sandboxed Security &amp; PIN</h4>
-                <p>Fast PIN authentication, local sandboxed memory, and secure Google OAuth session protection.</p>
+                <h4>Sovereign E:\BoVxAi DB</h4>
+                <p>All large assets and recordings reside strictly in your private local partition, keeping your sensitive data under your personal control.</p>
             </div>
         </div>
     </div>
 
     <footer>
         <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All features are free and unlocked for all users.</p>
-        <p style="margin-top: 5px;"><a href="/">Home</a> &bull; <a href="/settings.html">Settings</a> &bull; <a href="/faq">FAQs</a> &bull; <a href="/terms">Terms</a> &bull; <a href="/privacy">Privacy</a></p>
+        <p style="margin-top: 5px;">
+            <a href="/">Home</a> &bull; 
+            <a href="/about">About</a> &bull; 
+            <a href="/faq">FAQs</a> &bull; 
+            <a href="/terms">Terms</a> &bull; 
+            <a href="/privacy">Privacy</a> &bull; 
+            <a href="/sitemap">Sitemap</a>
+        </p>
     </footer>
 
 </body>

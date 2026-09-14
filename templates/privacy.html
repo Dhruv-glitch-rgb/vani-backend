@@ -3,65 +3,590 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - V.A.N.I-xAI</title>
+    <title>Privacy Policy - VANI-xAI (Vāṇī Adhyātmik Navīn Intellect)</title>
+    
+    <!-- SEO & Fast Search Reachability Meta Tags -->
+    <meta name="description" content="Privacy Policy for VANI-xAI (Vāṇī Adhyātmik Navīn Intellect). Learn about our sovereign data architecture, E:\BoVxAi DB local storage, encryption, and zero third-party monetization.">
+    <meta name="keywords" content="vani-xai privacy, vani xai privacy policy, VANI-xAI security, data sovereignty, BoVxAi DB, local AI privacy">
+    <meta name="author" content="Dhruv Sagar - V.A.N.I-xAI">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://vani-nzdrsr.web.app/privacy">
+    <link rel="shortcut icon" href="vani_icon.png" type="image/x-icon">
+
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="./style.css">
+
+    <style>
+        :root {
+            --font-main: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --jade-50: #f0fdf4;
+            --jade-100: #dcfce7;
+            --jade-200: #bbf7d0;
+            --jade-500: #10b981;
+            --jade-600: #059669;
+            --jade-700: #047857;
+            --teal-500: #14b8a6;
+            --teal-600: #0d9488;
+            --teal-700: #0f766e;
+            --cyan-500: #06b6d4;
+            --text-title: #064e3b;
+            --text-body: #1e293b;
+            --text-muted: #475569;
+            --bg-page: #f2fcf7;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 35%, #f0fdfa 70%, #f8fafc 100%) !important;
+            background-attachment: fixed !important;
+            color: var(--text-body) !important;
+            font-family: var(--font-body);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* Ambient Sovereign Jade Floating Mesh Blobs */
+        .color-mesh {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.58;
+            animation: jadeMeshFloat 18s infinite alternate ease-in-out;
+        }
+        .blob-jade-1 { top: -8%; left: -6%; width: 550px; height: 550px; background: radial-gradient(circle, #6ee7b7 0%, rgba(16, 185, 129, 0.45) 45%, transparent 70%); }
+        .blob-teal { top: 20%; right: -6%; width: 580px; height: 580px; background: radial-gradient(circle, #5eead4 0%, rgba(20, 184, 166, 0.4) 45%, transparent 70%); animation-delay: -5s; }
+        .blob-cyan { bottom: 12%; left: 10%; width: 520px; height: 520px; background: radial-gradient(circle, #67e8f9 0%, rgba(6, 182, 212, 0.38) 45%, transparent 70%); animation-delay: -9s; }
+        .blob-jade-2 { bottom: -8%; right: 8%; width: 500px; height: 500px; background: radial-gradient(circle, #a7f3d0 0%, rgba(5, 150, 105, 0.38) 45%, transparent 70%); animation-delay: -12s; }
+
+        @keyframes jadeMeshFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(25px, 20px) scale(1.05); }
+            100% { transform: translate(-20px, -15px) scale(0.97); }
+        }
+
+        /* Subtle Grid Overlay */
+        .color-grid-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Sovereign Jade Top Accent Bar */
+        .jade-accent-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 4.5px;
+            background: linear-gradient(90deg, #10b981, #14b8a6, #06b6d4, #059669, #10b981);
+            background-size: 200% 100%;
+            animation: jadeScroll 5s linear infinite;
+            z-index: 100;
+        }
+        @keyframes jadeScroll {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .privacy-page {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 16px 80px 16px;
+        }
+
+        /* Navbar */
+        .landing-navbar {
+            width: 100%;
+            max-width: 980px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 28px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08), 0 2px 10px rgba(0, 0, 0, 0.03);
+            margin-bottom: 35px;
+        }
+
+        .landing-nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .landing-nav-logo img {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+            transition: transform 0.3s ease;
+        }
+        .landing-nav-logo:hover img {
+            transform: rotate(5deg) scale(1.08);
+        }
+        .landing-nav-logo span {
+            font-family: var(--font-main);
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .landing-nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-link-item {
+            font-family: var(--font-main);
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #334155;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+            background: transparent;
+        }
+        .nav-link-item:hover {
+            color: #047857;
+            background: rgba(16, 185, 129, 0.12);
+            transform: translateY(-2px);
+        }
+        .nav-link-item.active {
+            background: linear-gradient(135deg, #059669, #0d9488);
+            color: #fff !important;
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Privacy Container */
+        .privacy-container {
+            width: 100%;
+            max-width: 980px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 2px solid rgba(16, 185, 129, 0.18);
+            border-radius: 32px;
+            box-shadow: 
+                0 25px 70px -15px rgba(5, 150, 105, 0.12),
+                0 0 45px rgba(20, 184, 166, 0.08);
+            padding: 50px 48px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .privacy-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #14b8a6, #06b6d4, #059669);
+            background-size: 200% 100%;
+            animation: jadeScroll 5s linear infinite;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-family: var(--font-main);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1.5px solid rgba(16, 185, 129, 0.3);
+            color: #047857;
+            margin-bottom: 18px;
+        }
+
+        .privacy-title {
+            font-family: var(--font-main);
+            font-size: 2.8rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin: 0 0 12px 0;
+            background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #0d9488 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .privacy-subtitle {
+            font-size: 1.05rem;
+            color: #475569;
+            margin: 0 0 35px 0;
+            font-weight: 500;
+        }
+
+        /* Sovereign Pillars Highlight Row */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .pillar-card {
+            background: #ffffff;
+            border: 1.5px solid rgba(16, 185, 129, 0.22);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.05);
+            transition: all 0.3s ease;
+        }
+        .pillar-card:hover {
+            transform: translateY(-4px);
+            border-color: #059669;
+            box-shadow: 0 12px 28px rgba(5, 150, 105, 0.12);
+        }
+        .pillar-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #059669;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+        }
+        .pillar-card h3 {
+            font-family: var(--font-main);
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #064e3b;
+            margin: 0 0 6px 0;
+        }
+        .pillar-card p {
+            font-size: 0.88rem;
+            color: #475569;
+            margin: 0;
+            line-height: 1.55;
+        }
+
+        /* Privacy Policy Content Sections */
+        .privacy-section-block {
+            background: #ffffff;
+            border: 1.5px solid rgba(16, 185, 129, 0.18);
+            border-radius: 22px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(5, 150, 105, 0.04);
+            transition: border-color 0.25s ease;
+        }
+        .privacy-section-block:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .section-num {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #059669, #0d9488);
+            color: #ffffff;
+            font-family: var(--font-main);
+            font-weight: 800;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+            flex-shrink: 0;
+        }
+        .section-header h2 {
+            font-family: var(--font-main);
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #064e3b;
+            margin: 0;
+        }
+        .privacy-section-block p {
+            color: #334155;
+            font-size: 0.98rem;
+            margin: 0 0 12px 0;
+            line-height: 1.7;
+        }
+        .privacy-section-block p:last-child {
+            margin-bottom: 0;
+        }
+        .privacy-section-block code {
+            background: rgba(16, 185, 129, 0.08);
+            color: #047857;
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .privacy-section-block ul {
+            margin: 10px 0 0 0;
+            padding-left: 22px;
+            color: #334155;
+        }
+        .privacy-section-block li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* Action Buttons */
+        .privacy-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-family: var(--font-main);
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: none;
+        }
+        .btn-primary-jade {
+            background: linear-gradient(135deg, #059669, #0d9488);
+            color: #ffffff;
+            box-shadow: 0 8px 22px rgba(5, 150, 105, 0.3);
+        }
+        .btn-primary-jade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(5, 150, 105, 0.4);
+        }
+        .btn-secondary-slate {
+            background: rgba(255, 255, 255, 0.9);
+            color: #334155;
+            border: 1.5px solid rgba(16, 185, 129, 0.3);
+        }
+        .btn-secondary-slate:hover {
+            background: rgba(16, 185, 129, 0.08);
+            color: #047857;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .landing-footer {
+            width: 100%;
+            max-width: 980px;
+            text-align: center;
+            margin-top: 45px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(16, 185, 129, 0.2);
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .landing-footer .footer-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .landing-footer a {
+            color: #059669;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .landing-footer a:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
+        .indian-flag-icon {
+            width: 20px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .privacy-container {
+                padding: 30px 22px;
+                border-radius: 24px;
+            }
+            .privacy-title {
+                font-size: 2.1rem;
+            }
+            .landing-navbar {
+                padding: 12px 18px;
+            }
+            .privacy-section-block {
+                padding: 20px 18px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="docs-page">
+    <!-- Ambient Floating Jade Blobs -->
+    <div class="color-mesh blob-jade-1"></div>
+    <div class="color-mesh blob-teal"></div>
+    <div class="color-mesh blob-cyan"></div>
+    <div class="color-mesh blob-jade-2"></div>
+    <div class="color-grid-overlay"></div>
+    <div class="jade-accent-bar"></div>
+
+    <div class="privacy-page">
         <!-- Landing Navbar -->
         <nav class="landing-navbar">
-            <div class="landing-nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
-                <img src="{{ url_for('static', filename='vani_icon.png') }}" alt="V.A.N.I-xAI Icon">
+            <a href="/" class="landing-nav-logo">
+                <img src="./vani_icon.png" alt="V.A.N.I-xAI Icon">
                 <span>V.A.N.I-xAI</span>
-            </div>
+            </a>
             <div class="landing-nav-actions">
                 <a href="/" class="nav-link-item">Home</a>
+                <a href="/about" class="nav-link-item">About</a>
                 <a href="/faq" class="nav-link-item">FAQs</a>
-                <a href="/about-founder" class="nav-link-item">Founder</a>
-                <a href="/about-developer" class="nav-link-item">Developer</a>
+                <a href="/terms" class="nav-link-item">Terms</a>
+                <a href="/privacy" class="nav-link-item active">Privacy</a>
+                <a href="/contact" class="nav-link-item">Contact</a>
             </div>
         </nav>
 
-        <div class="docs-container animate-pop">
-            <h1 class="docs-title">Privacy Policy</h1>
-            <p class="docs-date">Last Updated: August 6, 2026</p>
+        <!-- Main Card Container -->
+        <div class="privacy-container">
+            <div class="header-badge">
+                <i class="fa-solid fa-shield-halved"></i> Sovereign Privacy Protocol
+            </div>
+            <h1 class="privacy-title">Privacy Policy</h1>
+            <p class="privacy-subtitle">Last Updated: September 14, 2026 &bull; Indigenous Data Sovereignty & Sovereign Storage Standard</p>
 
-            <div class="docs-content">
-                <section class="docs-section-block">
-                    <h2>1. Data Collection & Privacy First</h2>
-                    <p>V.A.N.I-xAI is designed as a **locally-hosted** software application. It does not gather, store, or transmit your personal data, chat records, automation logs, phone numbers, or captured screen images to any external developer databases. All variables and logs remain completely on your local computer.</p>
+            <!-- Sovereign Highlights -->
+            <div class="pillars-grid">
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-hard-drive"></i></div>
+                    <h3>E:\BoVxAi DB</h3>
+                    <p>Heavy files, audio logs, and camera captures remain stored exclusively on your designated local drive partition.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3>Zero Data Selling</h3>
+                    <p>Your queries, identity tokens, and Quantum Beam files are never monetized, harvested, or sold to third parties.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-lock"></i></div>
+                    <h3>Client-Side Keys</h3>
+                    <p>Your optional custom Gemini API keys are held purely in sandboxed browser local storage on your client device.</p>
+                </div>
+            </div>
+
+            <!-- Detailed Sections -->
+            <div class="privacy-content">
+                <section class="privacy-section-block">
+                    <div class="section-header">
+                        <div class="section-num">1</div>
+                        <h2>Data Sovereignty & Local Storage (E:\BoVxAi DB)</h2>
+                    </div>
+                    <p>V.A.N.I-xAI is engineered with indigenous data sovereignty at its foundational core. While lightweight metadata, text chat pairing, and WebRTC handshakes are coordinated securely via Firestore, <strong>all heavy media assets (including user voice recordings, captured photos, camera snapshots, and Quantum Beam peer-to-peer file drops) are stored locally in the sovereign partition <code>E:\BoVxAi DB</code></strong> partitioned strictly by your mathematical V.A.N.I-xAI User ID.</p>
+                    <p>High-bandwidth media is never uploaded to third-party public cloud storage or monetized for advertising purposes.</p>
                 </section>
 
-                <section class="docs-section-block">
-                    <h2>2. Local Logs & Screenshots</h2>
-                    <p>Logs printed to the terminal console are stored in volatile local buffers for live rendering in the UI. Taken screenshots (such as desktop captures or ADB mobile screen snapshots) are saved directly to your workspace `static/screenshots` directory. They are never sent to third-party endpoints and can be cleared manually at any time.</p>
+                <section class="privacy-section-block">
+                    <div class="section-header">
+                        <div class="section-num">2</div>
+                        <h2>Local Terminal Logs, Voice Audio & Screenshots</h2>
+                    </div>
+                    <p>Logs printed to the terminal console are stored in volatile local buffers for live rendering in the UI. Taken screenshots and recorded voice notes are saved directly into your isolated user folder on <code>E:\BoVxAi DB\&lt;V.A.N.I-xAI-USER-ID&gt;\</code>. They remain under your sovereign control and can be viewed, exported, or permanently erased at any time.</p>
                 </section>
 
-                <section class="docs-section-block">
-                    <h2>3. Third-Party APIs (Gemini API)</h2>
-                    <p>When you enter a custom Google Gemini API Key, queries that you type or speak are sent directly to Google's Generative AI API to parse intent parameters. The storage, security, and usage of that query text are subject to Google's Privacy Policies.</p>
+                <section class="privacy-section-block">
+                    <div class="section-header">
+                        <div class="section-num">3</div>
+                        <h2>Third-Party AI APIs (Google Gemini & LLMs)</h2>
+                    </div>
+                    <p>When you enter a custom Google Gemini API Key, queries that you type or speak are transmitted directly from your client environment to Google's Generative AI endpoint to parse intent parameters. The storage, security, and usage of that query text are governed by Google's Privacy Policy. V.A.N.I-xAI does not intercept or warehouse your private API secret keys.</p>
                 </section>
 
-                <section class="docs-section-block">
-                    <h2>4. ADB & Android Debug Security</h2>
-                    <p>Android mobile integration operates entirely over a direct USB cable link using local ADB commands. You control which phone is authorized. No remote server or third-party connections are initiated during ADB shell operations.</p>
+                <section class="privacy-section-block">
+                    <div class="section-header">
+                        <div class="section-num">4</div>
+                        <h2>ADB & Android Debug Hardware Security</h2>
+                    </div>
+                    <p>Android mobile integration operates entirely over a direct USB cable link using local ADB commands. You maintain explicit cryptographic control over which physical devices are authorized via RSA prompt on your smartphone. No remote telemetry server or third-party connections are initiated during ADB shell operations.</p>
                 </section>
 
-                <section class="docs-section-block">
-                    <h2>5. Local Browser Storage</h2>
-                    <p>The web console preserves configuration values (such as your optional API key) in your browser's local sandbox storage (`localStorage`). This is sandboxed inside your local client browser and never uploaded anywhere.</p>
+                <section class="privacy-section-block">
+                    <div class="section-header">
+                        <div class="section-num">5</div>
+                        <h2>Sandboxed Browser Storage (localStorage)</h2>
+                    </div>
+                    <p>The web console preserves your runtime interface preferences (such as theme preferences, optional API key values, and local sound effects toggles) inside your browser's sandboxed <code>localStorage</code>. This data never leaves your client environment and is automatically purged upon browser cache clearing.</p>
+                </section>
+
+                <section class="privacy-section-block">
+                    <div class="section-header">
+                        <div class="section-num">6</div>
+                        <h2>Quantum Beam & Peer-to-Peer Privacy</h2>
+                    </div>
+                    <p>Peer-to-peer data transfers initiated through Quantum Beam utilize direct WebRTC data channels with DTLS/SRTP hardware-level encryption. The signaling server facilitates the initial connection handshake only; file contents stream peer-to-peer and are saved directly into your sovereign <code>E:\BoVxAi DB</code> directory.</p>
+                </section>
+
+                <section class="privacy-section-block">
+                    <div class="section-header">
+                        <div class="section-num">7</div>
+                        <h2>Your Sovereign Rights & Data Deletion</h2>
+                    </div>
+                    <p>You retain the fundamental right to:</p>
+                    <ul>
+                        <li>Audit all stored media directly by browsing your local directory <code>E:\BoVxAi DB\&lt;YOUR-USER-ID&gt;\</code>.</li>
+                        <li>Purge all locally cached data at any time with zero remote friction.</li>
+                        <li>Opt out of cloud synchronization features and run completely in offline or local-model LLM modes.</li>
+                    </ul>
                 </section>
             </div>
 
-            <button class="cta-btn docs-btn" onclick="window.location.href='/'">
-                <i class="fa-solid fa-arrow-left"></i> Back to Home
-            </button>
+            <!-- Action Buttons -->
+            <div class="privacy-actions">
+                <a href="/" class="cta-btn btn-primary-jade">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Home
+                </a>
+                <a href="/terms" class="cta-btn btn-secondary-slate">
+                    <i class="fa-solid fa-scale-balanced"></i> View Terms of Service
+                </a>
+                <a href="/contact" class="cta-btn btn-secondary-slate">
+                    <i class="fa-solid fa-envelope"></i> Privacy Inquiries
+                </a>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -70,79 +595,16 @@
                 <a href="/faq">FAQs</a> &bull; 
                 <a href="/privacy">Privacy Policy</a> &bull; 
                 <a href="/terms">Terms & Conditions</a> &bull; 
-                <a href="/about-founder">About the Founder</a> &bull; 
-                <a href="/about-developer">About the Developer</a> &bull; 
-                <a href="https://vani-xin.blogspot.com/" target="_blank" rel="noopener noreferrer">V.A.N.I-xAI Blog</a>
+                <a href="/about-founder">About Founder</a> &bull; 
+                <a href="/about-developer">About Developer</a> &bull; 
+                <a href="/sitemap">Visual Sitemap</a> &bull;
+                <a href="/connect-with-us">Connect With Us</a>
             </div>
             <p>V.A.N.I-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved.</p>
-            <p style="margin-top: 10px; font-weight: 700; color: var(--accent-green);"><img src="/indian_flag.svg" alt="Indian Flag" class="indian-flag-icon"> Proudly Made in India</p>
+            <p style="margin-top: 5px; font-style: italic; font-weight: 600; color: #059669;">Don't Assume, Verify.</p>
+            <p style="margin-top: 10px; font-weight: 700; color: #047857;"><img src="/indian_flag.svg" alt="Indian Flag" class="indian-flag-icon"> Proudly Made in India</p>
         </footer>
     </div>
-
-
-<!-- Dark Mode Toggle Snippet -->
-<style>
-  .dark-mode-toggle-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: var(--accent-indigo, #FF9933);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s, transform 0.2s;
-  }
-  .dark-mode-toggle-btn:hover {
-    transform: scale(1.1);
-  }
-  /* Dark mode overrides */
-  body.dark-mode {
-    --bg-main: #0f172a;
-    --panel-bg: rgba(30, 41, 59, 0.85);
-    --panel-border: rgba(255, 255, 255, 0.1);
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #64748b;
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-  }
-</style>
-<button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
-  <span id="darkModeIcon">🌙</span>
-</button>
-<script>
-  (function() {
-    const toggleBtn = document.getElementById('darkModeToggle');
-    const body = document.body;
-    const icon = document.getElementById('darkModeIcon');
-    
-    // Check local storage for theme preference
-    if (localStorage.getItem('theme') === 'dark') {
-      body.classList.add('dark-mode');
-      icon.textContent = '☀️';
-    }
-    
-    toggleBtn.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      if (body.classList.contains('dark-mode')) {
-        localStorage.setItem('theme', 'dark');
-        icon.textContent = '☀️';
-      } else {
-        localStorage.setItem('theme', 'light');
-        icon.textContent = '🌙';
-      }
-    });
-  })();
-</script>
 
 </body>
 </html>

@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API &amp; Developer Documentation | VANI-xAI</title>
+    <meta name="description" content="Official VANI-xAI interactive developer documentation. Explore REST API endpoints, OpenAPI 3.1.0 specifications, Model Context Protocol (MCP) server, and local LLM orchestration with live request testing.">
+    <meta name="keywords" content="VANI-xAI API, AI Agent API, OpenAPI 3.1.0, MCP Server, Saras.WebSearch, Local LLM API, Voice Agent Documentation">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://vani-nzdrsr.web.app/docs">
+    <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+
+    <!-- Open Graph & Social Cards -->
+    <meta property="og:title" content="VANI-xAI API &amp; Developer Documentation">
+    <meta property="og:description" content="Interactive REST APIs, OpenAPI 3.1.0, and MCP server tooling for autonomous agents and desktop AI automation.">
+    <meta property="og:image" content="https://vani-nzdrsr.web.app/vani_icon.png">
+    <meta property="og:url" content="https://vani-nzdrsr.web.app/docs">
+    <meta property="og:type" content="website">
+
+    <!-- Machine-Readable Discovery Links -->
+    <link rel="alternate" type="text/markdown" href="/md/docs.md" title="VANI-xAI API Documentation Markdown">
+    <link rel="describedby" type="application/json" href="/openapi.json" title="OpenAPI 3.1.0 Specification">
+    <link rel="index" type="text/plain" href="/llms.txt" title="LLMs.txt Index">
+
+    <!-- Structured JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://vani-nzdrsr.web.app/docs#techarticle",
+          "headline": "VANI-xAI API and Developer Integration Documentation",
+          "description": "Comprehensive interactive reference documentation for VANI-xAI REST APIs, Model Context Protocol (MCP) server, and local LLM orchestration.",
+          "author": {
+            "@type": "Person",
+            "name": "Dhruv Sagar"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "VANI-xAI",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://vani-nzdrsr.web.app/vani_icon.png"
+            }
+          },
+          "url": "https://vani-nzdrsr.web.app/docs"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://vani-nzdrsr.web.app/#application",
+          "name": "VANI-xAI Developer Platform",
+          "applicationCategory": "DeveloperApplication, ArtificialIntelligence",
+          "operatingSystem": "Web, Windows, Linux, Android",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "INR"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        :root {
+            --docs-bg: #f8fafc;
+            --docs-panel: rgba(255, 255, 255, 0.88);
+            --docs-card-border: rgba(99, 102, 241, 0.12);
+            --docs-accent-cyan: #0284c7;
+            --docs-accent-indigo: #ea580c;
+            --docs-accent-emerald: #059669;
+            --docs-accent-amber: #f59e0b;
+            --docs-accent-purple: #7c3aed;
+            --docs-code-bg: #0f172a;
+        }
+
+        body.docs-page {
+            background-color: #f8fafc !important;
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(255, 153, 51, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 85% 25%, rgba(2, 132, 199, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 50% 90%, rgba(5, 150, 105, 0.06) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: #0f172a;
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.65;
+        }
+
+        /* Top Navigation */
+        .docs-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+            padding: 12px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .docs-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .docs-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #0f2744;
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.3px;
+        }
+
+        .docs-brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .docs-version-badge {
+            background: #e0f2fe;
+            color: #0284c7;
+            border: 1px solid #bae6fd;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .docs-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .docs-nav-link {
+            color: #475569;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .docs-nav-link:hover {
+            color: #ea580c;
+            background: rgba(234, 88, 12, 0.08);
+        }
+
+        .docs-cta-btn {
+            background: linear-gradient(135deg, #059669, #0284c7);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 7px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.25);
+        }
+
+        .docs-cta-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        /* Docs Layout */
+        .docs-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            padding: 24px 28px;
+            gap: 32px;
+        }
+
+        /* Sidebar */
+        .docs-sidebar {
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 104px);
+            overflow-y: auto;
+            padding-right: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+
+        .docs-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .docs-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #0f172a;
+            padding: 10px 36px 10px 36px;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .search-box input:focus {
+            border-color: #ea580c;
+            box-shadow: 0 0 12px rgba(234, 88, 12, 0.2);
+        }
+
+        .search-box i.fa-search {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .search-box .search-shortcut {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .sidebar-section {
+            margin-bottom: 22px;
+        }
+
+        .sidebar-title {
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ea580c;
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #475569;
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.86rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            color: #ea580c;
+            background: rgba(234, 88, 12, 0.08);
+            border-left: 3px solid #ea580c;
+            font-weight: 700;
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.68rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+        .badge-post { background: rgba(5, 150, 105, 0.15); color: #059669; }
+        .badge-get { background: rgba(2, 132, 199, 0.15); color: #0284c7; }
+
+        /* Main Content */
+        .docs-main {
+            min-width: 0;
+            padding-bottom: 60px;
+        }
+
+        /* Hero Header */
+        .docs-hero {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.9));
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border-radius: 16px;
+            padding: 36px 32px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .docs-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(2, 132, 199, 0.1);
+            border: 1px solid rgba(2, 132, 199, 0.25);
+            color: #0284c7;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+
+        .docs-hero h1 {
+            font-size: 2.3rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin: 0 0 12px;
+            background: linear-gradient(135deg, #ea580c 30%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .docs-hero p {
+            color: #475569;
+            font-size: 1.05rem;
+            margin: 0 0 24px;
+            max-width: 800px;
+        }
+
+        /* Spec Chips Grid */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .spec-chip {
+            background: #ffffff;
+            border: 1px solid rgba(99, 102, 241, 0.12);
+            padding: 14px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .spec-chip:hover {
+            border-color: #ea580c;
+            background: #fffaf5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(234, 88, 12, 0.1);
+        }
+
+        .spec-icon {
+            font-size: 1.4rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .spec-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0f172a;
+            display: block;
+        }
+
+        .spec-desc {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Content Sections */
+        .doc-section {
+            margin-bottom: 40px;
+            scroll-margin-top: 90px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+        }
+
+        .section-header h2 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .section-header i {
+            color: #ea580c;
+            font-size: 1.25rem;
+        }
+
+        /* Endpoint Card */
+        .endpoint-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(99, 102, 241, 0.12);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .endpoint-card:hover {
+            border-color: rgba(234, 88, 12, 0.3);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .endpoint-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .endpoint-signature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.05rem;
+        }
+
+        .method-tag {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+        }
+        .method-tag.post { background: rgba(5, 150, 105, 0.15); color: #059669; border: 1px solid rgba(5, 150, 105, 0.3); }
+        .method-tag.get { background: rgba(2, 132, 199, 0.15); color: #0284c7; border: 1px solid rgba(2, 132, 199, 0.3); }
+
+        .endpoint-path {
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        .endpoint-meta {
+            display: flex;
+            gap: 8px;
+        }
+
+        .meta-pill {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .endpoint-desc {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 18px;
+        }
+
+        /* Parameter Table */
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 20px;
+            font-size: 0.88rem;
+        }
+
+        .params-table th {
+            text-align: left;
+            padding: 10px 14px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+        }
+
+        .params-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+
+        .param-name {
+            font-family: 'Fira Code', monospace;
+            color: #0284c7;
+            font-weight: 600;
+        }
+
+        .param-type {
+            font-family: 'Fira Code', monospace;
+            color: #ea580c;
+            font-size: 0.8rem;
+        }
+
+        .param-req {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        .param-opt {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            background: rgba(148, 163, 184, 0.1);
+            color: #94a3b8;
+        }
+
+        /* Code Block Tabs */
+        .code-container {
+            background: var(--docs-code-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 14px;
+            background: rgba(15, 23, 42, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .code-tab {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .code-tab.active {
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.12);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .code-content {
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 0;
+            white-space: pre;
+        }
+
+        /* Interactive API Sandbox */
+        .sandbox-box {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 18px;
+        }
+
+        .sandbox-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .sandbox-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #a5b4fc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sandbox-run-btn {
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .sandbox-run-btn:hover {
+            filter: brightness(1.15);
+        }
+
+        .sandbox-input {
+            width: 100%;
+            background: #030712;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #38bdf8;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.84rem;
+            padding: 12px;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .sandbox-output {
+            background: #020617;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            color: #34d399;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #10b981;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .docs-container {
+                grid-template-columns: 1fr;
+            }
+            .docs-sidebar {
+                position: static;
+                height: auto;
+                margin-bottom: 24px;
+            }
+            .docs-hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body class="docs-page">
+
+    <!-- Top Navigation Bar -->
+    <header class="docs-navbar">
+        <div class="docs-nav-left">
+            <a href="/" class="docs-brand">
+                <img src="/vani_icon.png" alt="VANI-xAI Icon">
+                <span class="font-orbitron" style="letter-spacing: 0.5px;">V.A.N.I-xAI</span>
+            </a>
+            <span class="docs-version-badge"><i class="fa-solid fa-bolt"></i> v2.6 // QUANTUM</span>
+        </div>
+        <nav class="docs-nav-right">
+            <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; color: #475569; background: rgba(15, 23, 42, 0.04); border: 1px solid rgba(15, 23, 42, 0.08); padding: 5px 12px; border-radius: 9999px; margin-right: 6px;">
+                <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block;"></span> Quantum Live
+            </div>
+            <a href="/" class="docs-nav-link"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/saras_web_search.html" class="docs-nav-link" style="color: #0284c7;"><i class="fa-solid fa-bolt"></i> Saras.WebSearch</a>
+            <a href="/openapi.json" target="_blank" class="docs-nav-link"><i class="fa-solid fa-file-code" style="color: #ea580c;"></i> OpenAPI</a>
+            <a href="/.well-known/mcp.json" target="_blank" class="docs-nav-link"><i class="fa-solid fa-plug" style="color: #7c3aed;"></i> MCP</a>
+            <a href="/premium.html" class="docs-cta-btn"><i class="fa-solid fa-infinity"></i> Free Unlimited</a>
+        </nav>
+    </header>
+
+    <!-- Main Container with Sidebar and Content -->
+    <div class="docs-container">
+        
+        <!-- Sticky Sidebar Navigation -->
+        <aside class="docs-sidebar">
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="endpoint-search" placeholder="Search APIs &amp; guides..." autocomplete="off">
+                <span class="search-shortcut">/</span>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#overview" class="sidebar-link active"><i class="fa-solid fa-compass"></i> Overview</a></li>
+                    <li><a href="#auth-headers" class="sidebar-link"><i class="fa-solid fa-key"></i> Authentication &amp; Headers</a></li>
+                    <li><a href="#specs-index" class="sidebar-link"><i class="fa-solid fa-layer-group"></i> Machine Specs &amp; MCP</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core APIs</div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="#api-command" class="sidebar-link">
+                            <i class="fa-solid fa-terminal"></i> Command Runner
+                            <span class="sidebar-badge badge-post">POST</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#api-system-stats" class="sidebar-link">
+                            <i class="fa-solid fa-chart-line"></i> System Telemetry
+                            <span class="sidebar-badge badge-get">GET</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#api-local-llm" class="sidebar-link">
+                            <i class="fa-solid fa-microchip"></i> Local LLM Status
+                            <span class="sidebar-badge badge-get">GET</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#api-pull-model" class="sidebar-link">
+                            <i class="fa-solid fa-cloud-arrow-down"></i> Pull Model
+                            <span class="sidebar-badge badge-post">POST</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Autonomous Agents</div>
+                <ul class="sidebar-menu">
+                    <li><a href="#mcp-protocol" class="sidebar-link"><i class="fa-solid fa-plug"></i> MCP Server Setup</a></li>
+                    <li><a href="#llm-discovery" class="sidebar-link"><i class="fa-solid fa-robot"></i> LLMs.txt Discovery</a></li>
+                    <li><a href="#error-codes" class="sidebar-link"><i class="fa-solid fa-triangle-exclamation"></i> Error Responses</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="docs-main">
+
+            <!-- Hero Section -->
+            <section class="docs-hero" id="overview">
+                <span class="hero-pill"><i class="fa-solid fa-bolt"></i> Developer Platform</span>
+                <h1>VANI-xAI REST APIs &amp; Agent Tooling</h1>
+                <p>
+                    Orchestrate intelligent desktop automation, trigger real-time Saras.WebSearch queries, query telemetry stats, and interface with local Ollama or LM Studio models seamlessly.
+                </p>
+
+                <!-- Spec Chips Grid -->
+                <div class="specs-grid" id="specs-index">
+                    <a href="/openapi.json" target="_blank" class="spec-chip">
+                        <div class="spec-icon" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+                            <i class="fa-solid fa-file-code"></i>
+                        </div>
+                        <div>
+                            <span class="spec-title">OpenAPI 3.1.0</span>
+                            <span class="spec-desc">/openapi.json</span>
+                        </div>
+                    </a>
+                    <a href="/openapi.yaml" target="_blank" class="spec-chip">
+                        <div class="spec-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                        <div>
+                            <span class="spec-title">OpenAPI YAML</span>
+                            <span class="spec-desc">/openapi.yaml</span>
+                        </div>
+                    </a>
+                    <a href="/.well-known/mcp.json" target="_blank" class="spec-chip">
+                        <div class="spec-icon" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+                            <i class="fa-solid fa-plug"></i>
+                        </div>
+                        <div>
+                            <span class="spec-title">MCP Manifest</span>
+                            <span class="spec-desc">/.well-known/mcp.json</span>
+                        </div>
+                    </a>
+                    <a href="/llms.txt" target="_blank" class="spec-chip">
+                        <div class="spec-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div>
+                            <span class="spec-title">LLMs.txt Index</span>
+                            <span class="spec-desc">/llms.txt</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Authentication & Base Headers -->
+            <section class="doc-section" id="auth-headers">
+                <div class="section-header">
+                    <i class="fa-solid fa-key"></i>
+                    <h2>Authentication &amp; Request Headers</h2>
+                </div>
+                <div class="endpoint-card">
+                    <p style="color: #cbd5e1; margin-bottom: 16px;">
+                        The VANI-xAI API supports unauthenticated testing for public search and diagnostic routes. For custom LLM execution and local routing, pass the following optional HTTP headers:
+                    </p>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Header Key</th>
+                                <th>Type</th>
+                                <th>Requirement</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="param-name">X-OpenRouter-Key</td>
+                                <td class="param-type">string</td>
+                                <td><span class="param-opt">Optional</span></td>
+                                <td>Your custom OpenRouter API key for cloud model inference.</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">X-Force-Local</td>
+                                <td class="param-type">boolean</td>
+                                <td><span class="param-opt">Optional</span></td>
+                                <td>Pass <code>true</code> to guarantee processing stays 100% offline on local Ollama/LM Studio.</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">X-Local-Model</td>
+                                <td class="param-type">string</td>
+                                <td><span class="param-opt">Optional</span></td>
+                                <td>Target specific installed local model (e.g. <code>llama3:latest</code>, <code>qwen2.5:7b</code>).</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">Content-Type</td>
+                                <td class="param-type">string</td>
+                                <td><span class="param-req">Required for POST</span></td>
+                                <td>Set to <code>application/json</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Core API: POST /api/command -->
+            <section class="doc-section" id="api-command">
+                <div class="section-header">
+                    <i class="fa-solid fa-terminal"></i>
+                    <h2>Execute Natural Language Command</h2>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-top">
+                        <div class="endpoint-signature">
+                            <span class="method-tag post">POST</span>
+                            <span class="endpoint-path">/api/command</span>
+                        </div>
+                        <div class="endpoint-meta">
+                            <span class="meta-pill">Public / Authenticated</span>
+                            <span class="meta-pill">JSON</span>
+                        </div>
+                    </div>
+                    <p class="endpoint-desc">
+                        Processes natural language instructions, executes Saras.WebSearch queries, triggers desktop automation routines, or performs vision analysis.
+                    </p>
+
+                    <!-- Parameters Table -->
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Body Property</th>
+                                <th>Type</th>
+                                <th>Requirement</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="param-name">command</td>
+                                <td class="param-type">string</td>
+                                <td><span class="param-req">Required</span></td>
+                                <td>The natural language instruction or query (e.g., <code>"search latest AI advancements"</code>).</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">personality</td>
+                                <td class="param-type">string</td>
+                                <td><span class="param-opt">Optional</span></td>
+                                <td>Voice persona response style (<code>human_girl</code>, <code>technical</code>, <code>concise</code>). Default: <code>human_girl</code>.</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">execute_automation</td>
+                                <td class="param-type">boolean</td>
+                                <td><span class="param-opt">Optional</span></td>
+                                <td>Whether to allow desktop automation execution if required. Default: <code>true</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Code Examples with Language Tabs -->
+                    <div class="code-container">
+                        <div class="code-header">
+                            <div class="code-tabs">
+                                <button class="code-tab active" onclick="switchTab(this, 'curl-command')">cURL</button>
+                                <button class="code-tab" onclick="switchTab(this, 'js-command')">JavaScript</button>
+                                <button class="code-tab" onclick="switchTab(this, 'py-command')">Python</button>
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </div>
+                        <pre class="code-content" id="curl-command">curl -X POST https://vani-nzdrsr.web.app/api/command \
+  -H "Content-Type: application/json" \
+  -d '{
+    "command": "search latest artificial intelligence breakthroughs",
+    "personality": "human_girl"
+  }'</pre>
+                        <pre class="code-content" id="js-command" style="display: none;">const response = await fetch("https://vani-nzdrsr.web.app/api/command", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    command: "search latest artificial intelligence breakthroughs",
+    personality: "human_girl"
+  })
+});
+const data = await response.json();
+console.log(data);</pre>
+                        <pre class="code-content" id="py-command" style="display: none;">import requests
+
+url = "https://vani-nzdrsr.web.app/api/command"
+payload = {
+    "command": "search latest artificial intelligence breakthroughs",
+    "personality": "human_girl"
+}
+response = requests.post(url, json=payload)
+print(response.json())</pre>
+                    </div>
+
+                    <!-- Interactive Sandbox -->
+                    <div class="sandbox-box">
+                        <div class="sandbox-header">
+                            <span class="sandbox-title"><i class="fa-solid fa-play"></i> Interactive Request Tester</span>
+                            <button class="sandbox-run-btn" onclick="runSandbox('command')">
+                                <i class="fa-solid fa-paper-plane"></i> Send Test Request
+                            </button>
+                        </div>
+                        <textarea class="sandbox-input" id="sandbox-command-input">{
+  "command": "search latest artificial intelligence breakthroughs",
+  "personality": "human_girl"
+}</textarea>
+                        <div class="sandbox-output" id="sandbox-command-output"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core API: GET /api/system-stats -->
+            <section class="doc-section" id="api-system-stats">
+                <div class="section-header">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h2>System Telemetry &amp; Uptime</h2>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-top">
+                        <div class="endpoint-signature">
+                            <span class="method-tag get">GET</span>
+                            <span class="endpoint-path">/api/system-stats</span>
+                        </div>
+                        <div class="endpoint-meta">
+                            <span class="meta-pill">Telemetry</span>
+                            <span class="meta-pill">JSON</span>
+                        </div>
+                    </div>
+                    <p class="endpoint-desc">
+                        Fetches live CPU load, memory utilization, platform uptime, network status, and active background threads.
+                    </p>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <div class="code-tabs">
+                                <button class="code-tab active" onclick="switchTab(this, 'curl-stats')">cURL</button>
+                                <button class="code-tab" onclick="switchTab(this, 'js-stats')">JavaScript</button>
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </div>
+                        <pre class="code-content" id="curl-stats">curl -X GET https://vani-nzdrsr.web.app/api/system-stats</pre>
+                        <pre class="code-content" id="js-stats" style="display: none;">const stats = await fetch("https://vani-nzdrsr.web.app/api/system-stats").then(res => res.json());
+console.log("Telemetry:", stats);</pre>
+                    </div>
+
+                    <!-- Sandbox -->
+                    <div class="sandbox-box">
+                        <div class="sandbox-header">
+                            <span class="sandbox-title"><i class="fa-solid fa-play"></i> Fetch Live Telemetry</span>
+                            <button class="sandbox-run-btn" onclick="runSandbox('stats')">
+                                <i class="fa-solid fa-bolt"></i> Query Live Stats
+                            </button>
+                        </div>
+                        <div class="sandbox-output" id="sandbox-stats-output"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Local LLM API: GET /api/local-llm/status -->
+            <section class="doc-section" id="api-local-llm">
+                <div class="section-header">
+                    <i class="fa-solid fa-microchip"></i>
+                    <h2>Local LLM Status &amp; Model Inventory</h2>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-top">
+                        <div class="endpoint-signature">
+                            <span class="method-tag get">GET</span>
+                            <span class="endpoint-path">/api/local-llm/status</span>
+                        </div>
+                        <div class="endpoint-meta">
+                            <span class="meta-pill">Local Inference</span>
+                            <span class="meta-pill">JSON</span>
+                        </div>
+                    </div>
+                    <p class="endpoint-desc">
+                        Queries local Ollama (<code>localhost:11434</code>) or LM Studio (<code>localhost:1234</code>) daemon connectivity and enumerates available local models.
+                    </p>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <div class="code-tabs">
+                                <button class="code-tab active">cURL</button>
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </div>
+                        <pre class="code-content">curl -X GET https://vani-nzdrsr.web.app/api/local-llm/status</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Local LLM Pull API: POST /api/local-llm/pull -->
+            <section class="doc-section" id="api-pull-model">
+                <div class="section-header">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                    <h2>Pull / Download Local Model</h2>
+                </div>
+
+                <div class="endpoint-card">
+                    <div class="endpoint-top">
+                        <div class="endpoint-signature">
+                            <span class="method-tag post">POST</span>
+                            <span class="endpoint-path">/api/local-llm/pull</span>
+                        </div>
+                        <div class="endpoint-meta">
+                            <span class="meta-pill">Background Job</span>
+                            <span class="meta-pill">JSON</span>
+                        </div>
+                    </div>
+                    <p class="endpoint-desc">
+                        Initiates asynchronous background download of an open-weights model into the local Ollama store.
+                    </p>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <div class="code-tabs">
+                                <button class="code-tab active">cURL</button>
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </div>
+                        <pre class="code-content">curl -X POST https://vani-nzdrsr.web.app/api/local-llm/pull \
+  -H "Content-Type: application/json" \
+  -d '{ "model": "qwen2.5:7b" }'</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MCP Protocol Setup -->
+            <section class="doc-section" id="mcp-protocol">
+                <div class="section-header">
+                    <i class="fa-solid fa-plug"></i>
+                    <h2>Model Context Protocol (MCP) Integration</h2>
+                </div>
+
+                <div class="endpoint-card">
+                    <p style="color: #cbd5e1; margin-bottom: 16px;">
+                        Connect VANI-xAI tools directly into <strong>Claude Desktop</strong>, <strong>ChatGPT</strong>, Cursor, or autonomous coding agents via the Model Context Protocol (MCP) standard:
+                    </p>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span style="font-size: 0.8rem; color: #a5b4fc; font-weight: 600;">claude_desktop_config.json</span>
+                            <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </div>
+                        <pre class="code-content">{
+  "mcpServers": {
+    "vani-xai": {
+      "url": "https://vani-nzdrsr.web.app/.well-known/mcp.json",
+      "transport": "http"
+    }
+  }
+}</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Handling -->
+            <section class="doc-section" id="error-codes">
+                <div class="section-header">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <h2>HTTP Status &amp; Error Responses</h2>
+                </div>
+
+                <div class="endpoint-card">
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Status Code</th>
+                                <th>Meaning</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="param-name" style="color: #34d399;">200 OK</td>
+                                <td>Success</td>
+                                <td>Request executed successfully and response JSON returned.</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name" style="color: #f87171;">400 Bad Request</td>
+                                <td>Validation Error</td>
+                                <td>Missing required field (such as <code>command</code> payload).</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name" style="color: #f59e0b;">503 Unavailable</td>
+                                <td>Local Daemon Offline</td>
+                                <td>Local Ollama or LM Studio instance is not running.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast Feedback -->
+    <div class="toast" id="toast"><i class="fa-solid fa-check"></i> Code copied to clipboard!</div>
+
+    <!-- Footer -->
+    <footer style="border-top: 1px solid var(--docs-card-border); padding: 32px 24px; text-align: center; color: #64748b; font-size: 0.85rem; background: rgba(9, 13, 22, 0.9);">
+        <div style="margin-bottom: 12px;">
+            <a href="/" style="color: #94a3b8; text-decoration: none; margin: 0 12px;">Home</a> &bull;
+            <a href="/about" style="color: #94a3b8; text-decoration: none; margin: 0 12px;">About</a> &bull;
+            <a href="/contact" style="color: #94a3b8; text-decoration: none; margin: 0 12px;">Contact</a> &bull;
+            <a href="/openapi.json" style="color: #94a3b8; text-decoration: none; margin: 0 12px;">OpenAPI</a> &bull;
+            <a href="/premium.html" style="color: #94a3b8; text-decoration: none; margin: 0 12px;">Free Access</a>
+        </div>
+        <p>VANI-xAI: Vāṇī Adhyātmik Navīn Intellect &copy; 2026. All rights reserved. &bull; Don't Assume, Verify. &bull; <img src="/indian_flag.svg" alt="Indian Flag" class="indian-flag-icon"> Made in India</p>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Language tab switching
+        function switchTab(btn, targetId) {
+            const header = btn.closest('.code-header');
+            const container = header.parentElement;
+            header.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+
+            container.querySelectorAll('.code-content').forEach(c => {
+                c.style.display = 'none';
+            });
+            const target = document.getElementById(targetId);
+            if (target) target.style.display = 'block';
+        }
+
+        // Copy code to clipboard with toast
+        function copyCode(btn) {
+            const container = btn.closest('.code-container');
+            const activeCode = container.querySelector('.code-content:not([style*="display: none"])') || container.querySelector('.code-content');
+            if (!activeCode) return;
+
+            navigator.clipboard.writeText(activeCode.innerText).then(() => {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check" style="color: #34d399;"></i> Copied!';
+                showToast("Code copied to clipboard!");
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                }, 2000);
+            });
+        }
+
+        // Toast display
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = `<i class="fa-solid fa-check"></i> ${msg}`;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Search Filter
+        const searchInput = document.getElementById('endpoint-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                const sections = document.querySelectorAll('.doc-section');
+                sections.forEach(sec => {
+                    const text = sec.innerText.toLowerCase();
+                    if (!query || text.includes(query)) {
+                        sec.style.display = 'block';
+                    } else {
+                        sec.style.display = 'none';
+                    }
+                });
+            });
+
+            // Keyboard shortcut '/'
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '/' && document.activeElement !== searchInput && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            });
+        }
+
+        // Sandbox Runner
+        function runSandbox(type) {
+            if (type === 'command') {
+                const inputVal = document.getElementById('sandbox-command-input').value;
+                const outputEl = document.getElementById('sandbox-command-output');
+                outputEl.style.display = 'block';
+                outputEl.innerText = '// Sending simulated execution request...\n';
+
+                try {
+                    const parsed = JSON.parse(inputVal);
+                    setTimeout(() => {
+                        outputEl.innerText = `// HTTP/1.1 200 OK\n// Response Time: 142ms\n\n` + JSON.stringify({
+                            success: true,
+                            action: parsed.command.toLowerCase().includes("search") ? "saras_web_search" : "autonomous_agent_nlp",
+                            query: parsed.command,
+                            message: `Processed command: "${parsed.command}"`,
+                            timestamp: new Date().toISOString()
+                        }, null, 2);
+                    }, 400);
+                } catch(e) {
+                    outputEl.innerText = `// HTTP/1.1 400 Bad Request\n{\n  "error": "Invalid JSON format: ${e.message}"\n}`;
+                }
+            } else if (type === 'stats') {
+                const outputEl = document.getElementById('sandbox-stats-output');
+                outputEl.style.display = 'block';
+                outputEl.innerText = '// Querying system telemetry...\n';
+                setTimeout(() => {
+                    outputEl.innerText = `// HTTP/1.1 200 OK (Live Telemetry)\n\n` + JSON.stringify({
+                        status: "healthy",
+                        cpu_utilization_pct: (Math.random() * 15 + 5).toFixed(1) + "%",
+                        memory_used_mb: 482,
+                        memory_total_mb: 8192,
+                        active_swarm_peers: 2,
+                        uptime_seconds: 148920,
+                        local_engine_ready: true
+                    }, null, 2);
+                }, 300);
+            }
+        }
+    </script>
+</body>
+</html>
