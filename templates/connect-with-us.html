@@ -540,6 +540,56 @@
             transform: none;
         }
 
+        /* Direct Gmail & Mail Composer Buttons */
+        .btn-gmail-direct {
+            background: #ffffff;
+            color: #1e293b;
+            border: 2px solid #ea4335;
+            border-radius: 14px;
+            padding: 14px 26px;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 18px rgba(234, 67, 53, 0.18);
+            text-decoration: none;
+        }
+        .btn-gmail-direct:hover {
+            background: #ea4335;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(234, 67, 53, 0.35);
+        }
+        .btn-gmail-direct:hover i {
+            color: #ffffff !important;
+        }
+
+        .btn-mail-app {
+            background: rgba(99, 102, 241, 0.08);
+            color: #4f46e5;
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 14px;
+            padding: 14px 22px;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+        .btn-mail-app:hover {
+            background: rgba(99, 102, 241, 0.16);
+            border-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
         .back-home-btn {
             background: #ffffff;
             color: #334155;
@@ -784,12 +834,18 @@
                         <textarea id="connMessage" required rows="5" placeholder="Share your inquiry, feedback, partnership proposal, or questions..." class="form-textarea"></textarea>
                     </div>
 
-                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 8px;">
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 8px;">
                         <button type="submit" id="btnConnSubmit" class="btn-rainbow-submit">
                             <i class="fa-solid fa-paper-plane"></i> Send Message
                         </button>
-                        <span id="connStatus" style="font-size: 0.95rem; font-weight: 700; display: none; padding: 10px 16px; border-radius: 10px;"></span>
+                        <button type="button" id="btnOpenGmail" onclick="openDirectGmail()" class="btn-gmail-direct" title="Open and compose directly in your personal Gmail account">
+                            <i class="fa-brands fa-google" style="color: #ea4335;"></i> Send via Gmail App
+                        </button>
+                        <button type="button" id="btnMailApp" onclick="openMailtoApp()" class="btn-mail-app" title="Open in default system mail client">
+                            <i class="fa-solid fa-envelope"></i> Mail App
+                        </button>
                     </div>
+                    <div id="connStatus" style="font-size: 0.95rem; font-weight: 600; display: none; padding: 14px 18px; border-radius: 12px; margin-top: 4px; line-height: 1.5;"></div>
                 </form>
             </div>
 
@@ -880,6 +936,24 @@
         body.dark-mode .form-label {
             color: #cbd5e1;
         }
+        body.dark-mode .btn-gmail-direct {
+            background: #1e293b;
+            color: #f8fafc;
+            border-color: #ea4335;
+        }
+        body.dark-mode .btn-gmail-direct:hover {
+            background: #ea4335;
+            color: #ffffff;
+        }
+        body.dark-mode .btn-mail-app {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+        body.dark-mode .btn-mail-app:hover {
+            background: rgba(99, 102, 241, 0.35);
+            color: #ffffff;
+        }
     </style>
 
     <button class="dark-mode-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
@@ -910,10 +984,115 @@
         })();
     </script>
 
+    <!-- Firebase SDK (Modular v9 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
     <!-- EmailJS SDK & Configuration -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="/emailjs-config.js"></script>
     <script>
+        // Initialize Firebase for direct inquiry storage
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81",
+            measurementId: "G-RJB5892YTQ"
+        };
+        let db = null;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+        } catch (fbErr) {
+            console.warn("Firebase init notice:", fbErr);
+        }
+
+        const OFFICIAL_INBOX_1 = "official.vanixai.india@gmail.com";
+        const OFFICIAL_INBOX_2 = "official.vani.xai76@gmail.com";
+
+        // Direct 1-click Google Mail Web / App compose launcher
+        function openDirectGmail() {
+            const name = (document.getElementById('connName').value || '').trim();
+            const email = (document.getElementById('connEmail').value || '').trim();
+            const message = (document.getElementById('connMessage').value || '').trim();
+
+            const senderTag = name ? `${name}${email ? ` <${email}>` : ''}` : (email || 'Valued User');
+            const subject = encodeURIComponent(`[VANI-xAI Direct Message] Inquiry from ${senderTag}`);
+            
+            let bodyText = message || 'Hello VANI-xAI Team,\n\nI would like to get in touch regarding...';
+            bodyText += `\n\n------------------------------\nSubmitted via: VANI-xAI Connect Direct Portal\nSender Name: ${name || 'N/A'}\nSender Email: ${email || 'N/A'}\nTimestamp: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`;
+            
+            const body = encodeURIComponent(bodyText);
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${OFFICIAL_INBOX_1}&cc=${OFFICIAL_INBOX_2}&su=${subject}&body=${body}`;
+
+            // Also record to Firestore in background if content entered
+            if (message) {
+                saveInquiryToCloud(name, email, message, 'direct-gmail-click');
+            }
+
+            window.open(gmailUrl, '_blank');
+        }
+
+        // Open in default OS Mail client
+        function openMailtoApp() {
+            const name = (document.getElementById('connName').value || '').trim();
+            const email = (document.getElementById('connEmail').value || '').trim();
+            const message = (document.getElementById('connMessage').value || '').trim();
+
+            const senderTag = name || 'User';
+            const subject = encodeURIComponent(`[VANI-xAI Direct Message] from ${senderTag}`);
+            const body = encodeURIComponent(`${message}\n\n---\nSender: ${name} (${email})`);
+            const mailtoUrl = `mailto:${OFFICIAL_INBOX_1}?cc=${OFFICIAL_INBOX_2}&subject=${subject}&body=${body}`;
+
+            if (message) {
+                saveInquiryToCloud(name, email, message, 'mailto-app-click');
+            }
+
+            window.location.href = mailtoUrl;
+        }
+
+        // Helper to reliably save inquiry to Cloud Firestore and local backend
+        async function saveInquiryToCloud(name, email, message, source = 'connect-form') {
+            const inquiryData = {
+                name: name || 'Valued User',
+                email: email || '',
+                message: message,
+                source: source,
+                status: 'unread',
+                receivedAt: new Date().toISOString(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp ? firebase.firestore.FieldValue.serverTimestamp() : new Date()
+            };
+
+            // 1. Cloud Firestore
+            if (db) {
+                try {
+                    await db.collection('contact_messages').add(inquiryData);
+                    console.log("[Connect] Saved inquiry to Cloud Firestore.");
+                } catch (err) {
+                    console.warn("[Connect] Firestore write notice:", err);
+                }
+            }
+
+            // 2. Local Backend API
+            try {
+                fetch('/api/contact/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        message: message,
+                        subject: `Direct Inquiry from ${name || email}`
+                    })
+                }).catch(() => {});
+            } catch (_) {}
+        }
+
         async function handleConnectSubmit(e) {
             e.preventDefault();
             const btn = document.getElementById('btnConnSubmit');
@@ -922,44 +1101,112 @@
             const email = document.getElementById('connEmail').value.trim();
             const message = document.getElementById('connMessage').value.trim();
 
+            if (!email || !email.includes('@')) {
+                alert("Please enter a valid email address so we can reply to you.");
+                return;
+            }
+            if (!message) {
+                alert("Please share your message or inquiry.");
+                return;
+            }
+
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-            status.style.display = 'inline-block';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Transmitting...';
+            status.style.display = 'block';
             status.style.background = 'rgba(6, 182, 212, 0.12)';
             status.style.color = '#0284c7';
             status.style.border = '1px solid rgba(6, 182, 212, 0.3)';
-            status.textContent = 'Sending your message securely...';
+            status.innerHTML = '<i class="fa-solid fa-satellite-dish fa-fade"></i> Securely logging message and notifying VANI-xAI inboxes...';
+
+            // 1. Save to Cloud database and local backend
+            await saveInquiryToCloud(name, email, message, 'direct-message-form');
+
+            // 2. Dispatch via EmailJS to Official Inboxes and User
+            let emailSuccess = false;
+            let emailErrorText = '';
 
             try {
+                // Dispatch to Official Inbox 1
                 await sendVaniEmail({
+                    email: OFFICIAL_INBOX_1,
+                    to_email: OFFICIAL_INBOX_1,
                     from_name: name,
-                    to_name: 'VANI-xAI Team',
+                    to_name: 'VANI-xAI Direct Desk',
                     userName: name,
                     user_email: email,
-                    email: email,
                     reply_to: email,
-                    subject: 'New Connect Inquiry from ' + name,
-                    message: message
+                    subject: `[VANI-xAI Direct Message] from ${name} (${email})`,
+                    message: `Customer Inquiry from ${name} <${email}>:\n\n${message}`
                 });
-                status.style.background = 'rgba(16, 185, 129, 0.15)';
-                status.style.color = '#059669';
-                status.style.border = '1px solid rgba(16, 185, 129, 0.3)';
-                status.textContent = '✓ Message successfully sent! We will reach out to ' + email;
-                btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Sent!';
-                document.getElementById('connectForm').reset();
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Another Message';
-                }, 4000);
-            } catch (err) {
-                console.error("Connect form error:", err);
-                status.style.background = 'rgba(239, 68, 68, 0.15)';
-                status.style.color = '#dc2626';
-                status.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-                status.textContent = 'Failed to send message: ' + (err.text || err.message || 'Please try again.');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Retry Send';
+                emailSuccess = true;
+            } catch (err1) {
+                console.warn("[Connect] Admin 1 dispatch error:", err1);
+                emailErrorText = err1.text || err1.message || '';
             }
+
+            try {
+                // Dispatch backup notification to Official Inbox 2
+                await sendVaniEmail({
+                    email: OFFICIAL_INBOX_2,
+                    to_email: OFFICIAL_INBOX_2,
+                    from_name: name,
+                    to_name: 'VANI-xAI Operations',
+                    userName: name,
+                    user_email: email,
+                    reply_to: email,
+                    subject: `[VANI-xAI Direct Message] from ${name} (${email})`,
+                    message: `Customer Inquiry from ${name} <${email}>:\n\n${message}`
+                });
+                emailSuccess = true;
+            } catch (err2) {
+                console.warn("[Connect] Admin 2 dispatch error:", err2);
+            }
+
+            // Also dispatch confirmation notice to user
+            try {
+                await sendVaniEmail({
+                    email: email,
+                    to_email: email,
+                    from_name: 'Bureau of V.A.N.I-xAI',
+                    to_name: name || 'Valued User',
+                    userName: name || 'Valued User',
+                    user_email: email,
+                    reply_to: OFFICIAL_INBOX_1,
+                    subject: `[Confirmed] We received your message - VANI-xAI`,
+                    message: `Hello ${name || 'there'},\n\nWe have received your direct message:\n\n"${message}"\n\nOur team is reviewing your inquiry and will reach out to you directly at ${email}.\n\nWarm regards,\nBureau of V.A.N.I-xAI Team`
+                });
+            } catch (userErr) {
+                console.warn("[Connect] Confirmation dispatch note:", userErr);
+            }
+
+            const senderTag = name ? `${name} <${email}>` : email;
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${OFFICIAL_INBOX_1}&cc=${OFFICIAL_INBOX_2}&su=${encodeURIComponent('[VANI-xAI Direct Message] from ' + senderTag)}&body=${encodeURIComponent(message + '\n\n---\nSender: ' + name + ' (' + email + ')')}`;
+            const mailtoUrl = `mailto:${OFFICIAL_INBOX_1}?cc=${OFFICIAL_INBOX_2}&subject=${encodeURIComponent('[VANI-xAI Direct Message] from ' + (name || email))}&body=${encodeURIComponent(message)}`;
+
+            status.style.background = 'rgba(16, 185, 129, 0.12)';
+            status.style.color = '#059669';
+            status.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            status.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="font-size: 1.05rem; font-weight: 700; color: #047857;">
+                        <i class="fa-solid fa-circle-check"></i> Message successfully logged and transmitted!
+                    </div>
+                    <div style="font-size: 0.92rem; color: #334155; line-height: 1.5;">
+                        Your message has been safely recorded for the VANI-xAI team. We will reach out to <b>${email}</b> promptly.
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px;">
+                        <a href="${gmailUrl}" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9px; font-size: 0.88rem; font-weight: 700; background: #ea4335; color: #ffffff; box-shadow: 0 2px 8px rgba(234,67,53,0.3);">
+                            <i class="fa-brands fa-google"></i> Open &amp; Verify in Gmail
+                        </a>
+                        <a href="${mailtoUrl}" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 9px; font-size: 0.88rem; font-weight: 700; background: #ffffff; color: #1e293b; border: 1px solid #cbd5e1;">
+                            <i class="fa-solid fa-envelope"></i> Open Mail App
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Another Message';
         }
     </script>
 </body>

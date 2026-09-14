@@ -1084,6 +1084,62 @@ def get_beam_signals(room_id):
     ]
     return jsonify({'success': True, 'signals': new_signals, 'server_time': time.time()})
 
+# Direct Contact Inquiries Submission Endpoint
+@app.route('/api/contact/submit', methods=['POST'])
+def handle_contact_submit():
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        name = data.get('name', '').strip()
+        email = data.get('email', '').strip()
+        message = data.get('message', '').strip()
+        subject = data.get('subject', f'Direct Message Inquiry from {name}').strip()
+
+        if not email or not message:
+            return jsonify({'success': False, 'error': 'Email and message are required.'}), 400
+
+        inquiry = {
+            'id': f"inq_{int(time.time() * 1000)}",
+            'name': name or 'Valued User',
+            'email': email,
+            'subject': subject,
+            'message': message,
+            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'received_at': time.time(),
+            'status': 'new'
+        }
+
+        # Store in E:\BoVxAi DB if present, else in workspace directory
+        db_root = r"E:\BoVxAi DB"
+        target_dir = db_root if os.path.isdir(db_root) else WORKSPACE_DIR
+        inquiries_file = os.path.join(target_dir, "contact_inquiries.json")
+
+        existing_inquiries = []
+        if os.path.exists(inquiries_file):
+            try:
+                import json
+                with open(inquiries_file, 'r', encoding='utf-8') as f:
+                    existing_inquiries = json.load(f)
+            except Exception:
+                existing_inquiries = []
+
+        existing_inquiries.append(inquiry)
+        try:
+            import json
+            with open(inquiries_file, 'w', encoding='utf-8') as f:
+                json.dump(existing_inquiries, f, indent=2)
+        except Exception as write_err:
+            print("Warning writing inquiries file:", write_err)
+
+        logger.log_status('CONTACT', f"New contact inquiry from {name} <{email}>: {subject}")
+        return jsonify({
+            'success': True,
+            'message': 'Direct message inquiry successfully logged and queued.',
+            'inquiry_id': inquiry['id']
+        })
+    except Exception as e:
+        logger.log_status('CONTACT_ERR', f"Failed to record inquiry: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 # Catch-all file server for public assets
 @app.route('/<path:path>')
 def serve_public_files(path):
