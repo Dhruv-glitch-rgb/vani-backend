@@ -7,7 +7,7 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="More BoVxAi by V.A.N.I-xAI: A state-of-the-art all-in-one AI workspace powered by GLM intelligence. Voice assistant, image generation, image analysis, document intelligence, YouTube AI summaries, long-term memory, translation, and OCR.">
-    <meta name="keywords" content="more bovxai, vani-xai, space-z ai, glm ai workspace, voice assistant, ai image generation, document intelligence, youtube ai summary, ai memory, ocr document analysis">
+    <meta name="keywords" content="more bovxai, vani-xai, base44 ai, glm ai workspace, voice assistant, ai image generation, document intelligence, youtube ai summary, ai memory, ocr document analysis">
     <meta name="author" content="Dhruv Sagar - Bureau of V.A.N.I-xAI">
     <link rel="canonical" href="https://vani-nzdrsr.web.app/more_bovxai">
     <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
@@ -382,9 +382,9 @@
                 <img src="/vani_icon.png" alt="V.A.N.I-xAI Icon">
                 <span class="brand-text">MORE BoVxAi</span>
             </a>
-            <div class="engine-pill" title="Live Next.js AI Engine hosted on Space-Z">
+            <div class="engine-pill" title="Live AI Engine hosted on Base44">
                 <span class="dot"></span>
-                <span>GLM · Space-Z AI</span>
+                <span>GLM · Base44 AI</span>
             </div>
         </div>
 
@@ -408,7 +408,7 @@
             <button class="nav-btn icon-only" onclick="toggleFullscreen()" title="Toggle Fullscreen Mode (F)">
                 <i class="fa-solid fa-expand" id="fsIcon"></i>
             </button>
-            <a href="https://more-bovxai.space-z.ai" target="_blank" rel="noopener noreferrer" class="nav-btn primary" title="Open More BoVxAi in a separate tab">
+            <a href="https://more-bovxai.base44.app/" target="_blank" rel="noopener noreferrer" class="nav-btn primary" title="Open More BoVxAi in a separate tab">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 <span class="btn-text">Open Full Tab</span>
             </a>
@@ -430,14 +430,14 @@
         <div class="frame-loader" id="frameLoader">
             <div class="spinner-ring"></div>
             <div class="loader-title">INITIALIZING MORE BoVxAi</div>
-            <div class="loader-sub">Connecting to Space-Z GLM Neural Cluster...</div>
+            <div class="loader-sub">Connecting to Base44 GLM Neural Cluster...</div>
         </div>
 
         <!-- Live Embedded Workspace -->
         <iframe 
             id="moreBovxaiFrame"
             class="workspace-iframe"
-            src="https://more-bovxai.space-z.ai"
+            src="https://more-bovxai.base44.app/"
             title="More BoVxAi AI Workspace"
             allow="camera; microphone; clipboard-read; clipboard-write; fullscreen; display-capture"
             loading="eager"
@@ -447,8 +447,8 @@
         <!-- Fallback Bar -->
         <div class="fallback-bar" id="fallbackBar">
             <i class="fa-solid fa-circle-info" style="color: #c084fc;"></i>
-            <span>Connected to <strong>more-bovxai.space-z.ai</strong>. If frame is restricted,</span>
-            <a href="https://more-bovxai.space-z.ai" target="_blank" rel="noopener noreferrer">Launch Direct Workspace &rarr;</a>
+            <span>Connected to <strong>more-bovxai.base44.app</strong>. If frame is restricted,</span>
+            <a href="https://more-bovxai.base44.app/" target="_blank" rel="noopener noreferrer">Launch Direct Workspace &rarr;</a>
         </div>
     </div>
 
@@ -475,7 +475,7 @@
             if (!frame) return;
             if (loader) loader.classList.remove('loaded');
             if (reloadIcon) reloadIcon.classList.add('fa-spin');
-            frame.src = 'https://more-bovxai.space-z.ai?t=' + Date.now();
+            frame.src = 'https://more-bovxai.base44.app/?t=' + Date.now();
             setTimeout(() => {
                 if (reloadIcon) reloadIcon.classList.remove('fa-spin');
             }, 1200);

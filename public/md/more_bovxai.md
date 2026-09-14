@@ -1,11 +1,11 @@
 # More BoVxAi — Modern Multi-Modal AI Workspace
 
 > V.A.N.I-xAI (Bureau Of V.A.N.I-xAI)  
-> Live Workspace: https://more-bovxai.space-z.ai  
+> Live Workspace: https://more-bovxai.base44.app/  
 > Route: https://vani-nzdrsr.web.app/more_bovxai
 
 ## Overview
-**More BoVxAi** is an advanced multi-modal AI workspace built for the V.A.N.I-xAI ecosystem. Powered by cutting-edge GLM intelligence hosted on Space-Z, it consolidates comprehensive generative, analytical, and multimodal capabilities into a unified sovereign interface with persistent context and zero external friction.
+**More BoVxAi** is an advanced multi-modal AI workspace built for the V.A.N.I-xAI ecosystem. Powered by cutting-edge GLM intelligence hosted on Base44, it consolidates comprehensive generative, analytical, and multimodal capabilities into a unified sovereign interface with persistent context and zero external friction.
 
 ## Suite Capabilities & Modules
 
