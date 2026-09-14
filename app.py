@@ -225,6 +225,15 @@ def serve_llms_full_txt():
 def serve_sitemap_xml():
     return send_from_directory(PUBLIC_DIR, 'sitemap.xml', mimetype='application/xml')
 
+@app.route('/sitemap.xsl')
+def serve_sitemap_xsl():
+    return send_from_directory(PUBLIC_DIR, 'sitemap.xsl', mimetype='application/xml; charset=utf-8')
+
+@app.route('/sitemap')
+@app.route('/sitemap.html')
+def serve_sitemap_page():
+    return serve_page('sitemap.html')
+
 @app.route('/robots.txt')
 def serve_robots_txt():
     return send_from_directory(PUBLIC_DIR, 'robots.txt', mimetype='text/plain; charset=utf-8')

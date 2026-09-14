@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitemap &amp; Directory - VANI-xAI Platform Index</title>
+
+    <!-- SEO & Machine Reachability Meta Tags -->
+    <meta name="description" content="Explore the comprehensive sitemap and visual directory of VANI-xAI (Vāṇī Adhyātmik Navīn Intellect). Access every AI module, Quantum Beam, APIs, documentation, and support pages.">
+    <meta name="keywords" content="VANI-xAI sitemap, VANI-xAI directory, Quantum Beam sitemap, AI assistant pages, VANI-xAI routes, Dhruv Sagar, OpenAPI VANI-xAI">
+    <meta name="author" content="Dhruv Sagar - Bureau of V.A.N.I-xAI">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://vani-nzdrsr.web.app/sitemap">
+    <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
+
+    <!-- Discovery Links -->
+    <link rel="alternate" type="application/xml" href="/sitemap.xml" title="XML Sitemap">
+    <link rel="describedby" type="application/json" href="/openapi.json" title="OpenAPI Specification">
+    <link rel="index" type="text/plain" href="/llms.txt" title="LLMs.txt Index">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-canvas: linear-gradient(135deg, #f0fdfa 0%, #eff6ff 30%, #faf5ff 65%, #fff7ed 100%);
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-sub: #64748b;
+            --border-light: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-head: 'Outfit', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-canvas);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            padding: 40px 20px 80px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation Header */
+        .site-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+            transition: transform 0.2s ease;
+        }
+        .brand-logo:hover {
+            transform: scale(1.05);
+        }
+        .brand-text-title {
+            font-family: var(--font-head);
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1e1b4b, #4338ca);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-text-sub {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #6366f1;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-nav-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+        .btn-nav-action:hover {
+            border-color: #6366f1;
+            color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+        .btn-nav-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #ffffff !important;
+            border: none;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+        }
+        .btn-nav-primary:hover {
+            background: linear-gradient(135deg, #4338ca, #6d28d9);
+            color: #ffffff !important;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 28px;
+            padding: 44px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 25%, #8b5cf6 50%, #ec4899 75%, #f59e0b 100%);
+        }
+        .badge-rainbow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            color: #4338ca;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .hero-title {
+            font-family: var(--font-head);
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: #0f172a;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        .hero-title span {
+            background: linear-gradient(135deg, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 820px;
+            margin-bottom: 28px;
+        }
+
+        /* Metric Counters */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 10px;
+        }
+        .metric-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.2s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            background: #ffffff;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        .metric-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+        .metric-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .metric-num {
+            font-family: var(--font-head);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-main);
+        }
+
+        /* Interactive Filter & Search Bar */
+        .filter-bar {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+        }
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
+        .search-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        .search-box {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            background: #f8fafc;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .search-box:focus {
+            border-color: #6366f1;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+        }
+
+        .category-tabs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-chip {
+            background: #f1f5f9;
+            border: 1px solid var(--border-light);
+            color: #475569;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-chip:hover, .tab-chip.active {
+            background: #6366f1;
+            color: #ffffff;
+            border-color: #6366f1;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+        }
+        .tab-chip .badge-count {
+            background: rgba(0, 0, 0, 0.12);
+            padding: 2px 7px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-family: var(--font-code);
+        }
+        .tab-chip.active .badge-count {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+
+        /* Section Headings */
+        .category-section {
+            margin-bottom: 36px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(226, 232, 240, 0.8);
+        }
+        .section-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+        .section-title {
+            font-family: var(--font-head);
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .section-count {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-family: var(--font-code);
+        }
+
+        /* Card Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 18px;
+        }
+        .sitemap-card {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 18px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .sitemap-card:hover {
+            transform: translateY(-3px);
+            border-color: #cbd5e1;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+        }
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+        .card-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #ffffff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .card-heading {
+            flex: 1;
+        }
+        .card-title {
+            font-family: var(--font-head);
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .card-route {
+            font-family: var(--font-code);
+            font-size: 0.78rem;
+            color: #6366f1;
+            background: #eef2ff;
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid #f1f5f9;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .card-tags {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .tag-pill {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .tag-priority-high {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+        .tag-priority-med {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+        .tag-label {
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-visit {
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid var(--border-light);
+            padding: 6px 14px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .btn-visit:hover {
+            background: #4f46e5;
+            color: #ffffff;
+            border-color: #4f46e5;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+        }
+
+        /* Empty State */
+        .no-results {
+            background: #ffffff;
+            border: 2px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 50px 20px;
+            text-align: center;
+            display: none;
+            margin: 20px 0;
+        }
+        .no-results i {
+            font-size: 2.8rem;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+        .no-results h3 {
+            font-family: var(--font-head);
+            font-size: 1.4rem;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+        .no-results p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .site-footer {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.92rem;
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+            padding-top: 30px;
+        }
+        .site-footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Top Nav -->
+        <header class="site-nav">
+            <a href="/" class="brand-link">
+                <img src="/vani_icon.png" alt="VANI-xAI Logo" class="brand-logo">
+                <div>
+                    <div class="brand-text-title">VANI-xAI</div>
+                    <div class="brand-text-sub">Sovereign Directory</div>
+                </div>
+            </a>
+            <div class="nav-actions">
+                <a href="/" class="btn-nav-action"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="/sitemap.xml" target="_blank" class="btn-nav-action"><i class="fa-solid fa-code"></i> XML Sitemap</a>
+                <a href="/openapi.json" target="_blank" class="btn-nav-action"><i class="fa-solid fa-plug"></i> OpenAPI</a>
+                <a href="/connect-with-us" class="btn-nav-action btn-nav-primary"><i class="fa-solid fa-paper-plane"></i> Contact Us</a>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <div class="hero-banner">
+            <div class="badge-rainbow">
+                <i class="fa-solid fa-compass"></i> Official Platform Sitemap &amp; Directory
+            </div>
+            <h1 class="hero-title">Explore the <span>VANI-xAI</span> Ecosystem</h1>
+            <p class="hero-desc">
+                A unified, colorful, and accessible visual index of every page, intelligent quantum module, AI workspace, machine-readable specification, and developer resource across VANI-xAI.
+            </p>
+
+            <!-- Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);">
+                        <i class="fa-solid fa-sitemap"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label">Total Index Routes</div>
+                        <div class="metric-num" id="totalCount">28</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #06b6d4, #0284c7);">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label">Quantum &amp; AI Tools</div>
+                        <div class="metric-num">8</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label">Machine Specs &amp; APIs</div>
+                        <div class="metric-num">6</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label">Security &amp; Portals</div>
+                        <div class="metric-num">6</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Controls -->
+        <div class="filter-bar">
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="directorySearch" class="search-box" placeholder="Search pages by name, route, keyword, or capability (e.g., beam, ai, openapi, auth)..." onkeyup="filterDirectory()">
+            </div>
+            <div class="category-tabs">
+                <button class="tab-chip active" onclick="selectTab('all', this)">
+                    <i class="fa-solid fa-border-all"></i> All Pages <span class="badge-count" id="countAll">28</span>
+                </button>
+                <button class="tab-chip" onclick="selectTab('quantum', this)">
+                    <i class="fa-solid fa-atom"></i> Quantum &amp; AI <span class="badge-count">8</span>
+                </button>
+                <button class="tab-chip" onclick="selectTab('core', this)">
+                    <i class="fa-solid fa-globe"></i> Core Platform <span class="badge-count">5</span>
+                </button>
+                <button class="tab-chip" onclick="selectTab('api', this)">
+                    <i class="fa-solid fa-terminal"></i> APIs &amp; Specs <span class="badge-count">6</span>
+                </button>
+                <button class="tab-chip" onclick="selectTab('auth', this)">
+                    <i class="fa-solid fa-key"></i> Auth &amp; Access <span class="badge-count">4</span>
+                </button>
+                <button class="tab-chip" onclick="selectTab('docs', this)">
+                    <i class="fa-solid fa-book-open"></i> Docs &amp; Legal <span class="badge-count">5</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- No Results Fallback -->
+        <div id="noResults" class="no-results">
+            <i class="fa-solid fa-satellite"></i>
+            <h3>No Matching Pages Located</h3>
+            <p>Try searching for a different keyword, route name, or reset the active filter chip.</p>
+        </div>
+
+        <!-- Content Categories -->
+
+        <!-- 1. Quantum & AI Ecosystem -->
+        <section class="category-section" data-category="quantum">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);">
+                    <i class="fa-solid fa-atom"></i>
+                </div>
+                <h2 class="section-title">Quantum &amp; AI Ecosystem</h2>
+                <span class="section-count">8 Modules</span>
+            </div>
+
+            <div class="cards-grid">
+                <!-- Quantum Beam -->
+                <div class="sitemap-card" data-keywords="quantum beam p2p sharing transfer files notes photos chat webrtc">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #06b6d4, #6366f1);">
+                            <i class="fa-solid fa-bolt-lightning"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Quantum Beam</h3>
+                            <span class="card-route">/quantum_beam</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">High-speed peer-to-peer quantum transmission for files, photos, batches, and notes with SHA-256 integrity and live audio FX.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.95</span>
+                            <span class="tag-pill tag-label">P2P File Beam</span>
+                        </div>
+                        <a href="/quantum_beam" class="btn-visit">Launch <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- More BoVxAi AI Workspace -->
+                <div class="sitemap-card" data-keywords="more bovxai workspace glm ai assistant voice vision image generation summarizer">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #8b5cf6, #d946ef);">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">More BoVxAi AI Workspace</h3>
+                            <span class="card-route">/more_bovxai</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">10-in-1 multimodal suite powered by GLM intelligence: Voice Studio, Image Gen, Vision Analysis, OCR, and Document Intelligence.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.95</span>
+                            <span class="tag-pill tag-label">10-in-1 Suite</span>
+                        </div>
+                        <a href="/more_bovxai" class="btn-visit">Launch <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Saras Vani Chat -->
+                <div class="sitemap-card" data-keywords="saras vani chat conversational ai multi-agent assistant">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Saras Vani Chat</h3>
+                            <span class="card-route">/saras_vani_chat</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Conversational neural interface with contextual memory retention, adaptive voice, and spiritual intelligence.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">Neural Chat</span>
+                        </div>
+                        <a href="/saras_vani_chat" class="btn-visit">Launch <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Saras Vani Search -->
+                <div class="sitemap-card" data-keywords="saras vani search ai engine web discovery semantic answer">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Saras Vani Search</h3>
+                            <span class="card-route">/saras_vani_search</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">High-speed generative AI search engine delivering syntheses, factual sources, and instant answers across the web.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">AI Search</span>
+                        </div>
+                        <a href="/saras_vani_search" class="btn-visit">Launch <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quantum Radar -->
+                <div class="sitemap-card" data-keywords="quantum radar active device discovery peer scan network">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <i class="fa-solid fa-satellite-dish"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Quantum Radar</h3>
+                            <span class="card-route">/quantum_radar</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Active radar scanner detecting nearby devices, active nodes, and quantum pairing endpoints for zero-latency linking.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">Node Radar</span>
+                        </div>
+                        <a href="/quantum_radar" class="btn-visit">Launch <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quantum Connect -->
+                <div class="sitemap-card" data-keywords="quantum connect instant pairing sync qr handshake">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #6366f1, #3b82f6);">
+                            <i class="fa-solid fa-link"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Quantum Connect</h3>
+                            <span class="card-route">/quantum_connect</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Instantaneous device pairing and QR code cryptographic handshakes for synchronized cross-device workflows.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">Device Link</span>
+                        </div>
+                        <a href="/quantum_connect" class="btn-visit">Launch <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- AI4 Console -->
+                <div class="sitemap-card" data-keywords="ai4 console workspace autonomous agents sidebar telemetry">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">
+                            <i class="fa-solid fa-terminal"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">AI4 Console Workspace</h3>
+                            <span class="card-route">/ai4consol</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Comprehensive operational workstation with autonomous agents, system health monitors, and More BoVxAi launcher.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">Agent Console</span>
+                        </div>
+                        <a href="/ai4consol" class="btn-visit">Launch <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Saras Web Search -->
+                <div class="sitemap-card" data-keywords="saras web search legacy web tool engine">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #14b8a6, #0d9488);">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Saras Web Search Portal</h3>
+                            <span class="card-route">/saras_web_search.html</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Specialized web indexing portal with clean search parsing and structured summaries.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.85</span>
+                            <span class="tag-pill tag-label">Web Search</span>
+                        </div>
+                        <a href="/saras_web_search.html" class="btn-visit">Launch <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Core Platform Pages -->
+        <section class="category-section" data-category="core">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                    <i class="fa-solid fa-globe"></i>
+                </div>
+                <h2 class="section-title">Core Platform Pages</h2>
+                <span class="section-count">5 Pages</span>
+            </div>
+
+            <div class="cards-grid">
+                <!-- Homepage -->
+                <div class="sitemap-card" data-keywords="home homepage landing portal main vani-xai">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);">
+                            <i class="fa-solid fa-house"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Homepage &amp; Hub</h3>
+                            <span class="card-route">/</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Official gateway to VANI-xAI AI Assistant. Features mission overview, live assistant status, and quick module launchers.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 1.0</span>
+                            <span class="tag-pill tag-label">Main Hub</span>
+                        </div>
+                        <a href="/" class="btn-visit">Visit <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Connect With Us -->
+                <div class="sitemap-card" data-keywords="connect with us contact message direct gmail social handle support">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #06b6d4, #6366f1);">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Connect &amp; Contact Us</h3>
+                            <span class="card-route">/connect-with-us</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Direct reachability portal with 1-click Gmail app compose, official social channels, support hours, and inquiry forms.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.95</span>
+                            <span class="tag-pill tag-label">Direct Reach</span>
+                        </div>
+                        <a href="/connect-with-us" class="btn-visit">Visit <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- About -->
+                <div class="sitemap-card" data-keywords="about mission architecture sovereign ethics dhruv sagar">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">About VANI-xAI</h3>
+                            <span class="card-route">/about</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">In-depth background, architectural principles, cognitive models, and the vision of spiritual intelligence.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">Platform Info</span>
+                        </div>
+                        <a href="/about" class="btn-visit">Visit <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Contact Support -->
+                <div class="sitemap-card" data-keywords="contact help support desk ticket inquiries">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #ea580c, #f59e0b);">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Support Desk</h3>
+                            <span class="card-route">/contact</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Developer APIs and technical issue ticketing with direct Gmail compose routing to support engineers.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">Ticketing</span>
+                        </div>
+                        <a href="/contact" class="btn-visit">Visit <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Visual Sitemap -->
+                <div class="sitemap-card" data-keywords="sitemap directory index routes overview">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #10b981, #06b6d4);">
+                            <i class="fa-solid fa-sitemap"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Visual Platform Sitemap</h3>
+                            <span class="card-route">/sitemap</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">This interactive, colorful Light UI index organizing all 28 canonical endpoints across VANI-xAI.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.95</span>
+                            <span class="tag-pill tag-label">Active Directory</span>
+                        </div>
+                        <a href="/sitemap" class="btn-visit">Visit <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Machine-Readable Specs & Agentic Discovery -->
+        <section class="category-section" data-category="api">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <h2 class="section-title">Developer APIs &amp; Agentic Specs</h2>
+                <span class="section-count">6 Endpoints</span>
+            </div>
+
+            <div class="cards-grid">
+                <!-- OpenAPI JSON -->
+                <div class="sitemap-card" data-keywords="openapi json api specification swagger rest endpoints">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <i class="fa-solid fa-file-code"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">OpenAPI 3.1.0 (JSON)</h3>
+                            <span class="card-route">/openapi.json</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Standardized OpenAPI 3.1.0 JSON contract detailing all autonomous agent REST endpoints, schemas, and security schemes.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">REST Schema</span>
+                        </div>
+                        <a href="/openapi.json" target="_blank" class="btn-visit">View <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+
+                <!-- OpenAPI YAML -->
+                <div class="sitemap-card" data-keywords="openapi yaml spec schema human readable">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #059669, #047857);">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">OpenAPI 3.1.0 (YAML)</h3>
+                            <span class="card-route">/openapi.yaml</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Human-readable YAML specification for IDE integration, API client generators, and Swagger UI tooling.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">YAML Contract</span>
+                        </div>
+                        <a href="/openapi.yaml" target="_blank" class="btn-visit">View <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+
+                <!-- Model Context Protocol (MCP) -->
+                <div class="sitemap-card" data-keywords="mcp model context protocol llm tool agentic json">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">MCP Discovery Protocol</h3>
+                            <span class="card-route">/.well-known/mcp.json</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Model Context Protocol manifest exposing sovereign tools, search prompts, and quantum transfer functions to external LLMs.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">MCP Tooling</span>
+                        </div>
+                        <a href="/.well-known/mcp.json" target="_blank" class="btn-visit">View <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+
+                <!-- LLMs.txt -->
+                <div class="sitemap-card" data-keywords="llms txt agentic index discovery prompt context ai">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">LLMs.txt Discovery Index</h3>
+                            <span class="card-route">/llms.txt</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Curated plain-text guide formatted specifically for AI agents, crawlers, and LLM reasoning engines exploring VANI-xAI.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 0.90</span>
+                            <span class="tag-pill tag-label">LLM Context</span>
+                        </div>
+                        <a href="/llms.txt" target="_blank" class="btn-visit">View <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+
+                <!-- LLMs-Full.txt -->
+                <div class="sitemap-card" data-keywords="llms full deep context knowledge corpus txt">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #0284c7, #1e40af);">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">LLMs-Full.txt Deep Index</h3>
+                            <span class="card-route">/llms-full.txt</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Comprehensive system instructions, tool execution rules, API catalogs, and philosophical tenets in single token-optimized corpus.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.85</span>
+                            <span class="tag-pill tag-label">Full Corpus</span>
+                        </div>
+                        <a href="/llms-full.txt" target="_blank" class="btn-visit">View <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+
+                <!-- XML Sitemap -->
+                <div class="sitemap-card" data-keywords="xml sitemap sitemap.xml search engines googlebot index">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #10b981, #06b6d4);">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Standard XML Sitemap</h3>
+                            <span class="card-route">/sitemap.xml</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Official search engine XML sitemap styled with colorful Light UI XSLT transformation for both humans and bots.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-high"><i class="fa-solid fa-star"></i> 1.0</span>
+                            <span class="tag-pill tag-label">XML / XSL</span>
+                        </div>
+                        <a href="/sitemap.xml" target="_blank" class="btn-visit">View <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Auth, Access & Keys -->
+        <section class="category-section" data-category="auth">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #ec4899, #d946ef);">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <h2 class="section-title">Authentication &amp; Access Portals</h2>
+                <span class="section-count">4 Portals</span>
+            </div>
+
+            <div class="cards-grid">
+                <!-- Auth Portal -->
+                <div class="sitemap-card" data-keywords="auth authentication sign in login google firebase account">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #ec4899, #be185d);">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Authentication Portal</h3>
+                            <span class="card-route">/auth-vani-xai</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Secure gateway for user login, registration, and Google OAuth account provisioning.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.85</span>
+                            <span class="tag-pill tag-label">Login / Signup</span>
+                        </div>
+                        <a href="/auth-vani-xai" class="btn-visit">Open <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Activation Flow -->
+                <div class="sitemap-card" data-keywords="activation sovereign key verification pass code email key">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #6366f1, #a855f7);">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Sovereign Key Activation</h3>
+                            <span class="card-route">/activation-vaniXai</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Zero-lockout sovereign activation flow with automatic email dispatch, auto-fill keys, and security PIN initialization.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.85</span>
+                            <span class="tag-pill tag-label">Key Clearance</span>
+                        </div>
+                        <a href="/activation-vaniXai" class="btn-visit">Open <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- PIN Verification -->
+                <div class="sitemap-card" data-keywords="pin verification security code entry unlock">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Security PIN Portal</h3>
+                            <span class="card-route">/pin-vaniXai.html</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Four-digit secondary PIN entry safeguarding encrypted sovereign partitions and personal AI workspaces.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.80</span>
+                            <span class="tag-pill tag-label">PIN Vault</span>
+                        </div>
+                        <a href="/pin-vaniXai.html" class="btn-visit">Open <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Pricing & Membership -->
+                <div class="sitemap-card" data-keywords="premium pricing membership subscription clearance tiers">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #d946ef, #7c3aed);">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Sovereign Membership</h3>
+                            <span class="card-route">/premium.html</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Enterprise clearance tiers, unlimited Quantum Beam transfers, and dedicated GPU neural compute quotas.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.80</span>
+                            <span class="tag-pill tag-label">Clearance Plans</span>
+                        </div>
+                        <a href="/premium.html" class="btn-visit">Open <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Documentation, Legal & Leadership -->
+        <section class="category-section" data-category="docs">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <h2 class="section-title">Knowledge, Legal &amp; Leadership</h2>
+                <span class="section-count">5 Resources</span>
+            </div>
+
+            <div class="cards-grid">
+                <!-- FAQs -->
+                <div class="sitemap-card" data-keywords="faq frequently asked questions help answers troubleshooting">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #f59e0b, #ea580c);">
+                            <i class="fa-solid fa-circle-question"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Frequently Asked Questions</h3>
+                            <span class="card-route">/faq</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Answers to common inquiries regarding privacy, model intelligence, Quantum Beam setup, and account keys.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.80</span>
+                            <span class="tag-pill tag-label">Knowledgebase</span>
+                        </div>
+                        <a href="/faq" class="btn-visit">Read <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- About Founder -->
+                <div class="sitemap-card" data-keywords="about founder creator dhruv sagar vision biography">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">About Founder</h3>
+                            <span class="card-route">/about-founder</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">The founder's journey, philosophical inspirations, and technical roadmaps shaping the VANI-xAI universe.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.85</span>
+                            <span class="tag-pill tag-label">Leadership</span>
+                        </div>
+                        <a href="/about-founder" class="btn-visit">Read <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Privacy Policy -->
+                <div class="sitemap-card" data-keywords="privacy policy data security sovereign local storage encryption">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Privacy Policy</h3>
+                            <span class="card-route">/privacy</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Commitment to privacy, local storage sovereignty on user devices, and zero data leakage to external third parties.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.80</span>
+                            <span class="tag-pill tag-label">Data Privacy</span>
+                        </div>
+                        <a href="/privacy" class="btn-visit">Read <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="sitemap-card" data-keywords="terms conditions agreement legal license usage">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #64748b, #475569);">
+                            <i class="fa-solid fa-file-contract"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Terms &amp; Conditions</h3>
+                            <span class="card-route">/terms</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Terms of service governing platform utilization, peer-to-peer transmissions, and sovereign access rights.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.75</span>
+                            <span class="tag-pill tag-label">Legal Agreement</span>
+                        </div>
+                        <a href="/terms" class="btn-visit">Read <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Official Publications Blog -->
+                <div class="sitemap-card" data-keywords="blog publications news updates articles tutorials">
+                    <div class="card-top">
+                        <div class="card-icon-box" style="background: linear-gradient(135deg, #ea580c, #dc2626);">
+                            <i class="fa-brands fa-blogger"></i>
+                        </div>
+                        <div class="card-heading">
+                            <h3 class="card-title">Official VANI Blog</h3>
+                            <span class="card-route">vani-xin.blogspot.com</span>
+                        </div>
+                    </div>
+                    <p class="card-desc">Official engineering blogs, tutorials, feature release announcements, and research insights.</p>
+                    <div class="card-footer">
+                        <div class="card-tags">
+                            <span class="tag-pill tag-priority-med"><i class="fa-solid fa-circle-dot"></i> 0.80</span>
+                            <span class="tag-pill tag-label">Publications</span>
+                        </div>
+                        <a href="https://vani-xin.blogspot.com/" target="_blank" class="btn-visit">Open <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <p>
+                <strong>VANI-xAI</strong> &bull; Vāṇī Adhyātmik Navīn Intellect &bull; Bureau of V.A.N.I-xAI &bull; Architected by Dhruv Sagar.
+            </p>
+            <p style="margin-top: 8px;">
+                <a href="/">Home</a> &bull;
+                <a href="/sitemap.xml">XML Sitemap</a> &bull;
+                <a href="/connect-with-us">Connect With Us</a> &bull;
+                <a href="/about">About</a> &bull;
+                <a href="/privacy">Privacy</a> &bull;
+                <a href="/terms">Terms</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Live Search & Filtering Script -->
+    <script>
+        let currentTab = 'all';
+
+        function filterDirectory() {
+            const query = document.getElementById('directorySearch').value.toLowerCase().trim();
+            const sections = document.querySelectorAll('.category-section');
+            let totalVisible = 0;
+
+            sections.forEach(sec => {
+                const secCategory = sec.getAttribute('data-category');
+                const matchesTab = (currentTab === 'all' || currentTab === secCategory);
+                const cards = sec.querySelectorAll('.sitemap-card');
+                let secVisibleCards = 0;
+
+                cards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+                    const matchesQuery = !query || text.includes(query) || keywords.includes(query);
+
+                    if (matchesTab && matchesQuery) {
+                        card.style.display = 'flex';
+                        secVisibleCards++;
+                        totalVisible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (secVisibleCards > 0) {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+
+            const noResults = document.getElementById('noResults');
+            if (totalVisible === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        function selectTab(category, btn) {
+            currentTab = category;
+            document.querySelectorAll('.tab-chip').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            filterDirectory();
+        }
+    </script>
+</body>
+
+</html>
