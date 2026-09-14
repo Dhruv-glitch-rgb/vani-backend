@@ -26,6 +26,8 @@ const BUFFER_LIMIT = 256 * 1024; // 256KB flow control threshold
 // Device identification
 const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent);
 const myDeviceId = 'NODE-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+let connectedPeerVaniUid = null;
+let connectedPeerLabel = null;
 
 // Resolve user ID: default to stored real user or guest until auth resolves
 let myVaniUid = localStorage.getItem('vani_user_uid') || 
@@ -513,8 +515,8 @@ async function sendQuickNote() {
         addSentFileToGallery(sentRecord);
         await saveToVaultIndexedDb('sent_files', sentRecord, new Blob([noteText], { type: 'text/plain' }));
 
-        // Archive to backend
-        archiveToSovereignDrive(`${noteTitle}.txt`, new Blob([noteText], { type: 'text/plain' }));
+        // Archive to backend E:\BoVxAi DB user-to-user storage
+        archiveToSovereignDrive(`${noteTitle}.txt`, new Blob([noteText], { type: 'text/plain' }), myVaniUid, connectedPeerVaniUid, 'sent', null, 'quick-note');
 
         // Clear note input
         elQuickNoteTextarea.value = '';
@@ -839,9 +841,19 @@ function setupDataChannel(channel) {
     const onChannelOpen = () => {
         console.log("[Quantum Beam] DataChannel OPEN & READY FOR TRANSFER");
         isChannelOpen = true;
-        updatePeerListUI(true);
+        updatePeerListUI(true, connectedPeerVaniUid, connectedPeerLabel);
         updatePeerStatusBadge('connected');
         playBeamSound('connect');
+        // Exchange peer identity for sovereign user-to-user storage
+        try {
+            if (dataChannel && dataChannel.readyState === 'open') {
+                dataChannel.send(JSON.stringify({
+                    type: 'peer-identity',
+                    vaniUid: myVaniUid,
+                    deviceLabel: isMobile ? 'Mobile Station' : 'Desktop Station'
+                }));
+            }
+        } catch (e) {}
     };
 
     dataChannel.onopen = onChannelOpen;
@@ -883,9 +895,11 @@ function updatePeerStatusBadge(state) {
     }
 }
 
-function updatePeerListUI(connected) {
+function updatePeerListUI(connected, peerUid = null, label = null) {
     if (connected) {
         if (elPeerCount) elPeerCount.textContent = '1';
+        const displayLabel = label || connectedPeerLabel || (isMobile ? 'Desktop Station' : 'Mobile Node');
+        const displayUid = peerUid || connectedPeerVaniUid || 'P2P Encrypted DataChannel Linked';
         if (elPeersList) {
             elPeersList.innerHTML = `
                 <div class="peer-item active">
@@ -894,15 +908,17 @@ function updatePeerListUI(connected) {
                             <i class="fa-solid ${isMobile ? 'fa-laptop' : 'fa-mobile-screen-button'}"></i>
                         </div>
                         <div>
-                            <div class="peer-name">${isMobile ? 'Desktop Station' : 'Mobile Node'}</div>
-                            <div class="peer-uid">P2P Encrypted DataChannel Linked</div>
+                            <div class="peer-name">${displayLabel}</div>
+                            <div class="peer-uid" style="font-family:'Fira Code',monospace; font-size:0.75rem; color:var(--accent-cyan);">${displayUid}</div>
                         </div>
                     </div>
-                    <div class="peer-status-dot" title="Active"></div>
+                    <div class="peer-status-dot" title="Active Sovereign P2P Channel"></div>
                 </div>
             `;
         }
     } else {
+        connectedPeerVaniUid = null;
+        connectedPeerLabel = null;
         if (elPeerCount) elPeerCount.textContent = '0';
         if (elPeersList) {
             elPeersList.innerHTML = `
@@ -1345,7 +1361,7 @@ async function startBeamTransfer() {
         };
         addSentFileToGallery(sentRecord);
         await saveToVaultIndexedDb('sent_files', sentRecord, file);
-        archiveToSovereignDrive(file.name, file);
+        archiveToSovereignDrive(file.name, file, myVaniUid, connectedPeerVaniUid, 'sent', sha256, 'file');
 
         // Small yield between batch files
         await new Promise(r => setTimeout(r, 60));
@@ -1453,24 +1469,45 @@ async function handleIncomingData(data) {
         try {
             const parsed = JSON.parse(data);
 
-            if (parsed.type === 'quick-note') {
+            if (parsed.type === 'peer-identity') {
+                connectedPeerVaniUid = parsed.vaniUid || 'V.A.N.I-xAI-PEER';
+                connectedPeerLabel = parsed.deviceLabel || (isMobile ? 'Desktop Station' : 'Mobile Node');
+                console.log("[Quantum Beam] Peer identity linked:", connectedPeerVaniUid, connectedPeerLabel);
+                updatePeerListUI(true, connectedPeerVaniUid, connectedPeerLabel);
+                try {
+                    dataChannel.send(JSON.stringify({
+                        type: 'peer-identity-ack',
+                        vaniUid: myVaniUid,
+                        deviceLabel: isMobile ? 'Mobile Station' : 'Desktop Station'
+                    }));
+                } catch (e) {}
+                return;
+            } else if (parsed.type === 'peer-identity-ack') {
+                connectedPeerVaniUid = parsed.vaniUid || 'V.A.N.I-xAI-PEER';
+                connectedPeerLabel = parsed.deviceLabel || (isMobile ? 'Desktop Station' : 'Mobile Node');
+                console.log("[Quantum Beam] Peer identity ACK received:", connectedPeerVaniUid);
+                updatePeerListUI(true, connectedPeerVaniUid, connectedPeerLabel);
+                return;
+            } else if (parsed.type === 'quick-note') {
                 // Incoming text note packet
                 playBeamSound('note_received');
+                const sender = parsed.senderUid || connectedPeerVaniUid || 'Peer-Node';
                 const noteRecord = {
                     id: parsed.id || ('note_' + Date.now()),
                     filename: `${parsed.title}.txt`,
                     isNote: true,
                     noteTitle: parsed.title,
                     noteContent: parsed.content,
+                    senderUid: sender,
                     size_bytes: parsed.size_bytes || new Blob([parsed.content]).size,
                     timestamp: parsed.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    stored_path: `E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\${parsed.title}.txt`,
+                    stored_path: `E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\received\\${parsed.title}.txt`,
                     blobUrl: URL.createObjectURL(new Blob([parsed.content], { type: 'text/plain;charset=utf-8' }))
                 };
 
                 addReceivedFileToGallery(noteRecord);
                 await saveToVaultIndexedDb('received_files', noteRecord, new Blob([parsed.content], { type: 'text/plain' }));
-                archiveToSovereignDrive(`${parsed.title}.txt`, new Blob([parsed.content], { type: 'text/plain' }));
+                archiveToSovereignDrive(`${parsed.title}.txt`, new Blob([parsed.content], { type: 'text/plain' }), sender, myVaniUid, 'received', null, 'quick-note');
                 switchBeamVaultTab('received');
 
             } else if (parsed.type === 'file-start' || parsed.type === 'file-meta') {
@@ -1578,10 +1615,11 @@ async function finalizeIncomingFile(endPacket) {
     playBeamSound('beam_complete');
 
     // Auto-archive to backend Sovereign Database (E:\BoVxAi DB)
-    let savedPath = `E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\${meta.fileName}`;
+    let savedPath = `E:\\BoVxAi DB\\${myVaniUid}\\beam_media\\received\\${meta.fileName}`;
     if (elAutoArchive && elAutoArchive.checked) {
         try {
-            const uploadRes = await archiveToSovereignDrive(meta.fileName, blob);
+            const sender = meta.senderUid || connectedPeerVaniUid || 'Peer-Node';
+            const uploadRes = await archiveToSovereignDrive(meta.fileName, blob, sender, myVaniUid, 'received', computedSha, 'file');
             if (uploadRes && uploadRes.stored_path) {
                 savedPath = uploadRes.stored_path;
             }
@@ -1597,7 +1635,8 @@ async function finalizeIncomingFile(endPacket) {
         blobUrl: blobUrl,
         stored_path: savedPath,
         sha256: computedSha,
-        shaVerified: shaVerified
+        shaVerified: shaVerified,
+        senderUid: meta.senderUid || connectedPeerVaniUid || 'Peer-Node'
     };
 
     // Cache into browser IndexedDB so it's permanent on this device
@@ -1623,23 +1662,36 @@ async function finalizeIncomingFile(endPacket) {
     }, 4500);
 }
 
-// Upload file to backend E:\BoVxAi DB
-async function archiveToSovereignDrive(filename, blob) {
-    if (!myVaniUid || myVaniUid.includes('SOVEREIGN') || myVaniUid.includes('GUEST')) return null;
+// Upload file to backend E:\BoVxAi DB with User-to-User Partitioning & Audit
+async function archiveToSovereignDrive(filename, blob, senderUid = null, receiverUid = null, direction = 'received', sha256 = null, transferType = 'file') {
+    const sender = senderUid || myVaniUid || 'V.A.N.I-xAI-DHRU-2026';
+    const receiver = receiverUid || connectedPeerVaniUid || myVaniUid;
 
     const endpoints = [
+        '/api/beam/record-transfer',
         '/api/storage/upload',
+        'http://127.0.0.1:5000/api/beam/record-transfer',
+        'http://localhost:5000/api/beam/record-transfer',
         'http://127.0.0.1:5000/api/storage/upload',
         'http://localhost:5000/api/storage/upload'
     ];
-    if (BACKEND_BASE) endpoints.push(`${BACKEND_BASE}/api/storage/upload`);
+    if (BACKEND_BASE) {
+        endpoints.push(`${BACKEND_BASE}/api/beam/record-transfer`);
+        endpoints.push(`${BACKEND_BASE}/api/storage/upload`);
+    }
 
     for (const ep of endpoints) {
         try {
             const formData = new FormData();
+            formData.append('sender_id', sender);
+            formData.append('receiver_id', receiver);
             formData.append('user_id', myVaniUid);
             formData.append('category', 'beam_media');
             formData.append('filename', filename);
+            formData.append('direction', direction);
+            formData.append('type', transferType);
+            if (sha256) formData.append('sha256', sha256);
+            if (currentOtpc) formData.append('session_id', currentOtpc);
             formData.append('file', blob, filename);
 
             const resp = await fetch(ep, {
@@ -1648,7 +1700,7 @@ async function archiveToSovereignDrive(filename, blob) {
             });
             if (resp.ok) {
                 const res = await resp.json();
-                console.log("[BoVxAi DB] Stored into real user sovereign drive:", res);
+                console.log("[BoVxAi DB] User-to-User Quantum Beam stored in E:\\BoVxAi DB:", res);
                 return res;
             }
         } catch (e) {}

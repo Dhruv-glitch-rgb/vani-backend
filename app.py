@@ -950,6 +950,81 @@ def sync_all_users_storage_endpoint():
     res = bovxai_db_manager.auto_provision_all_users(user_ids)
     return jsonify(res)
 
+@app.route('/api/beam/record-transfer', methods=['POST'])
+def record_beam_transfer_endpoint():
+    """
+    Saves User-to-User Quantum Beam shared data directly to E:\\BoVxAi DB\\
+    Supports files, notes, and audits with sender, receiver, and bit-integrity hashes.
+    """
+    try:
+        sender_id = request.headers.get('X-Vani-Sender') or request.form.get('sender_id')
+        receiver_id = request.headers.get('X-Vani-Receiver') or request.form.get('receiver_id')
+        filename = request.form.get('filename')
+        direction = request.form.get('direction', 'received')
+        transfer_type = request.form.get('type', 'file')
+        sha256_hash = request.form.get('sha256')
+        session_id = request.form.get('session_id')
+
+        binary_data = None
+
+        if 'file' in request.files:
+            file_obj = request.files['file']
+            filename = filename or file_obj.filename or 'beam_asset'
+            binary_data = file_obj.read()
+        else:
+            json_data = request.get_json(silent=True) or {}
+            sender_id = sender_id or json_data.get('sender_id')
+            receiver_id = receiver_id or json_data.get('receiver_id')
+            filename = filename or json_data.get('filename', 'beam_asset')
+            direction = json_data.get('direction', direction)
+            transfer_type = json_data.get('type', transfer_type)
+            sha256_hash = sha256_hash or json_data.get('sha256')
+            session_id = session_id or json_data.get('session_id')
+
+            if 'content' in json_data:
+                binary_data = str(json_data['content']).encode('utf-8')
+            elif 'base64_data' in json_data:
+                b64 = json_data['base64_data']
+                if ',' in b64:
+                    b64 = b64.split(',', 1)[1]
+                binary_data = base64.b64decode(b64)
+
+        if not binary_data:
+            return api_error_response('BAD_REQUEST', "No file binary or content provided for transfer.", 400)
+
+        res = bovxai_db_manager.save_quantum_beam_transfer(
+            sender_id=sender_id,
+            receiver_id=receiver_id,
+            filename=filename,
+            binary_data=binary_data,
+            transfer_type=transfer_type,
+            sha256_hash=sha256_hash,
+            session_id=session_id,
+            direction=direction
+        )
+        return jsonify(res)
+    except Exception as e:
+        return api_error_response('INTERNAL_SERVER_ERROR', f"Failed to record beam transfer in E:\\BoVxAi DB: {str(e)}", 500)
+
+@app.route('/api/beam/transfers/<user_id>', methods=['GET'])
+def get_user_beam_transfers_endpoint(user_id):
+    """
+    Returns user-to-user Quantum Beam transfer history from E:\\BoVxAi DB\\<USER_ID>\\beam_media\\transfers_history.json
+    """
+    limit = int(request.args.get('limit', 50))
+    transfers = bovxai_db_manager.get_user_beam_transfers(user_id, limit=limit)
+    return jsonify({'success': True, 'user_id': user_id, 'transfers': transfers})
+
+@app.route('/api/beam/ledger', methods=['GET'])
+def get_quantum_beam_ledger_endpoint():
+    """
+    Returns the central Quantum Beam audit ledger from E:\\BoVxAi DB\\quantum_beam_ledger.json
+    """
+    limit = int(request.args.get('limit', 100))
+    ledger = bovxai_db_manager.get_quantum_beam_ledger(limit=limit)
+    return jsonify({'success': True, 'ledger': ledger, 'total': len(ledger)})
+
+
 # ----------------------------------------------------
 # QUANTUM BEAM LOCAL P2P SIGNALING (OFFLINE / LAN)
 # ----------------------------------------------------

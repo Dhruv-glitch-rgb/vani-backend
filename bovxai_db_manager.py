@@ -417,3 +417,190 @@ def auto_provision_all_users(user_ids=None):
         "users": [p["user_id"] for p in provisioned],
         "timestamp": datetime.now().isoformat()
     }
+
+def save_quantum_beam_transfer(sender_id, receiver_id, filename, binary_data, transfer_type='file', sha256_hash=None, session_id=None, direction='received'):
+    """
+    Sovereign User-to-User Quantum Beam Storage:
+    Stores files and text notes shared via Quantum Beam in E:\\BoVxAi DB\\
+    - Partitions files under:
+        E:\\BoVxAi DB\\<USER_ID>\\beam_media\\received\\<filename>
+        E:\\BoVxAi DB\\<USER_ID>\\beam_media\\sent\\<filename>
+        E:\\BoVxAi DB\\<USER_ID>\\beam_media\\<filename> (root category link)
+    - Logs to:
+        E:\\BoVxAi DB\\<USER_ID>\\beam_media\\transfers_history.json
+        E:\\BoVxAi DB\\quantum_beam_ledger.json (Central Ledger)
+    - Updates metadata.json stats
+    """
+    if not filename or not binary_data:
+        return {"success": False, "error": "Filename and binary data required"}
+
+    # Fallback to default real user if UID cannot be sanitized
+    safe_sender = sanitize_user_id(sender_id) or "V.A.N.I-xAI-DHRU-2026"
+    safe_receiver = sanitize_user_id(receiver_id) or "V.A.N.I-xAI-DHRU-2026"
+
+    # Compute SHA-256 if not provided
+    if not sha256_hash:
+        import hashlib
+        sha256_hash = hashlib.sha256(binary_data).hexdigest()
+
+    file_size = len(binary_data)
+    clean_name = os.path.basename(filename or "beam_asset")
+    clean_name = re.sub(r'[<>:"/\\|?*]', '_', clean_name)
+    now_iso = datetime.now().isoformat()
+    transfer_id = f"BEAM-{int(time.time())}-{re.sub(r'[^A-Za-z0-9]', '', clean_name)[:8]}"
+
+    stored_entries = []
+
+    # Determine which users to save for
+    users_to_update = []
+    if direction == 'sent':
+        users_to_update.append((safe_sender, 'sent', safe_receiver))
+        if safe_receiver != safe_sender and sanitize_user_id(receiver_id):
+            users_to_update.append((safe_receiver, 'received', safe_sender))
+    else:
+        users_to_update.append((safe_receiver, 'received', safe_sender))
+        if safe_sender != safe_receiver and sanitize_user_id(sender_id):
+            users_to_update.append((safe_sender, 'sent', safe_receiver))
+
+    for (target_uid, dir_label, peer_uid) in users_to_update:
+        user_path = get_user_dir(target_uid)
+        if not user_path:
+            continue
+
+        beam_dir = os.path.join(user_path, 'beam_media')
+        dir_subdir = os.path.join(beam_dir, dir_label)
+        os.makedirs(dir_subdir, exist_ok=True)
+
+        target_file_path = os.path.join(dir_subdir, clean_name)
+        with open(target_file_path, "wb") as f:
+            f.write(binary_data)
+
+        # Also save in root beam_media for seamless backwards compatibility with UI
+        root_file_path = os.path.join(beam_dir, clean_name)
+        try:
+            with open(root_file_path, "wb") as f:
+                f.write(binary_data)
+        except Exception:
+            pass
+
+        # Update transfers_history.json in user's beam_media folder
+        history_path = os.path.join(beam_dir, "transfers_history.json")
+        history = []
+        if os.path.exists(history_path):
+            try:
+                with open(history_path, "r", encoding="utf-8") as hf:
+                    history = json.load(hf)
+            except Exception:
+                history = []
+
+        transfer_record = {
+            "transfer_id": transfer_id,
+            "filename": clean_name,
+            "type": transfer_type,
+            "direction": dir_label,
+            "user_id": target_uid,
+            "peer_id": peer_uid,
+            "sender_id": safe_sender,
+            "receiver_id": safe_receiver,
+            "size_bytes": file_size,
+            "sha256": sha256_hash,
+            "timestamp": now_iso,
+            "stored_path": target_file_path,
+            "session_id": session_id
+        }
+        history.insert(0, transfer_record)
+        try:
+            with open(history_path, "w", encoding="utf-8") as hf:
+                json.dump(history[:500], hf, indent=2)
+        except Exception:
+            pass
+
+        # Update user metadata.json
+        meta_path = os.path.join(user_path, "metadata.json")
+        try:
+            if os.path.exists(meta_path):
+                with open(meta_path, "r", encoding="utf-8") as mf:
+                    meta = json.load(mf)
+            else:
+                meta = {"created_at": now_iso, "file_counts": {}}
+            meta["last_active"] = now_iso
+            meta["total_bytes"] = meta.get("total_bytes", 0) + file_size
+            f_counts = meta.get("file_counts", {})
+            f_counts["beam_media"] = f_counts.get("beam_media", 0) + 1
+            meta["file_counts"] = f_counts
+            with open(meta_path, "w", encoding="utf-8") as mf:
+                json.dump(meta, mf, indent=2)
+        except Exception:
+            pass
+
+        stored_entries.append(transfer_record)
+
+    # Append to Central Bureau Ledger E:\BoVxAi DB\quantum_beam_ledger.json
+    base_dir = get_base_storage_dir()
+    global_ledger_path = os.path.join(base_dir, "quantum_beam_ledger.json")
+    try:
+        ledger = []
+        if os.path.exists(global_ledger_path):
+            with open(global_ledger_path, "r", encoding="utf-8") as gf:
+                ledger = json.load(gf)
+        ledger.insert(0, {
+            "transfer_id": transfer_id,
+            "filename": clean_name,
+            "type": transfer_type,
+            "sender": safe_sender,
+            "receiver": safe_receiver,
+            "size_bytes": file_size,
+            "sha256": sha256_hash,
+            "timestamp": now_iso,
+            "session_id": session_id
+        })
+        with open(global_ledger_path, "w", encoding="utf-8") as gf:
+            json.dump(ledger[:1000], gf, indent=2)
+    except Exception:
+        pass
+
+    return {
+        "success": True,
+        "transfer_id": transfer_id,
+        "filename": clean_name,
+        "sender_id": safe_sender,
+        "receiver_id": safe_receiver,
+        "size_bytes": file_size,
+        "sha256": sha256_hash,
+        "stored_entries": stored_entries,
+        "timestamp": now_iso
+    }
+
+def get_user_beam_transfers(user_id, limit=50):
+    """
+    Returns user-to-user Quantum Beam transfer history from E:\\BoVxAi DB\\<USER_ID>\\beam_media\\transfers_history.json
+    """
+    safe_uid = sanitize_user_id(user_id) or "V.A.N.I-xAI-DHRU-2026"
+    user_path = get_user_dir(safe_uid)
+    if not user_path:
+        return []
+    history_path = os.path.join(user_path, 'beam_media', 'transfers_history.json')
+    if os.path.exists(history_path):
+        try:
+            with open(history_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data[:limit]
+        except Exception:
+            return []
+    return []
+
+def get_quantum_beam_ledger(limit=100):
+    """
+    Returns the central sovereign Quantum Beam ledger from E:\\BoVxAi DB\\quantum_beam_ledger.json
+    """
+    base_dir = get_base_storage_dir()
+    ledger_path = os.path.join(base_dir, "quantum_beam_ledger.json")
+    if os.path.exists(ledger_path):
+        try:
+            with open(ledger_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data[:limit]
+        except Exception:
+            return []
+    return []
+
