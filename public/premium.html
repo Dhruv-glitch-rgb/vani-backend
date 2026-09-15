@@ -1374,14 +1374,15 @@
             }
         }
 
-        // Direct Key Redemption Logic
+        // Direct Key Redemption Logic (Case-Insensitive & Whitespace-Resilient)
         async function handleRedeemKey() {
             const keyInput = document.getElementById('manualActivationKey');
-            const key = keyInput.value.trim().toUpperCase();
+            const rawKey = keyInput ? keyInput.value : '';
+            const cleanKey = rawKey.replace(/\s+/g, '').trim();
             const statusBox = document.getElementById('redeemStatus');
             const btnRedeem = document.getElementById('btnRedeemKey');
 
-            if (!key || key.length < 8) {
+            if (!cleanKey || cleanKey.length < 8) {
                 statusBox.className = 'form-alert error';
                 statusBox.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please enter a valid activation key.';
                 statusBox.style.display = 'flex';
@@ -1389,8 +1390,9 @@
             }
 
             if (!currentUser) {
-                alert("Please log in first to bind this activation key to your account.");
-                window.location.href = '/auth-vani-xai.html?redirect=/premium.html';
+                localStorage.setItem('pending_redeem_key', cleanKey);
+                alert("Please log in with Google to bind this activation key to your account.");
+                window.location.href = '/auth-vani-xai.html?redirect=' + encodeURIComponent(window.location.pathname + '#redeem');
                 return;
             }
 
@@ -1399,8 +1401,50 @@
             statusBox.style.display = 'none';
 
             try {
-                const keyDoc = await db.collection('activation_keys').doc(key).get();
-                if (!keyDoc.exists) {
+                let keyDoc = null;
+                let matchedDocId = cleanKey;
+
+                // Attempt 1: Direct document get with cleanKey
+                let snap = await db.collection('activation_keys').doc(cleanKey).get();
+                if (snap.exists) {
+                    keyDoc = snap;
+                    matchedDocId = cleanKey;
+                }
+
+                // Attempt 2: Standard Bureau casing (V.A.N.I-xAI-)
+                if (!keyDoc) {
+                    const withLowerX = cleanKey.replace(/V\.?A\.?N\.?I-XAI/i, 'V.A.N.I-xAI');
+                    snap = await db.collection('activation_keys').doc(withLowerX).get();
+                    if (snap.exists) {
+                        keyDoc = snap;
+                        matchedDocId = withLowerX;
+                    }
+                }
+
+                // Attempt 3: All-uppercase
+                if (!keyDoc) {
+                    const allUpper = cleanKey.toUpperCase();
+                    snap = await db.collection('activation_keys').doc(allUpper).get();
+                    if (snap.exists) {
+                        keyDoc = snap;
+                        matchedDocId = allUpper;
+                    }
+                }
+
+                // Attempt 4: Scan collection case-insensitively & normalized
+                if (!keyDoc) {
+                    const normTarget = cleanKey.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    const allKeys = await db.collection('activation_keys').get();
+                    allKeys.forEach(d => {
+                        const normId = d.id.toLowerCase().replace(/[^a-z0-9]/g, '');
+                        if (normId === normTarget) {
+                            keyDoc = d;
+                            matchedDocId = d.id;
+                        }
+                    });
+                }
+
+                if (!keyDoc || !keyDoc.exists) {
                     statusBox.className = 'form-alert error';
                     statusBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Invalid activation key. Please double check and try again.';
                     statusBox.style.display = 'flex';
@@ -1415,34 +1459,35 @@
                     return;
                 }
 
-                const months = keyData.months || 1;
+                const months = keyData.months || 3;
                 const planName = keyData.planName || 'BoVxAi Pro';
                 const expireDate = new Date();
                 expireDate.setMonth(expireDate.getMonth() + months);
 
                 // Update User record
-                await db.collection('users').doc(currentUser.uid).update({
+                await db.collection('users').doc(currentUser.uid).set({
                     isPremium: true,
                     planName: planName,
                     premiumExpiry: firebase.firestore.Timestamp.fromDate(expireDate),
-                    activeActivationKey: key,
+                    activeActivationKey: matchedDocId,
                     premiumActivatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                }, { merge: true });
 
-                // Mark key used
-                await db.collection('activation_keys').doc(key).update({
+                // Mark key used (both exact doc and uppercase if exists)
+                await db.collection('activation_keys').doc(matchedDocId).update({
                     isUsed: true,
                     usedBy: currentUser.uid,
                     usedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
+                localStorage.removeItem('pending_redeem_key');
                 statusBox.className = 'form-alert success';
-                statusBox.innerHTML = `✓ Congratulations! ${planName} unlocked until ${expireDate.toLocaleDateString()}! Reloading...`;
+                statusBox.innerHTML = `✓ Congratulations! ${planName} unlocked until ${expireDate.toLocaleDateString()}! Reloading workspace...`;
                 statusBox.style.display = 'flex';
 
                 setTimeout(() => {
                     window.location.href = '/more_bovxai.html';
-                }, 2000);
+                }, 1800);
 
             } catch (err) {
                 console.error("Key redeem error:", err);

@@ -395,14 +395,18 @@
                 expireDate.setMonth(expireDate.getMonth() + (months || 1));
                 const expireDateStr = expireDate.toLocaleDateString();
 
-                // 2. Save Key to Database
-                await db.collection('activation_keys').doc(activationKey).set({
+                // 2. Save Key to Database (both exact and uppercase for maximum cross-compatibility)
+                const keyPayload = {
                     userId: userId || 'unknown',
                     months: months || 1,
                     planName: planName || 'Unknown',
                     generatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     isUsed: false
-                });
+                };
+                await db.collection('activation_keys').doc(activationKey).set(keyPayload);
+                if (activationKey.toUpperCase() !== activationKey) {
+                    await db.collection('activation_keys').doc(activationKey.toUpperCase()).set(keyPayload);
+                }
 
                 // Directly update user account to Premium in Firestore
                 if (userId && userId !== 'unknown' && !userId.startsWith('guest_')) {
