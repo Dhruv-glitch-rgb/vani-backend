@@ -1431,7 +1431,7 @@
                     }
                 }
 
-                // Attempt 4: Scan collection case-insensitively & normalized
+                // Attempt 4: Scan activation_keys collection case-insensitively & normalized
                 if (!keyDoc) {
                     const normTarget = cleanKey.toLowerCase().replace(/[^a-z0-9]/g, '');
                     const allKeys = await db.collection('activation_keys').get();
@@ -1440,6 +1440,31 @@
                         if (normId === normTarget) {
                             keyDoc = d;
                             matchedDocId = d.id;
+                        }
+                    });
+                }
+
+                // Attempt 5: Cross-check against admin-approved requests in premium_requests
+                let matchedRequestDoc = null;
+                if (!keyDoc) {
+                    const normTarget = cleanKey.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    const reqSnap = await db.collection('premium_requests').get();
+                    reqSnap.forEach(d => {
+                        const rData = d.data();
+                        const rawReqKey = (rData.activationKey || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                        if (rawReqKey && rawReqKey === normTarget) {
+                            matchedDocId = rData.activationKey || cleanKey;
+                            matchedRequestDoc = d;
+                            keyDoc = {
+                                exists: true,
+                                data: () => ({
+                                    planName: rData.planName || 'BoVxAi Pro',
+                                    months: rData.monthsRequested || 3,
+                                    isUsed: rData.status === 'redeemed' && rData.redeemedBy && rData.redeemedBy !== currentUser.uid,
+                                    userId: rData.userId,
+                                    userEmail: rData.userEmail
+                                })
+                            };
                         }
                     });
                 }
@@ -1473,12 +1498,25 @@
                     premiumActivatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
-                // Mark key used (both exact doc and uppercase if exists)
-                await db.collection('activation_keys').doc(matchedDocId).update({
+                // Mark key used in activation_keys (safe set with merge)
+                await db.collection('activation_keys').doc(matchedDocId).set({
+                    key: matchedDocId,
+                    activationKey: matchedDocId,
+                    planName: planName,
+                    months: months,
                     isUsed: true,
                     usedBy: currentUser.uid,
                     usedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                }, { merge: true });
+
+                // If matched via premium_requests, also mark the request document as redeemed
+                if (matchedRequestDoc && matchedRequestDoc.ref) {
+                    matchedRequestDoc.ref.update({
+                        status: 'redeemed',
+                        redeemedBy: currentUser.uid,
+                        redeemedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }).catch(console.warn);
+                }
 
                 localStorage.removeItem('pending_redeem_key');
                 statusBox.className = 'form-alert success';
