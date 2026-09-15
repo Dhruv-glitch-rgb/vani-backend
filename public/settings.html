@@ -854,6 +854,33 @@
                         </div>
                     </div>
 
+                    <!-- Unique V.A.N.I-xAI Verified Plan Clearance Module -->
+                    <div class="setting-card plan-clearance-card" id="planClearanceCard" style="margin-top: 18px; padding: 22px 24px; border-radius: 22px; background: #ffffff; border: 1.5px solid rgba(168, 85, 247, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #ec4899, #a855f7, #06b6d4);"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div id="verifiedSealIcon" style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #a855f7, #ec4899); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.4rem; box-shadow: 0 6px 18px rgba(168, 85, 247, 0.35); flex-shrink: 0;">
+                                    <i class="fa-solid fa-shield-check"></i>
+                                </div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                        <h4 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #0f172a;">V.A.N.I-xAI Verified Plan</h4>
+                                        <span id="planVerifiedTag" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">Loading Tag...</span>
+                                    </div>
+                                    <p id="planExpiryText" style="margin: 4px 0 0 0; font-size: 0.88rem; color: #64748b; line-height: 1.45;">Checking sovereign verification credentials...</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <a href="/more_bovxai.html" id="btnLaunchFromSettings" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff !important; padding: 9px 18px; border-radius: 12px; font-size: 0.84rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);">
+                                    <i class="fa-solid fa-rocket"></i> More BoVxAi
+                                </a>
+                                <a href="/premium.html" class="nav-cta-btn animate-hover-scale" style="background: rgba(245, 158, 11, 0.12); border: 1.5px solid rgba(245, 158, 11, 0.4); color: #b45309 !important; padding: 9px 18px; border-radius: 12px; font-size: 0.84rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 7px;">
+                                    <i class="fa-solid fa-crown"></i> Upgrades &amp; Plans
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Bureau Of V.A.N.I-xAI (BoVxAi) Sovereign ID Card Module -->
                     <div class="setting-card bovxai-id-card-wrapper" style="margin-top: 24px; padding: 24px; background: #ffffff; border-radius: 24px; border: 1.5px solid rgba(2, 132, 199, 0.22); box-shadow: 0 12px 36px rgba(2, 132, 199, 0.08);">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; border-bottom: 1.5px solid rgba(2, 132, 199, 0.1); padding-bottom: 16px;">
@@ -1508,6 +1535,10 @@
                     if (isUserAdmin && adminBtn) {
                         adminBtn.style.display = 'inline-flex';
                     }
+
+                    // Dynamically Render Unique V.A.N.I-xAI Verified Plan Badge
+                    renderUserVerifiedPlanBadge(userData, isUserAdmin);
+
                 } catch (e) {
                     console.error("Error fetching user details:", e);
                 }
@@ -1517,6 +1548,163 @@
                 window.location.href = '/auth-vani-xai.html';
             }
         });
+
+        // Dynamic V.A.N.I-xAI Unique Verified Badge & Clearance Renderer
+        function renderUserVerifiedPlanBadge(userData, isUserAdmin) {
+            const badgeEl = document.getElementById('premiumBadge');
+            const clearanceTag = document.getElementById('planVerifiedTag');
+            const expiryText = document.getElementById('planExpiryText');
+            const sealIcon = document.getElementById('verifiedSealIcon');
+            const cardStatusPill = document.querySelector('.bovxai-status-pill');
+
+            const now = new Date();
+            const hasExpiry = userData && userData.premiumExpiry && typeof userData.premiumExpiry.toDate === 'function';
+            const expiryDate = hasExpiry ? userData.premiumExpiry.toDate() : null;
+            const isExpired = expiryDate && expiryDate < now;
+            const isPremium = (userData && userData.isPremium === true) && !isExpired;
+            const planName = (userData && userData.planName) || '';
+
+            let config = {
+                title: 'Free Sovereign Citizen',
+                badgeHtml: '<i class="fa-solid fa-certificate"></i> Free Citizen',
+                tagHtml: '<i class="fa-solid fa-circle-check"></i> Sovereign Citizen &bull; Free Plan',
+                bg: 'linear-gradient(135deg, #059669, #0284c7)',
+                textColor: '#ffffff',
+                border: '1.5px solid rgba(16, 185, 129, 0.4)',
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.25)',
+                sealBg: 'linear-gradient(135deg, #059669, #0284c7)',
+                sealIcon: '<i class="fa-solid fa-shield"></i>',
+                cardPill: '<span class="status-pulse-dot" style="background:#10b981;"></span> ACTIVE CITIZEN',
+                desc: 'Access to indigenous core intelligence, Saras WebSearch, and personal storage partition.'
+            };
+
+            if (isUserAdmin) {
+                config = {
+                    title: 'Bureau Director · Supreme Clearance',
+                    badgeHtml: '<i class="fa-solid fa-crown" style="color: #fef08a;"></i> Verified Director',
+                    tagHtml: '<i class="fa-solid fa-shield-halved"></i> Bureau Director &bull; Supreme Clearance',
+                    bg: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #7c3aed 100%)',
+                    textColor: '#ffffff',
+                    border: '1.5px solid #f59e0b',
+                    boxShadow: '0 4px 20px rgba(245, 158, 11, 0.55)',
+                    sealBg: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+                    sealIcon: '<i class="fa-solid fa-crown"></i>',
+                    cardPill: '<span class="status-pulse-dot" style="background:#f59e0b;"></span> BUREAU DIRECTOR',
+                    desc: 'Supreme Bureau Administrative Clearance &bull; Permanent Sovereign Access to all AI Clusters.'
+                };
+            } else if (isPremium) {
+                const lower = planName.toLowerCase();
+                if (lower.includes('ultra') || lower.includes('sovereign')) {
+                    config = {
+                        title: 'BoVxAi Ultra · Sovereign Node',
+                        badgeHtml: '<i class="fa-solid fa-gem" style="color: #a7f3d0;"></i> Verified Ultra Sovereign',
+                        tagHtml: '<i class="fa-solid fa-circle-check"></i> BoVxAi Ultra &bull; Sovereign VIP Node',
+                        bg: 'linear-gradient(135deg, #06b6d4 0%, #10b981 50%, #2563eb 100%)',
+                        textColor: '#ffffff',
+                        border: '1.5px solid #06b6d4',
+                        boxShadow: '0 4px 20px rgba(6, 182, 212, 0.5)',
+                        sealBg: 'linear-gradient(135deg, #06b6d4, #10b981)',
+                        sealIcon: '<i class="fa-solid fa-gem"></i>',
+                        cardPill: '<span class="status-pulse-dot" style="background:#06b6d4;"></span> ULTRA VIP NODE',
+                        desc: `Unrestricted 4K multi-modal intelligence, continuous voice streaming &amp; zero queue priority. Valid until <strong>${expiryDate ? expiryDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Active'}</strong>.`
+                    };
+                } else if (lower.includes('pro')) {
+                    config = {
+                        title: 'BoVxAi Pro · Multi-Modal Scholar',
+                        badgeHtml: '<i class="fa-solid fa-bolt-lightning" style="color: #fbcfe8;"></i> Verified Pro Scholar',
+                        tagHtml: '<i class="fa-solid fa-circle-check"></i> BoVxAi Pro &bull; Multi-Modal Scholar',
+                        bg: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)',
+                        textColor: '#ffffff',
+                        border: '1.5px solid #c084fc',
+                        boxShadow: '0 4px 20px rgba(168, 85, 247, 0.5)',
+                        sealBg: 'linear-gradient(135deg, #a855f7, #ec4899)',
+                        sealIcon: '<i class="fa-solid fa-bolt-lightning"></i>',
+                        cardPill: '<span class="status-pulse-dot" style="background:#a855f7;"></span> PRO SCHOLAR',
+                        desc: `Unlimited acoustic voice assistant, 300 HD AI images, OCR &amp; YouTube video summaries. Valid until <strong>${expiryDate ? expiryDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Active'}</strong>.`
+                    };
+                } else if (lower.includes('lite') || lower.includes('starter')) {
+                    config = {
+                        title: 'BoVxAi Lite · Certified Learner',
+                        badgeHtml: '<i class="fa-solid fa-seedling" style="color: #fef08a;"></i> Verified Lite',
+                        tagHtml: '<i class="fa-solid fa-circle-check"></i> BoVxAi Lite &bull; Certified Learner',
+                        bg: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)',
+                        textColor: '#ffffff',
+                        border: '1.5px solid #fbbf24',
+                        boxShadow: '0 4px 18px rgba(245, 158, 11, 0.4)',
+                        sealBg: 'linear-gradient(135deg, #f59e0b, #ea580c)',
+                        sealIcon: '<i class="fa-solid fa-seedling"></i>',
+                        cardPill: '<span class="status-pulse-dot" style="background:#f59e0b;"></span> LITE NODE',
+                        desc: `50 AI Images / month, Voice Assistant (30m/day) &amp; YouTube video intelligence. Valid until <strong>${expiryDate ? expiryDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Active'}</strong>.`
+                    };
+                } else {
+                    config = {
+                        title: (planName || 'BoVxAi Premium') + ' Verified',
+                        badgeHtml: '<i class="fa-solid fa-star" style="color: #fde68a;"></i> Verified Premium',
+                        tagHtml: '<i class="fa-solid fa-circle-check"></i> ' + (planName || 'BoVxAi Premium'),
+                        bg: 'linear-gradient(135deg, #6366f1, #06b6d4)',
+                        textColor: '#ffffff',
+                        border: '1.5px solid #38bdf8',
+                        boxShadow: '0 4px 16px rgba(56, 189, 248, 0.4)',
+                        sealBg: 'linear-gradient(135deg, #6366f1, #06b6d4)',
+                        sealIcon: '<i class="fa-solid fa-star"></i>',
+                        cardPill: '<span class="status-pulse-dot" style="background:#38bdf8;"></span> PREMIUM NODE',
+                        desc: `Premium subscription active until <strong>${expiryDate ? expiryDate.toLocaleDateString('en-IN') : 'Active'}</strong>.`
+                    };
+                }
+            } else if (isExpired) {
+                config = {
+                    title: 'BoVxAi Subscription Expired',
+                    badgeHtml: '<i class="fa-solid fa-clock"></i> Plan Expired',
+                    tagHtml: '<i class="fa-solid fa-triangle-exclamation"></i> Subscription Expired &bull; Renew to Unlock',
+                    bg: 'linear-gradient(135deg, #64748b, #475569)',
+                    textColor: '#f1f5f9',
+                    border: '1.5px solid rgba(239, 68, 68, 0.5)',
+                    boxShadow: 'none',
+                    sealBg: 'linear-gradient(135deg, #64748b, #ef4444)',
+                    sealIcon: '<i class="fa-solid fa-triangle-exclamation"></i>',
+                    cardPill: '<span class="status-pulse-dot" style="background:#ef4444;"></span> EXPIRED NODE',
+                    desc: `Your previous subscription expired on ${expiryDate.toLocaleDateString('en-IN')}. Renew to re-activate More BoVxAi.`
+                };
+            }
+
+            // Apply to Header Badge
+            if (badgeEl) {
+                badgeEl.innerHTML = config.badgeHtml;
+                badgeEl.style.background = config.bg;
+                badgeEl.style.color = config.textColor;
+                badgeEl.style.border = config.border;
+                badgeEl.style.boxShadow = config.boxShadow;
+                badgeEl.title = config.title;
+                badgeEl.style.display = 'inline-flex';
+                badgeEl.style.alignItems = 'center';
+                badgeEl.style.gap = '6px';
+            }
+
+            // Apply to Clearance Tag
+            if (clearanceTag) {
+                clearanceTag.innerHTML = config.tagHtml;
+                clearanceTag.style.background = config.bg;
+                clearanceTag.style.color = config.textColor;
+                clearanceTag.style.border = config.border;
+                clearanceTag.style.boxShadow = config.boxShadow;
+            }
+
+            // Apply to Expiry / Description text
+            if (expiryText) {
+                expiryText.innerHTML = config.desc;
+            }
+
+            // Apply to Seal Icon
+            if (sealIcon) {
+                sealIcon.style.background = config.sealBg;
+                sealIcon.innerHTML = config.sealIcon;
+            }
+
+            // Update BoVxAi ID Card status pill
+            if (cardStatusPill) {
+                cardStatusPill.innerHTML = config.cardPill;
+            }
+        }
 
         async function fetchChatHistory(uid) {
             const listEl = document.getElementById('chatHistoryList');
