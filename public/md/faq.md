@@ -6,8 +6,8 @@
 ## 1. What is VANI-xAI?
 VANI-xAI (Vāṇī Adhyātmik Navīn Intellect) is an advanced AI assistant platform featuring zero-tab Saras.WebSearch, live voice synthesis, desktop automation, and multi-device Swarm intelligence.
 
-## 2. Is VANI-xAI free to use?
-Yes, VANI-xAI provides 100% free unlimited access to core capabilities, including Saras.WebSearch and local LLM orchestration.
+## 2. What are the subscription plans for VANI-xAI?
+VANI-xAI offers sovereign paid subscription plans starting from ₹99/mo (BoVxAi Lite, Pro, and Ultra) providing access to Saras.WebSearch, advanced voice synthesis, the More BoVxAi suite, and multi-device swarm mesh. Subscriptions are activated securely via UPI and instant redemption key verification at `/premium.html`.
 
 ## 3. How do voice commands work?
 Voice recognition uses the Web Speech API in the browser or local audio synthesis via the Python backend (`voice_agent.py`). Speak clearly or click the microphone button in the web console.

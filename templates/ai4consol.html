@@ -583,6 +583,33 @@
             background: #e0f2fe;
         }
 
+        .sidebar-addon-btn.beam-addon i {
+            color: #0284c7;
+        }
+
+        .sidebar-addon-btn.beam-addon:hover {
+            border-color: #bae6fd;
+            background: #e0f2fe;
+        }
+
+        .sidebar-addon-btn.vault-addon i {
+            color: #059669;
+        }
+
+        .sidebar-addon-btn.vault-addon:hover {
+            border-color: #a7f3d0;
+            background: #ecfdf5;
+        }
+
+        .sidebar-addon-btn.signout-addon i {
+            color: #ef4444;
+        }
+
+        .sidebar-addon-btn.signout-addon:hover {
+            border-color: #fecdd3;
+            background: #ffe4e6;
+        }
+
         .sidebar-addon-btn.home-addon i {
             color: #64748b;
         }
@@ -2093,8 +2120,8 @@
                                     2020</span>
                                 <span class="welcome-pill"><i class="fa-solid fa-robot"></i> Desktop GUI Agent</span>
                                 <span class="welcome-pill"><i class="fa-solid fa-satellite-dish"></i> Swarm Mesh</span>
-                                <span class="welcome-pill"><i class="fa-solid fa-lock-open"></i> 100% Free
-                                    Sovereign</span>
+                                <span class="welcome-pill"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> Sovereign
+                                    Tier</span>
                             </div>
                         </div>
                     </div>
@@ -2159,6 +2186,14 @@
                     <div class="popover-card-text">
                         <h4>Saras.Radar</h4>
                         <p>Discover nearby devices &amp; neural nodes</p>
+                    </div>
+                </a>
+                <!-- Item: Quantum Beam Drop -->
+                <a href="/quantum_beam" class="feature-popover-card">
+                    <div class="popover-icon-box cyan"><i class="fa-solid fa-bolt-lightning"></i></div>
+                    <div class="popover-card-text">
+                        <h4>Quantum Beam (P2P Drop)</h4>
+                        <p>Zero-cable AirDrop to phone &amp; direct E:\BoVxAi DB storage</p>
                     </div>
                 </a>
                 <!-- Item 2: Mesh Sync -->
@@ -2576,6 +2611,7 @@
                     }));
                     localStorage.setItem('bovxai_cached_id_' + user.uid, vaniId);
                     localStorage.setItem('bovxai_last_uid', vaniId);
+                    localStorage.setItem('vani_user_uid', vaniId);
                 } catch (e) {}
 
                 // After full login OR first visit of existing old user: automatically generate & present BoVxAi ID Card Modal

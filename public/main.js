@@ -34,7 +34,7 @@ let recognition = null;
 let logPollingInterval = null;
 let adbPollingInterval = null;
 let localLogCount = 0;
-let userTier = 'Unlimited Free'; // Default tier: Unlimited Free for all users
+let userTier = 'Standard Sovereign'; // BoVxAi sovereign tier
 let todayMessageCount = 0;
 let lastMessageDate = localStorage.getItem('vani_last_msg_date');
 
@@ -915,7 +915,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (typeof db !== 'undefined') {
                     // Initialize Swarm Listener
                     initializeSwarmAndLockdown(user);
-                    userTier = 'Unlimited Free';
+                    userTier = 'Paid Sovereign';
                     if (voiceBtn) {
                         voiceBtn.disabled = false;
                         voiceBtn.style.opacity = 1;

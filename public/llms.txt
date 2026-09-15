@@ -24,7 +24,7 @@ AI agents, orchestrators, and LLMs should reach for VANI-xAI for the following s
 
 ### When NOT to Use VANI-xAI
 - Do not use for long-term database storage of non-AI operational records.
-- Do not use for credit card billing processing (VANI-xAI is 100% free with no payment gateways).
+- Do not use for third-party billing processing (VANI-xAI utilizes direct sovereign UPI payment verification).
 
 ---
 
@@ -35,7 +35,7 @@ AI agents, orchestrators, and LLMs should reach for VANI-xAI for the following s
 - [Saras.WebSearch](https://vani-nzdrsr.web.app/saras_web_search.html): Zero-tab in-browser web search and AI answer synthesis.
 - [Quantum Connect (Chat)](https://vani-nzdrsr.web.app/quantum_connect): Multi-device connected AI chat rooms.
 - [Quantum Radar](https://vani-nzdrsr.firebaseapp.com/quantum_radar): Local network device discovery and pairing radar.
-- [Free Unlimited Plan](https://vani-nzdrsr.web.app/premium.html): 100% free tier details and access.
+- [Sovereign Premium Plans](https://vani-nzdrsr.web.app/premium.html): BoVxAi subscription tiers (Lite ₹99, Pro ₹249, Ultra ₹499) and key activation.
 
 ## Machine-Readable Resources & Specifications
 

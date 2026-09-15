@@ -158,7 +158,7 @@
             display: inline-block;
         }
 
-        .badge-free { background: #f1f5f9; color: #64748b; }
+        .badge-standard { background: #f1f5f9; color: #64748b; }
         .badge-starter { background: #dbeafe; color: #1d4ed8; }
         .badge-pro { background: #fce7f3; color: #be185d; }
         .badge-advanced { background: #fef3c7; color: #b45309; }
@@ -391,8 +391,8 @@
                     
                     let isPremium = userData.isPremium && userData.premiumExpiry && userData.premiumExpiry.toDate() > now;
                     let expiryStr = 'N/A';
-                    let planName = 'Free';
-                    let badgeClass = 'badge-free';
+                    let planName = 'Standard';
+                    let badgeClass = 'badge-standard';
                     let activationKeyStr = 'N/A';
                     
                     if (isPremium) {

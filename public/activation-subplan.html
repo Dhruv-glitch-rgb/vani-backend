@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Unlimited Plan Active - VANI-xAI</title>
+    <title>Sovereign Plan Active - VANI-xAI</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -176,8 +176,8 @@
 
     <div class="activation-container">
         <img src="vani_logo.jpg" alt="V.A.N.I-xAI" class="logo-img">
-        <h2>Free Unlimited Plan</h2>
-        <div class="status-badge"><i class="fa-solid fa-infinity"></i> 100% Free Forever</div>
+        <h2 id="planHeading">BoVxAi Sovereign Plan</h2>
+        <div class="status-badge" id="planStatusBadge"><i class="fa-solid fa-crown"></i> Paid Subscription Active</div>
 
         <div class="user-profile">
             <img src="developer.png" id="userAvatar" alt="User">
@@ -229,15 +229,19 @@
                     if (userDoc.exists) {
                         const userData = userDoc.data();
                         displayVaniId = userData.vaniId;
-                        if(userData.photoURL) {
+                        if (userData.photoURL) {
                             document.getElementById('userAvatar').src = userData.photoURL;
+                        }
+                        if (userData.planName) {
+                            document.getElementById('planHeading').innerText = userData.planName;
+                            document.getElementById('planStatusBadge').innerHTML = '<i class="fa-solid fa-crown"></i> Active: ' + userData.planName;
                         }
                     }
                     if (!displayVaniId) {
                         const nameBase = (user.displayName || user.email.split('@')[0]).replace(/[^a-zA-Z]/g, '').substring(0, 4).toUpperCase();
                         const randomDigits = Math.floor(1000 + Math.random() * 9000);
                         displayVaniId = `V.A.N.I-xAI-${nameBase}-${randomDigits}`;
-                        await db.collection('users').doc(user.uid).update({ vaniId: displayVaniId, isPremium: true });
+                        await db.collection('users').doc(user.uid).set({ vaniId: displayVaniId }, { merge: true });
                     }
 
                     document.getElementById('userEmail').innerText = user.displayName || user.email;

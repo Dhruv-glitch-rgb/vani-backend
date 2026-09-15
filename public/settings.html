@@ -833,7 +833,7 @@
                             <div style="flex: 1;">
                                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                                     <h3 id="profileName" style="margin-bottom: 2px; color: #0f172a !important; font-weight: 800; font-size: 1.35rem;">Loading...</h3>
-                                    <span id="premiumBadge" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;"><i class="fa-solid fa-infinity"></i> Free Unlimited Plan</span>
+                                    <span id="premiumBadge" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;"><i class="fa-solid fa-crown"></i> Sovereign Plan</span>
                                 </div>
                                 <p id="profileVaniId" style="color: #0284c7 !important; font-weight: 700; font-size: 0.95rem; margin-top: 5px; display: none;"><i class="fa-solid fa-id-badge"></i> <span></span></p>
                                 <p id="profileEmail" style="color: #475569 !important; font-size: 0.92rem; font-weight: 600; margin-top: 4px;">...</p>
@@ -1565,17 +1565,17 @@
             const planName = (userData && userData.planName) || '';
 
             let config = {
-                title: 'Free Sovereign Citizen',
-                badgeHtml: '<i class="fa-solid fa-certificate"></i> Free Citizen',
-                tagHtml: '<i class="fa-solid fa-circle-check"></i> Sovereign Citizen &bull; Free Plan',
-                bg: 'linear-gradient(135deg, #059669, #0284c7)',
+                title: 'Standard Sovereign Citizen',
+                badgeHtml: '<i class="fa-solid fa-certificate"></i> Citizen (Standard)',
+                tagHtml: '<i class="fa-solid fa-circle-check"></i> Sovereign Citizen &bull; Standard Tier',
+                bg: 'linear-gradient(135deg, #475569, #334155)',
                 textColor: '#ffffff',
-                border: '1.5px solid rgba(16, 185, 129, 0.4)',
-                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.25)',
-                sealBg: 'linear-gradient(135deg, #059669, #0284c7)',
+                border: '1.5px solid rgba(148, 163, 184, 0.4)',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
+                sealBg: 'linear-gradient(135deg, #475569, #334155)',
                 sealIcon: '<i class="fa-solid fa-shield"></i>',
-                cardPill: '<span class="status-pulse-dot" style="background:#10b981;"></span> ACTIVE CITIZEN',
-                desc: 'Access to indigenous core intelligence, Saras WebSearch, and personal storage partition.'
+                cardPill: '<span class="status-pulse-dot" style="background:#94a3b8;"></span> STANDARD ACCESS',
+                desc: 'Standard citizen access. Upgrade to BoVxAi Lite, Pro, or Ultra for unrestricted sovereign features.'
             };
 
             if (isUserAdmin) {

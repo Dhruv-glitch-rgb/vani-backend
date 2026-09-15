@@ -151,7 +151,7 @@ class TestAgenticReadiness(unittest.TestCase):
             ('/privacy.html', '# Privacy Policy'),
             ('/about-founder.html', '# About the Founder'),
             ('/about-developer.html', '# About the Developer'),
-            ('/premium.html', '# Free Unlimited Plan'),
+            ('/premium.html', '# BoVxAi Sovereign Premium Plans'),
         ]
 
         for path, expected_header in endpoints:
