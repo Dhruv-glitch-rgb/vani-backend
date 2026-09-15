@@ -22,14 +22,22 @@ import logger
 import bovxai_db_manager
 
 # Setup flask app
-# Ensure template and static folders are loaded from public directory (single source of truth)
+# Ensure template and static folders are loaded from public directory (local or sibling vani-frontend)
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
+SIBLING_FRONTEND_PUBLIC = os.path.abspath(os.path.join(WORKSPACE_DIR, '..', 'vani-frontend', 'public'))
+SIBLING_FRONTEND = os.path.abspath(os.path.join(WORKSPACE_DIR, '..', 'vani-frontend'))
+
 PUBLIC_DIR = os.path.join(WORKSPACE_DIR, 'public')
+if not os.path.exists(PUBLIC_DIR):
+    if os.path.exists(SIBLING_FRONTEND_PUBLIC):
+        PUBLIC_DIR = SIBLING_FRONTEND_PUBLIC
+    elif os.path.exists(SIBLING_FRONTEND):
+        PUBLIC_DIR = SIBLING_FRONTEND
 
 app = Flask(
     __name__, 
-    template_folder=PUBLIC_DIR, 
-    static_folder=PUBLIC_DIR,
+    template_folder=PUBLIC_DIR if os.path.exists(PUBLIC_DIR) else None, 
+    static_folder=PUBLIC_DIR if os.path.exists(PUBLIC_DIR) else None,
     static_url_path=''
 )
 CORS(app, resources={r"/api/*": {"origins": "*"}})

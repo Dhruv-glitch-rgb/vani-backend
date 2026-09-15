@@ -275,8 +275,13 @@ def take_desktop_screenshot():
             'message': "Screenshot capture is handled client-side in the browser."
         }
     try:
-        # Ensure static/screenshots directory exists
-        screenshots_dir = os.path.join(os.path.dirname(__file__), 'public', 'screenshots')
+        # Ensure screenshots directory exists (in frontend or local public)
+        backend_dir = os.path.dirname(__file__)
+        frontend_dir = os.path.abspath(os.path.join(backend_dir, '..', 'vani-frontend', 'public'))
+        if os.path.exists(frontend_dir):
+            screenshots_dir = os.path.join(frontend_dir, 'screenshots')
+        else:
+            screenshots_dir = os.path.join(backend_dir, 'public', 'screenshots')
         os.makedirs(screenshots_dir, exist_ok=True)
         
         filename = f"screenshot_{int(time.time())}.png"

@@ -78,5 +78,6 @@ __pycache__/
 venv/
 ENV/
 *.db
+BoVxAi_DB/
 
 

@@ -354,7 +354,7 @@
                     tr.innerHTML = `
                         <td style="font-weight:bold; color:#fff;">${req.userName}</td>
                         <td>${req.contactNumber}<br><span style="color:#94a3b8; font-size:0.85rem;">${req.userEmail}</span></td>
-                        <td style="color:var(--accent-primary);">${req.planName} (${req.monthsRequested} Mo)</td>
+                        <td style="color:var(--accent-primary);">${req.planName} (${req.monthsRequested} Mo) ${req.amount ? '<br><b style=\"color:#fde68a;\">₹' + req.amount + '</b>' : ''}</td>
                         <td style="font-family:monospace;">${req.transactionId}</td>
                         <td style="color:#94a3b8; font-size:0.85rem;">${dateStr}</td>
                         <td>
@@ -403,6 +403,17 @@
                     generatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     isUsed: false
                 });
+
+                // Directly update user account to Premium in Firestore
+                if (userId && userId !== 'unknown' && !userId.startsWith('guest_')) {
+                    await db.collection('users').doc(userId).set({
+                        isPremium: true,
+                        planName: planName || 'BoVxAi Pro',
+                        premiumExpiry: firebase.firestore.Timestamp.fromDate(expireDate),
+                        activeActivationKey: activationKey,
+                        premiumActivatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                }
 
                 // 3. Update the request status
                 await db.collection('premium_requests').doc(requestId).update({

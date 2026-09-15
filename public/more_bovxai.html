@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Immediate Auto-Redirect Fallback -->
-    <meta http-equiv="refresh" content="0; url=https://more-bovxai.base44.app/">
-    <title>More BoVxAi | Advanced Multi-Modal AI Workspace - V.A.N.I-xAI</title>
+    <title>More BoVxAi | Advanced Multi-Modal AI Workspace - Bureau of V.A.N.I-xAI</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="More BoVxAi by V.A.N.I-xAI: A state-of-the-art all-in-one AI workspace powered by GLM intelligence. Voice assistant, image generation, image analysis, document intelligence, YouTube AI summaries, long-term memory, translation, and OCR.">
-    <meta name="keywords" content="more bovxai, vani-xai, base44 ai, glm ai workspace, voice assistant, ai image generation, document intelligence, youtube ai summary, ai memory, ocr document analysis">
+    <meta name="description" content="More BoVxAi by V.A.N.I-xAI: Sovereign AI workspace powered by GLM intelligence. Voice assistant, AI image synthesis, document intelligence, YouTube AI summaries, long-term memory, translation, and OCR.">
+    <meta name="keywords" content="more bovxai, vani-xai premium, base44 ai workspace, glm ai, voice assistant, ai image generation, document intelligence, youtube ai summary">
     <meta name="author" content="Dhruv Sagar - Bureau of V.A.N.I-xAI">
-    <link rel="canonical" href="https://vani-nzdrsr.web.app/more_bovxai">
+    <link rel="canonical" href="https://vani-nzdrsr.web.app/more_bovxai.html">
     <link rel="shortcut icon" href="/vani_icon.png" type="image/x-icon">
 
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
             --bg-deep: #030712;
-            --panel-bg: rgba(15, 23, 42, 0.82);
-            --panel-border: rgba(168, 85, 247, 0.32);
+            --panel-bg: rgba(15, 23, 42, 0.85);
+            --panel-border: rgba(168, 85, 247, 0.35);
+            --accent-gold: #f59e0b;
             --accent-purple: #a855f7;
             --accent-pink: #ec4899;
             --accent-indigo: #6366f1;
             --accent-cyan: #06b6d4;
             --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --header-height: 66px;
+            --header-height: 68px;
         }
 
         * {
@@ -57,6 +57,22 @@
                         var(--bg-deep);
             display: flex;
             flex-direction: column;
+        }
+
+        /* Top Running Glow Bar */
+        .top-glow-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 3.5px;
+            background: linear-gradient(90deg, #f59e0b, #ec4899, #a855f7, #06b6d4, #f59e0b);
+            background-size: 200% 100%;
+            animation: glowScroll 4s linear infinite;
+            z-index: 1000;
+        }
+
+        @keyframes glowScroll {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
         }
 
         /* Top Navigation Header */
@@ -241,7 +257,7 @@
 
         .hero-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             font-weight: 800;
             letter-spacing: 1px;
             margin-bottom: 12px;
@@ -258,7 +274,58 @@
             margin-bottom: 28px;
         }
 
-        /* Direct Launch Primary Button */
+        /* Access Status Banner (Dynamic) */
+        .access-status-card {
+            max-width: 650px;
+            width: 100%;
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .access-status-card.authorized {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
+            border: 1.5px solid rgba(16, 185, 129, 0.5);
+        }
+
+        .access-status-card.locked {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(245, 158, 11, 0.12));
+            border: 1.5px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .status-badge-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .status-badge-icon.green { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .status-badge-icon.gold { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+        .status-text-block h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .status-text-block p {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+        }
+
+        /* Action Buttons */
         .launch-action-bar {
             display: flex;
             flex-wrap: wrap;
@@ -282,11 +349,35 @@
             box-shadow: 0 10px 30px rgba(168, 85, 247, 0.45);
             transition: all 0.25s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
         }
 
         .btn-launch-hero:hover {
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 16px 40px rgba(168, 85, 247, 0.6);
+            color: #ffffff;
+        }
+
+        .btn-upgrade-hero {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 16px 36px;
+            border-radius: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+            transition: all 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+
+        .btn-upgrade-hero:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(234, 88, 12, 0.6);
             color: #ffffff;
         }
 
@@ -312,17 +403,93 @@
             transform: translateY(-2px);
         }
 
-        .redirect-timer-badge {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.82rem;
-            color: #d8b4fe;
-            background: rgba(168, 85, 247, 0.15);
-            border: 1px solid rgba(168, 85, 247, 0.35);
-            padding: 6px 16px;
+        /* Subscription Options Preview Grid (When Locked) */
+        #plansPreviewSection {
+            max-width: 1050px;
+            width: 100%;
+            margin-bottom: 48px;
+            display: none;
+        }
+
+        .plans-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            text-align: left;
+        }
+
+        .preview-card {
+            background: var(--panel-bg);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            margin-bottom: 32px;
-            display: inline-flex;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s;
+        }
+
+        .preview-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-4px);
+        }
+
+        .preview-card.featured {
+            border-color: var(--accent-purple);
+            background: linear-gradient(180deg, rgba(30, 15, 55, 0.8), rgba(15, 23, 42, 0.85));
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.2);
+        }
+
+        .prev-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .prev-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
+        }
+
+        .prev-price span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+        .prev-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            font-size: 0.86rem;
+            color: var(--text-sub);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .prev-features li i {
+            color: #34d399;
+            margin-right: 6px;
+        }
+
+        .btn-prev-pay {
+            background: linear-gradient(135deg, #f59e0b, #ec4899);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
 
@@ -359,6 +526,7 @@
             transition: all 0.25s ease;
             text-decoration: none;
             color: inherit;
+            cursor: pointer;
         }
 
         .module-card:hover {
@@ -390,28 +558,126 @@
             line-height: 1.45;
         }
 
+        /* Payment Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-backdrop.active { display: flex; }
+
+        .modal-card {
+            background: #0f172a;
+            border: 2px solid rgba(245, 158, 11, 0.4);
+            border-radius: 28px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px 26px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8);
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #94a3b8;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .qr-frame {
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 18px;
+            width: 220px;
+            height: 220px;
+            margin: 15px auto;
+            border: 3px solid var(--accent-gold);
+        }
+
+        .qr-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .upi-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(245, 158, 11, 0.45);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .btn-copy-upi {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid var(--accent-gold);
+            color: #fde68a;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .btn-submit-verify {
+            background: linear-gradient(135deg, #f59e0b, #ec4899);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 0.98rem;
+            font-weight: 800;
+            width: 100%;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 1.6rem;
-            }
-            .hero-subtitle {
-                font-size: 0.92rem;
-            }
-            .btn-launch-hero {
-                width: 100%;
-                justify-content: center;
-            }
-            .btn-return-console {
-                width: 100%;
-                justify-content: center;
-            }
-            .engine-chip {
-                display: none;
-            }
+            .hero-title { font-size: 1.7rem; }
+            .hero-subtitle { font-size: 0.92rem; }
+            .btn-launch-hero, .btn-upgrade-hero, .btn-return-console { width: 100%; justify-content: center; }
+            .engine-chip { display: none; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Running Top Bar -->
+    <div class="top-glow-bar"></div>
 
     <!-- Top Navigation Header -->
     <header class="portal-header">
@@ -422,18 +688,18 @@
 
         <div class="engine-chip" title="Base44 AI Autonomous Workspace">
             <span class="pulse-dot"></span>
-            <span>GLM · Base44 AI Engine Online</span>
+            <span>GLM · Base44 Multi-Modal Engine</span>
         </div>
 
         <div class="header-nav-actions">
-            <a href="https://more-bovxai.base44.app/" target="_blank" rel="noopener noreferrer" class="nav-btn" style="background: rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.4); color: #e9d5ff;">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> Direct Link
+            <a href="/premium.html" class="nav-btn" style="border-color: rgba(245, 158, 11, 0.4); color: #fde68a;">
+                <i class="fa-solid fa-crown"></i> Plans
+            </a>
+            <a href="/activation-subplan.html" class="nav-btn">
+                <i class="fa-solid fa-key"></i> Key
             </a>
             <a href="/ai4consol.html" class="nav-btn">
                 <i class="fa-solid fa-terminal"></i> Console
-            </a>
-            <a href="/quantum_beam" class="nav-btn">
-                <i class="fa-solid fa-bolt-lightning" style="color: #38bdf8;"></i> Beam
             </a>
         </div>
     </header>
@@ -452,23 +718,94 @@
 
         <h1 class="hero-title">MORE BoVxAi WORKSPACE</h1>
         <p class="hero-subtitle">
-            Welcome to the multi-modal AI intelligence suite powered by GLM on Base44. Experience sovereign voice synthesis, vision comprehension, enterprise document intelligence, YouTube AI summarization, and long-term memory.
+            Welcome to the multi-modal sovereign AI suite powered by GLM on Base44: real-time voice synthesis, vision comprehension, enterprise document intelligence, YouTube summaries, and long-term memory.
         </p>
 
-        <!-- Redirect Status Badge -->
-        <div class="redirect-timer-badge" id="redirectBadge">
-            <i class="fa-solid fa-circle-notch fa-spin"></i>
-            <span>Forwarding to <strong>more-bovxai.base44.app</strong>...</span>
+        <!-- Access Status Card (Dynamically updated via Auth & Firestore) -->
+        <div class="access-status-card locked" id="accessStatusCard">
+            <div class="status-badge-icon gold" id="statusBadgeIcon">
+                <i class="fa-solid fa-lock" id="statusIcon"></i>
+            </div>
+            <div class="status-text-block">
+                <h3 id="statusTitle">Premium Subscription Required</h3>
+                <p id="statusDesc">More BoVxAi features are exclusively unlocked for active BoVxAi subscribers. Upgrade to continue.</p>
+            </div>
         </div>
 
-        <!-- Launch Buttons -->
+        <!-- Launch / Upgrade Action Bar -->
         <div class="launch-action-bar">
-            <a href="https://more-bovxai.base44.app/" id="launchNowBtn" class="btn-launch-hero">
-                <i class="fa-solid fa-rocket"></i> Launch More BoVxAi Now
+            <!-- Launch Button (Enabled only if premium) -->
+            <a href="https://more-bovxai.base44.app/" id="launchNowBtn" target="_blank" class="btn-launch-hero" style="display: none;">
+                <i class="fa-solid fa-rocket"></i> Launch More BoVxAi Workspace
             </a>
+
+            <!-- Upgrade Button (Displayed if not premium) -->
+            <button type="button" id="upgradeNowBtn" class="btn-upgrade-hero" onclick="openPaymentModal('BoVxAi Pro', 249, 3)">
+                <i class="fa-solid fa-crown"></i> Unlock More BoVxAi (₹249)
+            </button>
+
+            <a href="/premium.html" class="btn-return-console">
+                <i class="fa-solid fa-list-check"></i> View All Plans
+            </a>
+
             <a href="/ai4consol.html" class="btn-return-console">
                 <i class="fa-solid fa-terminal"></i> Return to Console
             </a>
+        </div>
+
+        <!-- Subscription Plans Preview (Visible when not premium) -->
+        <div id="plansPreviewSection">
+            <div class="modules-grid-title" style="margin-bottom: 16px;">
+                <i class="fa-solid fa-tags" style="color: var(--accent-gold);"></i> Choose Your BoVxAi Subscription Plan
+            </div>
+
+            <div class="plans-preview-grid">
+                <!-- Lite -->
+                <div class="preview-card">
+                    <div class="prev-name">BoVxAi Lite</div>
+                    <div class="prev-price">₹99 <span>/ 1 Month</span></div>
+                    <ul class="prev-features">
+                        <li><i class="fa-solid fa-check"></i> 50 AI Images / mo</li>
+                        <li><i class="fa-solid fa-check"></i> Voice Assistant (30 min/day)</li>
+                        <li><i class="fa-solid fa-check"></i> 15 Document OCR / PDFs</li>
+                        <li><i class="fa-solid fa-check"></i> YouTube Summaries (15m)</li>
+                    </ul>
+                    <button class="btn-prev-pay" onclick="openPaymentModal('BoVxAi Lite', 99, 1)">
+                        <i class="fa-solid fa-qrcode"></i> Pay ₹99 via UPI
+                    </button>
+                </div>
+
+                <!-- Pro -->
+                <div class="preview-card featured">
+                    <div style="font-size: 0.72rem; color: #c084fc; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">Recommended</div>
+                    <div class="prev-name">BoVxAi Pro</div>
+                    <div class="prev-price">₹249 <span>/ 3 Months</span></div>
+                    <ul class="prev-features">
+                        <li><i class="fa-solid fa-check"></i> <strong>Unlimited</strong> Voice Assistant</li>
+                        <li><i class="fa-solid fa-check"></i> 300 HD AI Images</li>
+                        <li><i class="fa-solid fa-check"></i> Full Document Intelligence</li>
+                        <li><i class="fa-solid fa-check"></i> Unlimited YouTube Intelligence</li>
+                    </ul>
+                    <button class="btn-prev-pay" onclick="openPaymentModal('BoVxAi Pro', 249, 3)">
+                        <i class="fa-solid fa-bolt"></i> Upgrade to Pro (₹249)
+                    </button>
+                </div>
+
+                <!-- Ultra -->
+                <div class="preview-card">
+                    <div class="prev-name">BoVxAi Ultra</div>
+                    <div class="prev-price">₹499 <span>/ 6 Months</span></div>
+                    <ul class="prev-features">
+                        <li><i class="fa-solid fa-check"></i> <strong>100% Unrestricted Access</strong></li>
+                        <li><i class="fa-solid fa-check"></i> Unlimited 4K AI Images</li>
+                        <li><i class="fa-solid fa-check"></i> Continuous Voice Streaming</li>
+                        <li><i class="fa-solid fa-check"></i> Zero-Queue VIP Compute</li>
+                    </ul>
+                    <button class="btn-prev-pay" onclick="openPaymentModal('BoVxAi Ultra', 499, 6)">
+                        <i class="fa-solid fa-gem"></i> Get Ultra (₹499)
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- 10 Modules Showcase Grid -->
@@ -477,95 +814,279 @@
         </div>
 
         <div class="modules-grid">
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(244, 63, 94, 0.15); color: #f43f5e;">
                     <i class="fa-solid fa-microphone-lines"></i>
                 </div>
                 <div class="mod-title">Voice Assistant</div>
                 <div class="mod-desc">Real-time acoustic speech synthesis and conversational natural voice interactions.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
                     <i class="fa-solid fa-image"></i>
                 </div>
                 <div class="mod-title">Image Generation</div>
                 <div class="mod-desc">High-resolution AI graphics synthesis from descriptive language prompts.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
                     <i class="fa-solid fa-eye"></i>
                 </div>
                 <div class="mod-title">Image Analysis</div>
                 <div class="mod-desc">Deep visual inspection, scene breakdown, and question answering on graphics.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;">
                     <i class="fa-solid fa-file-invoice"></i>
                 </div>
                 <div class="mod-title">Document Intelligence</div>
                 <div class="mod-desc">Multi-page contextual extraction, semantic search, and summary analysis.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
                     <i class="fa-brands fa-youtube"></i>
                 </div>
                 <div class="mod-title">YouTube Summaries</div>
                 <div class="mod-desc">Automated video transcript parsing and timestamped key takeaway extraction.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
                     <i class="fa-solid fa-brain"></i>
                 </div>
                 <div class="mod-title">Long-Term Memory</div>
                 <div class="mod-desc">Continuous context retention and cross-session user preference recall.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
                     <i class="fa-solid fa-language"></i>
                 </div>
                 <div class="mod-title">Translation & Writing</div>
                 <div class="mod-desc">Fluent multi-lingual translations and structured academic/creative prose composition.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
                     <i class="fa-solid fa-file-lines"></i>
                 </div>
                 <div class="mod-title">OCR & Doc Analysis</div>
                 <div class="mod-desc">High-precision optical character recognition from scans, receipts, and images.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
                     <i class="fa-solid fa-comments"></i>
                 </div>
                 <div class="mod-title">Personalized Chat</div>
                 <div class="mod-desc">Adaptive reasoning and conversational depth matching your exact preferences.</div>
-            </a>
+            </div>
 
-            <a href="https://more-bovxai.base44.app/" class="module-card">
+            <div class="module-card" onclick="handleModuleClick()">
                 <div class="mod-icon-box" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
                     <i class="fa-solid fa-cubes"></i>
                 </div>
                 <div class="mod-title">Modern AI Workspace</div>
                 <div class="mod-desc">Frictionless unified dashboard with real-time reasoning and zero external lag.</div>
-            </a>
+            </div>
         </div>
 
     </main>
 
+    <!-- UPI Payment Modal -->
+    <div class="modal-backdrop" id="paymentModal">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <h3 style="font-family: 'Orbitron', sans-serif; color: #fff; font-size: 1.4rem; margin-bottom: 6px;">Pay via UPI QR Code</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem;" id="modalPlanDesc">Selected: BoVxAi Pro &bull; ₹249 for 3 Months</p>
+
+            <div class="qr-frame">
+                <img src="/upi_qr.jpg" alt="Paytm UPI QR Code" onerror="this.src='/upi_qr.png'">
+            </div>
+
+            <div class="upi-box">
+                <div>
+                    <div style="font-size: 0.72rem; color: #94a3b8;">Payee: Abha Sagar &bull; Official UPI ID</div>
+                    <div style="font-family: 'Fira Code', monospace; color: #fde68a; font-weight: 700; font-size: 0.95rem;">nz.drsr-dhruvani@ptyes</div>
+                </div>
+                <button type="button" class="btn-copy-upi" onclick="copyUpiId()"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+
+            <form onsubmit="handlePaymentSubmit(event)">
+                <input type="text" id="payTxnId" class="form-control" required placeholder="12-digit UPI UTR / Transaction ID">
+                <input type="text" id="payName" class="form-control" required placeholder="Your Full Name">
+                <input type="tel" id="payPhone" class="form-control" required placeholder="WhatsApp / Phone Number">
+
+                <button type="submit" class="btn-submit-verify" id="btnSubmitPayment">
+                    Submit Verification &amp; Activate
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Compat v9) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
     <script>
-        // Smooth immediate redirect to Base44 app
-        try {
-            window.location.replace('https://more-bovxai.base44.app/');
-        } catch (err) {
-            window.location.href = 'https://more-bovxai.base44.app/';
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAUsbCzU-CfBGDIm1xqLMDaq5uzjWorvE",
+            authDomain: "vani-nzdrsr.firebaseapp.com",
+            projectId: "vani-nzdrsr",
+            storageBucket: "vani-nzdrsr.firebasestorage.app",
+            messagingSenderId: "908306821780",
+            appId: "1:908306821780:web:02e878153145968d113a81"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const UPI_ID = "nz.drsr-dhruvani@ptyes";
+        let currentUser = null;
+        let isUserPremium = false;
+        let selectedPlan = "BoVxAi Pro";
+        let selectedPrice = 249;
+        let selectedMonths = 3;
+
+        // Verify User Access on Auth state change
+        auth.onAuthStateChanged(async user => {
+            currentUser = user;
+            if (user) {
+                if (document.getElementById('payName')) document.getElementById('payName').value = user.displayName || '';
+
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        const data = userDoc.data();
+                        const now = new Date();
+                        const hasActiveSub = (data.isPremium === true) && (data.premiumExpiry && data.premiumExpiry.toDate() > now);
+
+                        if (hasActiveSub) {
+                            isUserPremium = true;
+                            renderAuthorizedState(data);
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Error checking user subscription:", e);
+                }
+            }
+            renderLockedState();
+        });
+
+        function renderAuthorizedState(data) {
+            const card = document.getElementById('accessStatusCard');
+            const iconBox = document.getElementById('statusBadgeIcon');
+            const icon = document.getElementById('statusIcon');
+            const title = document.getElementById('statusTitle');
+            const desc = document.getElementById('statusDesc');
+
+            card.className = 'access-status-card authorized';
+            iconBox.className = 'status-badge-icon green';
+            icon.className = 'fa-solid fa-circle-check';
+            title.innerHTML = '🌟 Sovereign Access Active (' + (data.planName || 'BoVxAi Pro') + ')';
+            
+            const expiryStr = data.premiumExpiry ? data.premiumExpiry.toDate().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Lifetime';
+            desc.textContent = 'Your multi-modal intelligence workspace is fully unlocked until ' + expiryStr + '. Click below to enter.';
+
+            document.getElementById('launchNowBtn').style.display = 'inline-flex';
+            document.getElementById('upgradeNowBtn').style.display = 'none';
+            document.getElementById('plansPreviewSection').style.display = 'none';
+        }
+
+        function renderLockedState() {
+            const card = document.getElementById('accessStatusCard');
+            const iconBox = document.getElementById('statusBadgeIcon');
+            const icon = document.getElementById('statusIcon');
+            const title = document.getElementById('statusTitle');
+            const desc = document.getElementById('statusDesc');
+
+            card.className = 'access-status-card locked';
+            iconBox.className = 'status-badge-icon gold';
+            icon.className = 'fa-solid fa-lock';
+            title.textContent = 'Premium Subscription Required';
+            desc.textContent = 'More BoVxAi multi-modal features are available on an active subscription. Choose a plan to unlock.';
+
+            document.getElementById('launchNowBtn').style.display = 'none';
+            document.getElementById('upgradeNowBtn').style.display = 'inline-flex';
+            document.getElementById('plansPreviewSection').style.display = 'block';
+        }
+
+        function handleModuleClick() {
+            if (isUserPremium) {
+                window.open('https://more-bovxai.base44.app/', '_blank');
+            } else {
+                openPaymentModal('BoVxAi Pro', 249, 3);
+            }
+        }
+
+        function openPaymentModal(plan, price, months) {
+            selectedPlan = plan;
+            selectedPrice = price;
+            selectedMonths = months;
+            document.getElementById('modalPlanDesc').textContent = `Selected: ${plan} • ₹${price} for ${months} Month${months > 1 ? 's' : ''}`;
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        async function copyUpiId() {
+            await navigator.clipboard.writeText(UPI_ID);
+            alert("Copied UPI ID: " + UPI_ID);
+        }
+
+        async function handlePaymentSubmit(e) {
+            e.preventDefault();
+            if (!currentUser) {
+                if (confirm("Please log in with Google to tie your subscription to your account. Proceed to login?")) {
+                    window.location.href = '/auth-vani-xai.html?redirect=/more_bovxai.html';
+                    return;
+                }
+            }
+
+            const txnId = document.getElementById('payTxnId').value.trim();
+            const payName = document.getElementById('payName').value.trim();
+            const payPhone = document.getElementById('payPhone').value.trim();
+            const btn = document.getElementById('btnSubmitPayment');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+            try {
+                const userId = currentUser ? currentUser.uid : 'guest_' + Date.now();
+                const userEmail = currentUser ? currentUser.email : (payPhone + '@vani-guest.local');
+
+                await db.collection('premium_requests').add({
+                    userId: userId,
+                    userEmail: userEmail,
+                    userName: payName,
+                    contactNumber: payPhone,
+                    planName: selectedPlan,
+                    monthsRequested: selectedMonths,
+                    amount: selectedPrice,
+                    transactionId: txnId,
+                    upiId: UPI_ID,
+                    status: 'pending',
+                    submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert(`Payment submitted for ${selectedPlan} (₹${selectedPrice})!\nTransaction ID: ${txnId}\n\nOur admin will verify your payment and activate your More BoVxAi access.`);
+                closePaymentModal();
+            } catch (err) {
+                alert("Error submitting payment: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Submit Verification & Activate';
+            }
         }
     </script>
 </body>
