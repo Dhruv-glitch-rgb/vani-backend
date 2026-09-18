@@ -2643,9 +2643,16 @@
 
         function isDesktopHardware() {
             const ua = navigator.userAgent || '';
-            const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
-            const isSmallTouch = window.innerWidth < 1024 && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-            return !isMobileUA && !isSmallTouch;
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua)) {
+                return false;
+            }
+            if (navigator.userAgentData && navigator.userAgentData.mobile) {
+                return false;
+            }
+            if (/Windows|Macintosh|Mac OS X|Linux|CrOS/i.test(ua)) {
+                return true;
+            }
+            return window.innerWidth >= 768;
         }
 
         // Global activation state for 1st-time setup
