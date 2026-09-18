@@ -2690,28 +2690,35 @@
             });
         }
 
+        function downloadDesktopExeInstaller() {
+            const a = document.createElement('a');
+            a.href = './VANI-xAI-Desktop-Setup.exe';
+            a.download = 'VANI-xAI-Desktop-Setup.exe';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            if (typeof showToast === 'function') {
+                showToast("Downloading VANI-xAI-Desktop-Setup.exe...", "fa-download");
+            }
+        }
+
         async function handleSureDesktopInstall() {
             const btn = document.getElementById('btnSureInstallDesktop');
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Installing V.A.N.I-xAI...';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Downloading .exe Installer...';
             }
 
             const uid = getActiveVaniId();
 
-            // 1. Trigger browser PWA install prompt if captured
+            // 1. Download Windows Executable Installer (.exe)
             try {
-                if (window.deferredPrompt) {
-                    window.deferredPrompt.prompt();
-                    const choice = await window.deferredPrompt.userChoice;
-                    console.log("PWA install choice:", choice);
-                    window.deferredPrompt = null;
-                }
+                downloadDesktopExeInstaller();
             } catch (err) {
-                console.warn("Deferred prompt error:", err);
+                console.warn("Direct exe download error:", err);
             }
 
-            // 2. Deliver one-click desktop shortcut launcher
+            // 2. Deliver one-click desktop shortcut launcher as companion
             try {
                 downloadDesktopShortcut();
             } catch (e) {
@@ -2729,6 +2736,7 @@
                             platform: navigator.platform || 'Desktop',
                             userAgent: navigator.userAgent || 'Unknown',
                             screenResolution: `${window.screen.width}x${window.screen.height}`,
+                            installerType: 'Windows .EXE Installer',
                             installedDate: new Date().toISOString()
                         }
                     }, { merge: true });
@@ -2752,7 +2760,7 @@
                 if (successView) successView.style.display = 'block';
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>Sure, Install V.A.N.I-xAI</span>';
+                    btn.innerHTML = '<i class="fa-solid fa-download"></i> <span>Sure, Install V.A.N.I-xAI (.exe)</span>';
                 }
             }, 600);
         }
@@ -2820,13 +2828,13 @@
                 <div id="desktopModalQuestionView">
                     <div style="text-align: center; margin-bottom: 20px;">
                         <span style="display: inline-block; padding: 4px 12px; background: rgba(2, 132, 199, 0.1); color: #0284c7; border-radius: 20px; font-size: 0.78rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">
-                            <i class="fa-solid fa-desktop"></i> Desktop Device Installation
+                            <i class="fa-solid fa-desktop"></i> Windows Desktop .EXE Installation
                         </span>
                         <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin: 0 0 10px 0; line-height: 1.3;">
                             Are you sure you want to install V.A.N.I-xAI in your Desktop Device?
                         </h3>
                         <p style="font-size: 0.9rem; color: #475569; margin: 0; line-height: 1.5;">
-                            Installing V.A.N.I-xAI creates a sovereign, dedicated Desktop Application for your PC workstation with zero-latency desktop execution.
+                            Installing V.A.N.I-xAI downloads the dedicated Windows Desktop Application Setup (<strong>VANI-xAI-Desktop-Setup.exe</strong>) to install on your PC workstation with zero-latency desktop execution.
                         </p>
                     </div>
 
@@ -2861,8 +2869,8 @@
                             <span>Auto Data &amp; Chat Sync</span>
                         </div>
                         <div style="background: rgba(245, 158, 11, 0.06); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.18); display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-laptop-code" style="color: #f59e0b;"></i>
-                            <span>PC &amp; Desktop Only</span>
+                            <i class="fa-solid fa-file-arrow-down" style="color: #f59e0b;"></i>
+                            <span>Native .EXE Installer</span>
                         </div>
                     </div>
 
@@ -2872,8 +2880,8 @@
                             Cancel
                         </button>
                         <button type="button" id="btnSureInstallDesktop" onclick="handleSureDesktopInstall()" style="flex: 2; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, #0284c7, #4f46e5); color: #ffffff; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35); display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>Sure, Install V.A.N.I-xAI</span>
+                            <i class="fa-solid fa-download"></i>
+                            <span>Sure, Install V.A.N.I-xAI (.exe)</span>
                         </button>
                     </div>
                 </div>
@@ -2884,10 +2892,10 @@
                         <i class="fa-solid fa-check"></i>
                     </div>
                     <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">
-                        V.A.N.I-xAI Installed on Desktop!
+                        VANI-xAI-Desktop-Setup.exe Downloaded!
                     </h3>
                     <p style="font-size: 0.9rem; color: #475569; margin: 0 0 16px 0; line-height: 1.5;">
-                        Your Sovereign Desktop Station has been created and registered in the BoVxAi Sovereign Database.
+                        Run <strong>VANI-xAI-Desktop-Setup.exe</strong> on your PC to complete workstation setup, create your Desktop &amp; Start Menu shortcuts, and launch the app.
                     </p>
 
                     <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 14px; padding: 14px 16px; margin-bottom: 20px; text-align: left;">
@@ -2903,8 +2911,8 @@
                     </div>
 
                     <div style="display: flex; gap: 10px;">
-                        <button type="button" onclick="downloadDesktopShortcut()" style="flex: 1; padding: 12px; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #334155; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <i class="fa-solid fa-download"></i> Download Launcher
+                        <button type="button" onclick="downloadDesktopExeInstaller()" style="flex: 1; padding: 12px; border-radius: 12px; border: 1.5px solid #0284c7; background: rgba(2, 132, 199, 0.08); color: #0284c7; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <i class="fa-solid fa-download"></i> Download .exe Again
                         </button>
                         <button type="button" onclick="launchDesktopAppNow()" style="flex: 1; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35); display: flex; align-items: center; justify-content: center; gap: 6px;">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i> Open App Now
