@@ -2691,9 +2691,11 @@
         }
 
         function downloadDesktopExeInstaller() {
+            const exeUrl = 'https://raw.githubusercontent.com/Dhruv-glitch-rgb/vani-backend/main/public/VANI-xAI-Desktop-Setup.exe';
             const a = document.createElement('a');
-            a.href = './VANI-xAI-Desktop-Setup.exe';
+            a.href = exeUrl;
             a.download = 'VANI-xAI-Desktop-Setup.exe';
+            a.target = '_blank';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
