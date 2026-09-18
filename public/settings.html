@@ -746,8 +746,8 @@
                 <span>V.A.N.I-xAI</span>
             </div>
             <div class="landing-nav-actions">
-                <button id="pwa-install-btn-settings" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; margin-right: 8px; display: none;">
-                    <i class="fa-solid fa-download"></i> Install App
+                <button id="pwa-install-btn-settings" onclick="openDesktopInstallModal()" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #0284c7, #4f46e5); color: white; border: none; margin-right: 8px; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-desktop"></i> Install V.A.N.I-xAI
                 </button>
                 <button id="settings-admin-btn" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; margin-right: 8px; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35); display: none;" onclick="window.location.href='./admin-vaniXai.html'">
                     <i class="fa-solid fa-shield-halved"></i> Admin Panel
@@ -809,7 +809,11 @@
                 <button class="save-all-btn animate-hover-scale" id="saveSettingsBtn">
                     <i class="fa-solid fa-floppy-disk"></i> Save Preferences
                 </button>
-                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.06);">
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 8px;">
+                    <button class="tab-item" id="btn-install-vani-sidebar" onclick="openDesktopInstallModal()" style="color: #0284c7 !important; width: 100%; border: 1.5px solid rgba(2, 132, 199, 0.35); background: linear-gradient(135deg, rgba(2, 132, 199, 0.08), rgba(99, 102, 241, 0.08)); font-weight: 700; cursor: pointer; justify-content: flex-start;">
+                        <i class="fa-solid fa-desktop" style="color: #0284c7;"></i>
+                        <span>Install V.A.N.I-xAI</span>
+                    </button>
                     <button class="tab-item" id="btn-signout-sidebar" onclick="handleUserSignOut()" style="color: #dc2626 !important; width: 100%; border: 1.5px solid rgba(239, 68, 68, 0.35); background: rgba(239, 68, 68, 0.08); font-weight: 700; cursor: pointer;">
                         <i class="fa-solid fa-right-from-bracket" style="color: #dc2626;"></i>
                         <span>Log Out Account</span>
@@ -822,9 +826,15 @@
                 
                 <!-- Pane 1: Account Profile -->
                 <div class="settings-tab-pane active" id="tab-account">
-                    <div class="pane-header">
-                        <h2><i class="fa-solid fa-user" style="color: #4f46e5;"></i> Account Profile</h2>
-                        <p>Manage your account identity, security PIN, and avatar.</p>
+                    <div class="pane-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h2><i class="fa-solid fa-user" style="color: #4f46e5;"></i> Account Profile</h2>
+                            <p>Manage your account identity, security PIN, and avatar.</p>
+                        </div>
+                        <button id="btn-install-vani-header" onclick="openDesktopInstallModal()" class="nav-cta-btn animate-hover-scale" style="background: linear-gradient(135deg, #0284c7, #4f46e5); color: #ffffff !important; border: none; font-weight: 700; padding: 10px 18px; border-radius: 12px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3); cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-desktop"></i>
+                            <span>Install V.A.N.I-xAI</span>
+                        </button>
                     </div>
 
                     <div class="setting-card">
@@ -2587,6 +2597,277 @@
                 }
             }
         }
+
+        // ==================== V.A.N.I-xAI DESKTOP APP CONTROLLER ====================
+        function isDesktopDevice() {
+            const ua = navigator.userAgent || '';
+            const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+            const isSmallScreen = window.innerWidth < 1024 && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+            return !isMobileUA && !isSmallScreen;
+        }
+
+        function getActiveVaniId() {
+            return currentBoVxAiUid || localStorage.getItem('bovxai_last_uid') || (typeof currentUser !== 'undefined' && currentUser ? `V.A.N.I-xAI-${(currentUser.displayName || currentUser.email || 'USER').substring(0, 4).toUpperCase()}-2026` : 'V.A.N.I-xAI-NODE-2026');
+        }
+
+        function openDesktopInstallModal() {
+            if (!isDesktopDevice()) {
+                alert("DESKTOP REQUIRED:\n\nV.A.N.I-xAI Desktop Application is exclusively designed for Desktop & Laptop computers (Windows, macOS, Linux).\n\nPlease open your Settings on your PC / Desktop device to install.");
+                return;
+            }
+
+            const uid = getActiveVaniId();
+            const modalUid = document.getElementById('modalDisplayVaniId');
+            const successUid = document.getElementById('successModalVaniId');
+            if (modalUid) modalUid.textContent = uid;
+            if (successUid) successUid.textContent = uid;
+
+            const modal = document.getElementById('desktopInstallModal');
+            const questionView = document.getElementById('desktopModalQuestionView');
+            const successView = document.getElementById('desktopModalSuccessView');
+
+            if (questionView) questionView.style.display = 'block';
+            if (successView) successView.style.display = 'none';
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeDesktopInstallModal() {
+            const modal = document.getElementById('desktopInstallModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function copyModalVaniId() {
+            const uid = getActiveVaniId();
+            navigator.clipboard.writeText(uid).then(() => {
+                if (typeof showToast === 'function') {
+                    showToast(`V.A.N.I-xAI User ID copied: ${uid}`);
+                } else {
+                    alert(`V.A.N.I-xAI User ID copied: ${uid}`);
+                }
+            }).catch(() => {
+                prompt("Copy your V.A.N.I-xAI User ID:", uid);
+            });
+        }
+
+        async function handleSureDesktopInstall() {
+            const btn = document.getElementById('btnSureInstallDesktop');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Installing V.A.N.I-xAI...';
+            }
+
+            const uid = getActiveVaniId();
+
+            // 1. Trigger browser PWA install prompt if captured
+            try {
+                if (window.deferredPrompt) {
+                    window.deferredPrompt.prompt();
+                    const choice = await window.deferredPrompt.userChoice;
+                    console.log("PWA install choice:", choice);
+                    window.deferredPrompt = null;
+                }
+            } catch (err) {
+                console.warn("Deferred prompt error:", err);
+            }
+
+            // 2. Deliver one-click desktop shortcut launcher
+            try {
+                downloadDesktopShortcut();
+            } catch (e) {
+                console.warn("Shortcut generation note:", e);
+            }
+
+            // 3. Persist Desktop App installation record to Firestore
+            try {
+                const u = firebase.auth().currentUser;
+                if (u && u.uid) {
+                    await db.collection('users').doc(u.uid).set({
+                        installedDesktopApp: true,
+                        desktopInstalledAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        desktopDevice: {
+                            platform: navigator.platform || 'Desktop',
+                            userAgent: navigator.userAgent || 'Unknown',
+                            screenResolution: `${window.screen.width}x${window.screen.height}`,
+                            installedDate: new Date().toISOString()
+                        }
+                    }, { merge: true });
+                }
+            } catch (err) {
+                console.warn("Firestore desktop install write error:", err);
+            }
+
+            // 4. Mark local storage flags
+            try {
+                localStorage.setItem('vani_desktop_installed', 'true');
+                localStorage.setItem('vani_desktop_user_id', uid);
+                localStorage.setItem('bovxai_desktop_uid', uid);
+            } catch(e) {}
+
+            // 5. Switch to Success Celebration View
+            setTimeout(() => {
+                const questionView = document.getElementById('desktopModalQuestionView');
+                const successView = document.getElementById('desktopModalSuccessView');
+                if (questionView) questionView.style.display = 'none';
+                if (successView) successView.style.display = 'block';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>Sure, Install V.A.N.I-xAI</span>';
+                }
+            }, 600);
+        }
+
+        function downloadDesktopShortcut() {
+            const targetUrl = window.location.origin + '/ai4consol.html?app_mode=desktop';
+            const iconUrl = window.location.origin + '/vani_icon.png';
+            const shortcutContent = `[InternetShortcut]\r\nURL=${targetUrl}\r\nIconFile=${iconUrl}\r\nIconIndex=0\r\nHotKey=0\r\nIDList=\r\n[{000214A0-0000-0000-C000-000000000046}]\r\nProp3=19,0\r\n`;
+            
+            const blob = new Blob([shortcutContent], { type: 'application/x-msdownload' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'V.A.N.I-xAI Desktop.url';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function launchDesktopAppNow() {
+            try {
+                localStorage.setItem('vani_desktop_mode', 'true');
+            } catch(e) {}
+            window.location.href = './ai4consol.html?app_mode=desktop';
+        }
     </script>
+
+    <!-- ==================== V.A.N.I-xAI DESKTOP INSTALLATION MODAL ==================== -->
+    <div class="modal-overlay" id="desktopInstallModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 100000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="desktop-modal-card" style="background: #ffffff; border: 2px solid rgba(2, 132, 199, 0.35); border-radius: 24px; width: 100%; max-width: 520px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(2, 132, 199, 0.15); overflow: hidden; position: relative;">
+            
+            <!-- Spectrum Ribbon -->
+            <div style="height: 6px; background: linear-gradient(90deg, #ff7b00 0%, #0284c7 35%, #4f46e5 70%, #10b981 100%);"></div>
+
+            <!-- Modal Content Body -->
+            <div style="padding: 28px 24px;">
+                
+                <!-- Dual Logos Container: V.A.N.I-xAI & BoVxAi -->
+                <div style="display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 20px;">
+                    <!-- VANI-xAI Official Logo -->
+                    <div style="position: relative; width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 2px solid #0284c7; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(2, 132, 199, 0.25);">
+                        <img src="./vani_icon.png" alt="V.A.N.I-xAI Logo" onerror="this.src='./vani_logo.jpg'" style="width: 52px; height: 52px; object-fit: contain;">
+                        <span style="position: absolute; bottom: -8px; font-size: 0.6rem; font-weight: 800; background: #0284c7; color: white; padding: 2px 6px; border-radius: 8px; letter-spacing: 0.5px;">V.A.N.I</span>
+                    </div>
+
+                    <!-- Cyber Connection Indicator -->
+                    <div style="width: 36px; height: 36px; border-radius: 50%; background: #f8fafc; border: 1.5px solid #cbd5e1; display: flex; align-items: center; justify-content: center; color: #6366f1; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
+                        <i class="fa-solid fa-arrows-left-right"></i>
+                    </div>
+
+                    <!-- BoVxAi Official Logo -->
+                    <div style="position: relative; width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 2px solid #f59e0b; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25);">
+                        <img src="./bureau_logo.png" alt="Bureau of V.A.N.I-xAI Logo" onerror="this.src='./Bureau_Of_VANI_xAI_Official_Logo.png'" style="width: 52px; height: 52px; object-fit: contain;">
+                        <span style="position: absolute; bottom: -8px; font-size: 0.6rem; font-weight: 800; background: #f59e0b; color: white; padding: 2px 6px; border-radius: 8px; letter-spacing: 0.5px;">BoVxAi</span>
+                    </div>
+                </div>
+
+                <!-- Main Confirmation Question -->
+                <div id="desktopModalQuestionView">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <span style="display: inline-block; padding: 4px 12px; background: rgba(2, 132, 199, 0.1); color: #0284c7; border-radius: 20px; font-size: 0.78rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">
+                            <i class="fa-solid fa-desktop"></i> Desktop Device Installation
+                        </span>
+                        <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin: 0 0 10px 0; line-height: 1.3;">
+                            Are you sure you want to install V.A.N.I-xAI in your Desktop Device?
+                        </h3>
+                        <p style="font-size: 0.9rem; color: #475569; margin: 0; line-height: 1.5;">
+                            Installing V.A.N.I-xAI creates a sovereign, dedicated Desktop Application for your PC workstation with zero-latency desktop execution.
+                        </p>
+                    </div>
+
+                    <!-- User UID Highlight Card -->
+                    <div style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 14px 16px; margin-bottom: 20px;">
+                        <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                            <i class="fa-solid fa-key" style="color: #0284c7;"></i> Your V.A.N.I-xAI User ID:
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                            <span id="modalDisplayVaniId" style="font-family: 'Fira Code', monospace; font-size: 0.95rem; font-weight: 700; color: #0369a1; word-break: break-all;">Connecting...</span>
+                            <button type="button" onclick="copyModalVaniId()" style="background: #ffffff; border: 1px solid #94a3b8; border-radius: 8px; padding: 6px 10px; font-size: 0.75rem; font-weight: 700; color: #334155; cursor: pointer; white-space: nowrap;">
+                                <i class="fa-regular fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #64748b; margin-top: 8px;">
+                            <i class="fa-solid fa-circle-info" style="color: #4f46e5;"></i> When you open the app for the 1st time on your desktop, enter this User ID to log in and sync all your personal data.
+                        </div>
+                    </div>
+
+                    <!-- Feature Highlights -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; font-size: 0.8rem; color: #334155;">
+                        <div style="background: rgba(2, 132, 199, 0.06); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(2, 132, 199, 0.18); display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-shield-halved" style="color: #0284c7;"></i>
+                            <span>PIN Protected Launches</span>
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.06); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.18); display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-bolt" style="color: #10b981;"></i>
+                            <span>No Landing / Auth Pages</span>
+                        </div>
+                        <div style="background: rgba(124, 58, 237, 0.06); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(124, 58, 237, 0.18); display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-database" style="color: #7c3aed;"></i>
+                            <span>Auto Data &amp; Chat Sync</span>
+                        </div>
+                        <div style="background: rgba(245, 158, 11, 0.06); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.18); display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-laptop-code" style="color: #f59e0b;"></i>
+                            <span>PC &amp; Desktop Only</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                        <button type="button" onclick="closeDesktopInstallModal()" style="flex: 1; padding: 12px; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #475569; font-weight: 700; cursor: pointer;">
+                            Cancel
+                        </button>
+                        <button type="button" id="btnSureInstallDesktop" onclick="handleSureDesktopInstall()" style="flex: 2; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, #0284c7, #4f46e5); color: #ffffff; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Sure, Install V.A.N.I-xAI</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Success Installed View -->
+                <div id="desktopModalSuccessView" style="display: none; text-align: center;">
+                    <div style="width: 70px; height: 70px; border-radius: 50%; background: #ecfdf5; border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: #10b981; font-size: 2rem; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.25);">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">
+                        V.A.N.I-xAI Installed on Desktop!
+                    </h3>
+                    <p style="font-size: 0.9rem; color: #475569; margin: 0 0 16px 0; line-height: 1.5;">
+                        Your Sovereign Desktop Station has been created and registered in the BoVxAi Sovereign Database.
+                    </p>
+
+                    <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 14px; padding: 14px 16px; margin-bottom: 20px; text-align: left;">
+                        <div style="font-size: 0.75rem; font-weight: 700; color: #166534; text-transform: uppercase; margin-bottom: 4px;">
+                            <i class="fa-solid fa-id-card"></i> 1st Time Open Required ID:
+                        </div>
+                        <div style="font-family: 'Fira Code', monospace; font-size: 1rem; font-weight: 800; color: #15803d; word-break: break-all; margin-bottom: 6px;" id="successModalVaniId">
+                            Connecting...
+                        </div>
+                        <div style="font-size: 0.8rem; color: #166534;">
+                            Keep this User ID saved. When opening the app for the 1st time, enter this ID to sync all your personal chats, memory, and settings.
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" onclick="downloadDesktopShortcut()" style="flex: 1; padding: 12px; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #334155; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <i class="fa-solid fa-download"></i> Download Launcher
+                        </button>
+                        <button type="button" onclick="launchDesktopAppNow()" style="flex: 1; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open App Now
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>

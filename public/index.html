@@ -4,6 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Immediate Desktop App Mode Bypass (Never shows landing page in desktop app) -->
+    <script>
+        (function() {
+            try {
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                const isDesktopParam = new URLSearchParams(window.location.search).get('app_mode') === 'desktop';
+                const isDesktopStored = localStorage.getItem('vani_desktop_mode') === 'true' && localStorage.getItem('bovxai_desktop_bound_uid');
+                if (isStandalone || isDesktopParam || isDesktopStored) {
+                    window.location.replace('./ai4consol.html?app_mode=desktop');
+                }
+            } catch(e) {}
+        })();
+    </script>
     <meta name="google-site-verification" content="a2k3hsJ7OMGBcqvaocR8ke0mnvEWpDVxs5WkqQogH04" />
     <title>VANI-xAI - Vāṇī Adhyātmik Navīn Intellect | Advanced AI Assistant &amp; Saras WebSearch</title>
 

@@ -4,6 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Immediate Desktop App Mode Bypass (Never shows auth page in desktop app) -->
+    <script>
+        (function() {
+            try {
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                const isDesktopParam = new URLSearchParams(window.location.search).get('app_mode') === 'desktop';
+                const hasDesktopUid = localStorage.getItem('bovxai_desktop_bound_uid') || localStorage.getItem('bovxai_desktop_uid');
+                if (isStandalone || isDesktopParam || (localStorage.getItem('vani_desktop_mode') === 'true' && hasDesktopUid)) {
+                    window.location.replace('./ai4consol.html?app_mode=desktop');
+                }
+            } catch(e) {}
+        })();
+    </script>
     <title>V.A.N.I-xAI Authentication</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"

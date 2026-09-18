@@ -2459,6 +2459,159 @@
             </div>
         </div>
     </div>
+
+    <!-- ==================== DESKTOP WORKSTATION REQUIRED LOCK OVERLAY ==================== -->
+    <div id="desktopDeviceBlockOverlay" style="display: none; position: fixed; inset: 0; z-index: 999999; background: #090d16; color: #ffffff; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;">
+        <div style="width: 80px; height: 80px; border-radius: 22px; background: rgba(239, 68, 68, 0.12); border: 2px solid #ef4444; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #ef4444; margin-bottom: 20px; box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);">
+            <i class="fa-solid fa-desktop"></i>
+        </div>
+        <h2 style="font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 12px; color: #ffffff; letter-spacing: 1px;">
+            DESKTOP WORKSTATION REQUIRED
+        </h2>
+        <p style="max-width: 480px; color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;">
+            The <strong>V.A.N.I-xAI Desktop Application</strong> is exclusively designed for PC &amp; Laptop hardware (Windows, macOS, Linux). Mobile terminal access is prohibited for desktop app mode.
+        </p>
+        <a href="./index.html" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);">
+            <i class="fa-solid fa-globe"></i> Open Standard Web Portal
+        </a>
+    </div>
+
+    <!-- ==================== DESKTOP 1ST TIME ACTIVATION MODAL (USER ID SYNC) ==================== -->
+    <div class="modal-overlay" id="desktop1stTimeActivationModal" style="display: none; position: fixed; inset: 0; background: rgba(9, 13, 22, 0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 100000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="desktop-modal-card" style="background: #ffffff; border: 2px solid rgba(2, 132, 199, 0.4); border-radius: 24px; width: 100%; max-width: 500px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4), 0 0 50px rgba(2, 132, 199, 0.2); overflow: hidden; position: relative;">
+            
+            <div style="height: 6px; background: linear-gradient(90deg, #ff7b00 0%, #0284c7 35%, #4f46e5 70%, #10b981 100%);"></div>
+
+            <div style="padding: 30px 24px;">
+                <!-- Dual Logos: V.A.N.I-xAI + BoVxAi -->
+                <div style="display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 20px;">
+                    <div style="position: relative; width: 68px; height: 68px; border-radius: 18px; background: #f0f9ff; border: 2px solid #0284c7; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(2, 132, 199, 0.25);">
+                        <img src="./vani_icon.png" alt="V.A.N.I-xAI Logo" onerror="this.src='./vani_logo.jpg'" style="width: 48px; height: 48px; object-fit: contain;">
+                        <span style="position: absolute; bottom: -8px; font-size: 0.6rem; font-weight: 800; background: #0284c7; color: white; padding: 2px 6px; border-radius: 8px;">V.A.N.I</span>
+                    </div>
+
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #f8fafc; border: 1.5px solid #cbd5e1; display: flex; align-items: center; justify-content: center; color: #6366f1; font-size: 0.9rem;">
+                        <i class="fa-solid fa-arrows-left-right"></i>
+                    </div>
+
+                    <div style="position: relative; width: 68px; height: 68px; border-radius: 18px; background: #fffbeb; border: 2px solid #f59e0b; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(245, 158, 11, 0.25);">
+                        <img src="./bureau_logo.png" alt="BoVxAi Logo" onerror="this.src='./Bureau_Of_VANI_xAI_Official_Logo.png'" style="width: 48px; height: 48px; object-fit: contain;">
+                        <span style="position: absolute; bottom: -8px; font-size: 0.6rem; font-weight: 800; background: #f59e0b; color: white; padding: 2px 6px; border-radius: 8px;">BoVxAi</span>
+                    </div>
+                </div>
+
+                <!-- STEP 1: Enter V.A.N.I-xAI User ID -->
+                <div id="desktopActStep1">
+                    <div style="text-align: center; margin-bottom: 22px;">
+                        <span style="display: inline-block; padding: 4px 12px; background: rgba(2, 132, 199, 0.1); color: #0284c7; border-radius: 20px; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">
+                            <i class="fa-solid fa-desktop"></i> Desktop App Activation
+                        </span>
+                        <h3 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">
+                            Welcome to V.A.N.I-xAI Desktop
+                        </h3>
+                        <p style="font-size: 0.9rem; color: #475569; margin: 0; line-height: 1.5;">
+                            Please enter your <strong>V.A.N.I-xAI User ID</strong> from your Settings page to link this workstation and synchronize all your profile data, chats, and memory.
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 18px;">
+                        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #334155; text-transform: uppercase; margin-bottom: 6px;">
+                            <i class="fa-solid fa-id-badge" style="color: #0284c7;"></i> V.A.N.I-xAI User ID
+                        </label>
+                        <input id="desktopActivationUidInput" type="text" placeholder="e.g. V.A.N.I-xAI-DHRU-2026" style="width: 100%; box-sizing: border-box; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-family: 'Fira Code', monospace; font-size: 0.95rem; font-weight: 600; color: #0369a1; background: #f8fafc; outline: none; transition: border-color 0.2s;">
+                        <div id="desktopActivationMsg" style="font-size: 0.8rem; margin-top: 8px; font-weight: 600; min-height: 18px;"></div>
+                    </div>
+
+                    <button id="btnActivateDesktopUid" onclick="handleDesktopActivation()" style="width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, #0284c7, #4f46e5); color: #ffffff; font-weight: 800; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);">
+                        <i class="fa-solid fa-plug"></i>
+                        <span>Verify &amp; Link Desktop Station</span>
+                    </button>
+                </div>
+
+                <!-- STEP 2: Enter PIN to Confirm Activation -->
+                <div id="desktopActStep2" style="display: none; text-align: center;">
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <span style="display: inline-block; padding: 4px 12px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 20px; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">
+                            <i class="fa-solid fa-shield-halved"></i> Identity Confirmed
+                        </span>
+                        <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;" id="desktopActFoundName">
+                            Sovereign Node
+                        </h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin: 0 0 16px 0;" id="desktopActFoundEmail">
+                            user@vani-xai.in
+                        </p>
+                        <p style="font-size: 0.9rem; color: #334155; font-weight: 600; margin: 0 0 16px 0;">
+                            Enter your Security PIN to complete desktop setup:
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <input id="desktopActPinInput" type="password" maxlength="8" placeholder="Enter PIN" style="width: 180px; text-align: center; letter-spacing: 8px; font-size: 1.6rem; font-family: monospace; padding: 10px 14px; border-radius: 12px; border: 2px solid #0284c7; outline: none; background: #f8fafc; font-weight: 800;">
+                        <div id="desktopActPinMsg" style="font-size: 0.82rem; margin-top: 8px; font-weight: 600; min-height: 18px; color: #ef4444;"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="backToDesktopStep1()" style="flex: 1; padding: 12px; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #475569; font-weight: 700; cursor: pointer;">
+                            Back
+                        </button>
+                        <button id="btnConfirmDesktopPin" onclick="confirmDesktopActivationPin()" style="flex: 2; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);">
+                            <i class="fa-solid fa-lock-open"></i> Unlock &amp; Open App
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== IN-APP DESKTOP SECURITY PIN GATEWAY (SUBSEQUENT OPENS) ==================== -->
+    <div class="modal-overlay" id="desktopPinGatewayModal" style="display: none; position: fixed; inset: 0; background: rgba(9, 13, 22, 0.94); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="desktop-modal-card" style="background: #ffffff; border: 2px solid rgba(2, 132, 199, 0.4); border-radius: 24px; width: 100%; max-width: 420px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(2, 132, 199, 0.25); overflow: hidden; position: relative; text-align: center;">
+            
+            <div style="height: 6px; background: linear-gradient(90deg, #ff7b00 0%, #0284c7 35%, #4f46e5 70%, #10b981 100%);"></div>
+
+            <div style="padding: 28px 24px;">
+                <!-- Dual Logos Header -->
+                <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 16px;">
+                    <img src="./vani_icon.png" alt="VANI-xAI" onerror="this.src='./vani_logo.jpg'" style="width: 42px; height: 42px; border-radius: 12px; border: 1.5px solid #0284c7;">
+                    <span style="font-size: 0.9rem; font-weight: 800; color: #94a3b8;">&times;</span>
+                    <img src="./bureau_logo.png" alt="BoVxAi" onerror="this.src='./Bureau_Of_VANI_xAI_Official_Logo.png'" style="width: 42px; height: 42px; border-radius: 12px; border: 1.5px solid #f59e0b;">
+                </div>
+
+                <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #0284c7, #4f46e5); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; margin: 0 auto 12px auto; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.3);" id="desktopPinAvatar">
+                    V
+                </div>
+
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;" id="desktopPinUserName">
+                    Sovereign Node
+                </h3>
+                <div style="font-family: 'Fira Code', monospace; font-size: 0.82rem; font-weight: 700; color: #0369a1; margin-bottom: 18px;" id="desktopPinUserUid">
+                    V.A.N.I-xAI-NODE-2026
+                </div>
+
+                <div style="font-size: 0.88rem; color: #475569; font-weight: 600; margin-bottom: 16px;">
+                    Enter Security PIN to unlock desktop workstation:
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <input id="desktopGatewayPinInput" type="password" maxlength="8" placeholder="••••" style="width: 170px; text-align: center; letter-spacing: 8px; font-size: 1.8rem; font-family: monospace; padding: 10px 14px; border-radius: 14px; border: 2px solid #0284c7; outline: none; background: #f8fafc; font-weight: 800;">
+                    <div id="desktopGatewayPinMsg" style="font-size: 0.82rem; margin-top: 8px; font-weight: 600; min-height: 18px; color: #ef4444;"></div>
+                </div>
+
+                <button id="btnUnlockDesktopGateway" onclick="verifyDesktopGatewayPin()" style="width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, #0284c7, #4f46e5); color: #ffffff; font-weight: 800; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);">
+                    <i class="fa-solid fa-lock-open"></i>
+                    <span>Unlock Workstation</span>
+                </button>
+
+                <div style="margin-top: 14px;">
+                    <button onclick="resetDesktopBoundAccount()" style="background: none; border: none; font-size: 0.78rem; color: #94a3b8; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                        Switch V.A.N.I-xAI User ID
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
@@ -2481,10 +2634,346 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // ==================== DESKTOP APP MODE LOGIC & CONTROLLER ====================
+        function isDesktopAppMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            return urlParams.get('app_mode') === 'desktop' || isStandalone || localStorage.getItem('vani_desktop_mode') === 'true';
+        }
+
+        function isDesktopHardware() {
+            const ua = navigator.userAgent || '';
+            const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+            const isSmallTouch = window.innerWidth < 1024 && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+            return !isMobileUA && !isSmallTouch;
+        }
+
+        // Global activation state for 1st-time setup
+        let pendingActivationData = null;
+        let pendingActivationUid = null;
+        let pendingActivationVaniId = null;
+
+        function showDesktop1stTimeActivationModal() {
+            const modal = document.getElementById('desktop1stTimeActivationModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.getElementById('desktopActStep1').style.display = 'block';
+                document.getElementById('desktopActStep2').style.display = 'none';
+                const input = document.getElementById('desktopActivationUidInput');
+                if (input) {
+                    input.value = localStorage.getItem('bovxai_last_uid') || localStorage.getItem('vani_desktop_user_id') || '';
+                    setTimeout(() => input.focus(), 200);
+                }
+            }
+        }
+
+        function backToDesktopStep1() {
+            document.getElementById('desktopActStep1').style.display = 'block';
+            document.getElementById('desktopActStep2').style.display = 'none';
+        }
+
+        async function handleDesktopActivation() {
+            const input = document.getElementById('desktopActivationUidInput');
+            const msg = document.getElementById('desktopActivationMsg');
+            const btn = document.getElementById('btnActivateDesktopUid');
+            const val = (input ? input.value : '').trim();
+
+            if (!val) {
+                msg.textContent = "Please enter your V.A.N.I-xAI User ID from Settings.";
+                msg.style.color = "#ef4444";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Locating Sovereign Node...';
+            msg.textContent = "Verifying V.A.N.I-xAI User ID in BoVxAi database...";
+            msg.style.color = "#0284c7";
+
+            try {
+                let foundDoc = null;
+                let foundData = null;
+
+                // 1. Search by vaniId
+                const q1 = await db.collection('users').where('vaniId', '==', val).limit(1).get();
+                if (!q1.empty) {
+                    foundDoc = q1.docs[0];
+                    foundData = foundDoc.data();
+                }
+
+                // 2. Search by bovxaiId
+                if (!foundDoc) {
+                    const q2 = await db.collection('users').where('bovxaiId', '==', val).limit(1).get();
+                    if (!q2.empty) {
+                        foundDoc = q2.docs[0];
+                        foundData = foundDoc.data();
+                    }
+                }
+
+                // 3. Direct doc ID search
+                if (!foundDoc) {
+                    const docRef = await db.collection('users').doc(val).get();
+                    if (docRef.exists) {
+                        foundDoc = docRef;
+                        foundData = docRef.data();
+                    }
+                }
+
+                // 4. Case-insensitive search fallback
+                if (!foundDoc) {
+                    const allUsersSnap = await db.collection('users').limit(150).get();
+                    allUsersSnap.forEach(d => {
+                        const data = d.data();
+                        if ((data.vaniId && data.vaniId.toLowerCase() === val.toLowerCase()) ||
+                            (data.bovxaiId && data.bovxaiId.toLowerCase() === val.toLowerCase()) ||
+                            (d.id.toLowerCase() === val.toLowerCase())) {
+                            foundDoc = d;
+                            foundData = data;
+                        }
+                    });
+                }
+
+                if (!foundDoc) {
+                    msg.textContent = "V.A.N.I-xAI User ID not found. Please verify the ID from your Settings panel.";
+                    msg.style.color = "#ef4444";
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-plug"></i> Verify &amp; Link Desktop Station';
+                    return;
+                }
+
+                // Node found!
+                pendingActivationData = foundData;
+                pendingActivationUid = foundDoc.id;
+                pendingActivationVaniId = foundData.vaniId || foundData.bovxaiId || val;
+
+                // Transition to Step 2: PIN Confirmation
+                document.getElementById('desktopActFoundName').textContent = foundData.name || (foundData.email ? foundData.email.split('@')[0] : 'Sovereign Node');
+                document.getElementById('desktopActFoundEmail').textContent = foundData.email || 'Communication Clearance Active';
+                document.getElementById('desktopActStep1').style.display = 'none';
+                document.getElementById('desktopActStep2').style.display = 'block';
+
+                const pinInput = document.getElementById('desktopActPinInput');
+                if (pinInput) {
+                    pinInput.value = '';
+                    setTimeout(() => pinInput.focus(), 200);
+                }
+
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-plug"></i> Verify &amp; Link Desktop Station';
+
+            } catch (err) {
+                console.error("Activation query error:", err);
+                msg.textContent = "Connection error: " + err.message;
+                msg.style.color = "#ef4444";
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-plug"></i> Verify &amp; Link Desktop Station';
+            }
+        }
+
+        async function confirmDesktopActivationPin() {
+            const pinInput = document.getElementById('desktopActPinInput');
+            const pinMsg = document.getElementById('desktopActPinMsg');
+            const btn = document.getElementById('btnConfirmDesktopPin');
+            const pinVal = (pinInput ? pinInput.value : '').trim();
+
+            if (!pinVal) {
+                pinMsg.textContent = "Please enter your Security PIN.";
+                return;
+            }
+
+            const expectedPin = String(pendingActivationData.pin || pendingActivationData.securityPin || '');
+            if (expectedPin && expectedPin !== pinVal) {
+                pinMsg.textContent = "Incorrect PIN. Please try again.";
+                pinInput.value = '';
+                pinInput.focus();
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Activating Desktop Node...';
+
+            // Bind user credentials to desktop storage
+            try {
+                localStorage.setItem('bovxai_desktop_bound_uid', pendingActivationUid);
+                localStorage.setItem('bovxai_desktop_uid', pendingActivationVaniId);
+                localStorage.setItem('bovxai_last_uid', pendingActivationVaniId);
+                localStorage.setItem('vani_desktop_mode', 'true');
+                localStorage.setItem('bovxai_cached_profile', JSON.stringify(pendingActivationData));
+                sessionStorage.setItem('pin_verified', 'true');
+
+                // Mark desktop installation in Firestore
+                await db.collection('users').doc(pendingActivationUid).set({
+                    installedDesktopApp: true,
+                    desktopInstalledAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    desktopDevice: {
+                        platform: navigator.platform || 'Desktop',
+                        userAgent: navigator.userAgent || 'Unknown',
+                        screenResolution: `${window.screen.width}x${window.screen.height}`,
+                        verifiedDate: new Date().toISOString()
+                    }
+                }, { merge: true });
+            } catch (err) {
+                console.warn("Desktop Firestore write note:", err);
+            }
+
+            // Hide activation modal and initialize console
+            document.getElementById('desktop1stTimeActivationModal').style.display = 'none';
+            hydrateConsoleWithUserData(pendingActivationUid, pendingActivationData, pendingActivationVaniId);
+        }
+
+        function showDesktopPinGatewayModal(userData, vaniId) {
+            const modal = document.getElementById('desktopPinGatewayModal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+
+            const name = userData.name || (userData.email ? userData.email.split('@')[0] : 'Sovereign Node');
+            document.getElementById('desktopPinUserName').textContent = name;
+            document.getElementById('desktopPinUserUid').textContent = vaniId || 'V.A.N.I-xAI-NODE-2026';
+            
+            const initials = name.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'V';
+            document.getElementById('desktopPinAvatar').textContent = initials;
+
+            const pinInput = document.getElementById('desktopGatewayPinInput');
+            if (pinInput) {
+                pinInput.value = '';
+                setTimeout(() => pinInput.focus(), 200);
+            }
+        }
+
+        async function verifyDesktopGatewayPin() {
+            const pinInput = document.getElementById('desktopGatewayPinInput');
+            const pinMsg = document.getElementById('desktopGatewayPinMsg');
+            const entered = (pinInput ? pinInput.value : '').trim();
+
+            if (!entered) {
+                pinMsg.textContent = "Please enter your Security PIN.";
+                return;
+            }
+
+            const boundUid = localStorage.getItem('bovxai_desktop_bound_uid');
+            let profile = null;
+            try {
+                profile = JSON.parse(localStorage.getItem('bovxai_cached_profile') || '{}');
+            } catch(e) {}
+
+            let expectedPin = String(profile.pin || profile.securityPin || '');
+
+            // If not cached, fetch fresh doc from Firestore
+            if (!expectedPin && boundUid) {
+                try {
+                    const snap = await db.collection('users').doc(boundUid).get();
+                    if (snap.exists) {
+                        const data = snap.data();
+                        expectedPin = String(data.pin || data.securityPin || '');
+                        localStorage.setItem('bovxai_cached_profile', JSON.stringify(data));
+                        profile = data;
+                    }
+                } catch (e) {
+                    console.error("PIN check fetch error:", e);
+                }
+            }
+
+            if (expectedPin && expectedPin !== entered) {
+                pinMsg.textContent = "Incorrect Security PIN.";
+                pinInput.value = '';
+                pinInput.focus();
+                return;
+            }
+
+            // PIN Verified!
+            sessionStorage.setItem('pin_verified', 'true');
+            document.getElementById('desktopPinGatewayModal').style.display = 'none';
+            const vaniId = localStorage.getItem('bovxai_desktop_uid') || profile.vaniId || 'V.A.N.I-xAI-NODE-2026';
+            hydrateConsoleWithUserData(boundUid, profile, vaniId);
+        }
+
+        function resetDesktopBoundAccount() {
+            if (confirm("Are you sure you want to change the V.A.N.I-xAI User ID bound to this desktop application?")) {
+                localStorage.removeItem('bovxai_desktop_bound_uid');
+                localStorage.removeItem('bovxai_desktop_uid');
+                sessionStorage.removeItem('pin_verified');
+                document.getElementById('desktopPinGatewayModal').style.display = 'none';
+                showDesktop1stTimeActivationModal();
+            }
+        }
+
+        function hydrateConsoleWithUserData(uid, userData, vaniId) {
+            const headerUid = document.getElementById('header-vani-id-text');
+            const sidebarUid = document.getElementById('sidebar-uid-text');
+            if (headerUid) headerUid.textContent = vaniId;
+            if (sidebarUid) {
+                sidebarUid.innerHTML = `${vaniId} <i class="fa-regular fa-copy" style="margin-left:4px; font-size:0.75rem;" title="Click to copy BoVxAi UID"></i>`;
+                sidebarUid.onclick = function (ev) { ev.preventDefault(); ev.stopPropagation(); window.copySidebarUID(); };
+            }
+
+            const displayName = (userData && userData.name) || (userData && userData.email ? userData.email.split('@')[0] : 'Sovereign Node');
+            const sidebarName = document.getElementById('sidebar-user-name');
+            const sidebarAvatar = document.getElementById('sidebar-user-avatar');
+            if (sidebarName) sidebarName.textContent = displayName;
+            if (sidebarAvatar) {
+                const initials = displayName.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'V';
+                sidebarAvatar.textContent = initials;
+            }
+
+            window.currentConsoleUserData = userData;
+            window.currentConsoleVaniId = vaniId;
+            try {
+                localStorage.setItem('bovxai_last_uid', vaniId);
+                localStorage.setItem('vani_user_uid', vaniId);
+            } catch(e) {}
+        }
+
+        // Attach Enter key triggers
+        document.addEventListener('DOMContentLoaded', () => {
+            const actInput = document.getElementById('desktopActivationUidInput');
+            if (actInput) {
+                actInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleDesktopActivation(); });
+            }
+            const actPin = document.getElementById('desktopActPinInput');
+            if (actPin) {
+                actPin.addEventListener('keydown', (e) => { if (e.key === 'Enter') confirmDesktopActivationPin(); });
+            }
+            const gPin = document.getElementById('desktopGatewayPinInput');
+            if (gPin) {
+                gPin.addEventListener('keydown', (e) => { if (e.key === 'Enter') verifyDesktopGatewayPin(); });
+            }
+        });
+
         // Auth Guard, PIN Setup Check & Admin Recognition
         auth.onAuthStateChanged(async (user) => {
+            // Check Desktop App Enforcement
+            if (isDesktopAppMode()) {
+                if (!isDesktopHardware()) {
+                    document.getElementById('desktopDeviceBlockOverlay').style.display = 'flex';
+                    return;
+                }
+
+                const boundUid = localStorage.getItem('bovxai_desktop_bound_uid');
+                if (!boundUid) {
+                    // 1st Time Opening App in Desktop Mode -> Request V.A.N.I-xAI User ID
+                    showDesktop1stTimeActivationModal();
+                    return;
+                }
+
+                // Bound UID exists -> Check PIN session clearance
+                if (sessionStorage.getItem('pin_verified') !== 'true') {
+                    let cachedData = {};
+                    try { cachedData = JSON.parse(localStorage.getItem('bovxai_cached_profile') || '{}'); } catch(e) {}
+                    const boundVaniId = localStorage.getItem('bovxai_desktop_uid') || cachedData.vaniId;
+                    showDesktopPinGatewayModal(cachedData, boundVaniId);
+                    return;
+                }
+            }
+
             if (!user) {
-                // Not authenticated -> redirect to Auth page
+                // If desktop app mode is active and user is already bound and PIN verified, hydrate locally!
+                if (isDesktopAppMode() && localStorage.getItem('bovxai_desktop_bound_uid') && sessionStorage.getItem('pin_verified') === 'true') {
+                    let cachedData = {};
+                    try { cachedData = JSON.parse(localStorage.getItem('bovxai_cached_profile') || '{}'); } catch(e) {}
+                    const boundVaniId = localStorage.getItem('bovxai_desktop_uid') || cachedData.vaniId;
+                    hydrateConsoleWithUserData(localStorage.getItem('bovxai_desktop_bound_uid'), cachedData, boundVaniId);
+                    return;
+                }
+                // Not authenticated and not desktop mode -> redirect to Auth page
                 window.location.href = './auth-vani-xai.html';
                 return;
             }
@@ -2524,12 +3013,20 @@
 
                 // 2. PIN setup check
                 if (!userData.pin && !userData.securityPin) {
+                    if (isDesktopAppMode()) {
+                        showDesktopPinGatewayModal(userData, userData.vaniId || userData.bovxaiId);
+                        return;
+                    }
                     window.location.href = './pin-vaniXai.html';
                     return;
                 }
 
                 // 3. PIN session verification check
                 if (sessionStorage.getItem('pin_verified') !== 'true') {
+                    if (isDesktopAppMode()) {
+                        showDesktopPinGatewayModal(userData, userData.vaniId || userData.bovxaiId);
+                        return;
+                    }
                     window.location.href = './pin-vaniXai.html';
                     return;
                 }

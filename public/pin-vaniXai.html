@@ -706,7 +706,9 @@
                     }
 
                     await logActivity("Security PIN Verified");
-                    setTimeout(() => window.location.href = './login-loading-vaniXai.html', 500);
+                    const isDesktopParam = new URLSearchParams(window.location.search).get('app_mode') === 'desktop' || localStorage.getItem('vani_desktop_mode') === 'true';
+                    const targetDest = isDesktopParam ? './ai4consol.html?app_mode=desktop' : './login-loading-vaniXai.html';
+                    setTimeout(() => window.location.href = targetDest, 500);
                 }
             } else {
                 failedAttempts++;

@@ -377,10 +377,25 @@
             border: 1px solid rgba(245, 158, 11, 0.35);
         }
 
+        .kpi-card.kpi-indigo {
+            border-top: 3.5px solid #6366f1;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.12);
+        }
+        .kpi-card.kpi-indigo:hover {
+            border-color: #6366f1;
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.25);
+        }
+
         .kpi-rose .kpi-icon-wrap {
             background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(168, 85, 247, 0.2));
             color: #e11d48;
             border: 1px solid rgba(244, 63, 94, 0.35);
+        }
+
+        .kpi-indigo .kpi-icon-wrap {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.2));
+            color: #6366f1;
+            border: 1px solid rgba(99, 102, 241, 0.35);
         }
 
         .kpi-info {
@@ -1041,6 +1056,15 @@
                     <div class="kpi-sub"><span class="kpi-badge rose"><i class="fa-solid fa-lock"></i> SUSPENDED</span> Perimeter Shield Active</div>
                 </div>
             </div>
+
+            <div class="kpi-card kpi-indigo">
+                <div class="kpi-icon-wrap"><i class="fa-solid fa-desktop"></i></div>
+                <div class="kpi-info">
+                    <div class="kpi-label">DESKTOP APP INSTALLS</div>
+                    <div class="kpi-value" id="kpi-desktop-users">--</div>
+                    <div class="kpi-sub"><span class="kpi-badge" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;"><i class="fa-solid fa-laptop-code"></i> DESKTOP</span> Workstations</div>
+                </div>
+            </div>
         </div>
 
         <main class="data-panel glass-panel">
@@ -1059,6 +1083,7 @@
                         <option value="newest">⚡ Newest First</option>
                         <option value="oldest">⏳ Oldest First</option>
                         <option value="name">🔤 Name A-Z</option>
+                        <option value="desktop">🖥️ Desktop App Installed</option>
                     </select>
                 </div>
                 <div class="jewel-btn-row">
@@ -1458,7 +1483,11 @@
                 (u.id || '').toLowerCase().includes(search)
             );
 
-            // Sort
+            // Sort & Filter
+            if (sort === 'desktop') {
+                filtered = filtered.filter(u => u.installedDesktopApp === true);
+            }
+
             filtered.sort((a, b) => {
                 const tA = parseTimestamp(a.createdAt || a.lastUpdated || a.timestamp);
                 const tB = parseTimestamp(b.createdAt || b.lastUpdated || b.timestamp);
@@ -1468,21 +1497,24 @@
                 return 0;
             });
 
-            // Update Dynamic 4-Deck KPI Counters
+            // Update Dynamic 5-Deck KPI Counters
             const totalCount = allUsers.length;
             const activeCount = allUsers.filter(u => u.status !== 'blocked' && u.status !== 'banned').length;
             const pinCount = allUsers.filter(u => u.pin && u.pin !== 'NOT SET').length;
             const flaggedCount = allUsers.filter(u => u.status === 'blocked' || u.status === 'banned' || (u.failedAttempts && u.failedAttempts > 0)).length;
+            const desktopCount = allUsers.filter(u => u.installedDesktopApp === true).length;
 
             const kpiTotal = document.getElementById('kpi-total-users');
             const kpiActive = document.getElementById('kpi-active-users');
             const kpiPin = document.getElementById('kpi-pin-users');
             const kpiFlagged = document.getElementById('kpi-flagged-users');
+            const kpiDesktop = document.getElementById('kpi-desktop-users');
 
             if (kpiTotal) kpiTotal.textContent = totalCount;
             if (kpiActive) kpiActive.textContent = activeCount;
             if (kpiPin) kpiPin.textContent = pinCount;
             if (kpiFlagged) kpiFlagged.textContent = flaggedCount;
+            if (kpiDesktop) kpiDesktop.textContent = desktopCount;
 
             const countBadge = document.getElementById('user-count');
             if (countBadge) countBadge.textContent = filtered.length + " NODES SYNCED";
@@ -1558,7 +1590,22 @@
                     <td data-label="Identity">
                         <div class="user-identity-cell">
                             <div class="avatar-initial-badge" style="background: ${avatarBg};">${firstChar}</div>
-                            <span class="name-label">${safeName}</span>
+                            <div>
+                                <span class="name-label">${safeName}</span>
+                                ${data.installedDesktopApp ? `
+                                    <div style="margin-top: 3px;">
+                                        <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; font-weight:800; color:#059669; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); padding:2px 7px; border-radius:6px;" title="Desktop App Installed">
+                                            <i class="fa-solid fa-desktop"></i> Desktop App
+                                        </span>
+                                    </div>
+                                ` : `
+                                    <div style="margin-top: 3px;">
+                                        <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; font-weight:600; color:#94a3b8; background:rgba(148,163,184,0.1); padding:2px 6px; border-radius:6px;">
+                                            <i class="fa-solid fa-globe"></i> Web Node
+                                        </span>
+                                    </div>
+                                `}
+                            </div>
                         </div>
                     </td>
                     <td data-label="Clearance Email">
